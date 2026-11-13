@@ -14,7 +14,7 @@ As documented in [Answer every requirement](/guides/answer-a-solicitation/), pro
 | --- | --- |
 | **Tool Slug** | `rfp-requirement-shredder` |
 | **Catalog CLIN** | `0002` — Proposal & capture |
-| **Stack Template** | `validator` (local text parser in `cs-06-build`) |
+| **Stack Template** | `validator` (local text parser in Jig) |
 | **Runtime** | 100% static browser-side HTML/CSS/JS (zero backend, zero runtime AI) |
 | **License** | MIT |
 
@@ -59,7 +59,7 @@ The shredder is anchored to public federal acquisition structure and solicitatio
 
 ## Clean-Room & 5-Condition QA Requirements
 
-All five `cs-07-verify` listing conditions are mandatory before catalog publication:
+All five Shakedown listing conditions are mandatory before catalog publication:
 
 1. **Browser-only execution:** All regex segmentation, heading detection, and CSV/JSON export run in client-side JavaScript memory. No backend API or LLM is used.
 2. **Strict Content Security Policy (`connect-src 'self'`):** Enforces `default-src 'self'; connect-src 'self'; form-action 'none'`. Pasted solicitation text never leaves the user's machine.
@@ -90,7 +90,7 @@ The contractor shall design, test, and document monthly status reports. The Gove
 | `C-001c` | Work duty | `shall` | `Section C.3.1, p. 18` | The contractor shall document monthly status reports. |
 | `C-002` | Government intent | `will` | `Section C.3.1, p. 18` | The Government will review deliverables within 10 business days. |
 
-**Boundary cases verified by `cs-07-verify`:**
+**Boundary cases verified by Shakedown:**
 - Empty or whitespace-only input returns zero rows and a clear validation notice without throwing.
 - Abbreviations (`FAR 52.215-1`, `U.S.C.`, `e.g.`) do not split sentences prematurely.
 - Input lacking UCF section headers falls back cleanly to `REQ-001`, `REQ-002`, etc.
@@ -101,4 +101,4 @@ The contractor shall design, test, and document monthly status reports. The Gove
 - [Answer every requirement](/guides/answer-a-solicitation/)
 - [Compliance Matrix Generator](/tools/compliance-matrix-generator/)
 - [Check a tool’s answer](/guides/checking-results/)
-- [cs-07-verify specification](/platform/cs-07-verify/)
+- [Shakedown specification](/platform/shakedown/)

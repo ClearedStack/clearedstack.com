@@ -8,7 +8,7 @@ export const meta = {
 
 **Offline Manifest Inspector** (`slug: offline-manifest-inspector`, CLIN `0005` — Tactical & DevSecOps) is a client-side static inspection tool in the ClearedStack catalog. On disconnected or air-gapped networks, package managers (`npm`), container runtimes (`containerd`), and security scanners cannot reach public registries, OSV/NVD feeds, or remote metadata endpoints. Engineers must inspect what is inside a container image manifest, a dependency lockfile, or a Software Bill of Materials (SBOM) locally before importing artifacts into an enclave.
 
-The tool runs entirely in the visitor's browser with zero backend dependencies, making it available in both the **Full Enclave Stack** (`clearedstack-web` + `cs-registry`) and **Snapshot Mode** (frozen static bundle). Consistent with ClearedStack's architecture, it assumes `containerd` and OCI archives with **zero Docker** anywhere.
+The tool runs entirely in the visitor's browser with zero backend dependencies, making it available in both the **Full Enclave Stack** (Conn + Stow) and **Snapshot Mode** (frozen static bundle). Consistent with ClearedStack's architecture, it assumes `containerd` and OCI archives with **zero Docker** anywhere.
 
 ## Governing Standards & Sources
 
@@ -29,7 +29,7 @@ Every parser rule, field label, and digest check in Offline Manifest Inspector i
 ### Inputs
 
 - **Primary artifact:** Drag-and-drop file, local file picker (`File.arrayBuffer()`), or pasted JSON text for an OCI manifest/index (`manifest.json`, `index.json`), `package-lock.json`, SPDX JSON, or CycloneDX JSON.
-- **Optional expected digest:** A `sha256:<64-hex>` string (for example, recorded outside the air gap from `ctr -n k8s.io images ls` or `cs-registry`) to compare against the uploaded file's computed SHA-256.
+- **Optional expected digest:** A `sha256:<64-hex>` string (for example, recorded outside the air gap from `ctr -n k8s.io images ls` or Stow) to compare against the uploaded file's computed SHA-256.
 - **Optional format override:** Auto-detection is default; the user may force a specific parser (`oci`, `npm-lock`, `spdx`, `cyclonedx`).
 
 ### Deterministic Browser-Only Processing Logic
@@ -54,7 +54,7 @@ Every parser rule, field label, and digest check in Offline Manifest Inspector i
 
 ## Clean-Room & 5-Condition QA Requirements
 
-To pass `cs-07-verify` and move from `planned` to `live` in `src/data/catalog.ts`, Offline Manifest Inspector must satisfy all five universal QA conditions and ClearedStack's clean-room rules:
+To pass Shakedown and move from `planned` to `live` in `src/data/catalog.ts`, Offline Manifest Inspector must satisfy all five universal QA conditions and ClearedStack's clean-room rules:
 
 | Requirement | Verification Criterion |
 | --- | --- |
@@ -64,7 +64,7 @@ To pass `cs-07-verify` and move from `planned` to `live` in `src/data/catalog.ts
 | **4. Worked examples** | Bundles synthetic test fixtures (OCI manifest, `package-lock.json` snippet, SPDX JSON, CycloneDX JSON) with deterministic expected outputs verified in automated tests. |
 | **5. Citations, scope & MIT** | Displays governing standard citations, explicit scope exclusions, non-advice notice, and an MIT `LICENSE` file. |
 
-**Clean-room boundary:** The tool is authored from scratch in `cs-06-build` using only the structured JSON specification from `cs-05-provenance`, never copying source code, CSS, or DOM layouts from third-party web inspectors.
+**Clean-room boundary:** The tool is authored from scratch in Jig using only the structured JSON specification from Waybill, never copying source code, CSS, or DOM layouts from third-party web inspectors.
 
 ## Worked Example & Verification
 
@@ -96,12 +96,12 @@ Given a synthetic `application/vnd.oci.image.manifest.v1+json` with `schemaVersi
 
 - **Detected format:** `OCI Image Manifest v1 (schemaVersion 2)`
 - **Total layer bytes:** `16777216` bytes (`16.0 MiB`) across `2` layers
-- **Digest integrity:** Every descriptor carries a valid `sha256:<64-hex>` digest; file-level `sha256:` matches the operator-supplied digest from `cs-registry`.
+- **Digest integrity:** Every descriptor carries a valid `sha256:<64-hex>` digest; file-level `sha256:` matches the operator-supplied digest from Stow.
 
 ## Related pages
 
 - [Working on disconnected networks](/guides/disconnected-networks/)
 - [Run it on a closed network](/guides/closed-networks/)
 - [Cluster architecture](/platform/cluster-architecture/)
-- [cs-07-verify specification](/platform/cs-07-verify/)
+- [Shakedown specification](/platform/shakedown/)
 - [Clean room and credit](/platform/clean-room-and-credit/)

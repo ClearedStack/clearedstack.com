@@ -1,283 +1,68 @@
-import type { HealthState } from "@/components/StatusChip";
+import registry from "@/data/registry.json";
 
-export type PlatformApp = {
-  id: string;
+/**
+ * The platform's components, read from the naming registry.
+ *
+ * src/data/registry.json is the single place a component's name is written
+ * down. To rename one, change `name` and `slug` there, move the old slug into
+ * `formerly`, and rename its page in src/platform to match the new slug. The
+ * old addresses keep working (see lib/docs.ts).
+ *
+ * The same file is published at /platform/registry.json for manifests,
+ * pipelines and other repositories to read.
+ */
+export type PlatformComponent = {
+  /** Lowercase identifier: the repository, the workload and the page at /platform/<slug>/. */
+  slug: string;
+  /** The canonical name, as written in prose. */
   name: string;
-  namespace: "clearedstack" | "cs-workers";
-  role: string;
-  ramBudget: string;
+  /** The identifier this name replaced. */
+  formerly: string;
   kind: "control-plane" | "worker";
+  /** Workers only: position in the pipeline, 1 to 10. */
+  stage?: number;
+  namespace: string;
+  /** What it is for, in terms that survive a change of implementation. */
+  responsibility: string;
+  /** Its boundaries: what it exposes and what it calls. */
+  interfaces: string[];
+  /** Repository name under the organization. */
+  repository: string;
+  /** Image name in the cluster's registry. */
+  image: string;
+  /** Slugs of the components it cannot work without. */
+  dependsOn: string[];
+  memory: string;
   version: string;
-  health: HealthState;
-  queued: number;
   subTools: string[];
-  ownerRepo: string;
-  notes: string;
 };
 
-export const controlPlaneApps: PlatformApp[] = [
-  {
-    id: "clearedstack-web",
-    name: "clearedstack-web",
-    namespace: "clearedstack",
-    role: "Unified Command Portal, App Store UI, and anonymous edit intake (only public Ingress).",
-    ramBudget: "128 MiB",
-    kind: "control-plane",
-    version: "v0.2.0-draft",
-    health: "healthy",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "clearedstack.com",
-    notes: "Reads only sanitized pub.* views; zero login lock.",
-  },
-  {
-    id: "hub-queue-api",
-    name: "hub-queue-api",
-    namespace: "clearedstack",
-    role: "Central queue leases, transitions, SSE live feed, and 5-layer anti-spam edit intake.",
-    ramBudget: "48 MiB",
-    kind: "control-plane",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "clearedstack.com",
-    notes: "Only service besides postgres holding core.* write access.",
-  },
-  {
-    id: "postgres",
-    name: "postgres",
-    namespace: "clearedstack",
-    role: "Single shared PostgreSQL 17 database (core.* state, pub.* views, append-only ledger).",
-    ramBudget: "256 MiB",
-    kind: "control-plane",
-    version: "17-alpine",
-    health: "idle",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "clearedstack.com",
-    notes: "Backed up nightly with age encryption; monthly restore drill.",
-  },
-  {
-    id: "cs-git",
-    name: "cs-git",
-    namespace: "clearedstack",
-    role: "Lightweight MIT Go Git server (primary) with push-mirroring to GitHub on change.",
-    ramBudget: "64 MiB",
-    kind: "control-plane",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "cs-git",
-    notes: "ClusterIP only; replaces Forgejo without 40+ DB tables.",
-  },
-  {
-    id: "cs-registry",
-    name: "cs-registry",
-    namespace: "clearedstack",
-    role: "Internal-only OCI image store keeping the last 5 signed digests per app.",
-    ramBudget: "64 MiB",
-    kind: "control-plane",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "cs-registry",
-    notes: "Zero container images are ever pushed to GitHub.",
-  },
-  {
-    id: "cs-runner",
-    name: "cs-runner",
-    namespace: "clearedstack",
-    role: "No-Docker build controller spawning ko (Go) and rootless BuildKit Jobs on push.",
-    ramBudget: "32 MiB",
-    kind: "control-plane",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "cs-runner",
-    notes: "Runs golden fixture tests and signs images with cosign.",
-  },
-  {
-    id: "cs-store",
-    name: "cs-store",
-    namespace: "clearedstack",
-    role: "App-Store reconciler (Server-Side Apply) + live pod/error sanitizer.",
-    ramBudget: "48 MiB",
-    kind: "control-plane",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "cs-store",
-    notes: "Replaces Argo CD + CasaOS with zero custom CRDs.",
-  },
-];
+export const components = registry.components as PlatformComponent[];
+export const controlPlane = components.filter((component) => component.kind === "control-plane");
+export const workers = components
+  .filter((component) => component.kind === "worker")
+  .sort((a, b) => (a.stage ?? 0) - (b.stage ?? 0));
 
-export const workerApps: PlatformApp[] = [
-  {
-    id: "cs-01-intake",
-    name: "cs-01-intake",
-    namespace: "cs-workers",
-    role: "Find candidates, normalize URLs, SHA-256 deduplicate, and assign PA-XXXX IDs.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: ["sam-gov", "github-issues", "web-sweep", "site-form"],
-    ownerRepo: "cs-01-intake",
-    notes: "Replaces old Stages 1–2 (Discover + Record).",
-  },
-  {
-    id: "cs-02-observe",
-    name: "cs-02-observe",
-    namespace: "cs-workers",
-    role: "Inspect public pages only via deterministic extractors; seal raw captures behind clean-room wall.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: ["saas-marketing", "gov-portal", "agency-pdf", "on-demand-browser-job"],
-    ownerRepo: "cs-02-observe",
-    notes: "Spawns on-demand headless browser Jobs only for JS-heavy sites.",
-  },
-  {
-    id: "cs-03-evaluate",
-    name: "cs-03-evaluate",
-    namespace: "cs-workers",
-    role: "Run 5 binary knockout gates, 100-pt rubric, and 5 tie-breakers using deterministic YAML/Go rules.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: ["rubric-profiles"],
-    ownerRepo: "cs-03-evaluate",
-    notes: "Zero AI; unknown fields fail closed to needs_subtool.",
-  },
-  {
-    id: "cs-04-decide",
-    name: "cs-04-decide",
-    namespace: "cs-workers",
-    role: "Decision and edit-approval queue for the human owner.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "cs-04-decide",
-    notes: "Records Build, Link, Merge, Park, Reject, and edit approvals.",
-  },
-  {
-    id: "cs-05-provenance",
-    name: "cs-05-provenance",
-    namespace: "cs-workers",
-    role: "Stamp provenance notes, enforce 48h/5d correction & opt-out SLAs, compile clean-room build specs.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: ["spec-profiles"],
-    ownerRepo: "cs-05-provenance",
-    notes: "Enforces the clean-room wall before cs-06-build.",
-  },
-  {
-    id: "cs-06-build",
-    name: "cs-06-build",
-    namespace: "cs-workers",
-    role: "Generate isolated static tool repos from clean-room specs + worked-example fixtures.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: ["calculator", "checklist", "validator", "decision-tree"],
-    ownerRepo: "cs-06-build",
-    notes: "Zero observation artifacts ever enter this worker.",
-  },
-  {
-    id: "cs-07-verify",
-    name: "cs-07-verify",
-    namespace: "cs-workers",
-    role: "Verify all 5 listing conditions: offline, CSP connect-src 'self', zero tracking, worked examples.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "cs-07-verify",
-    notes: "Split out of old Stage 9 (List) for automated QA.",
-  },
-  {
-    id: "cs-08-catalog",
-    name: "cs-08-catalog",
-    namespace: "cs-workers",
-    role: "Publish verified, linked, merged, and retired entries to the clearedstack.com catalog.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: [],
-    ownerRepo: "cs-08-catalog",
-    notes: "Generates live catalog entries with provenance links.",
-  },
-  {
-    id: "cs-09-monitor",
-    name: "cs-09-monitor",
-    namespace: "cs-workers",
-    role: "Watch FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers for drift.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: ["federal-register", "ecfr", "nist-csrc", "linked-tool-watch", "live-catalog"],
-    ownerRepo: "cs-09-monitor",
-    notes: "Replaces old Stage 10 (Revisit).",
-  },
-  {
-    id: "cs-10-notify",
-    name: "cs-10-notify",
-    namespace: "cs-workers",
-    role: "Route approved Portal edits, needs_subtool tasks, and fingerprinted errors to cs-git.",
-    ramBudget: "30 MiB",
-    kind: "worker",
-    version: "v0.1.0-draft",
-    health: "idle",
-    queued: 0,
-    subTools: ["internal-git", "github-mirror", "webhook-alert", "portal-sse"],
-    ownerRepo: "cs-10-notify",
-    notes: "Closes the edit-to-repo and auto-issue loops.",
-  },
-];
+export const registryMeta = {
+  organization: registry.organization,
+  imageRegistry: registry.imageRegistry,
+};
 
-export const attentionRules = [
-  {
-    tier: "P0 · Critical",
-    trigger: "Pod crash, failed health check, or dead-letter > 0",
-    behavior: "Promoted to top of Command view in crimson (--danger) with 1-click Rollback.",
-  },
-  {
-    tier: "P1 · Attention",
-    trigger: "Worker paused in needs_subtool or live feed stale > 15s",
-    behavior: "Surfaced in amber (--warn) with error code and owning repo link.",
-  },
-  {
-    tier: "P2 · Action",
-    trigger: "Items waiting in cs-04-decide or pending public ✎ edit proposals",
-    behavior: "Shown in the /guides/#decide inbox with oldest wait time.",
-  },
-  {
-    tier: "Quiet",
-    trigger: "Healthy, idle worker (0 queued, 0 errors)",
-    behavior: "Collapsed into a single muted summary row so the page stays calm.",
-  },
-];
+export function findComponent(slug: string): PlatformComponent | undefined {
+  return components.find((component) => component.slug === slug);
+}
+
+/** The component that used to go by an identifier such as "cs-01-intake". */
+export function findByFormerId(id: string): PlatformComponent | undefined {
+  return components.find((component) => component.formerly === id);
+}
+
+/** The components that depend on the given one. */
+export function dependents(slug: string): PlatformComponent[] {
+  return components.filter((component) => component.dependsOn.includes(slug));
+}
+
+/** "Stage 03" for a worker, nothing for a control-plane service. */
+export function stageLabel(component: PlatformComponent): string | undefined {
+  return component.stage ? `Stage ${String(component.stage).padStart(2, "0")}` : undefined;
+}

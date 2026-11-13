@@ -16,13 +16,13 @@ The project is split into small repositories, each with one job.
 | Group | Repositories | What it holds |
 | --- | --- | --- |
 | The hub | `clearedstack.com` | This website, the catalog, the guides, and the shared rules the other parts agree on |
-| The pipeline | `cs-01-intake` to `cs-10-notify` | Ten workers, one for each stage from finding an idea to watching a published tool |
-| The control plane | `cs-git`, `cs-registry`, `cs-runner`, `cs-store` | Four small services that hold the code, build it, store the images and deploy them |
+| The pipeline | Trawl, Spyglass, Assay, Gavel, Waybill, Jig, Shakedown, Gazette, Dogwatch, Foghorn | Ten workers, one for each stage from finding an idea to watching a published tool |
+| The control plane | Plainforge, Stow, Slipway, Bosun | Four small services that hold the code, build it, store the images and deploy them |
 | The tools | One repository for each tool | The browser tools themselves, each able to be read, forked and hosted alone |
 
 Keeping the parts separate has three effects. A change to one worker rebuilds and redeploys only that worker. The worker that looks at existing tools and the worker that builds new ones live in different repositories, which is how the [clean-room rule](/platform/clean-room-and-credit/) is enforced. And any one part can be rolled back without touching the rest.
 
-The full list, with each component’s job and memory budget, is on the [Platform](/platform/#components) page.
+Every component has a name of its own, so that it can be understood and used without the rest. The [naming registry](/platform/#registry) lists all seventeen with what each is responsible for, what it depends on and what it used to be called.
 
 ## From an idea to a listed tool
 
@@ -31,13 +31,13 @@ The full list, with each component’s job and memory budget, is on the [Platfor
   direction="down"
   loop="Published tools are watched. A change in the regulation sends a tool back to be rebuilt."
   steps={[
-    { tag: "cs-01", label: "Find and record", detail: "An existing tool, a spreadsheet or a request is recorded once and given an identifier." },
-    { tag: "cs-02", label: "Observe", detail: "Its public pages are read for what job it does. Nothing is copied." },
-    { tag: "cs-03", label: "Screen and score", detail: "Five knockout gates, then a 100-point rubric." },
-    { tag: "cs-04", label: "Decide", detail: "A person chooses: build, link to what exists, merge, park or decline." },
-    { tag: "cs-05", label: "Credit and specify", detail: "The source of the idea is credited, and a specification is written from the regulation alone." },
-    { tag: "cs-06 to cs-08", label: "Build, verify, list", detail: "The tool is built from the specification, checked against five conditions and added to the catalog." },
-    { tag: "cs-09, cs-10", label: "Watch and route", detail: "Sources are watched for changes, and problems are sent to the repository that owns them." },
+    { tag: "01 · Trawl", label: "Find and record", detail: "An existing tool, a spreadsheet or a request is recorded once and given an identifier." },
+    { tag: "02 · Spyglass", label: "Observe", detail: "Its public pages are read for what job it does. Nothing is copied." },
+    { tag: "03 · Assay", label: "Screen and score", detail: "Five knockout gates, then a 100-point rubric." },
+    { tag: "04 · Gavel", label: "Decide", detail: "A person chooses: build, link to what exists, merge, park or decline." },
+    { tag: "05 · Waybill", label: "Credit and specify", detail: "The source of the idea is credited, and a specification is written from the regulation alone." },
+    { tag: "06–08 · Jig, Shakedown, Gazette", label: "Build, verify, list", detail: "The tool is built from the specification, checked against five conditions and added to the catalog." },
+    { tag: "09–10 · Dogwatch, Foghorn", label: "Watch and route", detail: "Sources are watched for changes, and problems are sent to the repository that owns them." },
   ]}
 />
 
@@ -61,7 +61,7 @@ A catalog decays. Regulations change, the pages a worker reads are redesigned, a
 
 - **A page no rule covers.** A worker never guesses. It pauses the item, and a task is opened to write a rule for that case. When the rule ships, the paused items run again. See [Sub-tools](/platform/pipeline/#sub-tools-one-rule-for-each-case).
 - **An edit from a reader.** Anyone can propose a change without an account. Nothing is applied until the owner approves it. See [Public edits](/platform/public-edits/).
-- **A change in the rules.** A watcher compares official sources on a schedule. When a cited clause changes, the affected tool is sent back to be checked and rebuilt. See [cs-09-monitor](/platform/pipeline/#watching-and-routing).
+- **A change in the rules.** A watcher compares official sources on a schedule. When a cited clause changes, the affected tool is sent back to be checked and rebuilt. See [Dogwatch](/platform/pipeline/#watching-and-routing).
 
 ## Who does what
 

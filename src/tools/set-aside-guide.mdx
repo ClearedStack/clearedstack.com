@@ -62,7 +62,7 @@ As noted in [Codes, registration and small business status](/guides/codes-and-sm
 
 ## Clean-Room & 5-Condition QA Requirements
 
-To pass `cs-07-verify` and ship to `live`:
+To pass Shakedown and ship to `live`:
 
 1. **Browser-only & offline execution:** Runs 100% client-side with all thresholds (`$15,000` MPT, `$350,000` SAT), CFR citations, and subcontracting caps bundled inside the repository; operates with no network connection.
 2. **Strict Content Security Policy:** Enforces `default-src 'self'`, `connect-src 'self'`, and `form-action 'none'`. No ownership or teaming data leaves the browser.
@@ -95,4 +95,4 @@ To pass `cs-07-verify` and ship to `live`:
 - [Codes, registration and small business status](/guides/codes-and-small-business/)
 - [Read a solicitation](/guides/read-a-solicitation/)
 - [The pipeline and its ten workers](/platform/pipeline/#building-verifying-and-listing)
-- [cs-07-verify specification](/platform/cs-07-verify/)
+- [Shakedown specification](/platform/shakedown/)

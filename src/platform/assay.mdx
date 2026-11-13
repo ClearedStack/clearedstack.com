@@ -1,6 +1,6 @@
 export const meta = {
-  title: "cs-03-evaluate specification",
-  summary: "Technical specification for the deterministic cs-03-evaluate worker that executes five binary knockout gates, the 100-point rubric, and five tie-breakers using YAML/Go rules.",
+  title: "Assay specification",
+  summary: "Technical specification for the deterministic Assay worker that executes five binary knockout gates, the 100-point rubric, and five tie-breakers using YAML/Go rules.",
   group: "components",
   order: 10,
   revised: "2026-11",
@@ -9,29 +9,29 @@ export const meta = {
 
 ## Overview & Role
 
-`cs-03-evaluate` (`v0.1.0-draft`) is the deterministic screening and scoring worker in ClearedStack v3.1, replacing the original Stages 4 (Screen) and 5 (Score). Implemented as an MIT-licensed Go service in the `cs-03-evaluate` repository, it evaluates `observed` candidates using a pure YAML/Go rule engine with zero AI models and zero token costs.
+Assay (`v0.1.0-draft`) is the deterministic screening and scoring worker in ClearedStack v3.1, replacing the original Stages 4 (Screen) and 5 (Score). Implemented as an MIT-licensed Go service in the Assay repository, it evaluates `observed` candidates using a pure YAML/Go rule engine with zero AI models and zero token costs.
 
-Given identical observed facts, `cs-03-evaluate` produces the exact same gate outcome, 100-point rubric score, preliminary recommendation, and tie-breaker ordering on any cluster.
+Given identical observed facts, Assay produces the exact same gate outcome, 100-point rubric score, preliminary recommendation, and tie-breaker ordering on any cluster.
 
 ## Runtime & Resource Budget
 
-`cs-03-evaluate` runs in the `cs-workers` Kubernetes namespace under the **Standard (Workers)** priority class.
+Assay runs in the `cs-workers` Kubernetes namespace under the **Standard (Workers)** priority class.
 
 | Attribute | Value |
 | --- | --- |
-| **Worker ID / Repo** | `cs-03-evaluate` |
+| **Worker ID / Repo** | Assay (`assay`) |
 | **Namespace** | `cs-workers` |
 | **Kind / Version** | `worker` · `v0.1.0-draft` |
 | **RAM Budget** | `30 MiB` (always-on Go pod) |
 | **Runtime AI Calls** | `0` (100% deterministic YAML/Go rule engine) |
-| **Local Spool** | `/var/spool/cs` (buffers completed scoring payloads if `hub-queue-api` restarts) |
-| **Build & Deploy** | Built with `ko` (no Docker) by `cs-runner`, signed with `cosign` in `cs-registry`, deployed by `cs-store` via Server-Side Apply |
+| **Local Spool** | `/var/spool/cs` (buffers completed scoring payloads if Muster restarts) |
+| **Build & Deploy** | Built with `ko` (no Docker) by Slipway, signed with `cosign` in Stow, deployed by Bosun via Server-Side Apply |
 
 ## Interfaces & State Transitions
 
-`cs-03-evaluate` polls `hub-queue-api` in the `clearedstack` namespace over ServiceAccount-authenticated cluster-private HTTP (`CONTRACT_VERSION=v1`), draining `urgent` → `normal` → `backfill` lanes.
+Assay polls Muster in the `clearedstack` namespace over ServiceAccount-authenticated cluster-private HTTP (`CONTRACT_VERSION=v1`), draining `urgent` → `normal` → `backfill` lanes.
 
-- **Inbound state:** `observed` (structured JSON facts produced by `cs-02-observe`).
+- **Inbound state:** `observed` (structured JSON facts produced by Spyglass).
 - **Evaluation stages:**
   1. **Five binary knockout gates:**
      - *Public source* — Rules, formulas, and thresholds must come from officially released public materials (statutes, FAR, DFARS, NIST SPs).
@@ -49,7 +49,7 @@ Given identical observed facts, `cs-03-evaluate` produces the exact same gate ou
 
 ## Sub-Tools & Failure Modes
 
-Domain-specific scoring thresholds and fixtures live in `cs-03-evaluate` under `tools/rubric-profiles/<category>/` (such as `pricing`, `proposal`, `cyber`, `market`, and `devsecops`).
+Domain-specific scoring thresholds and fixtures live in Assay under `tools/rubric-profiles/<category>/` (such as `pricing`, `proposal`, `cyber`, `market`, and `devsecops`).
 
 | Sub-Tool | Responsibility |
 | --- | --- |
@@ -57,19 +57,19 @@ Domain-specific scoring thresholds and fixtures live in `cs-03-evaluate` under `
 
 ### Sanitized Failure Modes
 
-`cs-03-evaluate` fails closed on unknown fields or unsupported categories rather than falling back to defaults or heuristics:
+Assay fails closed on unknown fields or unsupported categories rather than falling back to defaults or heuristics:
 
 | Error Code | Trigger | Platform Behavior |
 | --- | --- | --- |
-| `E_NEEDS_SUBTOOL` | Observed item carries a contracting category or unknown field not covered by `tools/rubric-profiles/<category>/`. | Pauses item in `needs_subtool`. `cs-10-notify` opens a deduplicated task in `cs-03-evaluate` on `cs-git`; once a new profile and fixture deploy, `hub-queue-api` replays paused items automatically. |
-| `E_PARSE` | Observed JSON payload fails contract schema validation or contains invalid types. | Halts item cleanly and reports a fingerprinted error via `cs-10-notify`. |
+| `E_NEEDS_SUBTOOL` | Observed item carries a contracting category or unknown field not covered by `tools/rubric-profiles/<category>/`. | Pauses item in `needs_subtool`. Foghorn opens a deduplicated task in Assay on Plainforge; once a new profile and fixture deploy, Muster replays paused items automatically. |
+| `E_PARSE` | Observed JSON payload fails contract schema validation or contains invalid types. | Halts item cleanly and reports a fingerprinted error via Foghorn. |
 | `E_TIMEOUT` | Hub lease or completion call times out. | Completed score is retained in `/var/spool/cs` and retried on backoff. |
 
 ## Security & Clean-Room Boundaries
 
-- **Zero raw observation access:** `cs-03-evaluate` operates strictly on sanitized structured JSON facts from `observed` records; it never reads raw vendor HTML, screenshots, or binary PDFs.
-- **Public transparency:** All knockout gate outcomes, rubric weights, factor scores, and tie-breaker results are written through `hub-queue-api` to `core.*` and exposed read-only via `pub.*` views on `clearedstack.com` with no login wall.
-- **Pod hardening & network policy:** Runs as an unprivileged non-root container with dropped capabilities, read-only root filesystem (writable only at `/var/spool/cs`), zero database credentials, and default-deny `NetworkPolicy` permitting only ServiceAccount HTTP to `hub-queue-api`.
+- **Zero raw observation access:** Assay operates strictly on sanitized structured JSON facts from `observed` records; it never reads raw vendor HTML, screenshots, or binary PDFs.
+- **Public transparency:** All knockout gate outcomes, rubric weights, factor scores, and tie-breaker results are written through Muster to `core.*` and exposed read-only via `pub.*` views on `clearedstack.com` with no login wall.
+- **Pod hardening & network policy:** Runs as an unprivileged non-root container with dropped capabilities, read-only root filesystem (writable only at `/var/spool/cs`), zero database credentials, and default-deny `NetworkPolicy` permitting only ServiceAccount HTTP to Muster.
 
 ## Related pages
 

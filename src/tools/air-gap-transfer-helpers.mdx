@@ -57,7 +57,7 @@ Built directly around the two-sided workflow in [Working on disconnected network
 
 ## Clean-Room & 5-Condition QA Requirements
 
-To pass `cs-07-verify` and move from `planned` to `live` in `src/data/catalog.ts`, Air-Gap Transfer Helpers must satisfy all five universal QA conditions and ClearedStack's clean-room rules:
+To pass Shakedown and move from `planned` to `live` in `src/data/catalog.ts`, Air-Gap Transfer Helpers must satisfy all five universal QA conditions and ClearedStack's clean-room rules:
 
 | Requirement | Verification Criterion |
 | --- | --- |
@@ -67,7 +67,7 @@ To pass `cs-07-verify` and move from `planned` to `live` in `src/data/catalog.ts
 | **4. Worked examples** | Ships with synthetic multi-file fixtures testing `OK`, `FAILED` (1-byte change), `MISSING`, and `EXTRA` file detection. |
 | **5. Citations, scope & MIT** | Cites NIST FIPS 180-4 and ClearedStack transfer guidance; states integrity-vs-authenticity scope limits; includes an MIT `LICENSE` file. |
 
-**Clean-room boundary:** Authored from scratch in `cs-06-build` from `cs-05-provenance` JSON specifications, with zero copied code from external checksum utilities.
+**Clean-room boundary:** Authored from scratch in Jig from Waybill JSON specifications, with zero copied code from external checksum utilities.
 
 ## Worked Example & Verification
 
@@ -97,5 +97,5 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  README.txt
 - [Working on disconnected networks](/guides/disconnected-networks/)
 - [Run it on a closed network](/guides/closed-networks/)
 - [Cluster architecture](/platform/cluster-architecture/)
-- [cs-07-verify specification](/platform/cs-07-verify/)
+- [Shakedown specification](/platform/shakedown/)
 - [Clean room and credit](/platform/clean-room-and-credit/)

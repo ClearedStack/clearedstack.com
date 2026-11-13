@@ -87,7 +87,7 @@ Four things in the design hold that line.
 - **One door.** Only the website can be reached from outside. The queue service, the database, the Git server, the registry and the workers have private addresses only.
 - **Two namespaces.** The control plane and the workers are separated, and each blocks traffic that is not explicitly allowed.
 - **Views, not tables.** The website reads the database through a restricted role that can see only views built for publication. A private column cannot appear on a page, because the website is never given it.
-- **Errors are cleaned first.** When something fails, the event Kubernetes produces often names a machine or an address. `cs-store` removes those and maps the failure to one of the public error codes before anything is reported. A reader sees what broke and at which stage, not where.
+- **Errors are cleaned first.** When something fails, the event Kubernetes produces often names a machine or an address. Bosun removes those and maps the failure to one of the public error codes before anything is reported. A reader sees what broke and at which stage, not where.
 
 If a bad change does get through, the previous version is one step away: the last five signed images of every component are kept, and a rollback needs nothing from outside. See [Cluster architecture](/platform/cluster-architecture/#install-upgrade-pause-roll-back).
 

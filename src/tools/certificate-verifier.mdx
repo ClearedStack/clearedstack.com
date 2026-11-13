@@ -56,7 +56,7 @@ Certificate Verifier lets operators decode PEM or DER certificates, inspect Subj
 
 ## Clean-Room & 5-Condition QA Requirements
 
-To pass `cs-07-verify` and move from `planned` to `live` in `src/data/catalog.ts`, Certificate Verifier must satisfy all five universal QA conditions and ClearedStack's clean-room rules:
+To pass Shakedown and move from `planned` to `live` in `src/data/catalog.ts`, Certificate Verifier must satisfy all five universal QA conditions and ClearedStack's clean-room rules:
 
 | Requirement | Verification Criterion |
 | --- | --- |
@@ -66,7 +66,7 @@ To pass `cs-07-verify` and move from `planned` to `live` in `src/data/catalog.ts
 | **4. Worked examples** | Ships with synthetic PEM test chains (valid chain, expired cert, missing intermediate, self-signed leaf) verified by automated unit tests. |
 | **5. Citations, scope & MIT** | Cites RFC 5280, ITU-T X.690, RFC 7468, and FIPS 180-4; states scope exclusions and non-advice notice; includes an MIT `LICENSE` file. |
 
-**Clean-room boundary:** Built from scratch in `cs-06-build` from the `cs-05-provenance` JSON specification, without copying code or UI from third-party online SSL/TLS decoders.
+**Clean-room boundary:** Built from scratch in Jig from the Waybill JSON specification, without copying code or UI from third-party online SSL/TLS decoders.
 
 ## Worked Example & Verification
 
@@ -87,5 +87,5 @@ To pass `cs-07-verify` and move from `planned` to `live` in `src/data/catalog.ts
 
 - [Working on disconnected networks](/guides/disconnected-networks/)
 - [Run it on a closed network](/guides/closed-networks/)
-- [cs-07-verify specification](/platform/cs-07-verify/)
+- [Shakedown specification](/platform/shakedown/)
 - [Clean room and credit](/platform/clean-room-and-credit/)
