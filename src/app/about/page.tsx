@@ -34,12 +34,20 @@ const rules = [
     body: "No analytics, cookies or accounts. This site makes no third-party requests, and its content security policy tells your browser to block any that slip in. As with any website, the company hosting it can see the IP address a page was requested from.",
   },
   {
+    title: "Client-side execution.",
+    body: "All tools run entirely in your browser. Your labor rates, proposal drafts, and system configurations never leave your machine. There is no backend to send them to, and tools work offline.",
+  },
+  {
     title: "Public sources only.",
     body: "Tools are built only from material the government has officially released to the public: regulations, standards and guidance. No classified, controlled or otherwise non-public information goes into them, and a leaked document does not count as public.",
   },
   {
     title: "Show the work.",
     body: "Each tool will cite the regulation or standard behind its results, so you can check the answer instead of trusting it.",
+  },
+  {
+    title: "Air-gapped ready.",
+    body: "Every tool is designed to run in disconnected environments. You can clone the repository, bundle it, and run it on isolated or tactical networks with zero external dependencies.",
   },
 ];
 
@@ -94,6 +102,32 @@ export default function AboutPage() {
             </a>
             , so adding a tool to the list is a one-entry pull request.
           </p>
+        </Block>
+
+        <Block id="roadmap" label="Roadmap">
+          <p>
+            The project follows three progressive phases:
+          </p>
+          <div className="mt-4 grid gap-6 sm:grid-cols-3">
+            <div className="border-t-2 border-ink pt-3 text-sm leading-relaxed">
+              <strong className="block text-base text-ink">Phase 1: The Arsenal</strong>
+              <span className="mt-1 block text-muted">
+                Ship the core catalog of single-purpose client-side tools so small contractors and solo developers have the tools they need to bid.
+              </span>
+            </div>
+            <div className="border-t-2 border-ink pt-3 text-sm leading-relaxed">
+              <strong className="block text-base text-ink">Phase 2: The Community</strong>
+              <span className="mt-1 block text-muted">
+                Open the catalog to contributions from cleared engineers, veterans, and small business builders who do this work every day.
+              </span>
+            </div>
+            <div className="border-t-2 border-ink pt-3 text-sm leading-relaxed">
+              <strong className="block text-base text-ink">Phase 3: The Alternative</strong>
+              <span className="mt-1 block text-muted">
+                Grow an ecosystem of independent builders capable of challenging legacy contractor bloat and delivering modern defense software.
+              </span>
+            </div>
+          </div>
         </Block>
 
         <Block id="rules" label="Ground rules">
