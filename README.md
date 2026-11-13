@@ -31,9 +31,17 @@ have departments for that. A one-person company has evenings.
 
 Almost all of that knowledge is public. What costs money is turning it into a
 worked answer for one company's situation, and that step is mostly arithmetic,
-lookup tables and checklists. ClearedStack turns that step into tools and
-gives the tools away, so that someone who can do the work can also get through
-the paperwork.
+lookup tables and checklists.
+
+**The work is done by builders, not corporate overhead.** In defense contracting,
+corporations do not write code or secure systems—individual engineers, technicians,
+and craftsmen do. Yet in the traditional model, large prime contractors act as
+administrative tollbooths on cleared labor, capturing the vast majority of contract
+value while the person doing the work receives a fraction of their billing rate.
+
+ClearedStack turns that step into tools and gives the tools away—enabling the person
+who actually does the work to bid, win, and own the value of their labor directly
+without corporate gatekeepers.
 
 ## Ground rules
 
