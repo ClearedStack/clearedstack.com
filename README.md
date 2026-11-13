@@ -75,57 +75,39 @@ The list on the site is generated from [`src/data/catalog.ts`](src/data/catalog.
 2. **The community.** Open the catalog to tools written by other engineers, veterans and people who do this work for a living.
 3. **The institution.** Grow that community into something lasting that can compete for the work itself.
 
-## How tools are chosen (Prior Art — draft)
+## Architecture: Live Command Portal, App Store & 10-Worker Engine (v3.1)
 
-ClearedStack uses a ten-stage process called Prior Art to decide what to build. It looks at paperwork tools that already exist across government contracting, observes what they do from their public pages without logging in, screens and scores candidate ideas openly, lets the human owner make the decision, and credits where every idea came from. Approved tools are then built from the public regulation from scratch, never from another tool's code, text or design.
+ClearedStack v3.1 is a **100% deterministic, MIT-licensed, Kubernetes-native** platform with **zero AI at runtime** and **zero Docker anywhere**:
 
-> **Draft / intent only**: This process is currently intent and in draft. The automated engine is not running, no separate repository (`ClearedStack/prior-art`) exists yet, and nothing has been collected. The full evaluation factors and scoring rubric are described at [https://clearedstack.com/how-we-decide/](https://clearedstack.com/how-we-decide/).
+- **Open public sandbox (no login lock):** Everything running and being developed is shown publicly and for free across **Command** (`/`), **Apps** (`/apps/`), **Pipeline** (`/pipeline/`), **Decide** (`/decide/`), **Tools** (`/tools/`), and **Guides** (`/guides/`). Any visitor can propose edits via `✎ Edit` (protected by a 5-layer anti-spam shield + `ownership_map.json`, gated by owner approval in `cs-04-decide`).
+- **Two namespaces on `k3s` + `containerd` (~4 GiB single node):**
+  - `clearedstack` (7 control-plane pods, ~640 MiB RAM): `clearedstack-web`, `hub-queue-api`, PostgreSQL 17, `cs-git` (internal bare Git + outbound GitHub code-only mirror), `cs-registry` (internal OCI store keeping last 5 digests/app; **zero images on GitHub**), `cs-runner` (Dockerless `ko` + rootless BuildKit jobs), and `cs-store` (App Store reconciler via Server-Side Apply, replacing Argo CD + CasaOS).
+  - `cs-workers` (10 deterministic worker repos, ~300 MiB RAM): `cs-01-intake`, `cs-02-observe` (~30 MiB Go HTTP pods + on-demand headless browser `Job` pods), `cs-03-evaluate`, `cs-04-decide`, `cs-05-provenance`, `cs-06-build`, `cs-07-verify`, `cs-08-catalog`, `cs-09-monitor`, and `cs-10-notify`.
+- **Deterministic sub-tools (`tools/<case>/`):** Unknown layouts fail closed into `needs_subtool` and auto-replay once a deterministic sub-tool + golden fixture is deployed.
 
 ```mermaid
-flowchart TD
-  S1[1. Discover<br/>Public sweeps & community ideas] --> S2[2. Record<br/>Assign ID & deduplicate]
-  S2 --> S3[3. Observe<br/>Public pages only, zero logins]
-  S3 --> S4[4. Screen<br/>Five knockout gates]
-  S4 --> S5[5. Score<br/>Seven-factor rubric, 100 pts]
-  S5 --> S6[6. Decide<br/>Human owner: Build, Link, Merge, Park, Reject]
-  S6 --> S7[7. Credit<br/>Write provenance note]
-  S7 --> S8[8. Build<br/>Clean-room from public rules]
-  S8 --> S9[9. List<br/>Catalog status live on site]
-  S9 --> S10[10. Revisit<br/>Monthly check on rules & tools]
-  S10 -.->|Revisit parked/linked| S3
-  S10 -.->|Rule change| S8
+flowchart LR
+  PUB["Public Visitors (No Login)"] -->|"HTTPS (pub.* views + ✎ Edits)"| WEB["clearedstack-web"]
+  GH["GitHub (Code Mirror Only, NO Images)"] <--|"Push on change"| GIT["cs-git"]
+  WEB <-->|"pub.* + SSE + Proposals"| QAPI["hub-queue-api"]
+  QAPI <-->|"RW core.*"| DB[("Postgres 17")]
+  GIT -->|"Webhook"| RUN["cs-runner (ko / BuildKit)"] --> REG["cs-registry (last 5 digests)"]
+  STORE["cs-store (Server-Side Apply)"] -->|"Watches"| GIT & REG
+  STORE -->|"Monitors & Sanitizes"| W["cs-01 .. cs-10 (cs-workers)"]
+  W -->|"ServiceAccount HTTP + Local Spool"| QAPI
 ```
 
 ## How this project is built
 
-This project is built with AI assistance (Claude Code and Antigravity) under a single human owner who sets direction, makes every decision, reviews every change, and remains accountable.
+AI assistance (Claude Code and Antigravity) is used **only at authoring time** under a single human owner who sets direction, verifies every regulatory citation and formula against official public sources, reviews every change, and remains accountable.
 
-- **Human accountability**: The human owner makes every technical and design decision. Every regulatory statement and calculation is checked by a person against primary public sources before shipping. AI output is never the source of a rule.
-- **Strict data boundaries**: Prompts never contain non-public information, Controlled Unclassified Information (CUI), real contract data, real company rates, or personal information. All examples are made up.
-- **Authoring vs. runtime**: AI assistance is used only to **author and build** the site and tools. The tools themselves run entirely in the user's browser, contain zero AI models, and make zero network calls at runtime.
-- **Commit attribution**: Commits made with AI help carry a git trailer naming the tool (`Assisted-by: Claude Code` or `Assisted-by: Antigravity`), and decision records identify which tool drafted candidate scores.
-
-```mermaid
-sequenceDiagram
-  autonumber
-  actor Owner as Human Owner
-  participant AI as AI Assistant (Claude / Antigravity)
-  participant Sources as Public Sources (eCFR, NIST)
-  participant Repo as GitHub Repository
-  participant Browser as User Browser (Runtime)
-
-  Owner->>AI: Prompts with public rules & architecture (no CUI/real data)
-  AI-->>Owner: Drafts code, guides, tests & diagrams
-  Owner->>Sources: Audits facts & arithmetic against official public rules
-  Owner->>Repo: Commits verified code (with AI attribution trailer)
-  Repo->>Browser: Static export deployed (100% deterministic code)
-  Note over Browser: Browser tab executes purely client-side.<br/>Zero AI models, zero network egress.
-```
+- **Zero AI at runtime:** Not in any of the 10 pipeline workers, not in the control plane, and not in any shipped browser tool. Every runtime step is 100% deterministic.
+- **Strict data boundaries:** Prompts never contain non-public information, CUI, real contract data, real company rates, or personal information.
+- **Commit attribution:** Commits made with AI help carry an `Assisted-by` git trailer alongside the human owner's sign-off.
 
 ## Working on the site
 
-The site is [Next.js](https://nextjs.org) with TypeScript and Tailwind CSS,
-exported as static files. It has no server, no API routes and no database.
+The site is [Next.js](https://nextjs.org) with TypeScript and Tailwind CSS, exported as static files for Snapshot Mode or served inside `clearedstack-web`.
 
 ```bash
 npm install
@@ -136,18 +118,19 @@ npm run build      # writes the static site to out/
 npm run preview    # serves out/ locally
 ```
 
-Requires Node.js 20 or newer. The contents of `out/` can be hosted on any
-static file host.
+Requires Node.js 20 or newer.
 
 ```
 src/
-  app/            pages: home, /tools, /guides, /about, plus icons and metadata
-  components/     header, footer, logo, catalog list, guides list
+  app/            pages: Command (/), /apps, /pipeline, /decide, /tools, /guides, /how-we-decide, /about
+  components/     PulseStrip, AttentionCard, TrailRow, MetricCell, WhyDrawer, EditTrigger, AppStoreGrid, header, footer
   data/
-    catalog.ts    the categories and tools shown on the site
-    site.ts       name, URLs, contact address, short disclaimer
-  guides/         one .mdx file per guide
-  lib/guides.ts   the guide sections, and the code that reads and orders the guides
+    catalog.ts          the categories and tools shown on /tools
+    platform.ts         control-plane apps, 10 deterministic workers, and P0-P4 attention rules
+    ownership_map.json  element-to-repo routing for anonymous ✎ Edit proposals
+    site.ts             name, URLs, contact address, short disclaimer
+  guides/         big-picture .mdx guides (zero code blocks in v3.1 guides)
+  lib/guides.ts   the guide sections (L.1-L.6), reader, and ordering
 public/brand/     logo files (SVG, light and dark)
 Containerfile   builds the site and serves it with nginx (rootless BuildKit, zero Docker)
 k8s/              Kubernetes manifests: deployment, service, example ingress
