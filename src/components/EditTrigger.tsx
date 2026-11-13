@@ -4,6 +4,12 @@ import { useState } from "react";
 
 type ProposalState = "idle" | "proposed";
 
+/**
+ * A preview of the edit-proposal form described in the platform pages. The
+ * site is a static export with nothing behind it, so this sends nothing: what
+ * is typed stays in the page and is dropped when the form closes. The labels
+ * say so.
+ */
 export function EditTrigger({
   elementId,
   ownerRepo,
@@ -33,19 +39,19 @@ export function EditTrigger({
       {state === "proposed" ? (
         <span
           className="inline-flex items-center gap-1 rounded-sm border border-accent px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-accent"
-          title={`Routed to ${ownerRepo}`}
+          title={`In the design this would be routed to ${ownerRepo}. Nothing was sent.`}
         >
-          <span>Proposed</span>
-          <span aria-hidden="true">-&gt;</span>
-          <span>{ownerRepo}</span>
+          <span>Preview only</span>
+          <span aria-hidden="true">·</span>
+          <span>nothing sent</span>
         </span>
       ) : (
         <button
           type="button"
           onClick={() => setOpen(true)}
           className="inline-flex items-center gap-1 rounded-sm border border-line px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-muted transition-colors hover:border-ink hover:text-ink"
-          aria-label={`Propose edit for ${targetLabel}`}
-          title={`Propose edit (routes to ${ownerRepo})`}
+          aria-label={`Preview the edit form for ${targetLabel}`}
+          title="Preview of the edit form. Nothing is sent."
         >
           <span aria-hidden="true">✎</span>
           <span>Edit</span>
@@ -68,7 +74,7 @@ export function EditTrigger({
             <div>
               <div className="flex items-center justify-between border-b border-line pb-3">
                 <span className="font-mono text-xs uppercase tracking-wider text-accent">
-                  Anonymous edit proposal · no login required
+                  Edit proposal · preview only
                 </span>
                 <button
                   type="button"
@@ -135,9 +141,9 @@ export function EditTrigger({
               </label>
 
               <p className="mt-3 text-xs leading-relaxed text-muted">
-                Protected by browser proof-of-work, salted-IP rate limits, and schema validation.
-                Approved edits route to <code className="text-ink">{ownerRepo}</code> in{" "}
-                <code className="text-ink">cs-git</code> and mirror to GitHub.
+                <strong className="font-medium text-ink">This form is a preview and sends nothing.</strong> In the
+                design, a proposal passes five checks, waits for the owner’s approval and is then routed to{" "}
+                <code className="text-ink">{ownerRepo}</code>.
               </p>
             </div>
 
@@ -153,7 +159,7 @@ export function EditTrigger({
                 type="submit"
                 className="rounded-sm bg-accent px-4 py-1.5 font-mono text-xs font-medium text-accent-ink hover:opacity-90"
               >
-                Submit proposal
+                Preview submit · sends nothing
               </button>
             </div>
           </form>

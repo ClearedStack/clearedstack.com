@@ -1,4 +1,5 @@
 import { statusLabel, type ToolStatus } from "@/data/catalog";
+import { docStatus, type DocStatus } from "@/lib/status";
 
 const styles: Record<ToolStatus, string> = {
   planned: "border-line text-muted",
@@ -16,10 +17,20 @@ export function StatusChip({ status }: { status: ToolStatus }) {
   );
 }
 
-export function DraftChip() {
+const docStyles: Record<DocStatus, string> = {
+  design: "border-line border-dashed text-muted",
+  built: "border-accent text-accent",
+  running: "border-accent bg-accent text-accent-ink",
+};
+
+/** Whether a platform page describes a design, something built or something running. */
+export function DocStatusChip({ status }: { status: DocStatus }) {
   return (
-    <span className="inline-block shrink-0 rounded-sm border border-line px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider whitespace-nowrap text-muted">
-      Draft · architecture preview
+    <span
+      title={docStatus[status].meaning}
+      className={`inline-block shrink-0 rounded-sm border px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider whitespace-nowrap ${docStyles[status]}`}
+    >
+      {docStatus[status].label}
     </span>
   );
 }

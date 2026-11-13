@@ -4,22 +4,23 @@ Thanks for wanting to help. There are three ways to do it.
 
 ## Suggest an idea
 
-Suggestions from the community feed directly into **`cs-01-intake`** in our deterministic 10-worker Prior Art pipeline (currently in draft). Open an issue—or use `✎ Edit` on `/tools/` or `/guides/`—describing:
+Open an issue, or use the buttons on a tool's page at [clearedstack.com/tools](https://clearedstack.com/tools/), describing:
 
 - The job the tool should do (in one sentence, starting with a verb).
 - Who needs it (the small-business paperwork problem it addresses).
 - Where the idea was seen (if inspired by an existing product, spreadsheet or government tool).
 - The public regulation, standard or guide it would be based on (with a link to the official public source).
 
-Community suggestions are recorded as candidate ideas (`PA-XXXX`) and walk through the same observation, screening gates, and scoring rubric described at [How we decide](https://clearedstack.com/guides/#how-we-decide).
+A suggestion is treated like any other idea for a tool: it is screened against five knockout gates and scored on the rubric described at [How we decide what to build](https://clearedstack.com/platform/how-we-decide/), and a person decides.
 
 ## Fix or improve this site
 
 Small fixes can go straight to a pull request. For anything larger, open an
 issue first so the work is not wasted.
 
-The guides are text files in [`src/guides/`](src/guides), so correcting one is
-an ordinary pull request. [Work on this site](src/guides/work-on-this-site.mdx)
+The guides are text files in [`src/guides/`](src/guides), and the pages about
+how the project is built and run are text files in [`src/platform/`](src/platform),
+so correcting one is an ordinary pull request. [Work on this site](src/guides/work-on-this-site.mdx)
 shows where everything is and how a guide is written.
 
 ```bash

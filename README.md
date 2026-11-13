@@ -75,15 +75,26 @@ The list on the site is generated from [`src/data/catalog.ts`](src/data/catalog.
 2. **The community.** Open the catalog to tools written by other engineers, veterans and people who do this work for a living.
 3. **The institution.** Grow that community into something lasting that can compete for the work itself.
 
-## Architecture: Live Command Portal, App Store & 10-Worker Engine (v3.1)
+## How the site is organized
 
-ClearedStack v3.1 is a **100% deterministic, MIT-licensed, Kubernetes-native** platform with **zero AI at runtime** and **zero Docker anywhere**:
+| Section | Address | What is there |
+| --- | --- | --- |
+| **Tools** | `/tools/` | The catalog. Each tool also has a page at `/tools/<slug>/` with what it does, what you bring, what you get and the regulation it is built from. |
+| **Guides** | `/guides/` | Plain-language guides to the paperwork, plus hosting a copy and contributing. |
+| **Platform** | `/platform/` | How the project decides what to build, builds it and is designed to run. |
+| **About** | `/about/` | Mission, ground rules, how AI is used and the disclaimer. |
 
-- **Open public sandbox (no login lock):** Top navigation shows only **Home** (`/`), **Tools** (`/tools/`, listing all 18 browser utilities + the integrated Cluster App Store `#apps` for all 17 platform/factory apps), **Guides** (`/guides/`, housing the full field manual plus integrated **Command** `/guides/#command`, **Pipeline** `/guides/#pipeline`, **Decide** `/guides/#decide`, and **Section M** `/guides/#how-we-decide`), **About** (`/about/`), and **GitHub**. Any visitor can propose edits via `✎ Edit` (protected by a 5-layer anti-spam shield + `ownership_map.json`, gated by owner approval in `cs-04-decide`).
-- **Two namespaces on `k3s` + `containerd` (~4 GiB single node):**
-  - `clearedstack` (7 control-plane pods, ~640 MiB RAM): `clearedstack-web`, `hub-queue-api`, PostgreSQL 17, `cs-git` (internal bare Git + outbound GitHub code-only mirror), `cs-registry` (internal OCI store keeping last 5 digests/app; **zero images on GitHub**), `cs-runner` (Dockerless `ko` + rootless BuildKit jobs), and `cs-store` (App Store reconciler via Server-Side Apply, replacing Argo CD + CasaOS).
-  - `cs-workers` (10 deterministic worker repos, ~300 MiB RAM): `cs-01-intake`, `cs-02-observe` (~30 MiB Go HTTP pods + on-demand headless browser `Job` pods), `cs-03-evaluate`, `cs-04-decide`, `cs-05-provenance`, `cs-06-build`, `cs-07-verify`, `cs-08-catalog`, `cs-09-monitor`, and `cs-10-notify` (forming the 11 core pipeline repositories alongside `clearedstack.com`).
-- **Deterministic sub-tools (`tools/<case>/`):** Unknown layouts fail closed into `needs_subtool` and auto-replay once a deterministic sub-tool + golden fixture is deployed.
+## Platform design (v3.1)
+
+Behind the catalog is a design for choosing and building tools in the open. It is written up in full on the site under [Platform](https://clearedstack.com/platform/), where every page carries a label: **Design**, **Built** or **Running**. Read the label before relying on a page. This repository builds a static website; it contains no server, API or database.
+
+In outline, the design is:
+
+- **Ten workers, one job each** (`cs-01-intake` to `cs-10-notify`): find an idea, observe it, screen and score it, hold it for a person’s decision, credit it and write a specification, build the tool, verify it, list it, watch its sources, and route problems to the repository that owns them.
+- **No AI when it runs.** Workers use fixed rules. A case with no rule pauses in `needs_subtool` until a rule and its test examples are added, then runs again.
+- **Two namespaces on one small `k3s` node**, with no Docker: `clearedstack` for seven control-plane services (`clearedstack-web`, `hub-queue-api`, PostgreSQL, `cs-git`, `cs-registry`, `cs-runner`, `cs-store`) and `cs-workers` for the ten workers.
+- **Code mirrored to GitHub, images kept inside the cluster.**
+- **No login.** Anyone can read everything and propose an edit. Nothing is applied until the owner approves it.
 
 ```mermaid
 flowchart LR
@@ -103,13 +114,13 @@ flowchart LR
 
 AI assistance (Claude Code and Antigravity) is used **only at authoring time** under a single human owner who sets direction, verifies every regulatory citation and formula against official public sources, reviews every change, and remains accountable.
 
-- **Zero AI at runtime:** Not in any of the 10 pipeline workers, not in the control plane, and not in any shipped browser tool. Every runtime step is 100% deterministic.
+- **No AI at run time:** None in any browser tool, and none designed into the pipeline or the control plane. What runs is ordinary code that gives the same answer for the same input.
 - **Strict data boundaries:** Prompts never contain non-public information, CUI, real contract data, real company rates, or personal information.
 - **Commit attribution:** Commits made with AI help carry an `Assisted-by` git trailer alongside the human owner's sign-off.
 
 ## Working on the site
 
-The site is [Next.js](https://nextjs.org) with TypeScript and Tailwind CSS, exported as static files for Snapshot Mode or served inside `clearedstack-web`.
+The site is [Next.js](https://nextjs.org) with TypeScript and Tailwind CSS, exported as static files. It has no server, no API routes and no database.
 
 ```bash
 npm install
@@ -124,31 +135,38 @@ Requires Node.js 20 or newer.
 
 ```
 src/
-  app/            pages: Home (/), /tools (tools + #apps), /guides (manual + #command, #pipeline, #decide, #how-we-decide), /about
-  components/     GuidesWorkspace, PulseStrip, AttentionCard, TrailRow, MetricCell, WhyDrawer, EditTrigger, AppStoreGrid
+  app/            pages: Home (/), /tools and /tools/<slug>, /guides and /guides/<slug>,
+                  /platform and /platform/<slug>, /about
+  components/     header, footer, catalog list, page lists, article layout, diagrams
   data/
-    catalog.ts          the categories and browser tools shown on /tools
-    platform.ts         control-plane apps, 10 deterministic workers, and P0-P2 attention rules
-    ownership_map.json  element-to-repo routing for anonymous ✎ Edit proposals
+    catalog.ts          the categories and tools, and what each tool's page shows
+    platform.ts         the components listed on /platform
+    ownership_map.json  design data: which repository owns each editable element
     site.ts             name, URLs, contact address, short disclaimer
-  guides/         big-picture .mdx guides (zero code blocks in v3.1 guides)
-  lib/guides.ts   the guide sections (L.1-L.6), reader, and ordering
+  guides/         one .mdx file per guide, served under /guides/
+  platform/       one .mdx file per platform page, served under /platform/
+  tools/          the detailed specification of a tool, shown on /tools/<slug>/
+  lib/docs.ts     reads both folders: sections, ordering, and old addresses that moved
+scripts/          builds the search index before each build
 public/brand/     logo files (SVG, light and dark)
-Containerfile   builds the site and serves it with nginx (rootless BuildKit, zero Docker)
+Containerfile     builds the site and serves it with unprivileged nginx
+docker/           the nginx configuration used by the image
 k8s/              Kubernetes manifests: deployment, service, example ingress
 ```
 
-### Hosting on Kubernetes (No Docker)
+### Hosting a copy
 
-ClearedStack runs on `k3s` + `containerd` with **zero Docker**: Go services are built with `ko`, and the web portal is built from [`Containerfile`](Containerfile) using rootless BuildKit and stored in `cs-registry`.
+The build output in `out/` is plain files that any web server can serve. To run it as a container instead, build the image from [`Containerfile`](Containerfile) with Podman or any other tool that reads one, push it to your own registry, set the `image:` line in the manifest and apply it:
 
 ```bash
+podman build -t registry.example.com/clearedstack:1 .
+podman push registry.example.com/clearedstack:1
 kubectl apply -f k8s/clearedstack.yaml
 ```
 
 The manifest creates a namespace, a two-replica deployment and a service.
 The pods run non-root with a read-only filesystem and no added privileges.
-See [One-Command Quickstart](src/guides/one-command-quickstart.mdx), [Host on Kubernetes (No Docker)](src/guides/host-on-kubernetes.mdx), [Host as plain files](src/guides/host-static-files.mdx), and [Run it on a closed network](src/guides/closed-networks.mdx).
+See [Host as plain files](src/guides/host-static-files.mdx), [Host on Kubernetes](src/guides/host-on-kubernetes.mdx) and [Run it on a closed network](src/guides/closed-networks.mdx).
 
 ### Listing a tool
 
@@ -163,7 +181,13 @@ Add an entry to `tools` in [`src/data/catalog.ts`](src/data/catalog.ts):
   status: "live",            // "planned" | "building" | "live"
   url: "https://…",          // where it runs
   repo: "https://github.com/ClearedStack/…",
-  provenance: {              // optional: where the idea came from and clean-room notes
+  // Optional, shown on the tool's own page at /tools/<slug>/:
+  detail: "Two or three sentences on what it does.",
+  inputs: ["What the user brings"],
+  outputs: ["What the user gets"],
+  sources: [{ name: "FAR Part 31", url: "https://www.acquisition.gov/browse/index/far" }],
+  guides: [{ slug: "labor-rates", section: "Build the rate for one hour" }],
+  provenance: {              // where the idea came from, if another tool inspired it
     inspiredBy: [
       { name: "Tool A", kind: "commercial", url: "https://…", observed: "2026-11" },
     ],
@@ -172,14 +196,18 @@ Add an entry to `tools` in [`src/data/catalog.ts`](src/data/catalog.ts):
 },
 ```
 
-The home page, the catalog page and their counts update from that one entry.
+The home page, the catalog page, the tool's own page and every count update from that one entry.
+The build stops with a message if `guides` names a guide or a heading that does not exist.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for what a tool needs before it is listed.
 
-### Adding a guide
+### Adding a guide or a platform page
 
 The [guides](https://clearedstack.com/guides/) explain how to use the site,
 give plain-language background on the subjects the tools cover, and show how
-to host a copy. Each one is a file in [`src/guides/`](src/guides); the file
+to host a copy. Pages about how the project itself is built and run go in
+[`src/platform/`](src/platform) instead, are served under `/platform/`, use the
+groups `factory`, `cluster`, `governance` and `components`, and set `status` to `design`,
+`built` or `running`, whichever is true today. Each one is a file in [`src/guides/`](src/guides); the file
 name becomes the URL. Start the file with its details, then write the guide in
 Markdown:
 
@@ -187,7 +215,7 @@ Markdown:
 export const meta = {
   title: "Getting started",
   summary: "One sentence shown in the list and under the title.",
-  group: "start",        // "start" | "field" | "host" | "contribute" | "reference" | "project"
+  group: "start",        // "start" | "field" | "host" | "contribute" | "reference"
   order: 1,              // position within its section
   reviewed: "2026-11",   // optional: month the facts were last checked
 };
@@ -198,7 +226,7 @@ Your first paragraph.
 ```
 
 The guides page, the table of contents on each guide, the reading time, the
-previous/next links and the sitemap pick it up on the next build. Tables work,
+previous/next links, the search index and the sitemap pick it up on the next build. Tables work,
 and `<Callout kind="note | check | warning">` sets a short passage apart.
 [Work on this site](src/guides/work-on-this-site.mdx) has the details.
 

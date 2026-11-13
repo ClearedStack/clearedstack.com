@@ -188,34 +188,36 @@ On a closed network a lockfile is three things at once: the list of what to brin
 
 Read the `resolved` lines. Every one that points at a public registry is a package that must be mirrored inside before the build can run.
 
-## Container images (zero Docker)
+## Container images
 
-ClearedStack uses `containerd` and `cs-registry` with zero Docker anywhere. A container image is identified two ways: a **tag** (such as `clearedstack-web:1`), which is a human label, and a **digest** (a `sha256:` string computed from the exact contents), which cannot change silently.
+A container image is identified two ways. A **tag**, such as `clearedstack:1`, is a label that can be moved to point at different contents. A **digest**, a long string starting with `sha256:`, is computed from the contents and cannot.
 
-When an OCI image archive crosses a boundary as a `.tar.gz` file, compare its digest on both sides using `ctr` (containerd's built-in CLI):
-
-```bash
-ctr -n k8s.io images ls | grep clearedstack-web
-ctr -n k8s.io images export clearedstack-web.tar registry.internal.example/clearedstack-web@sha256:<digest>
-```
-
-Check the exported file in transit with an ordinary `sha256sum`, then import it into `containerd` and `cs-registry` on the inside:
+When an image crosses a boundary as a file, compare its digest on both sides. On a host that runs containers with `containerd`, its own command-line tool, `ctr`, lists and exports images:
 
 ```bash
-ctr -n k8s.io images import clearedstack-web.tar
+ctr -n k8s.io images ls | grep clearedstack
+ctr -n k8s.io images export clearedstack.tar registry.example.com/clearedstack@sha256:<digest>
 ```
 
-Inside the network, always pin manifests in `cs-git` by digest rather than mutable tag:
+Check the exported file in transit with an ordinary `sha256sum`, then import it on the inside:
+
+```bash
+ctr -n k8s.io images import clearedstack.tar
+```
+
+Inside the network, refer to images by digest in anything that matters:
 
 ```yaml
-image: cs-registry.clearedstack.svc.cluster.local:5000/clearedstack-web@sha256:<digest>
+image: registry.internal.example/clearedstack@sha256:<digest>
 ```
 
+A tag tells you what someone called an image. A digest tells you what it is.
+
 <Lanes
-  caption="Moving and verifying an OCI image across a boundary (zero Docker)"
+  caption="Moving and verifying a container image across a boundary"
   lanes={["Outside", "Transit", "Inside"]}
   steps={[
-    { lane: 0, label: "Record image digest", detail: "Capture the exact sha256 digest from cs-registry or ctr images ls." },
+    { lane: 0, label: "Record image digest", detail: "Note the exact sha256 digest shown by ctr images ls." },
     { lane: 0, label: "Export OCI archive", detail: "Export with ctr images export and generate sha256sum." },
     { lane: 1, label: "Media transfer", detail: "Carry file across network boundary per transfer rules." },
     { lane: 2, label: "Verify checksum", detail: "Check file integrity using sha256sum -c before importing." },

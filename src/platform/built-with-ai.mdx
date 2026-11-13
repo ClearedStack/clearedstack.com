@@ -1,0 +1,67 @@
+export const meta = {
+  title: "How AI is used to build this project",
+  summary: "AI assistants help write the code and the guides, under one person’s review. No AI runs in any tool, and none is designed into the pipeline.",
+  group: "governance",
+  order: 2,
+  revised: "2026-11",
+};
+
+This website, its guides and its code are drafted with the help of AI coding assistants: Claude Code by Anthropic and Antigravity by Google. Every line of code, every paragraph and every reference to a regulation is reviewed by one human owner, who decides what is built and is accountable for everything published here.
+
+Where AI is not used matters just as much. There is a wall between how the project is written and how it runs. No tool contains an AI model or calls one, and the pipeline that is designed to build the tools has no AI in it either. Everything that runs is ordinary code that gives the same answer for the same input.
+
+## Writing time and running time
+
+| Stage | Who or what does the work | How |
+| --- | --- | --- |
+| Writing | The owner, with AI assistants | AI drafts code, guides and tests under the owner’s direction |
+| Checking | The owner alone | Every citation is checked against the official source, and the math is worked by hand |
+| Running the pipeline | Fixed rules in the ten workers | No model and no call to one. See [The pipeline](/platform/pipeline/#why-no-worker-uses-ai) |
+| Running a tool | Plain files in your browser | Works offline, sends nothing and tracks nothing |
+
+<Layers
+  caption="AI helps to write. It does not run."
+  layers={[
+    { tag: "On your machine", label: "Your browser runs the tool", detail: "All the work happens locally." },
+    { tag: "In the tool", label: "No AI and no network calls", detail: "No server, no model, and a browser rule that blocks outside requests." },
+    { tag: "While writing", label: "AI assists", detail: "Used to draft code and guides, under strict rules about what may be entered." },
+    { tag: "Before release", label: "A person checks and merges", detail: "Against the official public sources." },
+  ]}
+/>
+
+## Why nothing that runs uses AI
+
+Many pipelines call a model whenever they meet an unfamiliar page, an awkward table or a messy edge case. This design does the opposite. When a worker meets something it has no rule for, it stops work on that item and asks for a rule. The rule is then written, with AI help if that is useful, reviewed by the owner, tested against saved examples and deployed. From then on that case is handled by code.
+
+The difference is that every solved case becomes something permanent and checkable, instead of a guess that might come out differently next time. In federal contracting a guess is worse than a gap.
+
+## The review rule
+
+AI assistants are useful for drafting and fail in predictable ways, which matter more here than in most fields. Every AI-assisted draft is checked for three of them before it is merged.
+
+| How it fails | What goes wrong | The check |
+| --- | --- | --- |
+| Invented citations | A clause number that looks right and does not exist | Every citation is looked up in the official source: the eCFR, acquisition.gov, NIST |
+| Out-of-date rules | A repealed provision, an old dollar threshold, a superseded revision | The current effective date and text are confirmed |
+| Confident wrong math | A formula explained clearly with a rounding or boundary error | The calculation is worked by hand for ordinary and edge cases, and turned into a test |
+
+## What never goes into a prompt
+
+The project makes no claims about how an AI vendor handles data. It follows a simpler rule: anything sensitive is never entered in the first place.
+
+| Kind of information | Rule | Examples |
+| --- | --- | --- |
+| Controlled, classified or non-public government information | Never | Defense technical data, a draft solicitation, source selection information |
+| A real company’s finances or rates | Never | Actual labor rates, indirect pools, a live bid |
+| Personal data, or data from a live contract | Never | Names, private email addresses, real contract numbers |
+| Public rules and made-up examples | Allowed | The text of the FAR, a public NIST standard, an invented rate such as $50.00 an hour |
+
+## Saying so
+
+Commits drafted with AI help carry an `Assisted-by` trailer that names the tool, beside the owner’s sign-off, so the history shows where an assistant was involved.
+
+If you find a wrong citation, a misquoted rule or a calculation error anywhere on the site, open an issue on [GitHub](https://github.com/ClearedStack/clearedstack.com/issues) or write to [contact@clearedstack.com](mailto:contact@clearedstack.com) with the page and the official source that shows the right answer.
+
+## If you contribute
+
+The same rules apply to anyone who uses an AI assistant on a contribution: no sensitive data in a prompt, a person checks every formula and citation, and the commit says which tool helped. [Build a tool that can be listed](/guides/build-a-tool/#if-you-build-with-ai) and [Work on this site](/guides/work-on-this-site/#ai-assisted-work-and-commit-trailers) have the detail.

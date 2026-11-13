@@ -3,72 +3,67 @@ import Link from "next/link";
 import { Flow } from "@/components/Diagram";
 import { SectionLabel } from "@/components/SectionLabel";
 import { ToolCatalog } from "@/components/ToolCatalog";
-import { liveCount, tools } from "@/data/catalog";
-import { controlPlaneApps, workerApps } from "@/data/platform";
+import { categories, liveCount, tools } from "@/data/catalog";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Tools",
-  description:
-    "The ClearedStack catalog: 18 free browser utilities for pricing, proposals, cyber compliance, market research, and DevSecOps, plus 17 MIT platform and factory tools.",
+  description: `The ClearedStack catalog: ${tools.length} free browser tools for pricing, proposals, cyber compliance, market research and disconnected networks, each with the regulation it is built from.`,
   alternates: { canonical: "/tools/" },
 };
 
 const inlineLink = "text-ink underline decoration-accent underline-offset-4 hover:text-accent";
 
 export default function ToolsPage() {
-  const totalPlatformTools = controlPlaneApps.length + workerApps.length;
+  const first = categories[0].clin;
+  const last = categories[categories.length - 1].clin;
 
   return (
     <div className="mx-auto max-w-6xl px-5 pt-14 lg:pt-20">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <SectionLabel section="CLIN 0001–0006">Catalog</SectionLabel>
+        <SectionLabel section={`CLIN ${first}–${last}`}>Catalog</SectionLabel>
         <span className="font-mono text-xs text-muted">Revised {site.revised}</span>
       </div>
       <h1 className="mt-4 text-4xl font-semibold tracking-[-0.02em]">Tools</h1>
       <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">
         {liveCount === 0
-          ? `${tools.length} browser contracting utilities and ${totalPlatformTools} platform and factory tools are listed below. Each ships as its own open-source repository.`
-          : `${liveCount} of ${tools.length} browser utilities are live alongside ${totalPlatformTools} platform and factory tools.`}{" "}
-        New here? Start with{" "}
-        <Link href="/guides/navigating-this-site/" className={inlineLink}>
-          how to navigate this site
+          ? `${tools.length} tools are planned and none is live yet.`
+          : `${liveCount} of ${tools.length} tools ${liveCount === 1 ? "is" : "are"} live.`}{" "}
+        Each has a page that says what it will do and which regulation it is built from. Until a tool ships, the{" "}
+        <Link href="/guides/" className={inlineLink}>
+          guides
+        </Link>{" "}
+        cover the same ground by hand. Want one sooner, or one that is not listed?{" "}
+        <Link href="/guides/request-or-add-a-tool/" className={inlineLink}>
+          Ask for it
         </Link>
-        . Want a tool sooner, or one that is not listed?{" "}
-        <a href={`mailto:${site.email}`} className={inlineLink}>
-          Say so
-        </a>
         .
       </p>
 
       <div className="mt-8">
         <Flow
-          caption="How a tool moves through the deterministic worker pipeline into this catalog."
+          caption="The three status labels a tool can carry."
           direction="across"
           steps={[
             {
-              tag: "cs-01..05",
+              tag: "Status 1",
               label: "Planned",
-              detail:
-                "Idea cleared 5 binary knockout gates and 100-pt rubric, approved by the human owner in cs-04-decide, with clean-room spec stamped by cs-05-provenance.",
+              detail: "The job and the public source are written down. No code yet. Requests decide what is built first.",
             },
             {
-              tag: "cs-06",
-              label: "Building",
-              detail:
-                "Clean-room development in its own MIT repository from the official public regulation without third-party code or observation snapshots.",
+              tag: "Status 2",
+              label: "In development",
+              detail: "Being built in its own open-source repository, from the regulation and nothing else.",
             },
             {
-              tag: "cs-07..08",
+              tag: "Status 3",
               label: "Live",
-              detail:
-                "Verified by cs-07-verify (browser-only, connect-src 'self', offline, worked examples, citations) and published by cs-08-catalog.",
+              detail: "It works in the browser, offline, with its sources cited. The name links to the tool.",
             },
           ]}
         />
       </div>
 
-      {/* CLIN 0001 - 0006: Unified Tool Catalog */}
       <div className="mt-10 pb-16">
         <ToolCatalog />
       </div>

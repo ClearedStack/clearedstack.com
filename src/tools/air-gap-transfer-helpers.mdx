@@ -1,0 +1,101 @@
+export const meta = {
+  title: "Air-Gap Transfer Helpers Specification",
+  summary: "Browser-only SHA-256 checksum generator, transfer manifest builder, and receiving-side integrity and file-count verifier for air-gapped media moves.",
+  revised: "2026-11",
+};
+
+## Overview & Role
+
+**Air-Gap Transfer Helpers** (`slug: air-gap-transfer-helpers`, CLIN `0005` — Tactical & DevSecOps) is a client-side integrity and manifest utility in the ClearedStack catalog. Moving software, snapshot bundles, or compliance records onto a disconnected network requires proving three things at the boundary: every file is intact, no expected file went missing, and no extra file was introduced.
+
+Built directly around the two-sided workflow in [Working on disconnected networks](/guides/disconnected-networks/) and [Run it on a closed network](/guides/closed-networks/), Air-Gap Transfer Helpers runs in the browser on both the sending side (outside) and receiving side (inside) without uploading a single byte over the network. It generates sorted `sha256sum`-compatible manifests (`payload.sha256`), records transfer provenance metadata, and verifies received payloads with both hash comparison and file-count parity checks.
+
+## Governing Standards & Sources
+
+| Component | Governing Standard / Reference | Rule Implemented |
+| --- | --- | --- |
+| **Cryptographic Hash** | NIST FIPS 180-4 (*Secure Hash Standard*) | SHA-256 (256-bit digest) computed via Web Crypto (`crypto.subtle.digest("SHA-256", ...)`). MD5 and SHA-1 are explicitly excluded due to collision vulnerabilities. |
+| **Manifest Line Format** | GNU Coreutils `sha256sum` / POSIX text format | `<64-lowercase-hex>  <relative-path>\n` (two-space separator), sorted lexicographically by UTF-8 byte order so browser output matches `( cd payload && find . -type f -print0 \| sort -z \| xargs -0 sha256sum )`. |
+| **Transfer Provenance** | ClearedStack Closed-Network Transfer Discipline ([disconnected-networks](/guides/disconnected-networks/), [closed-networks](/guides/closed-networks/)) | Captures item name, version, source URL/commit, SHA-256 manifest digest, reviewer, transfer date, and replaced item; enforces file-count parity (`actualCount === manifestCount`). |
+
+**Scope limits:** Air-Gap Transfer Helpers verifies byte-level integrity and file-set completeness. As noted in [Working on disconnected networks](/guides/disconnected-networks/), a checksum proves a file has not changed since the checksum was made—it does **not** prove publisher identity unless the checksum is carried over an independent trusted channel or paired with a digital signature. This tool does **not** replace an organization's formal Cross-Domain Solution (CDS) or transfer approval policy.
+
+## Inputs, Processing Logic & Outputs
+
+### Inputs
+
+- **Generate Mode (Sending / Outside Side):**
+  - Multi-file or directory selection (`<input type="file" webkitdirectory>` or drag-and-drop).
+  - Optional transfer record fields: preparer name, source (URL, Git commit, or release tag), version, purpose, and replaced item.
+- **Verify Mode (Receiving / Inside Side):**
+  - Received payload files or directory selection.
+  - Carried `payload.sha256` manifest file (uploaded or pasted).
+  - Optional expected file count (if recorded separately out-of-band).
+
+### Deterministic Browser-Only Processing Logic
+
+1. **Path normalization & deterministic sorting:** Normalizes relative paths using forward slashes (`/`), strips any leading `./` or common root folder prefix consistently, and sorts entries lexicographically by code point (matching `LC_ALL=C sort`).
+2. **Client-side SHA-256 computation:** Reads each `File` into memory as an `ArrayBuffer` (or processes large files in bounded chunks) and computes its SHA-256 digest via `crypto.subtle.digest("SHA-256", ...)` formatted as 64 lowercase hexadecimal characters.
+3. **Manifest generation (Generate Mode):**
+   - Emits `payload.sha256` with one `<hex>  <path>` line per file.
+   - Computes the SHA-256 digest of `payload.sha256` itself so the manifest fingerprint can be read aloud or sent out-of-band.
+   - Records `totalFiles` alongside the manifest.
+4. **Manifest verification & parity diff (Verify Mode):**
+   - Parses `payload.sha256` strictly (each non-empty line must match `^[0-9a-f]{64} [ *].+$`; malformed lines fail closed with `E_PARSE`).
+   - Hashes every file in the received selection and partitions all paths into four disjoint sets:
+     - `OK`: path in manifest and computed SHA-256 matches.
+     - `FAILED`: path in manifest but computed SHA-256 differs.
+     - `MISSING`: path in manifest but absent from received files.
+     - `EXTRA`: path in received files but absent from manifest.
+   - Evaluates `countMatch = (receivedCount === manifestCount)` and returns `PASS` if and only if `FAILED.length === 0`, `MISSING.length === 0`, `EXTRA.length === 0`, and `countMatch === true`.
+5. **CLI command helper:** Deterministically renders equivalent `sha256sum`, `shasum -a 256`, PowerShell `Get-FileHash`, and `ctr -n k8s.io images export/import` commands for operators who also need terminal commands.
+
+### Outputs
+
+- **Generate Mode:** Downloadable `payload.sha256` file, manifest SHA-256 fingerprint, total file count, and a downloadable Markdown/JSON **Transfer Record** for approval paperwork.
+- **Verify Mode:** Clear `PASS` / `FAIL` verdict banner, counts for `OK`, `FAILED`, `MISSING`, and `EXTRA`, per-file status table, and an exportable verification log via `Blob` URL (`URL.createObjectURL`).
+
+## Clean-Room & 5-Condition QA Requirements
+
+To pass `cs-07-verify` and move from `planned` to `live` in `src/data/catalog.ts`, Air-Gap Transfer Helpers must satisfy all five universal QA conditions and ClearedStack's clean-room rules:
+
+| Requirement | Verification Criterion |
+| --- | --- |
+| **1. Browser-only & offline** | Zero server uploads; all file hashing and manifest diffs execute locally in the browser via Web Crypto (`crypto.subtle`) in both Full Enclave Stack and Snapshot Mode. |
+| **2. Strict CSP** | Enforces `default-src 'self'`, `connect-src 'self'`, and `form-action 'none'`; zero outbound network requests. |
+| **3. Zero tracking or accounts** | No cookies, analytics, sign-in walls, or telemetry; file names and hashes never leave the browser. |
+| **4. Worked examples** | Ships with synthetic multi-file fixtures testing `OK`, `FAILED` (1-byte change), `MISSING`, and `EXTRA` file detection. |
+| **5. Citations, scope & MIT** | Cites NIST FIPS 180-4 and ClearedStack transfer guidance; states integrity-vs-authenticity scope limits; includes an MIT `LICENSE` file. |
+
+**Clean-room boundary:** Authored from scratch in `cs-06-build` from `cs-05-provenance` JSON specifications, with zero copied code from external checksum utilities.
+
+## Worked Example & Verification
+
+### Synthetic Verification Case: 3-File Payload & Tamper Detection
+
+Suppose an operator packages a 3-file folder (`README.txt`, `app.tar`, `config.yaml`) on the outside:
+
+1. **Generate Mode Output (`payload.sha256`):**
+
+```text
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  README.txt
+2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae  app.tar
+4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a  config.yaml
+```
+
+- **Recorded file count:** `3`
+
+2. **Verify Mode Simulation (Inside):**
+   - `README.txt` is unchanged → `OK`.
+   - `app.tar` has 1 byte altered → `FAILED` (computed digest differs from `2c26b46b...`).
+   - `config.yaml` is unchanged → `OK`.
+   - An unaccounted file `unexpected.bin` is present in the folder → `EXTRA` (received count `4` vs. manifest count `3`).
+   - **Final Verdict:** `FAIL` (`OK: 2`, `FAILED: 1`, `MISSING: 0`, `EXTRA: 1`, `countMatch: false`).
+
+## Related pages
+
+- [Working on disconnected networks](/guides/disconnected-networks/)
+- [Run it on a closed network](/guides/closed-networks/)
+- [Cluster architecture](/platform/cluster-architecture/)
+- [cs-07-verify specification](/platform/cs-07-verify/)
+- [Clean room and credit](/platform/clean-room-and-credit/)
