@@ -55,7 +55,7 @@ export default function Home() {
       <section className="mx-auto grid max-w-6xl gap-12 px-5 pb-16 pt-14 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16 lg:pb-24 lg:pt-24">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.14em] text-accent">
-            Free · Open source · Runs in your browser
+            Free · Open source · Runs in your browser · Revised {site.revised}
           </p>
           <h1 className="mt-5 text-4xl font-semibold leading-[1.08] tracking-[-0.02em] text-balance sm:text-5xl">
             Free tools for the paperwork between you and a government contract.
@@ -131,7 +131,7 @@ export default function Home() {
             </tfoot>
           </table>
           <p className="border-t border-line px-4 py-3 font-mono text-[11px] uppercase tracking-wider text-muted sm:px-5">
-            Firm-fixed-price · Period of performance: indefinite
+            Firm-fixed-price · Period of performance: indefinite · Revised {site.revised}
           </p>
         </div>
       </section>

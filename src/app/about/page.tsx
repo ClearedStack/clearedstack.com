@@ -46,7 +46,10 @@ const rules = [
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-6xl px-5 pt-14 lg:pt-20">
-      <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">About</p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">About</p>
+        <span className="font-mono text-xs text-muted">Revised {site.revised}</span>
+      </div>
       <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-[-0.02em] text-balance sm:text-5xl">
         Good engineers should not need a compliance department to bid.
       </h1>

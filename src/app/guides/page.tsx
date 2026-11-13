@@ -107,7 +107,10 @@ export default async function GuidesPage() {
   return (
     <div className="mx-auto max-w-6xl px-5 pt-14 lg:pt-20">
       {/* Introduction */}
-      <SectionLabel section="Section L">Instructions to offerors</SectionLabel>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <SectionLabel section="Section L">Instructions to offerors</SectionLabel>
+        <span className="font-mono text-xs text-muted">Revised {site.revised}</span>
+      </div>
       <div className="mt-4 grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:items-end lg:gap-16">
         <div>
           <h1 className="text-4xl font-semibold leading-[1.08] tracking-[-0.02em] text-balance sm:text-5xl">

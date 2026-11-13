@@ -43,6 +43,7 @@ export function SiteFooter() {
               {site.email}
             </a>
           </li>
+          <li>Revised {site.revised}</li>
           <li>MIT License</li>
         </ul>
       </div>

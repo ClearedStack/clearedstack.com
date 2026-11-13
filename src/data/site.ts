@@ -7,6 +7,7 @@ export const site = {
   email: "contact@clearedstack.com",
   github: "https://github.com/ClearedStack",
   repo: "https://github.com/ClearedStack/clearedstack.com",
+  revised: "November 2026",
 } as const;
 
 export const disclaimer =

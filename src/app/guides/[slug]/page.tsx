@@ -50,7 +50,7 @@ export default async function GuidePage({ params }: PageProps<"/guides/[slug]">)
       <p className="mt-5 flex flex-wrap gap-x-5 gap-y-1 font-mono text-xs text-muted">
         <span className="text-accent">{guide.code}</span>
         <span>{guide.minutes} min read</span>
-        {guide.reviewed ? <span>Checked against its sources in {formatReviewed(guide.reviewed)}</span> : null}
+        {guide.reviewed ? <span>Last revised {formatReviewed(guide.reviewed)}</span> : null}
       </p>
 
       <div className="mt-10 grid gap-x-16 border-t border-line pt-8 lg:grid-cols-[minmax(0,42rem)_minmax(0,1fr)]">

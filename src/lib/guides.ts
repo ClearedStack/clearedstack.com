@@ -64,6 +64,8 @@ export type GuideMeta = {
    * checked against the sources, as "YYYY-MM".
    */
   reviewed?: string;
+  /** Month the guide was last revised, as "YYYY-MM". */
+  revised?: string;
 };
 
 export type GuideHeading = { id: string; text: string };
@@ -120,6 +122,9 @@ async function loadModule(slug: string): Promise<GuideModule> {
   if (meta.reviewed && !/^\d{4}-(0[1-9]|1[0-2])$/.test(meta.reviewed)) {
     throw new Error(`src/guides/${slug}.mdx has reviewed "${meta.reviewed}". Write it as "YYYY-MM".`);
   }
+  if (meta.revised && !/^\d{4}-(0[1-9]|1[0-2])$/.test(meta.revised)) {
+    throw new Error(`src/guides/${slug}.mdx has revised "${meta.revised}". Write it as "YYYY-MM".`);
+  }
   return mod;
 }
 
@@ -135,12 +140,17 @@ export function listGuides(): Promise<Guide[]> {
       loaded
         .filter(({ meta }) => meta.group === group.id)
         .sort((a, b) => a.meta.order - b.meta.order || a.slug.localeCompare(b.slug))
-        .map(({ slug, meta }, index) => ({
-          ...meta,
-          slug,
-          code: `${group.code}.${index + 1}`,
-          ...readSource(slug),
-        })),
+        .map(({ slug, meta }, index) => {
+          const date = meta.revised ?? meta.reviewed;
+          return {
+            ...meta,
+            reviewed: date,
+            revised: date,
+            slug,
+            code: `${group.code}.${index + 1}`,
+            ...readSource(slug),
+          };
+        }),
     );
   })();
   return allGuides;

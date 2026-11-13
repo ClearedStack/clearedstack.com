@@ -17,7 +17,10 @@ const inlineLink = "text-ink underline decoration-accent underline-offset-4 hove
 export default function ToolsPage() {
   return (
     <div className="mx-auto max-w-6xl px-5 pt-14 lg:pt-20">
-      <SectionLabel>Catalog</SectionLabel>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <SectionLabel>Catalog</SectionLabel>
+        <span className="font-mono text-xs text-muted">Revised {site.revised}</span>
+      </div>
       <h1 className="mt-4 text-4xl font-semibold tracking-[-0.02em]">Tools</h1>
       <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">
         {liveCount === 0
