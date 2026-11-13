@@ -43,13 +43,8 @@ If your copy will live at a different address than clearedstack.com, change `url
 out/
   index.html                     the home page (UCF Sections B, C, F, H, M)
   404.html                       the page shown for an address that does not exist
-  tools/index.html               18 contracting tools + 17 platform & worker apps (#apps)
-  guides/index.html              Section L manual library + reading routes
-  guides/command/index.html      Command Portal view (Snapshot Mode when static)
-  guides/apps/index.html         Cluster App Store view
-  guides/pipeline/index.html     10-Worker Pipeline view
-  guides/decide/index.html       Decide & Public Edits view
-  guides/how-we-decide/index.html Section M evaluation factors
+  tools/index.html               18 contracting tools + Cluster App Store (#apps)
+  guides/index.html              Section L manual + integrated Command, Pipeline, Decide & Section M
   guides/<name>/index.html       individual MDX guides
   about/index.html
   _next/static/                  scripts, styles and fonts, with a hash in each file name
@@ -57,7 +52,7 @@ out/
   sitemap.xml, robots.txt
 ```
 
-Every page is a folder that holds an `index.html`. That is why addresses on the site end in a slash, and it is the one thing a web server has to understand. When hosted as plain static files without `hub-queue-api` behind it, the interactive factory views under `/guides/` automatically run in deterministic **Snapshot Mode** so every tool, guide, rule drawer, and architecture view works offline with zero backend services.
+Every page is a folder that holds an `index.html`. That is why addresses on the site end in a slash, and it is the one thing a web server has to understand. When hosted as plain static files without `hub-queue-api` behind it, the integrated factory views inside `/tools/` and `/guides/` automatically run in deterministic **Snapshot Mode** so every tool, guide, rule drawer, and architecture view works offline with zero backend services.
 
 You will also see small `.txt` files beside the pages. The site’s own scripts fetch them to move between pages without a full reload. They are part of the site, so copy them along with everything else.
 

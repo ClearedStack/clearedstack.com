@@ -4,14 +4,14 @@ Thanks for wanting to help. There are three ways to do it.
 
 ## Suggest an idea
 
-Suggestions from the community feed directly into **`cs-01-intake`** in our deterministic 10-worker Prior Art pipeline (currently in draft). Open an issue—or use `✎ Edit` on any live factory view under `/guides/`—describing:
+Suggestions from the community feed directly into **`cs-01-intake`** in our deterministic 10-worker Prior Art pipeline (currently in draft). Open an issue—or use `✎ Edit` on `/tools/` or `/guides/`—describing:
 
 - The job the tool should do (in one sentence, starting with a verb).
 - Who needs it (the small-business paperwork problem it addresses).
 - Where the idea was seen (if inspired by an existing product, spreadsheet or government tool).
 - The public regulation, standard or guide it would be based on (with a link to the official public source).
 
-Community suggestions are recorded as candidate ideas (`PA-XXXX`) and walk through the same observation, screening gates, and scoring rubric described at [How we decide](https://clearedstack.com/guides/how-we-decide/).
+Community suggestions are recorded as candidate ideas (`PA-XXXX`) and walk through the same observation, screening gates, and scoring rubric described at [How we decide](https://clearedstack.com/guides/#how-we-decide).
 
 ## Fix or improve this site
 

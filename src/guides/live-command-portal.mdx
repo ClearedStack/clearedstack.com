@@ -8,7 +8,7 @@ export const meta = {
 
 Most documentation sites ask you to read thousands of words of prose before you ever see software do anything. Folks are done reading. ClearedStack v3.1 pairs the contractor-first catalog at `/tools/` with a live operational window inside `/guides/`—opening directly into the cluster running the software factory.
 
-Instead of only reading about how the system is supposed to work, you can open `/guides/command/`, `/guides/apps/`, `/guides/pipeline/`, or `/guides/decide/` and inspect live state: which apps are healthy, which workers are busy, what is waiting in a queue, and what paused.
+Instead of only reading about how the system is supposed to work, you can open `/guides/#command`, `/tools/#apps`, `/guides/#pipeline`, or `/guides/#decide` and inspect live state: which apps are healthy, which workers are busy, what is waiting in a queue, and what paused.
 
 ## From static essays to live factory views under Guides
 
@@ -20,13 +20,13 @@ Earlier versions of the site explained the architecture solely through long-form
 
 ## How software rules promote what matters
 
-A live dashboard is useless if healthy background noise buries a real outage. On [Command](/guides/command/), deterministic priority rules automatically sort what appears at the top of the screen:
+A live dashboard is useless if healthy background noise buries a real outage. On [Command](/guides/#command), deterministic priority rules automatically sort what appears at the top of the screen:
 
 | Priority | What triggers it | How the portal displays it |
 | --- | --- | --- |
 | **P0 (Critical)** | An app or worker is down, crashing, or reporting an active error code | Promoted to the top in crimson (`AttentionCard`) with the sanitized error code and affected component |
 | **P1 (Stalled)** | A worker queue is backed up, a job timed out, or an item is paused in `needs_subtool` | Surfaced alongside P0 items in amber so bottlenecks are obvious immediately |
-| **P2 (Pending)** | Items waiting in `cs-04-decide` or public edit proposals waiting for owner review | Listed as actionable pending work ready for a decision in `/guides/decide/` |
+| **P2 (Pending)** | Items waiting in `cs-04-decide` or public edit proposals waiting for owner review | Listed as actionable pending work ready for a decision in `/guides/#decide` |
 | **Quiet / Idle** | Healthy workers with empty queues and no errors | Kept calm and muted so idle infrastructure stays out of your way |
 
 Because these rules are pure code rather than guesswork, the same cluster state always produces the exact same view.
@@ -38,17 +38,17 @@ Top navigation stays uncluttered (`Tools`, `Guides`, `About`, `GitHub`), while e
 | Route | View Name | What it shows | Who uses it |
 | --- | --- | --- | --- |
 | [`/tools/`](/tools/) | **Tools & Apps** | All 18 browser contracting utilities (`CLIN 0001`–`0005`) plus all 17 platform/factory apps (`CLIN 0006`, `#apps`) | Contractors, engineers, and self-hosters |
-| [`/guides/command/`](/guides/command/) | **Command** | Priority-sorted live status (`P0` errors, `P1` stalls, `P2` pending work), 10-worker pulse, and 7 control-plane pods | Anyone checking cluster health at a glance |
-| [`/guides/apps/`](/guides/apps/) | **Apps** | Cluster App Store cards for every running app and worker, showing version, live health, and Owner Mode lifecycle controls | Public visitors and operators |
-| [`/guides/pipeline/`](/guides/pipeline/) | **Pipeline** | Real-time flow across all 10 deterministic workers (`cs-01-intake` through `cs-10-notify`), queue depths, item trails, and `[? Why]` drawers | Visitors and contributors tracing `PA-XXXX` candidates |
-| [`/guides/decide/`](/guides/decide/) | **Decide** | The decision inbox for `cs-04-decide`, holding candidate determinations (Build, Link, Merge, Park, Reject) and pending `✎ Edit` proposals | Anyone reviewing queued decisions and community edits |
-| [`/guides/how-we-decide/`](/guides/how-we-decide/) | **How We Decide** | Section M evaluation factors, 5 binary knockout gates, 100-point rubric, and 14-state lifecycle | Auditors, tool authors, and contributors |
+| [`/guides/#command`](/guides/#command) | **Command** | Priority-sorted live status (`P0` errors, `P1` stalls, `P2` pending work), 10-worker pulse, and 7 control-plane pods | Anyone checking cluster health at a glance |
+| [`/tools/#apps`](/tools/#apps) | **Apps** | Cluster App Store cards for every running app and worker, showing version, live health, and Owner Mode lifecycle controls | Public visitors and operators |
+| [`/guides/#pipeline`](/guides/#pipeline) | **Pipeline** | Real-time flow across all 10 deterministic workers (`cs-01-intake` through `cs-10-notify`), queue depths, item trails, and `[? Why]` drawers | Visitors and contributors tracing `PA-XXXX` candidates |
+| [`/guides/#decide`](/guides/#decide) | **Decide** | The decision inbox for `cs-04-decide`, holding candidate determinations (Build, Link, Merge, Park, Reject) and pending `✎ Edit` proposals | Anyone reviewing queued decisions and community edits |
+| [`/guides/#how-we-decide`](/guides/#how-we-decide) | **How We Decide** | Section M evaluation factors, 5 binary knockout gates, 100-point rubric, and 14-state lifecycle | Auditors, tool authors, and contributors |
 
 ## One control plane, one lifecycle
 
 Behind the scenes, the portal connects two halves of the platform without mixing them up:
 
-1. **Software delivery (`/guides/apps/` & `/tools/#apps`):** `cs-git` stores the code, `cs-runner` builds container images without Docker (using `ko` for Go and rootless BuildKit for web apps) and pushes them to `cs-registry`, and `cs-store` applies those apps to Kubernetes and streams sanitized health back to the App Store.
-2. **Data and tool production (`/guides/pipeline/`, `/guides/decide/`, `/tools/`):** The 10 deterministic workers pull tasks from `hub-queue-api`, process public sources, pause for human judgment at `/guides/decide/`, and publish verified browser tools to `/tools/`.
+1. **Software delivery (`/tools/#apps`):** `cs-git` stores the code, `cs-runner` builds container images without Docker (using `ko` for Go and rootless BuildKit for web apps) and pushes them to `cs-registry`, and `cs-store` applies those apps to Kubernetes and streams sanitized health back to the App Store.
+2. **Data and tool production (`/guides/#pipeline`, `/guides/#decide`, `/tools/`):** The 10 deterministic workers pull tasks from `hub-queue-api`, process public sources, pause for human judgment at `/guides/#decide`, and publish verified browser tools to `/tools/`.
 
 Every piece you see in the portal is backed by open-source code mirrored to GitHub, so what you see running on `clearedstack.com` is the exact system you can inspect or host yourself.

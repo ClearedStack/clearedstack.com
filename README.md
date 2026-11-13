@@ -79,7 +79,7 @@ The list on the site is generated from [`src/data/catalog.ts`](src/data/catalog.
 
 ClearedStack v3.1 is a **100% deterministic, MIT-licensed, Kubernetes-native** platform with **zero AI at runtime** and **zero Docker anywhere**:
 
-- **Open public sandbox (no login lock):** Top navigation stays clean with **Tools** (`/tools/`, listing all 18 browser utilities + all 17 platform/factory apps), **Guides** (`/guides/`, housing the full field manual plus live **Command** `/guides/command/`, **Apps** `/guides/apps/`, **Pipeline** `/guides/pipeline/`, **Decide** `/guides/decide/`, and **Section M** `/guides/how-we-decide/`), **About** (`/about/`), and **GitHub**. Any visitor can propose edits via `✎ Edit` (protected by a 5-layer anti-spam shield + `ownership_map.json`, gated by owner approval in `cs-04-decide`).
+- **Open public sandbox (no login lock):** Top navigation shows only **Home** (`/`), **Tools** (`/tools/`, listing all 18 browser utilities + the integrated Cluster App Store `#apps` for all 17 platform/factory apps), **Guides** (`/guides/`, housing the full field manual plus integrated **Command** `/guides/#command`, **Pipeline** `/guides/#pipeline`, **Decide** `/guides/#decide`, and **Section M** `/guides/#how-we-decide`), **About** (`/about/`), and **GitHub**. Any visitor can propose edits via `✎ Edit` (protected by a 5-layer anti-spam shield + `ownership_map.json`, gated by owner approval in `cs-04-decide`).
 - **Two namespaces on `k3s` + `containerd` (~4 GiB single node):**
   - `clearedstack` (7 control-plane pods, ~640 MiB RAM): `clearedstack-web`, `hub-queue-api`, PostgreSQL 17, `cs-git` (internal bare Git + outbound GitHub code-only mirror), `cs-registry` (internal OCI store keeping last 5 digests/app; **zero images on GitHub**), `cs-runner` (Dockerless `ko` + rootless BuildKit jobs), and `cs-store` (App Store reconciler via Server-Side Apply, replacing Argo CD + CasaOS).
   - `cs-workers` (10 deterministic worker repos, ~300 MiB RAM): `cs-01-intake`, `cs-02-observe` (~30 MiB Go HTTP pods + on-demand headless browser `Job` pods), `cs-03-evaluate`, `cs-04-decide`, `cs-05-provenance`, `cs-06-build`, `cs-07-verify`, `cs-08-catalog`, `cs-09-monitor`, and `cs-10-notify` (forming the 11 core pipeline repositories alongside `clearedstack.com`).
@@ -124,8 +124,8 @@ Requires Node.js 20 or newer.
 
 ```
 src/
-  app/            pages: Home (/), /tools (tools + apps), /guides (+ command, apps, pipeline, decide, how-we-decide), /about
-  components/     GuidesSubnav, PulseStrip, AttentionCard, TrailRow, MetricCell, WhyDrawer, EditTrigger, AppStoreGrid
+  app/            pages: Home (/), /tools (tools + #apps), /guides (manual + #command, #pipeline, #decide, #how-we-decide), /about
+  components/     GuidesWorkspace, PulseStrip, AttentionCard, TrailRow, MetricCell, WhyDrawer, EditTrigger, AppStoreGrid
   data/
     catalog.ts          the categories and browser tools shown on /tools
     platform.ts         control-plane apps, 10 deterministic workers, and P0-P2 attention rules

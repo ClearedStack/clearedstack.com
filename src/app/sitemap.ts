@@ -9,11 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/",
     "/tools/",
     "/guides/",
-    "/guides/command/",
-    "/guides/apps/",
-    "/guides/pipeline/",
-    "/guides/decide/",
-    "/guides/how-we-decide/",
     ...guideSlugs().map((slug) => `/guides/${slug}/`),
     "/about/",
   ];

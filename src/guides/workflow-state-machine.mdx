@@ -17,7 +17,7 @@ The original website described ten conceptual stages from discovery to monthly r
 | `cs-01-intake` | Stage 1 (Discover) + Stage 2 (Record) | Normalize URLs, deduplicate by SHA-256, and assign `PA-XXXX` IDs. | Yes (`sam-gov`, `github-issues`, `web-sweep`, `site-form`) |
 | `cs-02-observe` | Stage 3 (Observe) | Fetch public pages via Go extractors (or on-demand headless browser jobs for JS-heavy sites) and seal raw captures behind the clean-room wall. | Yes (`saas-marketing`, `gov-portal`, `agency-pdf`, `<vendor-slug>`) |
 | `cs-03-evaluate` | Stage 4 (Screen) + Stage 5 (Score) | Run 5 binary knockout gates, the 100-point rubric, and 5 tie-breakers using YAML/Go rules. | Yes (`rubric-profiles/<category>`) |
-| `cs-04-decide` | Stage 6 (Decide) | Surface the owner-only decision queue on `/guides/decide/` for item outcomes and anonymous public edit approvals. | No |
+| `cs-04-decide` | Stage 6 (Decide) | Surface the owner-only decision queue on `/guides/#decide` for item outcomes and anonymous public edit approvals. | No |
 | `cs-05-provenance` | Stage 7 (Credit) | Stamp provenance notes via Go templates, enforce 48-hour identity verification and 5-day opt-out SLAs, and compile clean-room JSON build specs. | Yes (`spec-profiles/<tool-type>`) |
 | `cs-06-build` | Stage 8 (Build) | Generate isolated static tool repositories from clean-room specs and worked-example fixtures. | Yes (`calculator`, `checklist`, `validator`, `decision-tree`) |
 | `cs-07-verify` | Stage 9 (List, QA split) | Run automated 5-condition checks (offline execution, `connect-src 'self'`, zero tracking, worked examples). | No |

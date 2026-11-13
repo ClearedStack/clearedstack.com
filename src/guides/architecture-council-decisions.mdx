@@ -14,7 +14,7 @@ Every major choice on the site today traces back to a concrete trade-off settled
 
 | Design question | Early assumption | Final v3.1 decision | Why it won |
 | --- | --- | --- | --- |
-| **Workflow vs. website** | Static essays describing 10 stages | 10 live deterministic worker repos (`cs-01`..`cs-10`) feeding `/guides/command/`, `/guides/apps/`, `/guides/pipeline/`, and `/guides/decide/` | Real-time status and sanitized errors turn the site into a live operational portal instead of passive text. |
+| **Workflow vs. website** | Static essays describing 10 stages | 10 live deterministic worker repos (`cs-01`..`cs-10`) feeding `/guides/#command`, `/tools/#apps`, `/guides/#pipeline`, and `/guides/#decide` | Real-time status and sanitized errors turn the site into a live operational portal instead of passive text. |
 | **Database & state** | Separate per-stage databases | One shared PostgreSQL 17 hub (`clearedstack` namespace) + `hub-queue-api` + local worker spools | Workers hold zero DB passwords, handoffs are atomic, and local spools survive hub restarts. |
 | **Git, builds, and deploy** | Heavy third-party suites (Forgejo, Argo CD, CasaOS) | Custom clean-room MIT Go microservices (`cs-git`, `cs-registry`, `cs-runner`, `cs-store`) | Drops control-plane RAM to ~640 MiB so the entire 17-pod platform fits on one 4 GiB `k3s` node. |
 | **Edge cases & AI** | AI inside workers for messy pages | **100% deterministic everywhere**; unknown layouts fail closed into `needs_subtool` | Zero token cost, identical output on every cluster, and every solved edge case becomes permanent code. |

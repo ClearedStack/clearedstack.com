@@ -15,6 +15,9 @@ export function SiteHeader() {
         <div className="flex items-center gap-2 sm:gap-3">
           <GlobalSearch />
           <nav aria-label="Main" className="flex items-center gap-0.5 overflow-x-auto text-sm sm:gap-2">
+            <Link href="/" className={navLink}>
+              Home
+            </Link>
             <Link href="/tools/" className={navLink}>
               Tools
             </Link>

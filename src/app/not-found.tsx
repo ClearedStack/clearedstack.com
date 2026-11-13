@@ -28,7 +28,7 @@ export default function NotFound() {
             {
               tag: "Section L",
               label: "Guides & Factory",
-              detail: "Field manuals plus Command, Apps, Pipeline, and Decide views.",
+              detail: "Field manuals plus integrated Command, Pipeline, and Decide views.",
             },
             {
               tag: "Section M",
@@ -54,7 +54,7 @@ export default function NotFound() {
         </Link>
         , or inspect{" "}
         <Link
-          href="/guides/how-we-decide/"
+          href="/guides/#how-we-decide"
           className="text-ink underline decoration-accent underline-offset-4 hover:text-accent"
         >
           how we decide what to build

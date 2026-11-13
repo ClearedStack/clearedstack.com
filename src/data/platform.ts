@@ -163,7 +163,7 @@ export const workerApps: PlatformApp[] = [
     id: "cs-04-decide",
     name: "cs-04-decide",
     namespace: "cs-workers",
-    role: "Decision & anonymous edit-approval queue surfaced on /guides/decide/.",
+    role: "Decision & anonymous edit-approval queue surfaced on /guides/#decide.",
     ramBudget: "30 MiB",
     kind: "worker",
     version: "v0.1.0-draft",
@@ -273,7 +273,7 @@ export const attentionRules = [
   {
     tier: "P2 · Action",
     trigger: "Items waiting in cs-04-decide or pending public ✎ edit proposals",
-    behavior: "Shown in the /guides/decide/ inbox with oldest wait time.",
+    behavior: "Shown in the /guides/#decide inbox with oldest wait time.",
   },
   {
     tier: "Quiet",

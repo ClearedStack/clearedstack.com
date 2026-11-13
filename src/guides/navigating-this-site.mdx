@@ -18,23 +18,23 @@ ClearedStack borrows this exact structure across its pages. Instead of arbitrary
 
 | UCF Section | Title in Federal Contracting | ClearedStack Location | What you find there |
 | --- | --- | --- | --- |
-| **Section B** | Supplies or services and prices/costs | [Home](/) and [Tools](/tools/) | Contract Line Item Numbers `CLIN 0001`–`0006` (browser tools + platform apps), all priced at $0.00. |
+| **Section B** | Supplies or services and prices/costs | [Home](/) and [Tools](/tools/) | Contract Line Item Numbers `CLIN 0001`–`0005` on Home (plus `CLIN 0006` platform apps on Tools), all priced at $0.00. |
 | **Section C** | Description/specifications/statement of work | [Home](/) and [Tools](/tools/) | The statement of work for all 18 single-purpose browser tools and 17 MIT platform/factory apps. |
 | **Section F** | Deliveries or performance | [Home](/) | The delivery roadmap across three phases: the free arsenal, the community, and the institution. |
-| **Section H** | Special contract requirements | [Home](/) and [About](/about/) | The four core ground rules: free, open source, client-side & deterministic execution, and independent governance. |
-| **Section L** | Instructions, conditions and notices to offerors | [Guides](/guides/) | Live factory views (`L.0`) plus the documentation library numbered `L.1` through `L.6`. |
-| **Section M** | Evaluation factors for award | [How we decide](/guides/how-we-decide/) | The 10-worker Prior Art evaluation engine: five knockout gates, 100-point rubric, 14-state lifecycle, and provenance rules. |
+| **Section H** | Special contract requirements | [Home](/) and [About](/about/) | The four core ground rules: free, open source, runs in your browser, and independent governance. |
+| **Section L** | Instructions, conditions and notices to offerors | [Guides](/guides/) | The documentation library (`L.1`–`L.6`) integrated with live Command, Pipeline, and Decide views. |
+| **Section M** | Evaluation factors for award | [How we decide](/guides/#how-we-decide) | The 10-worker Prior Art evaluation engine: five knockout gates, 100-point rubric, 14-state lifecycle, and provenance rules. |
 
 <Flow
   caption="Federal contract structure (UCF) mapped to ClearedStack pages"
   direction="down"
   steps={[
-    { tag: "Section B", label: "Pricing schedule", detail: "Firm-fixed-price of $0.00 across CLIN 0001–0006 on Home and Tools." },
+    { tag: "Section B", label: "Pricing schedule", detail: "Firm-fixed-price of $0.00 across CLIN 0001–0005 on Home and CLIN 0001–0006 on Tools." },
     { tag: "Section C", label: "Statement of work", detail: "Functional scope for 18 browser tools and 17 platform apps on Tools." },
     { tag: "Section F", label: "Deliveries and roadmap", detail: "Three delivery phases: arsenal, community, and institution on Home." },
-    { tag: "Section H", label: "Special contract requirements", detail: "Ground rules: free, open-source, deterministic, independent on About." },
-    { tag: "Section L", label: "Instructions & live factory", detail: "Live views (Command, Apps, Pipeline, Decide) + Sections L.1–L.6 under Guides." },
-    { tag: "Section M", label: "Evaluation factors for award", detail: "Knockout gates, 100-pt rubric, and record lifecycle at /guides/how-we-decide/." },
+    { tag: "Section H", label: "Special contract requirements", detail: "Ground rules: free, open-source, client-side, independent on Home and About." },
+    { tag: "Section L", label: "Instructions & live factory", detail: "Sections L.1–L.6 plus integrated Command, Pipeline, and Decide views on Guides." },
+    { tag: "Section M", label: "Evaluation factors for award", detail: "Knockout gates, 100-pt rubric, and record lifecycle at /guides/#how-we-decide." },
   ]}
 />
 
@@ -42,25 +42,25 @@ Learning this layout once helps you navigate both ClearedStack and federal reque
 
 ## The main areas
 
-Top navigation stays intentionally clean with four links alongside **Home** ([`/`](/)) and instant site search: **Tools** ([`/tools/`](/tools/)), **Guides** ([`/guides/`](/guides/)), **About** ([`/about/`](/about/)), and **GitHub**.
+Top navigation shows only **Home** ([`/`](/)), **Tools** ([`/tools/`](/tools/)), **Guides** ([`/guides/`](/guides/)), **About** ([`/about/`](/about/)), and **GitHub** alongside instant site search.
 
-Every live factory and governance view sits inside **Guides** with **no login lock**, and every editable element carries a `✎ Edit` button (5-layer anti-spam shield) and contextual `[? Why]` drawers:
+Every live factory and governance view is integrated directly into **Tools** and **Guides** with **no login lock**, and every editable element carries a `✎ Edit` button (5-layer anti-spam shield) and contextual `[? Why]` drawers:
 
 ### 1. Home (`/`)
-The contract-structured front door (`Sections B, C, F, H, M`), summarizing the $0.00 CLIN schedule, the 18 browser utilities + 17 platform apps, the three-phase delivery roadmap, and the 10-worker deterministic factory.
+The clean contractor-first front door (`Sections B, C, F, H, M`), presenting the $0.00 `CLIN 0001`–`0005` schedule, the 18 browser utilities, the four permanent ground rules, the three-phase delivery roadmap, and how tools are evaluated.
 
-### 2. Tools & Apps (`/tools/`)
+### 2. Tools & Cluster App Store (`/tools/`)
 The unified catalog of everything ClearedStack builds and runs:
 - **Browser Contracting Utilities (`CLIN 0001`–`0005`):** 18 single-purpose client-side tools (`#pricing`, `#proposal`, `#cyber`, `#market`, `#devsecops`) with instant search and provenance links.
-- **Platform & Factory Apps (`CLIN 0006`, [`#apps`](/tools/#apps)):** All 7 clean-room Go/Postgres control-plane services in `clearedstack` and all 10 deterministic worker repositories (`cs-01-intake` through `cs-10-notify`) in `cs-workers`.
+- **Cluster App Store (`CLIN 0006`, [`#apps`](/tools/#apps)):** Integrated App Store view powered by `cs-store` (Server-Side Apply) covering all 7 clean-room Go/Postgres control-plane services in `clearedstack` and all 10 deterministic worker repositories (`cs-01-intake` through `cs-10-notify`) in `cs-workers`, with Owner Mode preview for 1-click Upgrade, Pause, and 5-digest Rollback.
 
-### 3. Guides & Live Factory Views (`/guides/*`)
-The documentation hub (`L.1`–`L.6`) and the five live operational & evaluation views connected by a shared sub-navigation bar:
-- **Command ([`/guides/command/`](/guides/command/)):** Priority dashboard driven by deterministic `P0`–`P2` attention rules (`PulseStrip`, `AttentionCard`, 10-worker strip, and control-plane summary).
-- **Apps ([`/guides/apps/`](/guides/apps/)):** Dedicated Cluster App Store powered by `cs-store` (Server-Side Apply) with Owner Mode preview for 1-click Upgrade, Pause, and 5-digest Rollback.
-- **Pipeline ([`/guides/pipeline/`](/guides/pipeline/)):** Real-time view of `cs-01-intake` through `cs-10-notify`, `PA-XXXX` trails, `/var/spool/cs` local spools, and `tools/<case>/` deterministic sub-tools.
-- **Decide ([`/guides/decide/`](/guides/decide/)):** Publicly readable queue for `cs-04-decide` candidate determinations and `core.edit_proposal` anonymous `✎ Edit` submissions.
-- **How We Decide ([`/guides/how-we-decide/`](/guides/how-we-decide/)):** Section M evaluation factors, 5 binary knockout gates, 100-point rubric, 14-state lifecycle, and clean-room rules.
+### 3. Guides & Integrated Factory Workspace (`/guides/`)
+The documentation hub (`L.1`–`L.6`) integrated with live operational and evaluation tabs inside `/guides/`:
+- **Field Manual (`L.1`–`L.6`):** All 49 plain-language guides, reading routes, search filter, and short answers.
+- **Command ([`/guides/#command`](/guides/#command)):** Priority dashboard driven by deterministic `P0`–`P2` attention rules (`PulseStrip`, `AttentionCard`, 10-worker strip, and control-plane summary).
+- **Pipeline ([`/guides/#pipeline`](/guides/#pipeline)):** Real-time view of `cs-01-intake` through `cs-10-notify`, `PA-XXXX` trails, `/var/spool/cs` local spools, and `tools/<case>/` deterministic sub-tools.
+- **Decide ([`/guides/#decide`](/guides/#decide)):** Publicly readable queue for `cs-04-decide` candidate determinations and `core.edit_proposal` anonymous `✎ Edit` submissions.
+- **How We Decide ([`/guides/#how-we-decide`](/guides/#how-we-decide)):** Section M evaluation factors, 5 binary knockout gates, 100-point rubric, 14-state lifecycle, and clean-room rules.
 
 ### 4. About (`/about/`)
 Mission (workplace autonomy for builders over corporate overhead), 11-repo + 2-namespace organization, authoring-only AI disclosure, ground rules, and full legal disclaimer.
@@ -136,8 +136,7 @@ If you are looking for a guided sequence rather than browsing the full list, use
 
 ### The guide reading interface
 Every individual guide page provides structured navigation aids:
-- **Shared Guides Sub-Navigation:** Jump directly between the `Library`, `Command`, `Apps`, `Pipeline`, `Decide`, and `How We Decide` views from the top of any guide.
-- **Header Breadcrumb:** Links back to `/guides/` and directly to the parent section anchor (for example, `Guides Library · L.1 Start here`).
+- **Header Breadcrumb:** Links back to `/guides/` and directly to the parent section anchor (for example, `Guides · L.1 Start here`).
 - **Metadata Line:** Displays the official Section L designation (such as `L.1.1`), estimated reading time based on a 220 word-per-minute standard, and revision currency.
 - **Sticky Desktop Table of Contents:** On large screens, an "On this page" sidebar follows your scroll position on the right, listing all level-2 headings (`##`) for instant jumping.
 - **Section Sibling Navigation:** Below the desktop TOC, the sidebar lists all sibling guides within the current Section L category, highlighting your active page.
@@ -199,7 +198,7 @@ ClearedStack is built to comply with federal accessibility standards (Section 50
 ### Global site search (⌘K or /)
 Pressing `⌘K` (on macOS), `Ctrl+K` (on Windows and Linux), or `/` anywhere on the site opens the instant site-wide search dialog. The search engine runs 100% locally in your browser memory:
 - **Zero latency:** Queries resolve in 1 to 2 milliseconds using client-side MiniSearch indexing.
-- **Deep heading indexing:** Search indexes all 18 planned browser tools, all 17 platform/worker apps, all 49 guides, live factory views under `/guides/`, and over 250 individual `##` headings with direct deep links.
+- **Deep heading indexing:** Search indexes all 18 planned browser tools, all 17 platform/worker apps, all 49 guides, integrated factory views under `/guides/`, and over 250 individual `##` headings with direct deep links.
 - **Keyboard operation:** Use `↓` and `↑` arrow keys to highlight results, `Enter` to navigate directly to the page or subsection, and `Escape` to close the dialog.
 - **Strict privacy:** No search queries, keystrokes, or IP addresses are transmitted to external servers or search APIs.
 
@@ -209,8 +208,8 @@ Pressing `Tab` upon initial page load reveals a high-contrast **"Skip to content
 ### High-contrast focus rings and logical tab order
 All interactive elements—links, search inputs, buttons, and summary disclosures—feature high-contrast focus rings (`focus:border-accent` and `focus:outline-none`). Tab order follows the visual and logical structure of the document:
 1. Skip link (when focused)
-2. SiteHeader branding, search trigger, and four main navigation links
-3. Guides sub-navigation or catalog section jump links
+2. SiteHeader branding, search trigger, and five top navigation links (Home, Tools, Guides, About, GitHub)
+3. Page workspace tabs or catalog section jump links
 4. Main article text and internal links
 5. Sticky or inline table of contents
 6. Footer site map and repository links

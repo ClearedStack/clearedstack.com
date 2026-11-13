@@ -10,7 +10,7 @@
     "portal.home.hero": {
       "ownerRepo": "clearedstack.com",
       "editClass": "CONFIG",
-      "filePath": "src/app/guides/command/page.tsx"
+      "filePath": "src/app/guides/page.tsx"
     },
     "command.attention.p0": {
       "ownerRepo": "cs-store",
@@ -30,7 +30,7 @@
     "decide.sandbox.test": {
       "ownerRepo": "clearedstack.com",
       "editClass": "ISSUE",
-      "filePath": "src/app/guides/decide/page.tsx"
+      "filePath": "src/app/guides/page.tsx"
     },
     "app.clearedstack-web.manifest": {
       "ownerRepo": "clearedstack.com",

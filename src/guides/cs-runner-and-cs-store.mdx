@@ -18,7 +18,7 @@ Once an image digest is recorded in `app.yaml`, `cs-store` takes over. Tradition
 
 `cs-store` watches `app.yaml` files in `cs-git` alongside image digests in `cs-registry`, then manages deployments across the platform's two namespaces: `clearedstack` for the seven control-plane pods and `cs-workers` for the ten deterministic workers.
 
-Through the `/guides/apps/` App Store view (and `/tools/#apps` catalog section) on `clearedstack.com`, the owner gets four 1-click lifecycle controls backed by `cs-store`:
+Through the `/tools/#apps` Cluster App Store on `clearedstack.com`, the owner gets four 1-click lifecycle controls backed by `cs-store`:
 
 - **Install:** Applies the app's manifests into the target namespace for the first time.
 - **Upgrade:** Rolls the Deployment forward to the latest signed digest built by `cs-runner`.
@@ -27,4 +27,4 @@ Through the `/guides/apps/` App Store view (and `/tools/#apps` catalog section) 
 
 ## Live health and sanitized error reporting
 
-`cs-store` continuously watches Kubernetes Pods, Deployments, and Events so `/guides/apps/` and `/tools/#apps` reflect what is actually running. Before sending any status update to `hub-queue-api` for display on the public Portal, `cs-store` strips out internal cluster IP addresses, node names, and pod hostnames. Visitors see clear health states and standardized error codes—such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL`—while the cluster's internal network layout stays completely private.
+`cs-store` continuously watches Kubernetes Pods, Deployments, and Events so `/tools/#apps` reflect what is actually running. Before sending any status update to `hub-queue-api` for display on the public Portal, `cs-store` strips out internal cluster IP addresses, node names, and pod hostnames. Visitors see clear health states and standardized error codes—such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL`—while the cluster's internal network layout stays completely private.

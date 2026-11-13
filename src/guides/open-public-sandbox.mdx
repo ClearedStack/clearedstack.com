@@ -14,7 +14,7 @@ This is a deliberate choice: an open public sandbox turns every curious visitor 
 
 Most platforms hide their errors, queues, and internal workflows behind login screens or status pages that only say "All systems operational." ClearedStack does the opposite:
 
-- **Zero accounts for visitors:** You never need to sign in or hand over an email address to browse [`/guides/apps/`](/guides/apps/), trace [`/guides/pipeline/`](/guides/pipeline/), use [`/tools/`](/tools/), or propose an edit using the `✎ Edit` button.
+- **Zero accounts for visitors:** You never need to sign in or hand over an email address to browse [`/tools/#apps`](/tools/#apps), trace [`/guides/#pipeline`](/guides/#pipeline), use [`/tools/`](/tools/), or propose an edit using the `✎ Edit` button.
 - **MIT-licensed code:** Every repository—from the portal (`clearedstack.com`) to `cs-git`, `cs-registry`, `cs-runner`, `cs-store`, and all 10 workers (`cs-01` through `cs-10`)—is clean-room Go or web code under the MIT license, mirrored publicly on GitHub.
 - **Visible failures:** When a worker hits a snag, it does not silently swallow the problem. It logs a sanitized error code (such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL`) and surfaces it in the portal.
 
@@ -34,7 +34,7 @@ Letting anyone propose a change without signing in would normally invite spam bo
 2. **Honeypot field:** A hidden form field invisible to humans catches automated scrapers and silently drops their submissions.
 3. **Daily-salted IP hash rate limit:** The server caps submissions per hashed IP using a salt that rotates daily, so raw visitor IP addresses are never stored.
 4. **Strict schema validation:** Every proposal is checked against `ownership_map.json`, limited to 4 KB, restricted to allowed edit classes (`DATA`, `CONFIG`, or `ISSUE`), and stripped of HTML or scripts.
-5. **Human review gate:** Proposals sit in a pending queue and never touch `cs-git` or the cluster until reviewed and approved in [`/guides/decide/`](/guides/decide/) (`cs-04-decide`).
+5. **Human review gate:** Proposals sit in a pending queue and never touch `cs-git` or the cluster until reviewed and approved in [`/guides/#decide`](/guides/#decide) (`cs-04-decide`).
 
 While waiting, your edit button updates live in place so you can watch your contribution move from **Proposed** to **Approved**, **Building**, and **Live**.
 

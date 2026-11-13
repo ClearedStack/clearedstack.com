@@ -26,38 +26,18 @@ export function SiteFooter() {
         </div>
         <ul className="flex flex-col gap-2.5 font-mono text-[13px] md:items-end">
           <li>
+            <Link href="/" className={footLink}>
+              Home
+            </Link>
+          </li>
+          <li>
             <Link href="/tools/" className={footLink}>
-              Tools &amp; Apps
+              Tools
             </Link>
           </li>
           <li>
             <Link href="/guides/" className={footLink}>
-              Guides Library
-            </Link>
-          </li>
-          <li>
-            <Link href="/guides/command/" className={footLink}>
-              Command Portal
-            </Link>
-          </li>
-          <li>
-            <Link href="/guides/apps/" className={footLink}>
-              Cluster App Store
-            </Link>
-          </li>
-          <li>
-            <Link href="/guides/pipeline/" className={footLink}>
-              10-Worker Pipeline
-            </Link>
-          </li>
-          <li>
-            <Link href="/guides/decide/" className={footLink}>
-              Decide &amp; Edits
-            </Link>
-          </li>
-          <li>
-            <Link href="/guides/how-we-decide/" className={footLink}>
-              How we decide (Section M)
+              Guides
             </Link>
           </li>
           <li>
@@ -66,8 +46,8 @@ export function SiteFooter() {
             </Link>
           </li>
           <li>
-            <a href={site.repo} className={footLink} rel="noopener">
-              Source code (GitHub mirror)
+            <a href={site.github} className={footLink} rel="noopener">
+              GitHub
             </a>
           </li>
           <li>

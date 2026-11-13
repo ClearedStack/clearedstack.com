@@ -102,10 +102,11 @@ export default function AboutPage() {
             alongside four clean-room Go control-plane services.
           </p>
           <p>
-            Every app and tool is indexed under <Link href="/tools/">Tools</Link>, and anyone can inspect the live
-            factory under Guides on <Link href="/guides/command/">Command</Link>,{" "}
-            <Link href="/guides/apps/">Apps</Link>, and <Link href="/guides/pipeline/">Pipeline</Link>—or propose edits
-            without signing in. Source code is stored in <code className="text-ink">cs-git</code> and mirrored to{" "}
+            Every browser utility and cluster app is indexed under <Link href="/tools/">Tools</Link> (including the{" "}
+            <Link href="/tools/#apps">Cluster App Store</Link>), and anyone can inspect the live factory directly inside{" "}
+            <Link href="/guides/">Guides</Link> across <Link href="/guides/#command">Command</Link>,{" "}
+            <Link href="/guides/#pipeline">Pipeline</Link>, and <Link href="/guides/#decide">Decide</Link>—or propose
+            edits without signing in. Source code is stored in <code className="text-ink">cs-git</code> and mirrored to{" "}
             <a href={site.github} rel="noopener">
               GitHub
             </a>{" "}
@@ -117,11 +118,11 @@ export default function AboutPage() {
           <p>
             ClearedStack finds ideas through the 10-worker Prior Art engine. Workers observe public pages, score
             candidates deterministically against five knockout gates and a 100-point rubric, surface decisions in{" "}
-            <Link href="/guides/decide/">/guides/decide/</Link>, and compile clean-room specs from official public
+            <Link href="/guides/#decide">/guides/#decide</Link>, and compile clean-room specs from official public
             regulations—never copying third-party code, text, or design.
           </p>
           <p className="font-mono text-xs text-muted">
-            Read our <Link href="/guides/how-we-decide/">Section M evaluation factors</Link> and{" "}
+            Read our <Link href="/guides/#how-we-decide">Section M evaluation factors</Link> and{" "}
             <Link href="/guides/prior-art-engine/">The 10-Worker Prior Art Engine guide</Link>.
           </p>
         </Block>
