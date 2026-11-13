@@ -79,10 +79,10 @@ const answers = [
     slug: "closed-networks",
   },
   {
-    question: "Why is nothing live yet?",
+    question: "How can I see what is running or propose a change?",
     answer:
-      "The catalog is published before the tools so that people can say which ones they need first. Each tool is linked the day it works.",
-    slug: "faq",
+      "Open Command (/), Apps (/apps/), Pipeline (/pipeline/), or Decide (/decide/) with no login required, and click ✎ Edit on any element to propose a change.",
+    slug: "live-command-portal",
   },
 ];
 

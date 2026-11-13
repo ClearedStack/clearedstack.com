@@ -42,43 +42,33 @@ Learning this layout once helps you navigate both ClearedStack and federal reque
 
 ## The main areas
 
-The site is organized into five primary sections: [Home](/), [Tools](/tools/), [Guides](/guides/), [How we decide](/how-we-decide/), and [About](/about/). You can move between them at any time using the navigation links in the persistent header (`SiteHeader`) at the top of every page, or the index links in the footer (`SiteFooter`) at the bottom. The footer also carries our AI disclosure—stating that the site is built with Claude Code and Antigravity and reviewed by a person—linking to [How AI is used to build this project](/guides/built-with-ai/).
+The ClearedStack v3.1 Portal is an open public sandbox with **no login lock**, organized across **Command** ([`/`](/)), **Apps** ([`/apps/`](/apps/)), **Pipeline** ([`/pipeline/`](/pipeline/)), **Decide** ([`/decide/`](/decide/)), **Tools** ([`/tools/`](/tools/)), **Guides** ([`/guides/`](/guides/)), **How we decide** ([`/how-we-decide/`](/how-we-decide/)), and **About** ([`/about/`](/about/)).
 
-### 1. Home (`/`)
-The home page provides an executive summary of the project:
-- **Hero & Mission:** A concise statement of why ClearedStack exists—to help small businesses and engineers get through contracting paperwork without buying enterprise software or hiring compliance consultants.
-- **Section B Price Schedule:** An interactive pricing table laying out the five tool categories as CLINs 0001 through 0005, showing unit prices and total evaluated price ($0.00).
-- **Section C Catalog Preview:** Summary cards for all five areas showing the tools planned under each CLIN.
-- **Section H Principles:** The mandatory operational boundaries (free forever, MIT licensed, strictly client-side, unaffiliated with the government).
-- **Section F Roadmap:** The phased delivery timeline showing current focus and future trajectory.
+Every live element carries a `✎ Edit` button (anonymous 5-layer anti-spam shield) and contextual `[? Why]` drawers.
 
-### 2. Tools (`/tools/`)
-The tool catalog is the functional core of the site. It lists all 18 planned tools organized by their 4-digit CLINs. On this page, you can:
-- Filter tools in real time using the interactive search input.
-- Jump directly to specific categories using category anchor buttons (`#pricing`, `#proposal`, `#cyber`, `#market`, `#devsecops`).
-- Check development statuses (`Planned`, `In development`, `Live`).
-- Access the direct links and open-source source code repositories as tools become live.
+### 1. Command (`/`)
+The live priority dashboard driven by deterministic `P0`–`P4` attention rules (zero AI at runtime):
+- **Live Pulse Strip:** Shows control-plane pods, 10 deterministic workers, queue depth, and stream freshness.
+- **Attention Cards (`P0`–`P2`):** Surfaces critical errors, stalled `needs_subtool` queues, and pending decisions or public edit proposals at the top while collapsing idle workers to one line.
 
-### 3. Guides (`/guides/`)
-The documentation hub contains detailed operational guides. It is structured under UCF Section L ("Instructions to offerors"):
-- **Metrics Bar:** Summary counts of total guides, sections, combined reading time, and pricing ($0.00).
-- **Curated Reading Routes:** Tailored sequence paths designed for specific visitor objectives.
-- **Section Index (L.1–L.6):** An interactive, searchable library of all guides with real-time text matching and section jump anchors.
-- **Short Answers:** Quick answers to common questions regarding data security, costs, accounts, and trust.
+### 2. Apps (`/apps/`)
+The clean-room App Store powered by `cs-store` (replacing Argo CD and CasaOS):
+- **Control Plane (`clearedstack` namespace):** Live status and RAM budgets for `clearedstack-web`, `hub-queue-api`, `postgres`, `cs-git`, `cs-registry`, `cs-runner`, and `cs-store`.
+- **10 Workers (`cs-workers` namespace):** Live health, active sub-tools, and owner-only 1-click **Install / Upgrade / Pause / Rollback** controls.
 
-### 4. How we decide (`/how-we-decide/`)
-The decision engine under UCF Section M ("Evaluation factors for award"):
-- **Prior Art Process (Draft):** How existing tools are discovered, observed from public pages, screened, scored, and decided.
-- **Five Knockout Gates:** The non-negotiable checks every idea must pass before scoring.
-- **Advisory Rubric:** The 100-point rubric and public decision log with human owner accountability.
+### 3. Pipeline (`/pipeline/`) & Decide (`/decide/`)
+- **Pipeline (`/pipeline/`):** Real-time view of `cs-01-intake` through `cs-10-notify`, their `tools/<case>/` sub-tools, and `[? Why]` drawers.
+- **Decide (`/decide/`):** Publicly visible inbox for `cs-04-decide` candidate determinations and anonymous `✎ Edit` proposals.
 
-### 5. About (`/about/`)
-The project background and governance statement:
-- **The Problem & Mission:** Why good engineers should not need a full compliance department to bid on federal work.
-- **Architecture:** Why each tool is built as an independent, auditable open-source repository rather than a monolithic platform.
-- **Ground Rules:** Absolute rules governing no revenue, zero telemetry or tracking, public sources only, and verifiable math.
-- **Legal Disclaimer:** Clear statements that ClearedStack is not a government agency, does not grant security clearances or CMMC certifications, and provides self-service reference tools rather than legal or accounting advice.
-- **Contact:** Direct links to the GitHub organization and maintainer email.
+### 4. Tools (`/tools/`)
+The catalog of single-purpose client-side contracting tools organized by 4-digit CLINs (`#pricing`, `#proposal`, `#cyber`, `#market`, `#devsecops`), with real-time search and provenance links.
+
+### 5. Guides (`/guides/`)
+The documentation hub structured under UCF Section L (`L.1` through `L.6`), with curated reading routes, live text search, and short answers.
+
+### 6. How we decide (`/how-we-decide/`) & About (`/about/`)
+- **How we decide:** Section M evaluation factors, the 10-worker flow, 14-state lifecycle (including `needs_subtool`), 5 knockout gates, and 100-point rubric.
+- **About:** Mission, 2-namespace organization, zero-AI-at-runtime policy, MIT license, and full legal disclaimer.
 
 ## Finding tools in the catalog
 

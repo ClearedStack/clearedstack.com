@@ -51,7 +51,7 @@ export const guideGroups = [
     code: "L.6",
     name: "How this project is run",
     blurb:
-      "Where tool ideas come from, how they are chosen and credited, and how AI is used to do the work. Describes intent; the process is not running yet.",
+      "The 10-worker deterministic Prior Art engine, 14-state lifecycle, MIT clean-room architecture, and zero-AI-at-runtime rules.",
   },
 ] as const;
 

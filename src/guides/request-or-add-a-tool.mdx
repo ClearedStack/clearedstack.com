@@ -42,22 +42,22 @@ Anything the tool must NOT do or ask for:
 
 The last line matters more than it looks. If a tool would be useless to you the moment it asked for a company name, say so.
 
-### How a suggestion enters the Prior Art process
+### How a suggestion enters the 10-worker pipeline
 
-Community suggestions enter the project’s [Prior Art engine (draft)](/guides/prior-art-engine/) at the **Discover** stage and go through the same stages as any other candidate:
+Community suggestions can be submitted directly on the Portal via `✎ Edit` (no login required), via GitHub issue, or by email. Every suggestion enters `cs-01-intake` and moves through the 100% deterministic pipeline:
 
 <Flow
-  caption="How community tool requests flow through the Prior Art process"
+  caption="How community tool requests flow through the 10-worker Prior Art engine"
   direction="down"
   steps={[
-    { tag: "Stage 1", label: "Discover", detail: "Community suggestion submitted via GitHub issue or email." },
-    { tag: "Stage 2", label: "Record & Observe", detail: "Given a candidate ID; public pages and regulatory sources observed." },
-    { tag: "Stage 3", label: "Screen", detail: "Tested against five knockout gates (public source, browser, private, one job, arithmetic)." },
-    { tag: "Stage 4", label: "Score & Decide", detail: "Scored against the 100-point rubric; human owner decides outcome on /how-we-decide/." },
+    { tag: "cs-01-intake", label: "Intake & Dedupe", detail: "Normalizes URLs, SHA-256 deduplicates, and assigns a PA-XXXX ID." },
+    { tag: "cs-02-observe", label: "Observe & Seal", detail: "Inspects public pages and seals raw snapshots behind the clean-room wall." },
+    { tag: "cs-03-evaluate", label: "Screen & Score", detail: "Runs five knockout gates and the 100-point rubric deterministically." },
+    { tag: "cs-04-decide", label: "Decide", detail: "Surfaces in /decide for human owner determination (Build, Link, Merge, Park, Reject)." },
   ]}
 />
 
-*(Note: The Prior Art engine describes pure intent and is currently in draft. It is not running yet, and nothing has been collected. See [Section M · How we decide](/how-we-decide/) and [How the project chooses what to build](/guides/prior-art-engine/).)*
+Follow live progress in [Pipeline](/pipeline/) and [Decide](/decide/), or read [The 10-Worker Prior Art Engine](/guides/prior-art-engine/).
 
 ## Ask for one that is already planned
 
