@@ -1,5 +1,5 @@
 export const meta = {
-  title: "cs-09-monitor specification",
+  title: "Dogwatch specification",
   summary: "Scheduled monitoring worker that watches FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers for deterministic drift and reopens affected items.",
   group: "components",
   order: 16,
@@ -9,30 +9,30 @@ export const meta = {
 
 ## Overview & Role
 
-`cs-09-monitor` is the continuous monitoring worker in the `cs-workers` namespace (`ownerRepo: cs-09-monitor`, version `v0.1.0-draft`). Replacing the original Stage 10 (Revisit), it watches federal regulatory feeds, `live` ClearedStack tools, external `linked` tools, and `parked` blockers for drift.
+Dogwatch is the continuous monitoring worker in the `cs-workers` namespace (`ownerRepo: Dogwatch`, version `v0.1.0-draft`). Replacing the original Stage 10 (Revisit), it watches federal regulatory feeds, `live` ClearedStack tools, external `linked` tools, and `parked` blockers for drift.
 
-`cs-09-monitor` is a 100% deterministic Go service with zero AI at runtime. Rather than scraping pages blindly or patching tools directly, it uses lightweight HTTP ETags, structured XML/API feeds, and deterministic DOM diffs—and reopens affected `PA-XXXX` items in `hub-queue-api` so the main pipeline handles updates cleanly.
+Dogwatch is a 100% deterministic Go service with zero AI at runtime. Rather than scraping pages blindly or patching tools directly, it uses lightweight HTTP ETags, structured XML/API feeds, and deterministic DOM diffs—and reopens affected `PA-XXXX` items in Muster so the main pipeline handles updates cleanly.
 
 ## Runtime & Resource Budget
 
 | Property | Value |
 | --- | --- |
-| **Service / Repo** | `cs-09-monitor` |
+| **Service / Repo** | Dogwatch (`dogwatch`) |
 | **Namespace** | `cs-workers` |
 | **Kind** | `worker` (100% deterministic Go, zero runtime AI) |
 | **Version** | `v0.1.0-draft` |
 | **RAM Budget** | `30 MiB` |
 | **Sub-Tools** | `federal-register`, `ecfr`, `nist-csrc`, `linked-tool-watch`, `live-catalog` |
-| **Local Spool** | `/var/spool/cs` (buffers detected drift events if `hub-queue-api` is restarting) |
+| **Local Spool** | `/var/spool/cs` (buffers detected drift events if Muster is restarting) |
 | **Contract Version** | `CONTRACT_VERSION=v1` (owned by `clearedstack.com`) |
 
-`cs-09-monitor` runs under the Standard Kubernetes priority class with a `30 MiB` memory footprint, yielding before High-priority control-plane pods on a single 4 GiB `k3s` node.
+Dogwatch runs under the Standard Kubernetes priority class with a `30 MiB` memory footprint, yielding before High-priority control-plane pods on a single 4 GiB `k3s` node.
 
 ## Interfaces & State Transitions
 
-`cs-09-monitor` pulls scheduled watch tasks from `hub-queue-api` over cluster-private HTTP using its Kubernetes ServiceAccount identity (`lease`, `heartbeat`, `complete`, `fail`, `needs_subtool`). It never touches `postgres` directly.
+Dogwatch pulls scheduled watch tasks from Muster over cluster-private HTTP using its Kubernetes ServiceAccount identity (`lease`, `heartbeat`, `complete`, `fail`, `needs_subtool`). It never touches Logbook directly.
 
-When a deterministic diff confirms a meaningful change, `cs-09-monitor` stages the finding in `/var/spool/cs` and requests a state transition through `hub-queue-api`:
+When a deterministic diff confirms a meaningful change, Dogwatch stages the finding in `/var/spool/cs` and requests a state transition through Muster:
 
 | Current State | Reopened Target State | Priority Lane | Condition |
 | --- | --- | --- | --- |
@@ -43,7 +43,7 @@ When a deterministic diff confirms a meaningful change, `cs-09-monitor` stages t
 
 ## Sub-Tools & Failure Modes
 
-Each source type is implemented as a deterministic sub-tool under `tools/<case>/` inside the `cs-09-monitor` repository, paired with golden test fixtures:
+Each source type is implemented as a deterministic sub-tool under `tools/<case>/` inside the Dogwatch repository, paired with golden test fixtures:
 
 | Sub-Tool | Target Monitored | Detection Method |
 | --- | --- | --- |
@@ -55,16 +55,16 @@ Each source type is implemented as a deterministic sub-tool under `tools/<case>/
 
 | Error Code | Trigger | Pipeline Behavior |
 | --- | --- | --- |
-| `E_TIMEOUT` | Upstream government feed or external linked site fails to respond in time | Item stays safe in queue for retry; repeated timeouts are deduplicated by `cs-10-notify`. |
+| `E_TIMEOUT` | Upstream government feed or external linked site fails to respond in time | Item stays safe in queue for retry; repeated timeouts are deduplicated by Foghorn. |
 | `E_PARSE` | Corrupt XML/JSON feed or broken HTTP response | Refuses to guess; logs sanitized failure and halts that check cleanly. |
-| `E_NEEDS_SUBTOOL` | Upstream feed or DOM layout changes to an unrecognized structure | Fails closed, pauses item in `needs_subtool`, and triggers `cs-10-notify` to open a task; auto-replays after `cs-store` deploys the new watcher. |
+| `E_NEEDS_SUBTOOL` | Upstream feed or DOM layout changes to an unrecognized structure | Fails closed, pauses item in `needs_subtool`, and triggers Foghorn to open a task; auto-replays after Bosun deploys the new watcher. |
 
 ## Security & Clean-Room Boundaries
 
-- **Restricted network egress:** Default-deny network policies permit `cs-09-monitor` to call `hub-queue-api` and approved public regulatory/catalog targets only; `postgres`, `cs-git`, and `cs-registry` are unreachable.
+- **Restricted network egress:** Default-deny network policies permit Dogwatch to call Muster and approved public regulatory/catalog targets only; Logbook, Plainforge, and Stow are unreachable.
 - **Unprivileged pod posture:** Runs as non-root with dropped Linux capabilities, no privilege escalation, and a read-only root filesystem (apart from `/var/spool/cs`).
-- **Clean-room separation:** `cs-09-monitor` only inspects public regulatory feeds and catalog metadata; it never injects raw external HTML into `cs-06-build` payloads (`hub-queue-api` rejects any such attempt).
-- **Sanitized status:** Internal cluster details are stripped by `cs-store` before any `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL` alert is surfaced publicly.
+- **Clean-room separation:** Dogwatch only inspects public regulatory feeds and catalog metadata; it never injects raw external HTML into Jig payloads (Muster rejects any such attempt).
+- **Sanitized status:** Internal cluster details are stripped by Bosun before any `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL` alert is surfaced publicly.
 
 ## Related pages
 

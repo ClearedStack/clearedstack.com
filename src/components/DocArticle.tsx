@@ -18,6 +18,7 @@ export function DocArticle({
   group,
   docs,
   Content,
+  before,
   children,
 }: {
   /** The library this page belongs to. */
@@ -27,6 +28,8 @@ export function DocArticle({
   /** Every page in the same library, in reading order. */
   docs: Doc[];
   Content: ComponentType;
+  /** Anything to show above the text, such as a component's registry entry. */
+  before?: ReactNode;
   /** Anything to show under the text, such as related tools. */
   children?: ReactNode;
 }) {
@@ -69,6 +72,7 @@ export function DocArticle({
       ) : null}
 
       <div className="mt-10 grid gap-x-16 border-t border-line pt-8 lg:grid-cols-[minmax(0,42rem)_minmax(0,1fr)]">
+        {before}
         {/* On a small screen the contents fold away above the text. */}
         {doc.headings.length > 1 ? (
           <details className="mb-8 rounded-sm border border-line bg-surface lg:hidden">

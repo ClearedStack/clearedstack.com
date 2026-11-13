@@ -187,7 +187,7 @@ export function GlobalSearch() {
                 <div className="px-4 py-8 text-center text-sm text-muted">
                   <p className="font-medium text-ink">Instant, client-side site search</p>
                   <p className="mt-1 text-xs">
-                    Type a keyword, CLIN number (e.g. <span className="font-mono text-accent">0001</span>), regulation (e.g. <span className="font-mono text-accent">FAR 15</span>, <span className="font-mono text-accent">DFARS 7012</span>), or topic (<span className="font-mono text-accent">wrap rate</span>, <span className="font-mono text-accent">CMMC</span>, <span className="font-mono text-accent">cs-store</span>, <span className="font-mono text-accent">k3s</span>).
+                    Type a keyword, CLIN number (e.g. <span className="font-mono text-accent">0001</span>), regulation (e.g. <span className="font-mono text-accent">FAR 15</span>, <span className="font-mono text-accent">DFARS 7012</span>), or topic (<span className="font-mono text-accent">wrap rate</span>, <span className="font-mono text-accent">CMMC</span>, <span className="font-mono text-accent">Bosun</span>, <span className="font-mono text-accent">k3s</span>).
                   </p>
                 </div>
               ) : results.length === 0 ? (

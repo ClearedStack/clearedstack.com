@@ -53,7 +53,8 @@ src/
   components/       header, footer, logo, the catalog list, the page lists and the diagrams
   data/
     catalog.ts      the areas and tools shown on the site
-    platform.ts     the components listed on /platform
+    registry.json   the naming registry: one entry per platform component
+    platform.ts     typed access to the registry
     site.ts         name, addresses, contact email, short disclaimer
   guides/           one .mdx file per guide, served under /guides/
   platform/         one .mdx file per platform page, served under /platform/
@@ -146,6 +147,8 @@ Pages about how the project chooses, builds and runs things live in `src/platfor
 | --- | --- |
 | `group` | `factory`, `cluster`, `governance` or `components` |
 | `status` | `design`, `built` or `running`. Shown as a label on the page and in the list |
+
+A page named after a component in the naming registry (`src/data/registry.json`) is that component’s specification, and shows its registry entry above the text. The registry is the only place a component’s name is written down: to rename one, change it there and rename the page to match.
 
 Set `status` to what is true today, not what is planned. A page that describes something not yet running is a `design`, however complete the description. Change the label when the thing it describes changes.
 

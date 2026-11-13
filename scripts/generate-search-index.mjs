@@ -123,35 +123,25 @@ if (toolsMatch) {
   }
 }
 
-// 3. Platform components from src/data/platform.ts. These are the parts of
-// the factory, not tools: they are listed on the Platform page.
-const platformSource = fs.readFileSync(path.join(dataDir, "platform.ts"), "utf8");
-const cpMatch = platformSource.match(/export const controlPlaneApps: PlatformApp\[\] = (\[[\s\S]*?\n\]);/);
-const wkMatch = platformSource.match(/export const workerApps: PlatformApp\[\] = (\[[\s\S]*?\n\]);/);
+// 3. Platform components from the naming registry. A component with a
+// specification page is indexed from that page; the registry adds its old
+// identifier, so a search for "cs-git" still finds Plainforge.
+const registry = JSON.parse(fs.readFileSync(path.join(dataDir, "registry.json"), "utf8"));
+const formerNames = new Map(registry.components.map((component) => [component.slug, component]));
 
-for (const match of [cpMatch, wkMatch]) {
-  if (!match) continue;
-  try {
-    const apps = eval(match[1]);
-    apps.forEach((app) => {
-      // A component with a specification page is indexed from that page instead.
-      if (fs.existsSync(path.join(rootDir, "src", "platform", `${app.id}.mdx`))) return;
-      const kindLabel = app.kind === "control-plane" ? "Control plane" : "Pipeline worker";
-      documents.push({
-        id: `app-${app.id}`,
-        type: "app",
-        title: app.name,
-        subtitle: `Platform component · ${kindLabel}`,
-        summary: app.role,
-        url: "/platform/#components",
-        badge: "Platform",
-        content: `${app.name} ${app.namespace} ${app.role} ${app.ownerRepo} ${app.notes} ${(app.subTools || []).join(" ")}`
-      });
-    });
-  } catch (err) {
-    console.error("Failed to parse platform apps:", err);
-  }
-}
+registry.components.forEach((component) => {
+  if (fs.existsSync(path.join(rootDir, "src", "platform", `${component.slug}.mdx`))) return;
+  documents.push({
+    id: `app-${component.slug}`,
+    type: "app",
+    title: component.name,
+    subtitle: `Platform component · formerly ${component.formerly}`,
+    summary: component.responsibility,
+    url: "/platform/#registry",
+    badge: "Platform",
+    content: `${component.name} ${component.formerly} ${component.namespace} ${component.responsibility} ${component.interfaces.join(" ")} ${component.subTools.join(" ")}`
+  });
+});
 
 // 4. Guides (src/guides) and platform pages (src/platform), with their sections.
 // The section numbers repeat the ones in src/lib/docs.ts.
@@ -213,7 +203,11 @@ for (const collection of collections) {
       summary: meta.summary || cleanBody.slice(0, 160) + "...",
       url: `${collection.base}/${slug}/`,
       badge: meta.status ? meta.status.toUpperCase() : code,
-      content: `${meta.title} ${meta.summary || ""} ${meta.group || ""} ${code} ${meta.status || ""} ${cleanBody.slice(0, 600)}`
+      content: `${meta.title} ${meta.summary || ""} ${meta.group || ""} ${code} ${meta.status || ""} ${
+        collection.folder === "platform" && formerNames.has(slug)
+          ? `formerly ${formerNames.get(slug).formerly} ${formerNames.get(slug).responsibility}`
+          : ""
+      } ${cleanBody.slice(0, 600)}`
     });
 
     const parts = body.split(/^## /m);

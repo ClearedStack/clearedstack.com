@@ -14,7 +14,7 @@ As explained in [Answer every requirement](/guides/answer-a-solicitation/), a pa
 | --- | --- |
 | **Tool Slug** | `page-budget-planner` |
 | **Catalog CLIN** | `0002` — Proposal & capture |
-| **Stack Template** | `calculator` (deterministic allocation math in `cs-06-build`) |
+| **Stack Template** | `calculator` (deterministic allocation math in Jig) |
 | **Runtime** | 100% static browser-side HTML/CSS/JS (zero backend, zero runtime AI) |
 | **License** | MIT |
 
@@ -91,7 +91,7 @@ As explained in [Answer every requirement](/guides/answer-a-solicitation/), a pa
 | Factor 3, staffing | 20% | 6 |
 | **Total** | **100%** | **30** |
 
-**Boundary cases verified by `cs-07-verify`:**
+**Boundary cases verified by Shakedown:**
 - `countedFixed > totalPageLimit` displays an inline error and refuses to emit negative section budgets.
 - `totalWeight === 0` displays an inline validation error instead of dividing by zero.
 - Unnormalized weights (e.g., `5, 3, 2`) normalize identically to `50%, 30%, 20%`.
@@ -102,4 +102,4 @@ As explained in [Answer every requirement](/guides/answer-a-solicitation/), a pa
 - [Read a solicitation](/guides/read-a-solicitation/)
 - [Compliance Matrix Generator](/tools/compliance-matrix-generator/)
 - [Check a tool’s answer](/guides/checking-results/)
-- [cs-07-verify specification](/platform/cs-07-verify/)
+- [Shakedown specification](/platform/shakedown/)

@@ -1,0 +1,400 @@
+{
+  "version": 1,
+  "revised": "2026-11",
+  "about": "The naming registry for the ClearedStack platform. One entry per component: its canonical name, the identifier it replaced, what it is responsible for, its boundaries, its repository, its container image and what it depends on. Manifests, pipelines and documentation should take names from this file.",
+  "organization": "https://github.com/ClearedStack",
+  "imageRegistry": "stow.clearedstack.svc.cluster.local:5000",
+  "components": [
+    {
+      "slug": "conn",
+      "name": "Conn",
+      "formerly": "clearedstack-web",
+      "kind": "control-plane",
+      "namespace": "clearedstack",
+      "responsibility": "Shows the catalog, the guides and the state of the factory to anyone, and takes in edit proposals.",
+      "interfaces": [
+        "Public HTTPS: the only way in from outside",
+        "Reads Logbook's public views with a read-only role",
+        "Receives the live update stream from Muster and sends it edit proposals"
+      ],
+      "repository": "clearedstack.com",
+      "image": "conn",
+      "dependsOn": [
+        "logbook",
+        "muster"
+      ],
+      "memory": "128 MiB",
+      "version": "v0.2.0-draft",
+      "subTools": []
+    },
+    {
+      "slug": "muster",
+      "name": "Muster",
+      "formerly": "hub-queue-api",
+      "kind": "control-plane",
+      "namespace": "clearedstack",
+      "responsibility": "Hands out work to the workers, records every result and change of state, and receives edit proposals.",
+      "interfaces": [
+        "Worker calls over cluster-private HTTP: lease, heartbeat, complete, fail, needs_subtool",
+        "Reads and writes Logbook's working records; the only service that does",
+        "Live update stream and edit-proposal intake for Conn",
+        "Receives health reports from Bosun"
+      ],
+      "repository": "clearedstack.com",
+      "image": "muster",
+      "dependsOn": [
+        "logbook"
+      ],
+      "memory": "48 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": []
+    },
+    {
+      "slug": "logbook",
+      "name": "Logbook",
+      "formerly": "postgres",
+      "kind": "control-plane",
+      "namespace": "clearedstack",
+      "responsibility": "Keeps the record of every item, decision and proposal, and the public views of that record.",
+      "interfaces": [
+        "Working records (the core schema): read and written by Muster only",
+        "Public views (the pub schema): read-only, for Conn"
+      ],
+      "repository": "clearedstack.com",
+      "image": "postgres:17-alpine (upstream PostgreSQL; Logbook is the schema and ledger on top)",
+      "dependsOn": [],
+      "memory": "256 MiB",
+      "version": "17-alpine",
+      "subTools": []
+    },
+    {
+      "slug": "plainforge",
+      "name": "Plainforge",
+      "formerly": "cs-git",
+      "kind": "control-plane",
+      "namespace": "clearedstack",
+      "responsibility": "Holds the primary copy of every repository, announces each change and mirrors code outward.",
+      "interfaces": [
+        "Git over HTTP and SSH, inside the cluster only",
+        "Push notifications to Slipway",
+        "Outbound mirror of code to GitHub",
+        "Commits from Foghorn, Slipway and Jig; reads by Bosun"
+      ],
+      "repository": "plainforge",
+      "image": "plainforge",
+      "dependsOn": [],
+      "memory": "64 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": []
+    },
+    {
+      "slug": "stow",
+      "name": "Stow",
+      "formerly": "cs-registry",
+      "kind": "control-plane",
+      "namespace": "clearedstack",
+      "responsibility": "Keeps built images inside the cluster, with recent versions ready for rollback.",
+      "interfaces": [
+        "Standard OCI registry API, inside the cluster only",
+        "Pushes from Slipway's build jobs",
+        "Pulls by the cluster's container runtime when Bosun deploys"
+      ],
+      "repository": "stow",
+      "image": "stow",
+      "dependsOn": [],
+      "memory": "64 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": []
+    },
+    {
+      "slug": "slipway",
+      "name": "Slipway",
+      "formerly": "cs-runner",
+      "kind": "control-plane",
+      "namespace": "clearedstack",
+      "responsibility": "Tests, builds and signs an image for every change.",
+      "interfaces": [
+        "Receives push notifications from Plainforge",
+        "Pushes signed images to Stow",
+        "Writes the new image digest back to Plainforge"
+      ],
+      "repository": "slipway",
+      "image": "slipway",
+      "dependsOn": [
+        "plainforge",
+        "stow"
+      ],
+      "memory": "32 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": []
+    },
+    {
+      "slug": "bosun",
+      "name": "Bosun",
+      "formerly": "cs-store",
+      "kind": "control-plane",
+      "namespace": "clearedstack",
+      "responsibility": "Deploys what was built, keeps it in its intended state and reports its health with cluster details removed.",
+      "interfaces": [
+        "Kubernetes API, using server-side apply",
+        "Reads manifests from Plainforge and image digests from Stow",
+        "Sends cleaned health reports to Muster"
+      ],
+      "repository": "bosun",
+      "image": "bosun",
+      "dependsOn": [
+        "plainforge",
+        "stow",
+        "muster"
+      ],
+      "memory": "48 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": []
+    },
+    {
+      "slug": "trawl",
+      "name": "Trawl",
+      "formerly": "cs-01-intake",
+      "kind": "worker",
+      "stage": 1,
+      "namespace": "cs-workers",
+      "responsibility": "Finds candidate tools and records each one exactly once.",
+      "interfaces": [
+        "Leases work from Muster over cluster-private HTTP",
+        "Reads public sources: SAM.gov notices, GitHub issues, scheduled site sweeps and the site's own form"
+      ],
+      "repository": "trawl",
+      "image": "trawl",
+      "dependsOn": [
+        "muster"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": [
+        "sam-gov",
+        "github-issues",
+        "web-sweep",
+        "site-form"
+      ]
+    },
+    {
+      "slug": "spyglass",
+      "name": "Spyglass",
+      "formerly": "cs-02-observe",
+      "kind": "worker",
+      "stage": 2,
+      "namespace": "cs-workers",
+      "responsibility": "Reads a candidate's public pages and writes down what job it does, copying nothing.",
+      "interfaces": [
+        "Leases work from Muster over cluster-private HTTP",
+        "Fetches public pages over HTTPS, and starts a temporary browser job when a page needs one"
+      ],
+      "repository": "spyglass",
+      "image": "spyglass",
+      "dependsOn": [
+        "muster"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": [
+        "saas-marketing",
+        "gov-portal",
+        "agency-pdf",
+        "on-demand-browser-job"
+      ]
+    },
+    {
+      "slug": "assay",
+      "name": "Assay",
+      "formerly": "cs-03-evaluate",
+      "kind": "worker",
+      "stage": 3,
+      "namespace": "cs-workers",
+      "responsibility": "Screens each candidate against the knockout gates and scores it on the rubric.",
+      "interfaces": [
+        "Leases observed records from Muster",
+        "Returns a pass or fail on each gate, a score and a recommendation"
+      ],
+      "repository": "assay",
+      "image": "assay",
+      "dependsOn": [
+        "muster"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": [
+        "rubric-profiles"
+      ]
+    },
+    {
+      "slug": "gavel",
+      "name": "Gavel",
+      "formerly": "cs-04-decide",
+      "kind": "worker",
+      "stage": 4,
+      "namespace": "cs-workers",
+      "responsibility": "Holds scored candidates and edit proposals until a person decides.",
+      "interfaces": [
+        "Leases scored candidates and pending proposals from Muster",
+        "Presents them to the owner and records the decision, with a reason for any override"
+      ],
+      "repository": "gavel",
+      "image": "gavel",
+      "dependsOn": [
+        "muster"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": []
+    },
+    {
+      "slug": "waybill",
+      "name": "Waybill",
+      "formerly": "cs-05-provenance",
+      "kind": "worker",
+      "stage": 5,
+      "namespace": "cs-workers",
+      "responsibility": "Credits where an idea came from and writes the specification a tool is built from.",
+      "interfaces": [
+        "Leases approved items from Muster",
+        "Emits the credit note and the build specification"
+      ],
+      "repository": "waybill",
+      "image": "waybill",
+      "dependsOn": [
+        "muster"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": [
+        "spec-profiles"
+      ]
+    },
+    {
+      "slug": "jig",
+      "name": "Jig",
+      "formerly": "cs-06-build",
+      "kind": "worker",
+      "stage": 6,
+      "namespace": "cs-workers",
+      "responsibility": "Generates a tool's repository from its specification and a fixed template.",
+      "interfaces": [
+        "Leases build specifications from Muster",
+        "Commits the generated repository to Plainforge"
+      ],
+      "repository": "jig",
+      "image": "jig",
+      "dependsOn": [
+        "muster",
+        "plainforge"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": [
+        "calculator",
+        "checklist",
+        "validator",
+        "decision-tree"
+      ]
+    },
+    {
+      "slug": "shakedown",
+      "name": "Shakedown",
+      "formerly": "cs-07-verify",
+      "kind": "worker",
+      "stage": 7,
+      "namespace": "cs-workers",
+      "responsibility": "Checks a built tool against the five listing conditions before it can be listed.",
+      "interfaces": [
+        "Leases built tools from Muster",
+        "Returns a pass or fail on each of the five conditions"
+      ],
+      "repository": "shakedown",
+      "image": "shakedown",
+      "dependsOn": [
+        "muster"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": []
+    },
+    {
+      "slug": "gazette",
+      "name": "Gazette",
+      "formerly": "cs-08-catalog",
+      "kind": "worker",
+      "stage": 8,
+      "namespace": "cs-workers",
+      "responsibility": "Publishes, links, merges and retires catalog entries.",
+      "interfaces": [
+        "Leases verified, linked, merged and retired items from Muster",
+        "Writes catalog entries to the hub repository in Plainforge"
+      ],
+      "repository": "gazette",
+      "image": "gazette",
+      "dependsOn": [
+        "muster",
+        "plainforge"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": []
+    },
+    {
+      "slug": "dogwatch",
+      "name": "Dogwatch",
+      "formerly": "cs-09-monitor",
+      "kind": "worker",
+      "stage": 9,
+      "namespace": "cs-workers",
+      "responsibility": "Watches official sources, live tools and linked tools for change, and reopens whatever is affected.",
+      "interfaces": [
+        "Leases scheduled checks from Muster",
+        "Fetches the Federal Register, the eCFR and NIST's publications, and checks linked and live tools"
+      ],
+      "repository": "dogwatch",
+      "image": "dogwatch",
+      "dependsOn": [
+        "muster"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": [
+        "federal-register",
+        "ecfr",
+        "nist-csrc",
+        "linked-tool-watch",
+        "live-catalog"
+      ]
+    },
+    {
+      "slug": "foghorn",
+      "name": "Foghorn",
+      "formerly": "cs-10-notify",
+      "kind": "worker",
+      "stage": 10,
+      "namespace": "cs-workers",
+      "responsibility": "Turns failures, paused items and approved edits into one piece of work in the repository that owns the fix.",
+      "interfaces": [
+        "Leases routing work from Muster",
+        "Commits changes and opens tasks in Plainforge",
+        "Sends owner alerts to a configured webhook",
+        "Feeds the live update stream through Muster"
+      ],
+      "repository": "foghorn",
+      "image": "foghorn",
+      "dependsOn": [
+        "muster",
+        "plainforge"
+      ],
+      "memory": "30 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": [
+        "internal-git",
+        "github-mirror",
+        "webhook-alert",
+        "portal-sse"
+      ]
+    }
+  ]
+}

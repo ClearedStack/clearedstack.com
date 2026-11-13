@@ -2,7 +2,7 @@
 # it with unprivileged nginx running as a non-root user on port 8080.
 #
 #   buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. \
-#     --opt filename=Containerfile --output type=image,name=cs-registry.clearedstack.svc:5000/clearedstack-web:latest,push=true
+#     --opt filename=Containerfile --output type=image,name=stow.clearedstack.svc:5000/conn:latest,push=true
 
 FROM node:22-alpine AS build
 WORKDIR /app

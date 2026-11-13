@@ -90,23 +90,42 @@ Behind the catalog is a design for choosing and building tools in the open. It i
 
 In outline, the design is:
 
-- **Ten workers, one job each** (`cs-01-intake` to `cs-10-notify`): find an idea, observe it, screen and score it, hold it for a person’s decision, credit it and write a specification, build the tool, verify it, list it, watch its sources, and route problems to the repository that owns them.
+- **Ten workers, one job each** (Trawl to Foghorn): find an idea, observe it, screen and score it, hold it for a person’s decision, credit it and write a specification, build the tool, verify it, list it, watch its sources, and route problems to the repository that owns them.
 - **No AI when it runs.** Workers use fixed rules. A case with no rule pauses in `needs_subtool` until a rule and its test examples are added, then runs again.
-- **Two namespaces on one small `k3s` node**, with no Docker: `clearedstack` for seven control-plane services (`clearedstack-web`, `hub-queue-api`, PostgreSQL, `cs-git`, `cs-registry`, `cs-runner`, `cs-store`) and `cs-workers` for the ten workers.
+- **Two namespaces on one small `k3s` node**, with no Docker: `clearedstack` for seven control-plane services (Conn, Muster, Logbook, Plainforge, Stow, Slipway, Bosun) and `cs-workers` for the ten workers.
 - **Code mirrored to GitHub, images kept inside the cluster.**
 - **No login.** Anyone can read everything and propose an edit. Nothing is applied until the owner approves it.
 
+### Naming registry
+
+Each of the seventeen platform components has one canonical name. [`src/data/registry.json`](src/data/registry.json) is the only place a name is written down, with the identifier it replaced, what the component is responsible for, its boundaries, its repository, its container image and what it depends on. The site publishes the same file at `/platform/registry.json` so that manifests, pipelines and other repositories can read it.
+
+| Stage | Name | Formerly | | Name | Formerly |
+| --- | --- | --- | --- | --- | --- |
+| 01 | **Trawl** | `cs-01-intake` | | **Conn** | `clearedstack-web` |
+| 02 | **Spyglass** | `cs-02-observe` | | **Muster** | `hub-queue-api` |
+| 03 | **Assay** | `cs-03-evaluate` | | **Logbook** | `postgres` |
+| 04 | **Gavel** | `cs-04-decide` | | **Plainforge** | `cs-git` |
+| 05 | **Waybill** | `cs-05-provenance` | | **Stow** | `cs-registry` |
+| 06 | **Jig** | `cs-06-build` | | **Slipway** | `cs-runner` |
+| 07 | **Shakedown** | `cs-07-verify` | | **Bosun** | `cs-store` |
+| 08 | **Gazette** | `cs-08-catalog` | | | |
+| 09 | **Dogwatch** | `cs-09-monitor` | | | |
+| 10 | **Foghorn** | `cs-10-notify` | | | |
+
+To rename a component, change `name` and `slug` in the registry, keep the old identifier in `formerly`, and rename its page in `src/platform/` to the new slug. Old addresses keep working.
+
 ```mermaid
 flowchart LR
-  PUB["Public Visitors (No Login)"] -->|"HTTPS (pub.* views + Edit)"| WEB["clearedstack-web"]
-  GIT["cs-git"] -->|"Push mirror on change"| GH["GitHub (Code Mirror Only, NO Images)"]
-  WEB <-->|"pub.* + SSE + Proposals"| QAPI["hub-queue-api"]
+  PUB["Public Visitors (No Login)"] -->|"HTTPS (pub.* views + Edit)"| WEB["Conn"]
+  GIT["Plainforge"] -->|"Push mirror on change"| GH["GitHub (Code Mirror Only, NO Images)"]
+  WEB <-->|"pub.* + SSE + Proposals"| QAPI["Muster"]
   QAPI <-->|"RW core.*"| DB[("Postgres 17")]
-  GIT -->|"Webhook"| RUN["cs-runner (ko / BuildKit)"]
-  RUN -->|"Signed OCI"| REG["cs-registry (last 5 digests)"]
-  STORE["cs-store (Server-Side Apply)"] -->|"Watches"| GIT
+  GIT -->|"Webhook"| RUN["Slipway (ko / BuildKit)"]
+  RUN -->|"Signed OCI"| REG["Stow (last 5 digests)"]
+  STORE["Bosun (Server-Side Apply)"] -->|"Watches"| GIT
   STORE -->|"Watches"| REG
-  STORE -->|"Monitors and Sanitizes"| W["cs-01 .. cs-10 (cs-workers)"]
+  STORE -->|"Monitors and Sanitizes"| W["Trawl .. Foghorn (cs-workers)"]
   W -->|"ServiceAccount HTTP + Spool"| QAPI
 ```
 
@@ -140,7 +159,8 @@ src/
   components/     header, footer, catalog list, page lists, article layout, diagrams
   data/
     catalog.ts          the categories and tools, and what each tool's page shows
-    platform.ts         the components listed on /platform
+    registry.json       the naming registry: one entry per platform component
+    platform.ts         typed access to the registry
     ownership_map.json  design data: which repository owns each editable element
     site.ts             name, URLs, contact address, short disclaimer
   guides/         one .mdx file per guide, served under /guides/

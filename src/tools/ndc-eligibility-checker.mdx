@@ -52,7 +52,7 @@ No government agency issues a certificate for NDC status. As explained in [Codes
 
 ## Clean-Room & 5-Condition QA Requirements
 
-To pass `cs-07-verify` and ship to `live`:
+To pass Shakedown and ship to `live`:
 
 1. **Browser-only & offline execution:** Executes 100% in the browser with all statutory rules and CAS exemption logic bundled locally; works completely offline.
 2. **Strict Content Security Policy:** Enforces `default-src 'self'`, `connect-src 'self'`, and `form-action 'none'`. No contract history or company answers ever leave the browser.
@@ -87,4 +87,4 @@ To pass `cs-07-verify` and ship to `live`:
 - [Codes, registration and small business status](/guides/codes-and-small-business/)
 - [Read a solicitation](/guides/read-a-solicitation/)
 - [The pipeline and its ten workers](/platform/pipeline/#building-verifying-and-listing)
-- [cs-07-verify specification](/platform/cs-07-verify/)
+- [Shakedown specification](/platform/shakedown/)

@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import type { ComponentType } from "react";
+import { components } from "@/data/platform";
 import { slugify } from "@/lib/slug";
 import type { DocStatus } from "@/lib/status";
 
@@ -278,8 +279,9 @@ export type Collection = typeof guides | typeof platform;
  * address still answers, with a page that sends the reader on. A static site
  * cannot issue a redirect, so this is the next best thing.
  *
- * Specifications were once guides named "spec-<name>". Those addresses are
- * handled by movedGuideTarget() below and do not need listing here.
+ * Specifications were once guides named "spec-<name>", using each component's
+ * old identifier. Those addresses are worked out from the naming registry by
+ * movedGuideTarget() below and do not need listing here.
  */
 export const movedGuides: Record<string, string> = {
   "self-building-factory-loop": "/platform/overview/",
@@ -317,15 +319,8 @@ export function movedGuideSlugs(): string[] {
   return [
     ...Object.keys(movedGuides),
     ...toolSpecSlugs().map((slug) => `spec-${slug}`),
-    ...[...platformComponentSlugs()].map((slug) => `spec-${slug}`),
+    ...components.map((component) => `spec-${component.formerly}`),
   ];
-}
-
-function platformComponentSlugs(): Set<string> {
-  const dir = path.join(process.cwd(), "src", "platform");
-  return new Set(
-    platform.slugs().filter((slug) => /group:\s*"components"/.test(readFileSync(path.join(dir, `${slug}.mdx`), "utf8"))),
-  );
 }
 
 /** Where an old guide address now leads, or undefined if it never moved. */
@@ -334,8 +329,21 @@ export function movedGuideTarget(slug: string): string | undefined {
   if (!slug.startsWith("spec-")) return undefined;
   const name = slug.slice("spec-".length);
   if (toolSpecSlugs().includes(name)) return `/tools/${name}/`;
-  if (platformComponentSlugs().has(name)) return `/platform/${name}/`;
-  return undefined;
+  const component = components.find((item) => item.formerly === name);
+  return component ? `/platform/${component.slug}/` : undefined;
+}
+
+/**
+ * Platform pages named after a component's old identifier, such as
+ * /platform/cs-git/. They send the reader to the page under its new name.
+ */
+export function movedPlatformSlugs(): string[] {
+  return components.map((component) => component.formerly);
+}
+
+export function movedPlatformTarget(slug: string): string | undefined {
+  const component = components.find((item) => item.formerly === slug);
+  return component ? `/platform/${component.slug}/` : undefined;
 }
 
 /** "2026-11" becomes "November 2026". */

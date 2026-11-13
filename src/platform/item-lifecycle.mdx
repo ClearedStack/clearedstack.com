@@ -37,16 +37,16 @@ An item does not always go straight from found to live. It can leave early, wait
 
 | State | What it means | Usually goes to | Other moves |
 | --- | --- | --- | --- |
-| `discovered` | `cs-01-intake` has seen a candidate | `recorded` | `rejected` if the address is dead or a duplicate |
+| `discovered` | Trawl has seen a candidate | `recorded` | `rejected` if the address is dead or a duplicate |
 | `recorded` | It has an identifier | `observed` | `needs_subtool` if the source is in a form intake has no rule for |
-| `observed` | `cs-02-observe` has read its public pages | `scored` or `screened-out` | `needs_subtool` if the page layout is unfamiliar |
-| `screened-out` | `cs-03-evaluate` found it fails a gate | Stays there | The owner can send it back to `observed` |
-| `scored` | `cs-03-evaluate` has rated it | `approved` | The owner can choose `parked`, `linked`, `merged` or `rejected` |
-| `approved` | The owner chose to build, and `cs-05-provenance` wrote the specification | `building` | `needs_subtool` if there is no profile for that kind of tool |
-| `building` | `cs-06-build` generated it and `cs-07-verify` is checking it | `live` | `parked` if the rule turns out to be unclear |
-| `live` | `cs-08-catalog` published it | Watched by `cs-09-monitor` | Back to `building` when the rule changes, or `retired` when it is repealed |
-| `parked` | A good idea that is blocked | Stays there | Back to `observed` when `cs-09-monitor` sees the blocker clear |
-| `linked` | The catalog points at an existing tool | Watched by `cs-09-monitor` | Back to `observed` if that tool breaks or starts tracking users |
+| `observed` | Spyglass has read its public pages | `scored` or `screened-out` | `needs_subtool` if the page layout is unfamiliar |
+| `screened-out` | Assay found it fails a gate | Stays there | The owner can send it back to `observed` |
+| `scored` | Assay has rated it | `approved` | The owner can choose `parked`, `linked`, `merged` or `rejected` |
+| `approved` | The owner chose to build, and Waybill wrote the specification | `building` | `needs_subtool` if there is no profile for that kind of tool |
+| `building` | Jig generated it and Shakedown is checking it | `live` | `parked` if the rule turns out to be unclear |
+| `live` | Gazette published it | Watched by Dogwatch | Back to `building` when the rule changes, or `retired` when it is repealed |
+| `parked` | A good idea that is blocked | Stays there | Back to `observed` when Dogwatch sees the blocker clear |
+| `linked` | The catalog points at an existing tool | Watched by Dogwatch | Back to `observed` if that tool breaks or starts tracking users |
 | `merged` | Folded into another tool | Stays there | Back to `observed` only if the other tool is retired |
 | `rejected` | Declined, with the reason public | Stays there | None, unless it is sent in again as a new candidate |
 | `retired` | Removed from use, with a note | Stays there | None |
