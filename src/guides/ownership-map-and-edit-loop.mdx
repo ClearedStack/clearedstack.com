@@ -1,0 +1,27 @@
+export const meta = {
+  title: "Ownership Map & the Edit-to-Repo Loop",
+  summary: "How ownership_map.json maps every ✎ Edit button on the Portal to its owning repository, edit class (DATA, CONFIG, ISSUE), and live status pill.",
+  group: "contribute",
+  order: 9,
+  revised: "2026-11",
+};
+
+Every `✎ Edit` button on `clearedstack.com` knows exactly which repository and file it belongs to. That routing is governed by a single public file in this repository: `ownership_map.json`.
+
+Instead of sending generic feedback into a black hole, each editable element on Command (`/`), Apps (`/apps`), Pipeline (`/pipeline`), and Decide (`/decide`) maps to an `ownerRepo`, an `editClass`, and a target `filePath`.
+
+## The three edit classes
+
+| Edit class | What it changes | What happens after owner approval |
+| --- | --- | --- |
+| **`DATA`** | Catalog text, descriptions, or record metadata | Updates Postgres (`core.*`), logs to the append-only ledger, and refreshes the Portal view. |
+| **`CONFIG`** | Worker manifest (`app.yaml`), rubric weights, or sub-tool settings | `cs-10-notify` commits a branch/PR in `cs-git`, `cs-runner` builds and tests without Docker, and `cs-store` rolls it out. |
+| **`ISSUE`** | Bug report, broken extractor, or `needs_subtool` request | `cs-10-notify` computes a deterministic error fingerprint and opens or updates a deduplicated issue in `cs-git` (mirrored to GitHub). |
+
+## How the live status pill works
+
+Because `clearedstack.com` is an open public sandbox with **no login lock**, anyone can submit a proposal up to 4 KB. After passing the five-layer anti-spam shield (browser Proof-of-Work, honeypot field, daily-salted IP hash rate limit, schema check against `ownership_map.json`, and owner gate in `cs-04-decide`), the exact `✎ Edit` button you clicked turns into a live status pill:
+
+**`Proposed` → `Approved` → `Building` → `Live`**
+
+You can watch your change move from `cs-04-decide` into `cs-git`, through `cs-runner` (`ko` or rootless BuildKit), and into `cs-store` without creating an account.

@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { EditTrigger } from "@/components/EditTrigger";
+import { MetricCell } from "@/components/MetricCell";
+import { PulseStrip } from "@/components/PulseStrip";
 import { SectionLabel } from "@/components/SectionLabel";
 import { DraftChip, HealthChip } from "@/components/StatusChip";
+import { TrailRow } from "@/components/TrailRow";
 import { WhyDrawer } from "@/components/WhyDrawer";
 import { workerApps } from "@/data/platform";
 
@@ -43,6 +46,39 @@ export default function PipelinePage() {
         </Link>
         .
       </p>
+
+      <div className="mt-6">
+        <PulseStrip
+          state="empty"
+          summary="0 records collected yet · all 10 deterministic workers idle and ready"
+          metrics={[
+            { label: "Urgent lane", value: "0", unit: "items" },
+            { label: "Normal lane", value: "0", unit: "items" },
+            { label: "Backfill lane", value: "0", unit: "items" },
+            { label: "needs_subtool", value: "0", unit: "paused" },
+          ]}
+        />
+      </div>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <MetricCell label="Priority order" value="urgent → normal → backfill" />
+        <MetricCell label="Runtime AI calls" value="0" unit="100% deterministic" />
+        <MetricCell label="Local spool" value="/var/spool/cs" unit="survives hub restart" />
+      </div>
+
+      <div className="mt-8 space-y-3">
+        <h2 className="font-mono text-xs uppercase tracking-wider text-muted">
+          Item Trail Preview (PA-XXXX)
+        </h2>
+        <TrailRow
+          id="PA-0000"
+          label="Nothing collected yet"
+          detail="Submit a candidate or propose an edit with ✎ to start the 10-worker deterministic trail."
+          lane="normal"
+          state="empty"
+          timestamp="initial"
+        />
+      </div>
 
       <div className="mt-10 space-y-4">
         {workerApps.map((w, idx) => (

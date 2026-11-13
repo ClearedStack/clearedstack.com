@@ -428,6 +428,46 @@
     "content": "What a tool can and cannot do here Answer every requirement Pulling out sentences with “shall” and “must”, numbering them and laying out a matrix is mechanical work, and a tool can do it in seconds. Deciding what a requirement means, whether your answer satisfies it and what the evaluator is really worried about is judgment. Use a tool for the first, and read every row yourself for the second. A tool can miss a requirement that is phrased unusually, or sitting in a table or an image."
   },
   {
+    "id": "guide-architecture-council-decisions",
+    "type": "guide",
+    "title": "How the Architecture Council Designed v3.1",
+    "subtitle": "Guide · Section L.6",
+    "summary": "How five engineering seats resolved the move from a static website to a 10-worker deterministic platform, why custom MIT microservices replaced Forgejo/Argo CD/CasaOS, and why zero AI runs at runtime.",
+    "url": "/guides/architecture-council-decisions/",
+    "badge": "PROJECT",
+    "content": "How the Architecture Council Designed v3.1 How five engineering seats resolved the move from a static website to a 10-worker deterministic platform, why custom MIT microservices replaced Forgejo/Argo CD/CasaOS, and why zero AI runs at runtime. project  ClearedStack v3.1 did not start as a single-person sketch. Its design came out of a structured five-seat architecture council—bringing together Kubernetes platform operations, real-time interface design, queue systems, security compliance, and solo-maintainer pragmatism—followed by specialized engineering reviews. Every major choice on the site today traces back to a concrete trade-off settled in those discussions. The five core shifts | Design question | Early assumption | Final v3.1 decision |"
+  },
+  {
+    "id": "section-architecture-council-decisions-the-five-core-shifts",
+    "type": "section",
+    "title": "The five core shifts",
+    "subtitle": "How the Architecture Council Designed v3.1",
+    "summary": "| Design question | Early assumption | Final v3.1 decision | Why it won | | --- | --- | --- | --- | | Workflow vs. website | Static essays describing 10 stages ...",
+    "url": "/guides/architecture-council-decisions/#the-five-core-shifts",
+    "badge": "Section",
+    "content": "The five core shifts How the Architecture Council Designed v3.1 | Design question | Early assumption | Final v3.1 decision | Why it won | | --- | --- | --- | --- | | Workflow vs. website | Static essays describing 10 stages | 10 live deterministic worker repos ( cs-01 .. cs-10 ) feeding / , /apps , /pipeline , and /decide | Real-time status and sanitized errors turn the site into a live operational portal instead of passive text. | | Database & state | Separate per-stage databases | One shared PostgreSQL 17 hub ( clearedstack namespace) + hub-queue-api + local worker spools | Workers hold zero DB passwords, handoffs are atomic, and local spools survive hub restarts. | | Git, builds, and deploy | Heavy third-party suites (Forgejo, Argo CD, CasaOS) | Custom clean-room MIT Go microservices ( cs-git , cs-registry , cs-runner , cs-store ) | Drops control-plane RAM to ~640 MiB so the entire 17-pod platform fits on one 4 GiB k3s node. | | Edge cases & AI | AI inside workers for messy pages | 100% deterministic everywhere ; unknown layouts fail closed into needs subtool | Zero token cost, identical output on every cluster, and every solved edge case becomes permanent code. | | Public access vs. privacy | Login wall for proposing edits | No login lock ( ✎ Edit anywhere behind a 5-layer anti-spam shield) + private NetworkPolicy | Anyone can inspect and improve the platform while internal IPs, tokens, and cluster layout stay hidden. |"
+  },
+  {
+    "id": "section-architecture-council-decisions-why-the-council-rejected-heavy-third-party-suites",
+    "type": "section",
+    "title": "Why the council rejected heavy third-party suites",
+    "subtitle": "How the Architecture Council Designed v3.1",
+    "summary": "Bundling Forgejo, Harbor, Argo CD, and CasaOS would have required 8–16 GiB of RAM just to run the control plane, along with dozens of upstream database tables a...",
+    "url": "/guides/architecture-council-decisions/#why-the-council-rejected-heavy-third-party-suites",
+    "badge": "Section",
+    "content": "Why the council rejected heavy third-party suites How the Architecture Council Designed v3.1 Bundling Forgejo, Harbor, Argo CD, and CasaOS would have required 8–16 GiB of RAM just to run the control plane, along with dozens of upstream database tables and mixed licenses. By writing four small, single-purpose Go services from scratch under the MIT License , ClearedStack keeps the control plane under 640 MiB, removes Docker completely, and avoids copying any upstream code."
+  },
+  {
+    "id": "section-architecture-council-decisions-why-two-namespaces-beat-eleven",
+    "type": "section",
+    "title": "Why two namespaces beat eleven",
+    "subtitle": "How the Architecture Council Designed v3.1",
+    "summary": "An early draft proposed 11 separate namespaces (one for the hub and one per worker). The council simplified that to two namespaces : clearedstack for the 7 cont...",
+    "url": "/guides/architecture-council-decisions/#why-two-namespaces-beat-eleven",
+    "badge": "Section",
+    "content": "Why two namespaces beat eleven How the Architecture Council Designed v3.1 An early draft proposed 11 separate namespaces (one for the hub and one per worker). The council simplified that to two namespaces : clearedstack for the 7 control-plane pods and cs-workers for all 10 deterministic workers ( cs-01-intake through cs-10-notify ). Two namespaces keep NetworkPolicy isolation clean without multiplying boilerplate manifests for solo maintainers adopting the stack."
+  },
+  {
     "id": "guide-backups-and-restore-drills",
     "type": "guide",
     "title": "Backups and Monthly Restore Drills",
@@ -2498,6 +2538,36 @@
     "content": "What remains open What is decided and what remains open While the v3.1 runtime and sandbox architecture are settled, three areas remain open for further design and community input. | Open area | Core question | Current working default | Why it remains open | | --- | --- | --- | --- | | Dataset licensing edge cases | How should MIT code licensing interact with CC0 1.0 public-domain records when third-party excerpts, worked-example government tables, or vendor-submitted errata are compiled into clearedstack.com and cs-05-provenance specs? | MIT across all code repositories; clean-room factual extraction for regulatory and vendor observations. | Edge cases around mixed-provenance JSON bundles, statutory tables with agency formatting, and user-proposed edit contributions need explicit legal clarity before external dataset mirrors proliferate. | | Multi-node federation | How should independent ClearedStack v3.1 instances synchronize cs-git repositories, hub-queue-api work items, or cs-registry digests if the project grows beyond a single k3s node or organizations self-host their own mirrors? | Single-node k3s deployment with outbound GitHub code mirroring from cs-git . | Federation introduces hard distributed-systems trade-offs around deterministic replay, conflicting PA-XXXX IDs, and trust boundaries between independent cs-04-decide owner queues. | | Community stewardship | When and how should the project transition from a single-owner Phase 1 operation to a durable multi-maintainer model (legal entity, backup owner-mode access, and shared cs-04-decide review)? | Single human owner with an inviolable zero-revenue policy and public git history. | Sustaining a zero-revenue public-interest compliance platform long-term requires clear succession rules, co-maintainer ethics attestations, and a governance structure that cannot be captured by commercial vendors. |"
   },
   {
+    "id": "guide-ownership-map-and-edit-loop",
+    "type": "guide",
+    "title": "Ownership Map & the Edit-to-Repo Loop",
+    "subtitle": "Guide · Section CONTRIBUTE",
+    "summary": "How ownership_map.json maps every ✎ Edit button on the Portal to its owning repository, edit class (DATA, CONFIG, ISSUE), and live status pill.",
+    "url": "/guides/ownership-map-and-edit-loop/",
+    "badge": "CONTRIBUTE",
+    "content": "Ownership Map & the Edit-to-Repo Loop How ownership_map.json maps every ✎ Edit button on the Portal to its owning repository, edit class (DATA, CONFIG, ISSUE), and live status pill. contribute  Every ✎ Edit button on clearedstack.com knows exactly which repository and file it belongs to. That routing is governed by a single public file in this repository: ownership map.json . Instead of sending generic feedback into a black hole, each editable element on Command ( / ), Apps ( /apps ), Pipeline ( /pipeline ), and Decide ( /decide ) maps to an ownerRepo , an editClass , and a target filePath . The three edit classes | Edit class | What it changes | What happens after owner approval | | -"
+  },
+  {
+    "id": "section-ownership-map-and-edit-loop-the-three-edit-classes",
+    "type": "section",
+    "title": "The three edit classes",
+    "subtitle": "Ownership Map & the Edit-to-Repo Loop",
+    "summary": "| Edit class | What it changes | What happens after owner approval | | --- | --- | --- | | DATA | Catalog text, descriptions, or record metadata | Updates Postg...",
+    "url": "/guides/ownership-map-and-edit-loop/#the-three-edit-classes",
+    "badge": "Section",
+    "content": "The three edit classes Ownership Map & the Edit-to-Repo Loop | Edit class | What it changes | What happens after owner approval | | --- | --- | --- | | DATA | Catalog text, descriptions, or record metadata | Updates Postgres ( core. ), logs to the append-only ledger, and refreshes the Portal view. | | CONFIG | Worker manifest ( app.yaml ), rubric weights, or sub-tool settings | cs-10-notify commits a branch/PR in cs-git , cs-runner builds and tests without Docker, and cs-store rolls it out. | | ISSUE | Bug report, broken extractor, or needs subtool request | cs-10-notify computes a deterministic error fingerprint and opens or updates a deduplicated issue in cs-git (mirrored to GitHub). |"
+  },
+  {
+    "id": "section-ownership-map-and-edit-loop-how-the-live-status-pill-works",
+    "type": "section",
+    "title": "How the live status pill works",
+    "subtitle": "Ownership Map & the Edit-to-Repo Loop",
+    "summary": "Because clearedstack.com is an open public sandbox with no login lock , anyone can submit a proposal up to 4 KB. After passing the five-layer anti-spam shield (...",
+    "url": "/guides/ownership-map-and-edit-loop/#how-the-live-status-pill-works",
+    "badge": "Section",
+    "content": "How the live status pill works Ownership Map & the Edit-to-Repo Loop Because clearedstack.com is an open public sandbox with no login lock , anyone can submit a proposal up to 4 KB. After passing the five-layer anti-spam shield (browser Proof-of-Work, honeypot field, daily-salted IP hash rate limit, schema check against ownership map.json , and owner gate in cs-04-decide ), the exact ✎ Edit button you clicked turns into a live status pill: Proposed → Approved → Building → Live You can watch your change move from cs-04-decide into cs-git , through cs-runner ( ko or rootless BuildKit), and into cs-store without creating an account."
+  },
+  {
     "id": "guide-prior-art-engine",
     "type": "guide",
     "title": "The 10-Worker Prior Art Engine",
@@ -3016,6 +3086,36 @@
     "url": "/guides/score-and-decide/#human-decisions-and-decide-cs-04-decide",
     "badge": "Section",
     "content": "Human decisions and /decide (cs-04-decide) How Ideas Are Scored and Decided cs-04-decide has no tools// sub-tools because final judgment belongs strictly to the human project owner. It powers the /decide inbox on clearedstack.com , which handles two queues: - Tool determinations: The owner reviews scored (or overridden screened-out ) candidates and chooses Approve (Build) , Link , Merge , Park , Reject , or Override . Any override requires an explicit written reason, which is recorded in the public decision log. Approved items advance to cs-05-provenance ( approved state). - Anonymous public edit approvals: Any visitor can click ✎ anywhere on the Portal to propose a DATA , CONFIG , or ISSUE edit without signing in. After passing browser Proof-of-Work, a honeypot check, daily-salted IP hash rate limits, and ownership map.json schema validation, proposals wait in core.edit proposal ( pending approval ). Nothing touches cs-git or the cluster until the owner clicks Approve in /decide , which dispatches cs-10-notify on the urgent lane ( Proposed -> Approved -> Building -> Live )."
+  },
+  {
+    "id": "guide-shared-contracts-and-sdk",
+    "type": "guide",
+    "title": "Shared Contracts Without an 11th Repo",
+    "subtitle": "Guide · Section L.6",
+    "summary": "How clearedstack.com owns the shared worker queue contract and schema versions so all 10 worker repositories stay in sync without an extra shared-code repository.",
+    "url": "/guides/shared-contracts-and-sdk/",
+    "badge": "PROJECT",
+    "content": "Shared Contracts Without an 11th Repo How clearedstack.com owns the shared worker queue contract and schema versions so all 10 worker repositories stay in sync without an extra shared-code repository. project  Splitting the pipeline into 10 separate worker repositories ( cs-01-intake through cs-10-notify ) creates an obvious coordination question: how do all 10 workers agree on the exact JSON shapes for queue leases, item states, and error codes without creating an 11th shared-code repository that everything depends on? ClearedStack solves this by making clearedstack.com —the hub repository—the single owner of the shared contract. What the hub contract defines | Contract piece | What it specifies | Wh"
+  },
+  {
+    "id": "section-shared-contracts-and-sdk-what-the-hub-contract-defines",
+    "type": "section",
+    "title": "What the hub contract defines",
+    "subtitle": "Shared Contracts Without an 11th Repo",
+    "summary": "| Contract piece | What it specifies | Who enforces it | | --- | --- | --- | | Queue lease API | lease , heartbeat , complete , fail , and needs subtool endpoin...",
+    "url": "/guides/shared-contracts-and-sdk/#what-the-hub-contract-defines",
+    "badge": "Section",
+    "content": "What the hub contract defines Shared Contracts Without an 11th Repo | Contract piece | What it specifies | Who enforces it | | --- | --- | --- | | Queue lease API | lease , heartbeat , complete , fail , and needs subtool endpoints on hub-queue-api | Validated by hub-queue-api on every worker call | | 14 item states | Exact allowed transitions ( discovered through live , parked , retired , needs subtool ) | Enforced atomically in Postgres transactions | | Sanitized error codes | E TIMEOUT , E PARSE , E NEEDS SUBTOOL and deterministic error fingerprint format | Mapped by cs-store and deduplicated by cs-10-notify | | Clean-room boundary | Strict rule rejecting raw cs-02-observe HTML/snapshots from cs-06-build payloads | Rejected at hub-queue-api before any build starts |"
+  },
+  {
+    "id": "section-shared-contracts-and-sdk-independent-upgrades-without-lockstep-deploys",
+    "type": "section",
+    "title": "Independent upgrades without lockstep deploys",
+    "subtitle": "Shared Contracts Without an 11th Repo",
+    "summary": "Each worker repository pins a CONTRACT VERSION (starting at v1 ). Because hub-queue-api validates every payload against that version, any single worker ( cs-02-...",
+    "url": "/guides/shared-contracts-and-sdk/#independent-upgrades-without-lockstep-deploys",
+    "badge": "Section",
+    "content": "Independent upgrades without lockstep deploys Shared Contracts Without an 11th Repo Each worker repository pins a CONTRACT VERSION (starting at v1 ). Because hub-queue-api validates every payload against that version, any single worker ( cs-02-observe , for example) can add a new tools// sub-tool, pass its golden tests in cs-runner , and roll out via cs-store without touching or redeploying the other nine workers."
   },
   {
     "id": "guide-software-decides-ui",

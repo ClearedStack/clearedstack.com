@@ -1,0 +1,24 @@
+export const meta = {
+  title: "Shared Contracts Without an 11th Repo",
+  summary: "How clearedstack.com owns the shared worker queue contract and schema versions so all 10 worker repositories stay in sync without an extra shared-code repository.",
+  group: "project",
+  order: 9,
+  revised: "2026-11",
+};
+
+Splitting the pipeline into 10 separate worker repositories (`cs-01-intake` through `cs-10-notify`) creates an obvious coordination question: how do all 10 workers agree on the exact JSON shapes for queue leases, item states, and error codes without creating an 11th shared-code repository that everything depends on?
+
+ClearedStack solves this by making `clearedstack.com`—the hub repository—the single owner of the shared contract.
+
+## What the hub contract defines
+
+| Contract piece | What it specifies | Who enforces it |
+| --- | --- | --- |
+| **Queue lease API** | `lease`, `heartbeat`, `complete`, `fail`, and `needs_subtool` endpoints on `hub-queue-api` | Validated by `hub-queue-api` on every worker call |
+| **14 item states** | Exact allowed transitions (`discovered` through `live`, `parked`, `retired`, `needs_subtool`) | Enforced atomically in Postgres transactions |
+| **Sanitized error codes** | `E_TIMEOUT`, `E_PARSE`, `E_NEEDS_SUBTOOL` and deterministic `error_fingerprint` format | Mapped by `cs-store` and deduplicated by `cs-10-notify` |
+| **Clean-room boundary** | Strict rule rejecting raw `cs-02-observe` HTML/snapshots from `cs-06-build` payloads | Rejected at `hub-queue-api` before any build starts |
+
+## Independent upgrades without lockstep deploys
+
+Each worker repository pins a `CONTRACT_VERSION` (starting at `v1`). Because `hub-queue-api` validates every payload against that version, any single worker (`cs-02-observe`, for example) can add a new `tools/<case>/` sub-tool, pass its golden tests in `cs-runner`, and roll out via `cs-store` without touching or redeploying the other nine workers.

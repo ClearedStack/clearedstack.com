@@ -24,7 +24,7 @@ export function DraftChip() {
   );
 }
 
-export type HealthState = "healthy" | "idle" | "erroring" | "recovering" | "stale";
+export type HealthState = "healthy" | "idle" | "erroring" | "recovering" | "stale" | "empty";
 
 const healthStyles: Record<HealthState, { cls: string; glyph: string; label: string }> = {
   healthy: { cls: "border-accent text-accent", glyph: "●", label: "Healthy" },
@@ -32,6 +32,7 @@ const healthStyles: Record<HealthState, { cls: string; glyph: string; label: str
   recovering: { cls: "border-warn text-warn", glyph: "◐", label: "Recovering" },
   stale: { cls: "border-warn border-dashed text-warn", glyph: "◷", label: "Stale" },
   erroring: { cls: "border-danger text-danger", glyph: "▲", label: "Error" },
+  empty: { cls: "border-line text-muted", glyph: "◌", label: "Empty" },
 };
 
 export function HealthChip({ state, label }: { state: HealthState; label?: string }) {

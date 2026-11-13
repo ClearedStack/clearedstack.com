@@ -1,0 +1,101 @@
+{
+  "version": "v1",
+  "maxBytes": 4096,
+  "elements": {
+    "command.hero.mission": {
+      "ownerRepo": "clearedstack.com",
+      "editClass": "DATA",
+      "filePath": "src/data/site.ts"
+    },
+    "decide.sandbox.test": {
+      "ownerRepo": "clearedstack.com",
+      "editClass": "ISSUE",
+      "filePath": "src/app/decide/page.tsx"
+    },
+    "app.clearedstack-web.manifest": {
+      "ownerRepo": "clearedstack.com",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "app.hub-queue-api.manifest": {
+      "ownerRepo": "clearedstack.com",
+      "editClass": "CONFIG",
+      "filePath": "deploy/hub-queue-api/app.yaml"
+    },
+    "app.postgres.manifest": {
+      "ownerRepo": "clearedstack.com",
+      "editClass": "CONFIG",
+      "filePath": "deploy/postgres/app.yaml"
+    },
+    "app.cs-git.manifest": {
+      "ownerRepo": "cs-git",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "app.cs-registry.manifest": {
+      "ownerRepo": "cs-registry",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "app.cs-runner.manifest": {
+      "ownerRepo": "cs-runner",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "app.cs-store.manifest": {
+      "ownerRepo": "cs-store",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-01-intake.manifest": {
+      "ownerRepo": "cs-01-intake",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-02-observe.manifest": {
+      "ownerRepo": "cs-02-observe",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-03-evaluate.manifest": {
+      "ownerRepo": "cs-03-evaluate",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-04-decide.manifest": {
+      "ownerRepo": "cs-04-decide",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-05-provenance.manifest": {
+      "ownerRepo": "cs-05-provenance",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-06-build.manifest": {
+      "ownerRepo": "cs-06-build",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-07-verify.manifest": {
+      "ownerRepo": "cs-07-verify",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-08-catalog.manifest": {
+      "ownerRepo": "cs-08-catalog",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-09-monitor.manifest": {
+      "ownerRepo": "cs-09-monitor",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-10-notify.manifest": {
+      "ownerRepo": "cs-10-notify",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    }
+  }
+}

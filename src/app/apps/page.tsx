@@ -1,6 +1,7 @@
-import { EditTrigger } from "@/components/EditTrigger";
+import { AppStoreGrid } from "@/components/AppStoreGrid";
+import { PulseStrip } from "@/components/PulseStrip";
 import { SectionLabel } from "@/components/SectionLabel";
-import { DraftChip, HealthChip } from "@/components/StatusChip";
+import { DraftChip } from "@/components/StatusChip";
 import { WhyDrawer } from "@/components/WhyDrawer";
 import { controlPlaneApps, workerApps } from "@/data/platform";
 
@@ -38,69 +39,22 @@ export default function AppsPage() {
         worker in <code className="text-ink">cs-workers</code> is shown publicly with no login lock.
       </p>
 
-      <section className="mt-10">
-        <h2 className="font-mono text-xs uppercase tracking-wider text-muted">
-          Control Plane · namespace: clearedstack (~640 MiB total)
-        </h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {controlPlaneApps.map((app) => (
-            <div key={app.id} className="flex flex-col justify-between rounded-sm border border-line bg-surface p-5">
-              <div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-sm font-semibold text-ink">{app.name}</span>
-                  <HealthChip state={app.health} />
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{app.role}</p>
-                <p className="mt-2 font-mono text-xs text-muted">
-                  {app.version} · {app.ramBudget} RAM · {app.notes}
-                </p>
-              </div>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 font-mono text-[11px]">
-                <span className="text-muted">Actions: Install · Upgrade · Pause · Rollback</span>
-                <EditTrigger
-                  elementId={`app.${app.id}.manifest`}
-                  ownerRepo={app.ownerRepo}
-                  targetLabel={`${app.name} app.yaml`}
-                  editClass="CONFIG"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <div className="mt-6">
+        <PulseStrip
+          state="healthy"
+          summary="17 total pods across 2 namespaces · 0 erroring · 0 stale"
+          metrics={[
+            { label: "Control plane", value: "7", unit: "pods (~640 MiB)" },
+            { label: "Workers", value: "10", unit: "pods (~300 MiB)" },
+            { label: "Rollback depth", value: "5", unit: "digests / app" },
+            { label: "Docker daemon", value: "0", unit: "ko + BuildKit" },
+          ]}
+        />
+      </div>
 
-      <section className="mt-14 border-t border-line pt-10">
-        <h2 className="font-mono text-xs uppercase tracking-wider text-muted">
-          10 Deterministic Workers · namespace: cs-workers (~300 MiB total)
-        </h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {workerApps.map((w) => (
-            <div key={w.id} className="flex flex-col justify-between rounded-sm border border-line bg-surface p-5">
-              <div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-sm font-semibold text-ink">{w.name}</span>
-                  <HealthChip state={w.health} />
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{w.role}</p>
-                {w.subTools.length > 0 && (
-                  <p className="mt-2 font-mono text-xs text-muted">
-                    Sub-tools: <span className="text-ink">{w.subTools.join(", ")}</span>
-                  </p>
-                )}
-              </div>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 font-mono text-[11px]">
-                <span className="text-muted">{w.queued} queued · {w.ramBudget}</span>
-                <EditTrigger
-                  elementId={`worker.${w.id}.manifest`}
-                  ownerRepo={w.ownerRepo}
-                  targetLabel={`${w.name} config`}
-                  editClass="CONFIG"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <div className="mt-8">
+        <AppStoreGrid controlPlane={controlPlaneApps} workers={workerApps} />
+      </div>
     </div>
   );
 }
