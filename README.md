@@ -7,41 +7,28 @@
 
 <p align="center">
   <strong>Free, open-source tools for the paperwork between you and a government contract.</strong><br>
+  <em>Empowering cleared engineers and independent builders to bid, win, and own their labor directly.</em><br>
   <a href="https://clearedstack.com">clearedstack.com</a>
 </p>
 
 ---
 
-ClearedStack is a growing set of small, single-purpose tools for government
-contracting and defense tech: pricing, proposals, cyber compliance, market
-research and DevSecOps. Every tool runs in the browser, costs nothing and
-ships with its source.
+In defense contracting, **corporations do not write code or secure networks—individual engineers, technicians, and craftsmen do.** Yet traditional multi-billion-dollar prime contractors capture the vast majority of contract value simply by managing compliance red tape and administrative moats, while the person doing the work receives a fraction of their billing rate.
 
-This repository is the **website**: the hub at clearedstack.com that explains
-the project and lists the tools. Each tool is a separate project in its own
-repository.
+**ClearedStack** is a free, open-source toolbox that automates the paperwork barriers—pricing, proposals, cyber compliance, and market research. We give these tools away so that solo developers, veteran founders, and independent teams can bid directly, outcompete legacy contractor bloat, and bring workplace autonomy to the defense industrial base.
 
-## Why
+This repository is the **website**: the open public hub at clearedstack.com that explains the project and indexes the tools. Each tool is an independent open-source project designed to run 100% in your browser.
 
-Selling to the Department of Defense takes more than being good at the work.
-Before a small company can bid, it has to price labor under FAR Part 31, build
-indirect rates an auditor will accept, answer every line of Sections L and M,
-and show how it protects CUI under NIST SP 800-171 and CMMC. Large contractors
-have departments for that. A one-person company has evenings.
+## The Core Thesis: Builders Over Bloat
 
-Almost all of that knowledge is public. What costs money is turning it into a
-worked answer for one company's situation, and that step is mostly arithmetic,
-lookup tables and checklists.
+Selling to the Department of Defense takes more than technical excellence. Before an independent company can bid, it has to price labor under FAR Part 31, construct indirect rates an auditor will accept, answer every instruction of Sections L and M, and prove CUI protection under NIST SP 800-171 and CMMC. 
 
-**The work is done by builders, not corporate overhead.** In defense contracting,
-corporations do not write code or secure systems—individual engineers, technicians,
-and craftsmen do. Yet in the traditional model, large prime contractors act as
-administrative tollbooths on cleared labor, capturing the vast majority of contract
-value while the person doing the work receives a fraction of their billing rate.
+Large contractors maintain entire departments for this. A solo builder has evenings.
 
-ClearedStack turns that step into tools and gives the tools away—enabling the person
-who actually does the work to bid, win, and own the value of their labor directly
-without corporate gatekeepers.
+Almost all of that knowledge is public. It sits in statutes, regulations, and agency guides. What costs money is turning it into a worked answer for one company's situation, and that step is mostly arithmetic, lookup tables, and checklists.
+
+- **The Tollbooth Model:** Legacy primes act as administrative tollbooths on cleared human labor. The government pays $300+/hour for an engineer, the engineer takes home a fraction of that wage, and the remaining 60%+ is absorbed by executive bonuses, K Street lobbyists, and non-technical management layers.
+- **Democratizing the Workplace:** ClearedStack turns the compliance barrier into free software. When the regulatory overhead is automated, the individual worker can bid, win, and keep the full fruit of their labor. The taxpayer pays less, the warfighter gets better software, and the builder owns their work.
 
 ## Ground rules
 
@@ -49,10 +36,11 @@ without corporate gatekeepers.
 | --- | --- |
 | **Free** | No paywall, ads, subscriptions, sponsorships or donations. The project takes in no revenue. |
 | **Open source** | MIT licensed. Read the code, check the math, fork it, host it yourself. |
-| **Client-side** | Tools run in your browser. Your rates, proposal text and system details stay on your machine. |
+| **Client-side** | Tools run entirely in your browser. Your rates, proposal text, and system details never leave your machine. |
 | **No tracking** | No analytics, cookies or accounts. The site makes no third-party requests and enforces that with a content security policy. |
-| **Public sources only** | Built only from material the government has officially released to the public. Nothing classified, controlled or non-public, and a leaked document does not count as public. |
-| **Independent** | A personal project with no government affiliation. See the [disclaimer](#disclaimer). |
+| **Air-gapped ready** | Designed for disconnected environments. Tools can be cloned, bundled, and run on isolated networks with zero external calls. |
+| **Public sources only** | Built only from material the government has officially released to the public. Nothing classified, controlled or non-public. |
+| **Independent** | An independent personal project with no government affiliation. See the [disclaimer](#disclaimer). |
 
 ## The catalog
 
@@ -71,9 +59,9 @@ The list on the site is generated from [`src/data/catalog.ts`](src/data/catalog.
 
 ## Roadmap
 
-1. **The free arsenal.** Ship the catalog one tool at a time.
-2. **The community.** Open the catalog to tools written by other engineers, veterans and people who do this work for a living.
-3. **The institution.** Grow that community into something lasting that can compete for the work itself.
+1. **The free arsenal.** Ship the core catalog one client-side tool at a time until every small contractor keeps this page open all day.
+2. **The community.** Open the catalog to tools and scripts written by other cleared engineers, veterans, and small builders who do this work for a living.
+3. **The sovereign alternative.** Grow that community into a decentralized, democratic platform where independent builders swarm on defense contracts directly, cutting out corporate middle management.
 
 ## How tools are chosen (Prior Art — draft)
 
