@@ -89,3 +89,78 @@ body {
 .prose-cs a:hover {
   color: var(--accent);
 }
+
+/* Guides: headings, lists and code written in markdown. */
+.prose-cs > :first-child {
+  margin-top: 0;
+}
+
+.prose-cs h2 {
+  margin-top: 2.5rem;
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.prose-cs h3 {
+  margin-top: 1.75rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.prose-cs ul,
+.prose-cs ol {
+  margin-top: 1rem;
+  padding-left: 1.25rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.prose-cs ul {
+  list-style: square;
+}
+
+.prose-cs ol {
+  list-style: decimal;
+}
+
+.prose-cs li {
+  margin-top: 0.5rem;
+  padding-left: 0.25rem;
+}
+
+.prose-cs li::marker {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+.prose-cs code {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--surface);
+  padding: 0.1em 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  color: var(--ink);
+}
+
+.prose-cs pre {
+  margin-top: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--surface);
+  padding: 1rem 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.prose-cs pre code {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}

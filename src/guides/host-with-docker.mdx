@@ -1,0 +1,84 @@
+export const meta = {
+  title: "Host your own copy with Docker",
+  summary: "Build this site into a container image and run it on your own server, including one with no internet.",
+  order: 5,
+};
+
+You do not have to use clearedstack.com to use ClearedStack. Everything is MIT licensed, and the repository includes a Dockerfile that packs the whole site into one small container.
+
+## What you need
+
+A machine with [Docker](https://docs.docker.com/get-docker/), git and an internet connection. The internet connection is only needed to build the image. Running it needs none.
+
+## Build the image
+
+```bash
+git clone https://github.com/ClearedStack/clearedstack.com.git
+cd clearedstack.com
+docker build -t clearedstack .
+```
+
+The first build takes a few minutes. The result is an image of about 85 MB that holds a web server (nginx) and the finished pages. It contains no database, no application server and no source code, and the web server runs as an ordinary user, not as root.
+
+## Run it
+
+```bash
+docker run -d --name clearedstack --restart unless-stopped -p 8080:8080 clearedstack
+```
+
+Open `http://localhost:8080` and the site is there. If port 8080 is already taken, change the first number, for example `-p 3000:8080`.
+
+The `--restart unless-stopped` option brings the container back after a reboot.
+
+## Put it on your own domain
+
+The container speaks plain HTTP on port 8080. For a public site, keep it behind whatever handles HTTPS for you, such as Caddy, Traefik or nginx, and point that at the container.
+
+If your copy lives at a different address than clearedstack.com, change `url` in `src/data/site.ts` before you build. The sitemap and link previews use it.
+
+## Update it
+
+When the site changes, pull the new code, rebuild and replace the container:
+
+```bash
+git pull
+docker build -t clearedstack .
+docker rm -f clearedstack
+docker run -d --name clearedstack --restart unless-stopped -p 8080:8080 clearedstack
+```
+
+## Move it to a closed network
+
+Build the image on a connected machine, then save it to a single file of about 23 MB:
+
+```bash
+docker save clearedstack | gzip > clearedstack.tar.gz
+```
+
+Carry that file across by whatever transfer process your network requires. On the other side, load it and run it:
+
+```bash
+docker load < clearedstack.tar.gz
+docker run -d --name clearedstack --restart unless-stopped -p 8080:8080 clearedstack
+```
+
+The site loads its fonts and scripts from itself, so it works with no outside connection. Links to GitHub and email addresses are the only things that will not.
+
+## Without Docker
+
+The site is plain files, so any web server can host it. With [Node.js](https://nodejs.org) 20 or newer installed:
+
+```bash
+npm install
+npm run build
+```
+
+The build writes the site to a folder named `out`. Copy that folder to your web server.
+
+## Running a cluster?
+
+The same image runs on Kubernetes. See [Host on Kubernetes](/guides/host-on-kubernetes/).
+
+## The tools
+
+Each tool has its own repository with its own instructions, and can be hosted on its own in the same way. The **Source** link next to a tool in the [catalog](/tools/) takes you there.

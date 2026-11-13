@@ -86,13 +86,45 @@ static file host.
 
 ```
 src/
-  app/            pages: home, /tools, /about, plus icons and metadata
+  app/            pages: home, /tools, /guides, /about, plus icons and metadata
   components/     header, footer, logo, catalog list
   data/
     catalog.ts    the categories and tools shown on the site
     site.ts       name, URLs, contact address, short disclaimer
+  guides/         one .mdx file per guide
 public/brand/     logo files (SVG, light and dark)
+Dockerfile        builds the site and serves it with nginx
+docker/           nginx configuration used by the image
+k8s/              Kubernetes manifests: deployment, service, example ingress
 ```
+
+### Hosting with Docker
+
+```bash
+docker build -t clearedstack .
+```
+
+```bash
+docker run -d --name clearedstack --restart unless-stopped -p 8080:8080 clearedstack
+```
+
+The site is then at http://localhost:8080. The image is about 85 MB, holds
+only nginx and the built pages, and runs as a non-root user. The
+[Docker guide](src/guides/host-with-docker.mdx) covers updates, custom
+domains and moving the image to a network with no internet.
+
+### Hosting on Kubernetes
+
+Push the image to a registry your cluster can reach, set that image name in
+[`k8s/clearedstack.yaml`](k8s/clearedstack.yaml), then:
+
+```bash
+kubectl apply -f k8s/clearedstack.yaml
+```
+
+The manifest creates a namespace, a two-replica deployment and a service.
+The pods run non-root with a read-only filesystem and no added privileges.
+The [Kubernetes guide](src/guides/host-on-kubernetes.mdx) has the full steps.
 
 ### Listing a tool
 
@@ -112,6 +144,27 @@ Add an entry to `tools` in [`src/data/catalog.ts`](src/data/catalog.ts):
 
 The home page, the catalog page and their counts update from that one entry.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for what a tool needs before it is listed.
+
+### Adding a guide
+
+Guides explain how to use the site. Each one is a file in
+[`src/guides/`](src/guides); the file name becomes the URL. Start the file
+with its details, then write the guide in Markdown:
+
+```mdx
+export const meta = {
+  title: "Getting started",
+  summary: "One sentence shown in the list and under the title.",
+  order: 1,
+};
+
+Your first paragraph.
+
+## A heading
+```
+
+The guides list, the previous/next links and the sitemap pick it up on the
+next build.
 
 ## Brand
 

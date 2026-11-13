@@ -15,10 +15,13 @@ export function SiteHeader() {
           <Link href="/tools/" className={navLink}>
             Tools
           </Link>
+          <Link href="/guides/" className={navLink}>
+            Guides
+          </Link>
           <Link href="/about/" className={navLink}>
             About
           </Link>
-          <a href={site.github} className={navLink} rel="noopener">
+          <a href={site.github} className={`${navLink} hidden sm:inline`} rel="noopener">
             GitHub
           </a>
         </nav>

@@ -24,6 +24,11 @@ export function SiteFooter() {
             </Link>
           </li>
           <li>
+            <Link href="/guides/" className={footLink}>
+              Guides
+            </Link>
+          </li>
+          <li>
             <Link href="/about/" className={footLink}>
               About
             </Link>
