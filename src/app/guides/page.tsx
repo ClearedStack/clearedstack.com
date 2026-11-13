@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 const routes = [
   {
     title: "New to the site",
-    body: "What ClearedStack is, where your information goes and how far to trust a result.",
-    slugs: ["getting-started", "your-data", "checking-results", "faq"],
+    body: "How to navigate the site, what ClearedStack is, where your data stays and how to check results.",
+    slugs: ["navigating-this-site", "getting-started", "your-data", "checking-results", "faq"],
   },
   {
     title: "New to government contracting",
@@ -43,6 +43,12 @@ const routes = [
 ];
 
 const answers = [
+  {
+    question: "How do I navigate the site?",
+    answer:
+      "The site uses federal contract structure (Sections B, C, F, H, L) across Home, Tools, Guides, and About.",
+    slug: "navigating-this-site",
+  },
   {
     question: "Do I need an account?",
     answer: "No. There are no accounts on this site or on any tool it lists, and there is nothing to install.",
@@ -182,7 +188,7 @@ export default async function GuidesPage() {
         <div>
           <SectionLabel>Short answers</SectionLabel>
           <h2 id="answers-title" className="mt-3 text-2xl font-semibold tracking-[-0.015em]">
-            Six questions people ask first.
+            Questions people ask first.
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
             More in{" "}

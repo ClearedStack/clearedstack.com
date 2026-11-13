@@ -23,9 +23,9 @@ export default function ToolsPage() {
         {liveCount === 0
           ? `${tools.length} tools are planned and none are live yet. Each will ship as its own open-source repository and be linked here the day it works.`
           : `${liveCount} of ${tools.length} tools are live. Each one is its own open-source repository.`}{" "}
-        New here? Start with the{" "}
-        <Link href="/guides/getting-started/" className={inlineLink}>
-          getting started guide
+        New here? Start with{" "}
+        <Link href="/guides/navigating-this-site/" className={inlineLink}>
+          how to navigate this site
         </Link>
         . Want a tool sooner, or one that is not listed?{" "}
         <a href={`mailto:${site.email}`} className={inlineLink}>

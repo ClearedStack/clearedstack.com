@@ -1,0 +1,237 @@
+export const meta = {
+  title: "How to navigate this site",
+  summary: "A complete guide to using ClearedStack: the four main areas, the contract-style structure, searching the catalog, reading routes, keyboard navigation and offline use.",
+  group: "start",
+  order: 1,
+};
+
+ClearedStack is built like a contract, runs entirely in your browser, and requires no account, payment, or installation. It consists of two things: an open catalog of 18 planned browser-based contracting tools, and an exhaustive library of plain-language reference guides.
+
+This guide explains how the website is organized, how to search and filter the catalog and guides, how to navigate efficiently using keyboard shortcuts and screen readers, and how to use the site offline or on disconnected networks.
+
+## The contract structure
+
+Federal solicitations under FAR Part 15 follow the Uniform Contract Format (UCF). The UCF organizes complex requirements into standardized lettered sections so that contractors always know where to find line items, statements of work, and submission instructions.
+
+ClearedStack borrows this exact structure across its pages. Instead of arbitrary marketing layouts, the site uses UCF conventions to label its data, navigation, and documentation:
+
+| UCF Section | Title in Federal Contracting | ClearedStack Location | What you find there |
+| --- | --- | --- | --- |
+| **Section B** | Supplies or services and prices/costs | [Home](/) and [Tools](/tools/) | The 5 Contract Line Item Number (CLIN) categories, all priced at a firm-fixed-price of $0.00. |
+| **Section C** | Description/specifications/statement of work | [Home](/) and [Tools](/tools/) | The statement of work for all 18 single-purpose browser tools. |
+| **Section F** | Deliveries or performance | [Home](/) | The delivery roadmap across three phases: the free arsenal, the community, and the institution. |
+| **Section H** | Special contract requirements | [Home](/) and [About](/about/) | The four core ground rules: free, open source, client-side execution, and independent governance. |
+| **Section L** | Instructions, conditions and notices to offerors | [Guides](/guides/) | The documentation library, numbered from L.1 through L.5 (Start here, Field guides, Hosting, Contributing, Reference). |
+
+Learning this layout once helps you navigate both ClearedStack and federal requests for proposals (RFPs). When you see a reference like `CLIN 0001` or `Section L.2.3`, you are reading standard acquisition shorthand.
+
+## The four main areas
+
+The site is divided into four primary pages. You can move between them at any time using the navigation links in the persistent header (`SiteHeader`) at the top of every page, or the index links in the footer (`SiteFooter`) at the bottom.
+
+### 1. Home (`/`)
+The home page provides an executive summary of the project:
+- **Hero & Mission:** A concise statement of why ClearedStack exists—to help small businesses and engineers get through contracting paperwork without buying enterprise software or hiring compliance consultants.
+- **Section B Price Schedule:** An interactive pricing table laying out the five tool categories as CLINs 0001 through 0005, showing unit prices and total evaluated price ($0.00).
+- **Section C Catalog Preview:** Summary cards for all five areas showing the tools planned under each CLIN.
+- **Section H Principles:** The mandatory operational boundaries (free forever, MIT licensed, strictly client-side, unaffiliated with the government).
+- **Section F Roadmap:** The phased delivery timeline showing current focus and future trajectory.
+
+### 2. Tools (`/tools/`)
+The tool catalog is the functional core of the site. It lists all 18 planned tools organized by their 4-digit CLINs. On this page, you can:
+- Filter tools in real time using the interactive search input.
+- Jump directly to specific categories using category anchor buttons (`#pricing`, `#proposal`, `#cyber`, `#market`, `#devsecops`).
+- Check development statuses (`Planned`, `In development`, `Live`).
+- Access the direct links and open-source source code repositories as tools become live.
+
+### 3. Guides (`/guides/`)
+The documentation hub contains more than 20 detailed operational guides. It is structured under UCF Section L ("Instructions to offerors"):
+- **Metrics Bar:** Summary counts of total guides, sections, combined reading time, and pricing ($0.00).
+- **Curated Reading Routes:** Four tailored sequence paths designed for specific visitor objectives.
+- **Section Index (L.1–L.5):** An interactive, searchable library of all guides with real-time text matching and section jump anchors.
+- **Short Answers:** Quick answers to the six most common questions regarding data security, costs, accounts, and trust.
+
+### 4. About (`/about/`)
+The project background and governance statement:
+- **The Problem & Mission:** Why good engineers should not need a full compliance department to bid on federal work.
+- **Architecture:** Why each tool is built as an independent, auditable open-source repository rather than a monolithic platform.
+- **Ground Rules:** Absolute rules governing no revenue, zero telemetry or tracking, public sources only, and verifiable math.
+- **Legal Disclaimer:** Clear statements that ClearedStack is not a government agency, does not grant security clearances or CMMC certifications, and provides self-service reference tools rather than legal or accounting advice.
+- **Contact:** Direct links to the GitHub organization and maintainer email.
+
+## Finding tools in the catalog
+
+All tools are indexed on the [Tools](/tools/) page. The catalog is organized into five CLIN categories:
+
+| CLIN | Anchor Link | Area | Focus |
+| --- | --- | --- | --- |
+| **0001** | [`#pricing`](/tools/#pricing) | Pricing & cost accounting | Fully burdened wrap rates, indirect cost pools, Section B pricing tables, and Prompt Payment Act late interest. |
+| **0002** | [`#proposal`](/tools/#proposal) | Proposal & capture | RFP requirement shredding, compliance matrices, acronym tables, and page budget allocations. |
+| **0003** | [`#cyber`](/tools/#cyber) | Cybersecurity & compliance | NIST SP 800-171 / CMMC readiness checklists, CUI marking generators, DISA STIG reference lookups, and OSCAL validation. |
+| **0004** | [`#market`](/tools/#market) | Market research & small business | NAICS-to-PSC code crosswalks, Nontraditional Defense Contractor (NDC) eligibility, and small business set-aside guides. |
+| **0005** | [`#devsecops`](/tools/#devsecops) | Tactical & DevSecOps | Offline container manifest inspectors, X.509 certificate chain decoders, and air-gap transfer checksum helpers. |
+
+### Using the interactive search filter
+At the top of the catalog is an interactive search input:
+- **Instant filtering:** As you type, the tool list updates immediately without reloading the page.
+- **Multi-field matching:** The search scans across tool names (such as "Wrap Rate Calculator"), summaries (such as "cost pools"), and category titles simultaneously.
+- **Multi-word AND logic:** Typing `labor rate` finds tools containing both "labor" and "rate", filtering out irrelevant items.
+- **Live tally:** A counter to the right of the search input displays the exact count of matches (`X of 18 tools`), announced directly to assistive technologies.
+- **Clearing your query:** Press `Escape`, click the clear button (`✕`) inside the search box, or delete the search text to restore the complete catalog.
+
+### Reading status labels
+Every tool card carries a color-coded status badge:
+- **Planned:** The tool is defined in the catalog and scheduled for implementation. Work has not yet begun. **All 18 tools are currently marked Planned.**
+- **In development:** The tool is actively being coded and tested in its dedicated repository.
+- **Live:** The tool is completed, tested, and operational. Its title links directly to the browser-based application, and a "Source" link points to its public repository.
+
+### Signaling demand and prioritizing tools
+ClearedStack builds tools based on what users ask for first. Because the project accepts no revenue or paid sponsorships, backlog prioritization depends entirely on user feedback:
+1. Review the planned tools in the [Tools](/tools/) catalog.
+2. If a planned tool would save you or your team hours of manual spreadsheet work, let the maintainers know.
+3. Open a feature request issue on [GitHub](https://github.com/ClearedStack/clearedstack.com/issues) or send an email to [contact@clearedstack.com](mailto:contact@clearedstack.com).
+4. Describe your specific use case, governing contract clauses, or input formats. User demand determines the active build sequence.
+
+For details on contributing your own tools, see [Request a tool or add your own](/guides/request-or-add-a-tool/).
+
+## Using the guides library
+
+The [Guides](/guides/) page contains in-depth documentation covering contracting regulations, site architecture, self-hosting, and contribution.
+
+### The Section L organization
+Guides are grouped into five logical sections under UCF Section L:
+- **L.1 Start here:** Essential onboarding guides covering site navigation, browser data isolation, result verification, and core operating principles.
+- **L.2 Field guides:** Detailed primers on government contracting mechanics—reading RFPs, answering requirements, building labor rates, submitting proper invoices, protecting CUI, handling STIGs and OSCAL, and working on disconnected networks.
+- **L.3 Host your own copy:** Complete engineering guides for deploying ClearedStack on Docker, Kubernetes, bare static web servers, or air-gapped security enclaves.
+- **L.4 Contribute:** Step-by-step instructions for submitting tool requests, reporting regulatory errors, building compliant client-side tools, and maintaining this website.
+- **L.5 Reference:** Quick lookups including a comprehensive contracting acronym glossary, regulatory source links, and answers to common questions.
+
+### The four reading routes
+If you are looking for a guided sequence rather than browsing the full list, use the four curated routes at the top of `/guides/`:
+1. **New to the site:** For first-time visitors wanting to understand how the tools work, where data goes, and how to verify calculations ([Getting started](/guides/getting-started/), [What happens to what you type](/guides/your-data/), [Check a tool’s answer](/guides/checking-results/), and [Common questions](/guides/faq/)).
+2. **New to government contracting:** For engineers and founders preparing their first bid ([Read a solicitation](/guides/read-a-solicitation/), [Answer a solicitation](/guides/answer-a-solicitation/), [Labor rates and wrap rates](/guides/labor-rates/), [Protecting government information](/guides/protecting-government-information/), and [Codes, registration and small business status](/guides/codes-and-small-business/)).
+3. **Running your own copy:** For DevOps engineers and system administrators deploying inside corporate networks or secure labs ([Host your own copy with Docker](/guides/host-with-docker/), [Host on Kubernetes](/guides/host-on-kubernetes/), [Host as plain files](/guides/host-static-files/), and [Run it on a closed network](/guides/closed-networks/)).
+4. **Building or fixing something:** For developers and technical contributors ([Request a tool or add your own](/guides/request-or-add-a-tool/), [Build a tool that can be listed](/guides/build-a-tool/), and [Work on this site](/guides/work-on-this-site/)).
+
+### The guide reading interface
+Every individual guide page provides structured navigation aids:
+- **Header Breadcrumb:** Located at the top left, linking back to `/guides/` and directly to the parent section anchor (for example, `Guides · L.1 Start here`).
+- **Metadata Line:** Displays the official Section L designation (such as `L.1.1`), estimated reading time based on a 220 word-per-minute standard, and regulatory currency ("Checked against its sources in November 2026").
+- **Sticky Desktop Table of Contents:** On large screens, an "On this page" sidebar follows your scroll position on the right, listing all level-2 headings (`##`) for instant jumping.
+- **Section Sibling Navigation:** Below the desktop TOC, the sidebar lists all sibling guides within the current Section L category, highlighting your active page.
+- **Collapsible Mobile TOC:** On mobile devices and small viewports, the table of contents folds into an accessible `<details>` accordion labeled "On this page" located immediately above the text.
+- **Previous and Next Navigation Cards:** Large cards at the bottom of the article link sequentially to the preceding and following guides across the library.
+
+### Searching and filtering guides
+Like the tool catalog, the guides index on `/guides/` includes an instant search filter:
+- Enter any term (e.g. `wrap rate`, `CUI`, `Docker`, `invoice`, `DFARS`).
+- The filter matches guide titles, summaries, section names, and second-level heading topics.
+- Section navigation pills (`L.1 Start here`, `L.2 Field guides`, etc.) display live match counts and jump directly to the relevant section heading.
+
+## Finding what you need by role
+
+Select the reading path below that matches your professional responsibility:
+
+### Solo consultants and first-time bidders
+If you are pricing your first proposal or bidding on a small set-aside:
+1. Read [How to navigate this site](/guides/navigating-this-site/) and [Getting started](/guides/getting-started/) to understand the tools.
+2. Read [Read a solicitation](/guides/read-a-solicitation/) to master the 13 UCF lettered sections and identify pass-or-fail requirements.
+3. Read [Answer a solicitation](/guides/answer-a-solicitation/) to learn how to structure responsive technical and cost volumes.
+4. Read [Labor rates and wrap rates](/guides/labor-rates/) to build defensible direct, fringe, overhead, and G&A rates.
+5. Watch the catalog for the **Wrap Rate Calculator**, **Section B Pricing Table Builder**, and **RFP Requirement Shredder**.
+
+### Small business founders
+If you run an emerging company scaling government revenue:
+1. Read [Codes, registration and small business status](/guides/codes-and-small-business/) to understand SAM.gov registrations, NAICS size standards, and 8(a), HUBZone, WOSB, and SDVOSB set-asides.
+2. Read [Invoices and late payment interest](/guides/getting-paid/) to understand FAR 52.232-25 rules, proper invoicing requirements, and calculating interest penalties when payments are overdue.
+3. Read [Protecting government information](/guides/protecting-government-information/) to prepare for safeguarding Federal Contract Information (FCI) under FAR 52.204-21.
+4. Watch the catalog for the **NAICS-to-PSC Crosswalk**, **NDC Eligibility Checker**, and **Prompt Payment Interest Tracker**.
+
+### Engineers and compliance leads
+If you are responsible for cybersecurity, system security plans, or technical compliance:
+1. Read [Protecting government information](/guides/protecting-government-information/) for an end-to-end breakdown of NIST SP 800-171, DFARS 252.204-7012, CMMC 2.0 assessment levels, and CUI marking rules.
+2. Read [STIGs, OSCAL and SBOMs](/guides/compliance-as-data/) to work with machine-readable compliance artifacts.
+3. Read [What happens to what you type](/guides/your-data/) to confirm how client-side privacy protects sensitive data on your local workstation.
+4. Watch the catalog for the **NIST SP 800-171 / CMMC Readiness Checklist**, **CUI Marking Generator**, **DISA STIG Reference Lookup**, and **OSCAL Validator**.
+
+### Systems administrators and DevOps engineers
+If you maintain infrastructure or deploy software into high-security enclaves:
+1. Read [Working on disconnected networks](/guides/disconnected-networks/) to review air-gap integrity procedures (cryptographic hashes, transfer manifests, offline container signatures).
+2. Choose your deployment architecture:
+   - [Host your own copy with Docker](/guides/host-with-docker/) for single-node installations.
+   - [Host on Kubernetes](/guides/host-on-kubernetes/) for production cluster deployments.
+   - [Host as plain files](/guides/host-static-files/) for simple Nginx, Apache, or Caddy file serving.
+3. Read [Run it on a closed network](/guides/closed-networks/) to verify transfer checksums and run ClearedStack with no internet gateway.
+4. Watch the catalog for the **Offline Manifest Inspector**, **Certificate Verifier**, and **Air-Gap Transfer Helpers**.
+
+### Open-source contributors
+If you want to suggest improvements, report regulatory updates, or contribute tools:
+1. Read [Work on this site](/guides/work-on-this-site/) to set up the local Next.js repository, run tests, and understand the project structure.
+2. Read [Build a tool that can be listed](/guides/build-a-tool/) to understand the five mandatory listing conditions (free/open source, 100% client-side, zero tracking, official public sources, and clear operational boundaries).
+3. Read [Request a tool or add your own](/guides/request-or-add-a-tool/) to submit pull requests or proposals.
+
+## Keyboard navigation and accessibility
+
+ClearedStack is built to comply with federal accessibility standards (Section 508 and WCAG 2.1 Level AA) and supports complete mouse-free operation.
+
+### Skip to main content
+Pressing `Tab` upon initial page load reveals a high-contrast **"Skip to content"** link in the top left corner. Pressing `Enter` bypasses the header navigation and lands keyboard focus directly on the `#main` container, allowing immediate interaction with page content.
+
+### High-contrast focus rings and logical tab order
+All interactive elements—links, search inputs, buttons, and summary disclosures—feature high-contrast focus rings (`focus:border-accent` and `focus:outline-none`). Tab order follows the visual and logical structure of the document:
+1. Skip link (when focused)
+2. SiteHeader branding and navigation links
+3. Search inputs or section jump links
+4. Main article text and internal links
+5. Sticky or inline table of contents
+6. Footer site map and repository links
+
+### Screen reader announcements
+Both the Tool Catalog (`/tools/`) and Guides Index (`/guides/`) feature real-time search result counts marked with `aria-live="polite"`. When you type into a filter input, screen readers announce updated match totals (for example, "4 of 18 tools") without interrupting user keystrokes.
+
+### Dark mode and system preferences
+The site automatically detects and honors your operating system color scheme preference (`prefers-color-scheme`). High contrast is maintained in both modes:
+- **Light mode:** Warm parchment background (`#f5f4ef`) with dense charcoal ink text (`#1a1d1b`) and deep copper accent highlights.
+- **Dark mode:** Tactical black/forest background (`#0b0f0d`) with off-white typography and vibrant copper accents.
+- Both modes strictly avoid pure `#000000` or `#ffffff` extremes to minimize eye fatigue during extended proposal reviews.
+
+### Deep linking with URL fragments
+Every second-level heading (`##`) automatically generates an anchor ID and an interactive anchor symbol (`#`) linking directly to that section. You can right-click or copy any heading link to share or bookmark an exact subsection.
+
+Similarly, all CLIN categories (`#pricing`, `#proposal`, `#cyber`, `#market`, `#devsecops`) and guide sections (`#start`, `#field`, `#host`, `#contribute`, `#reference`) support direct fragment URLs.
+
+## Navigating offline and on closed networks
+
+ClearedStack is engineered from the ground up to operate reliably in air-gapped facilities, Secure Compartmented Information Facilities (SCIFs), and networks with no internet connection.
+
+### Zero external assets
+Traditional web platforms load fonts, scripts, stylesheets, and tracking beacons from third-party content delivery networks (CDNs). ClearedStack loads nothing from external servers:
+- **Locally bundled typography:** IBM Plex Sans and IBM Plex Mono fonts are packaged directly within the application bundle via `@fontsource`.
+- **Zero telemetry:** No Google Analytics, no tracking scripts, no third-party tags, and no remote telemetry.
+- **Strict Content Security Policy:** Production builds enforce `default-src 'self'`, forbidding your browser from connecting to unauthorized external endpoints.
+
+### Behavior inside a SCIF or air gap
+When self-hosting a copy inside a secure enclave (see [Run it on a closed network](/guides/closed-networks/)):
+- The entire interface loads at line speed from your local web server.
+- The interactive catalog filters and guide search work identically to the public site because all search indexes execute locally in browser memory.
+- No network requests leave the client machine during tool usage or document searches.
+
+### External links on closed networks
+The guides contain references and links to official government publications, including [acquisition.gov](https://www.acquisition.gov), [SAM.gov](https://sam.gov), [eCFR.gov](https://www.ecfr.gov), and [GitHub](https://github.com/ClearedStack).
+
+When viewing ClearedStack on an air-gapped system, clicking an external link will fail or time out according to your local browser network policy. All essential regulatory summaries, formula explanations, and procedural instructions are written directly into the guides themselves so you can complete your work without external internet access.
+
+## Suggesting changes or reporting mistakes
+
+Federal acquisition regulations, clauses, and standards change continuously. ClearedStack maintains accuracy through open peer review and transparent source tracking.
+
+### Inspecting guide source code
+Every guide page features a direct **"Source of this page"** link at the bottom of the article. Clicking this link takes you directly to the raw Markdown/MDX file in the public GitHub repository (`src/guides/<slug>.mdx`). You can view the exact commit history, inspect when changes were made, and verify the authorship.
+
+### Reporting errors or submitting corrections
+If you notice an outdated FAR clause number, an ambiguous instruction, or a broken cross-reference:
+- **Open an issue:** Visit [ClearedStack issues on GitHub](https://github.com/ClearedStack/clearedstack.com/issues) and submit a description of the error, citing the relevant current regulation.
+- **Submit a pull request:** If you know the fix, fork the repository, edit the `.mdx` file directly, and submit a pull request. Corrections are reviewed and merged promptly.
+- **Send an email:** If you do not use GitHub or work from an environment where code repositories are restricted, send your notes directly to [contact@clearedstack.com](mailto:contact@clearedstack.com).
+
+To learn how to develop tools or contribute larger guides, see [Work on this site](/guides/work-on-this-site/).
