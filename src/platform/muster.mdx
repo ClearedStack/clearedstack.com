@@ -15,9 +15,9 @@ Rather than letting 10 worker pods hold database passwords or implement their ow
 
 - **Sole `core.*` Writer:** Besides Logbook itself, Muster is the only service in the cluster with read/write access to `core.*` tables.
 - **Lease & Heartbeat Coordinator:** Issues work leases in priority order (`urgent` -> `normal` -> `backfill`), tracks worker heartbeats, and commits state changes alongside the next queue step in a single Postgres transaction.
-- **`needs_subtool` Pause & Replay:** Places items encountering unknown layouts into `needs_subtool` and automatically replays them once Bosun deploys the updated worker digest.
+- **`needs_subtool` Pause & Replay:** Places items encountering unknown layouts into `needs_subtool` and automatically replays them once Shipkeeper deploys the updated worker digest.
 - **SSE Live Feed:** Publishes real-time queue depths, worker health, and edit status transitions to Conn.
-- **5-Layer Anti-Spam Edit Intake:** Screens anonymous `✎ Edit` submissions before they enter Gavel as `pending_approval`.
+- **5-Layer Anti-Spam Edit Intake:** Screens anonymous `✎ Edit` submissions before they enter Countersign as `pending_approval`.
 
 ## Runtime & Resource Budget
 
@@ -30,26 +30,26 @@ Rather than letting 10 worker pods hold database passwords or implement their ow
 | **RAM Request** | `48 MiB` |
 | **Priority Class** | High (Control Plane — protected from eviction) |
 | **Storage** | Stateless (all durable state lives in Logbook) |
-| **Network Exposure** | Cluster-private (`ClusterIP` only); reachable by Conn, Bosun, and `cs-workers` |
+| **Network Exposure** | Cluster-private (`ClusterIP` only); reachable by Conn, Shipkeeper, and `cs-workers` |
 
 ## Interfaces & Data Contracts
 
 | Peer Service | Direction | Protocol / Auth | Data Contract |
 | --- | --- | --- | --- |
 | **Logbook** | Outbound | SQL (read/write on `core.*`) | Atomic transactions for item state, queue leases, edit proposals, and append-only ledger |
-| **`cs-workers` (Trawl through Foghorn)** | Inbound | Cluster-private HTTP (Kubernetes ServiceAccount) | Lease acquisition (`urgent`/`normal`/`backfill`), heartbeats, result submission, and `E_NEEDS_SUBTOOL` reporting |
+| **`cs-workers` (Trawl through Bellbuoy)** | Inbound | Cluster-private HTTP (Kubernetes ServiceAccount) | Lease acquisition (`urgent`/`normal`/`backfill`), heartbeats, result submission, and `E_NEEDS_SUBTOOL` reporting |
 | **Conn** | Outbound / Inbound | Cluster-private HTTP + SSE | Streams live SSE progress; receives anonymous `✎ Edit` proposals |
-| **Bosun** | Inbound | Cluster-private HTTP | Receives sanitized pod health and stripped error events (zero node names or internal IPs) |
+| **Shipkeeper** | Inbound | Cluster-private HTTP | Receives sanitized pod health and stripped error events (zero node names or internal IPs) |
 
 ### 5-Layer Anti-Spam Edit Intake
 
-Every anonymous `✎ Edit` submission must pass all five layers before reaching Gavel:
+Every anonymous `✎ Edit` submission must pass all five layers before reaching Countersign:
 
 1. **Browser Proof-of-Work:** Validates the ~1-second client-side cryptographic puzzle token.
 2. **Honeypot Field:** Silently discards requests where the hidden form field is populated.
 3. **Daily-Salted IP Rate Limit:** Hashes the client IP with a daily-rotating secret salt and caps submissions per hash without ever storing raw IP addresses.
 4. **Strict Schema Check:** Verifies the target exists in `ownership_map.json`, enforces a 4 KB payload limit, and strips all HTML and scripts.
-5. **Review Gate:** Holds every valid proposal in `pending_approval` inside Gavel until explicitly approved by the human owner.
+5. **Review Gate:** Holds every valid proposal in `pending_approval` inside Countersign until explicitly approved by the human owner.
 
 ## Failure Modes & Recovery
 

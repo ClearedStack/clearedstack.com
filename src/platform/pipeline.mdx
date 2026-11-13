@@ -7,22 +7,22 @@ export const meta = {
   status: "design",
 };
 
-The pipeline is ten small Go programs, from Trawl at stage 01 to Foghorn at stage 10, each in its own MIT-licensed repository and each with one job. Together they take an idea for a tool from first sighting to a listing in the catalog, and keep watching it afterward. This page describes each worker and the rules they share. Each name in the table links to that worker’s full specification, and the [naming registry](/platform/#registry) lists what each one used to be called.
+The pipeline is ten small Go programs, from Trawl at stage 01 to Bellbuoy at stage 10, each in its own MIT-licensed repository and each with one job. Together they take an idea for a tool from first sighting to a listing in the catalog, and keep watching it afterward. This page describes each worker and the rules they share. Each name in the table links to that worker’s full specification, and the [naming registry](/platform/#registry) lists what each one used to be called.
 
 ## The ten workers
 
 | Stage | Worker | Its job | Rules for particular cases |
 | --- | --- | --- | --- |
 | 01 | [Trawl](/platform/trawl/) | Record a candidate once: clean its address, check for duplicates, give it an identifier | One for each source: `sam-gov`, `github-issues`, `web-sweep`, `site-form` |
-| 02 | [Spyglass](/platform/spyglass/) | Read the candidate’s public pages and write down what job it does | One for each kind of page: `saas-marketing`, `gov-portal`, `agency-pdf`, and particular vendors |
+| 02 | [Sextant](/platform/sextant/) | Read the candidate’s public pages and write down what job it does | One for each kind of page: `saas-marketing`, `gov-portal`, `agency-pdf`, and particular vendors |
 | 03 | [Assay](/platform/assay/) | Apply the five knockout gates, the 100-point rubric and the tie-breakers | One profile for each area of the catalog |
-| 04 | [Gavel](/platform/gavel/) | Hold the queue where the owner decides | None. The decision is a person’s |
+| 04 | [Countersign](/platform/countersign/) | Hold the queue where the owner decides | None. The decision is a person’s |
 | 05 | [Waybill](/platform/waybill/) | Write the credit note and the specification the tool is built from | One profile for each kind of tool |
-| 06 | [Jig](/platform/jig/) | Generate the tool’s own repository from the specification | Four templates: `calculator`, `checklist`, `validator`, `decision-tree` |
+| 06 | [Moldloft](/platform/moldloft/) | Generate the tool’s own repository from the specification | Four templates: `calculator`, `checklist`, `validator`, `decision-tree` |
 | 07 | [Shakedown](/platform/shakedown/) | Check the built tool against the five listing conditions | None. The checks are the same for every tool |
-| 08 | [Gazette](/platform/gazette/) | Publish, link, merge or retire the catalog entry | None |
-| 09 | [Dogwatch](/platform/dogwatch/) | Watch regulations, live tools and linked tools for change | One for each source: `federal-register`, `ecfr`, `nist-csrc`, `linked-tool-watch`, `live-catalog` |
-| 10 | [Foghorn](/platform/foghorn/) | Send approved edits, tasks and errors to the repository that owns them | One for each destination: `internal-git`, `github-mirror`, `webhook-alert`, `portal-sse` |
+| 08 | [Chartroom](/platform/chartroom/) | Publish, link, merge or retire the catalog entry | None |
+| 09 | [Tidegauge](/platform/tidegauge/) | Watch regulations, live tools and linked tools for change | One for each source: `federal-register`, `ecfr`, `nist-csrc`, `linked-tool-watch`, `live-catalog` |
+| 10 | [Bellbuoy](/platform/bellbuoy/) | Send approved edits, tasks and errors to the repository that owns them | One for each destination: `internal-git`, `github-mirror`, `webhook-alert`, `portal-sse` |
 
 ## Finding and recording
 
@@ -36,7 +36,7 @@ Trawl collects candidates from four places: public notices on SAM.gov, issues op
 
 ## Observing
 
-Spyglass reads what a candidate says about itself in public and turns that into a structured record: the job it does, its inputs and outputs, whether it needs a login, whether it tracks its users, its license, its price model, the public rule it cites and the date it was looked at.
+Sextant reads what a candidate says about itself in public and turns that into a structured record: the job it does, its inputs and outputs, whether it needs a login, whether it tracks its users, its license, its price model, the public rule it cites and the date it was looked at.
 
 **A small program first, a browser only when needed.** Most public pages and documents can be read with a plain web request, by a program that needs about 30 MiB of memory. Only when a page is built entirely by scripts does the worker start a temporary browser to render it, and that browser is discarded as soon as the page has been read.
 
@@ -46,7 +46,7 @@ Spyglass reads what a candidate says about itself in public and turns that into 
 
 ## Screening, scoring and deciding
 
-Assay applies the five knockout gates and, for candidates that pass, the 100-point rubric and the tie-breakers. It produces a recommendation. Gavel holds the queue in which the owner makes the decision. Both are described in [How we decide what to build](/platform/how-we-decide/).
+Assay applies the five knockout gates and, for candidates that pass, the 100-point rubric and the tie-breakers. It produces a recommendation. Countersign holds the queue in which the owner makes the decision. Both are described in [How we decide what to build](/platform/how-we-decide/).
 
 ## Crediting and specifying
 
@@ -54,7 +54,7 @@ Once the owner approves a build, Waybill writes two things: the note that credit
 
 ## Building, verifying and listing
 
-**Building.** Jig reads the specification and generates the tool’s own repository from one of four templates.
+**Building.** Moldloft reads the specification and generates the tool’s own repository from one of four templates.
 
 | Template | Used for | In and out |
 | --- | --- | --- |
@@ -73,11 +73,11 @@ Every template produces plain files that run in the browser, with no server behi
 4. **Its answers match the worked examples.** The tool is run against examples calculated by hand, including the awkward cases: zero, an empty file, a date that crosses a boundary. All test data is made up.
 5. **It shows its sources and its limits.** Each result cites its regulation, paragraph and revision date. The tool says what it does not cover and that it is not professional advice, and carries an MIT license.
 
-**Listing.** Gazette adds the verified tool to the [catalog](/tools/). It also handles the other outcomes: linking to an existing tool, merging an idea into another entry, and retiring a tool whose rule has been repealed.
+**Listing.** Chartroom adds the verified tool to the [catalog](/tools/). It also handles the other outcomes: linking to an existing tool, merging an idea into another entry, and retiring a tool whose rule has been repealed.
 
 ## Watching and routing
 
-**Dogwatch** keeps the catalog accurate after a tool is published. On a schedule, it asks each official source whether anything has changed, using the cheapest check that works: a header that says whether a file is newer, a structured feed, or a comparison of a page’s structure.
+**Tidegauge** keeps the catalog accurate after a tool is published. On a schedule, it asks each official source whether anything has changed, using the cheapest check that works: a header that says whether a file is newer, a structured feed, or a comparison of a page’s structure.
 
 | It watches | For |
 | --- | --- |
@@ -89,7 +89,7 @@ Every template produces plain files that run in the browser, with no server behi
 
 The monitor does not change a tool itself. It reopens the item so that the pipeline handles it: a live tool whose rule changed goes back to be rebuilt, or is retired if the rule was repealed. A parked idea is looked at again when the thing blocking it clears. A linked tool that breaks or starts tracking its users goes back to be reconsidered.
 
-**Foghorn** turns failures, paused items and approved edits into work for the right repository. Its main job is to avoid noise. If two hundred items fail on the same unfamiliar table, one task is opened, not two hundred: the worker builds a fingerprint from the worker’s name, the error code and the pattern of the failure, and adds to the count on an existing task when the fingerprint matches.
+**Bellbuoy** turns failures, paused items and approved edits into work for the right repository. Its main job is to avoid noise. If two hundred items fail on the same unfamiliar table, one task is opened, not two hundred: the worker builds a fingerprint from the worker’s name, the error code and the pattern of the failure, and adds to the count on an existing task when the fingerprint matches.
 
 ## Why no worker uses AI
 
@@ -119,7 +119,7 @@ Real pages do not look alike. One agency publishes a neat table and another buri
   direction="down"
   steps={[
     { tag: "1", label: "Pause the item", detail: "The item is marked needs_subtool, with the error code E_NEEDS_SUBTOOL." },
-    { tag: "2", label: "Open one task", detail: "Foghorn opens a task in the worker’s repository describing the pattern, or adds to an existing one." },
+    { tag: "2", label: "Open one task", detail: "Bellbuoy opens a task in the worker’s repository describing the pattern, or adds to an existing one." },
     { tag: "3", label: "Write the rule", detail: "A sub-tool and its fixtures are added and reviewed." },
     { tag: "4", label: "Build and deploy", detail: "The worker’s tests run, including the new fixtures, and the new version is rolled out." },
     { tag: "5", label: "Run the paused items again", detail: "Every item that was waiting on that pattern is replayed automatically." },
@@ -136,6 +136,6 @@ Workers do not talk to each other, and they do not touch the database. Each one 
 - **One shared contract.** The hub repository owns the definition of the handful of calls a worker makes (`lease`, `heartbeat`, `complete`, `fail`, `needs_subtool`), the fourteen item states and the error codes. There is no separate shared-code repository for the ten workers to depend on.
 - **Versions.** Each worker states which version of the contract it speaks, and the hub checks every message against it. That lets one worker change and ship without the other nine being redeployed.
 - **Three error codes.** `E_TIMEOUT` means something outside took too long. `E_PARSE` means the data was broken. `E_NEEDS_SUBTOOL` means the data was valid and unfamiliar.
-- **The wall is checked here too.** The hub rejects any message to Jig that carries a raw page captured by Spyglass.
+- **The wall is checked here too.** The hub rejects any message to Moldloft that carries a raw page captured by Sextant.
 
 [Cluster architecture](/platform/cluster-architecture/) describes the queue service and the database behind it.

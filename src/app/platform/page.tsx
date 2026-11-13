@@ -67,7 +67,12 @@ function RegistryTable({
                   row.name
                 )}
               </th>
-              <td className="px-4 py-3 font-mono text-xs whitespace-nowrap text-muted">{row.formerly}</td>
+              <td className="px-4 py-3 font-mono text-xs text-muted">
+                <span className="whitespace-nowrap">{row.formerly}</span>
+                {row.earlierNames?.length ? (
+                  <span className="block font-sans whitespace-nowrap">then {row.earlierNames.join(", ")}</span>
+                ) : null}
+              </td>
               <td className="px-4 py-3 leading-relaxed text-muted">{row.responsibility}</td>
               <td className="px-4 py-3 text-muted">
                 {row.dependsOn.length > 0 ? row.dependsOn.map((dep) => findComponent(dep)!.name).join(", ") : "—"}
@@ -160,7 +165,7 @@ export default async function PlatformIndexPage() {
         <DocIndex
           groups={platform.groups}
           noun="page"
-          placeholder="Filter: rubric, Bosun, clean room, backups…"
+          placeholder="Filter: rubric, Shipkeeper, clean room, backups…"
           docs={docs.map((doc) => ({
             slug: doc.slug,
             href: doc.href,

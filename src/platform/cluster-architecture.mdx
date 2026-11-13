@@ -34,11 +34,11 @@ An earlier draft gave every worker its own namespace, eleven in all. Two keeps t
 | [Muster](/platform/muster/) | Hands out work to the workers, records results and receives edit proposals | 48 MiB |
 | [Logbook](/platform/logbook/) | The one database, on a persistent volume. Logbook is the record itself; today it is kept in PostgreSQL | 256 MiB |
 | [Plainforge](/platform/plainforge/) | Holds every repository, signals each push and mirrors code to GitHub | 64 MiB |
-| [Stow](/platform/stow/) | Stores built images inside the cluster and keeps the last five of each | 64 MiB |
-| [Slipway](/platform/slipway/) | Starts a short-lived job to test and build on each push | 32 MiB |
-| [Bosun](/platform/bosun/) | Deploys what was built, watches its health and reports it | 48 MiB |
+| [Lazarette](/platform/lazarette/) | Stores built images inside the cluster and keeps the last five of each | 64 MiB |
+| [Keelworks](/platform/keelworks/) | Starts a short-lived job to test and build on each push | 32 MiB |
+| [Shipkeeper](/platform/shipkeeper/) | Deploys what was built, watches its health and reports it | 48 MiB |
 
-Plainforge, Stow, Slipway and Bosun are written from scratch as small Go programs instead of being assembled from large existing projects. [Clean room and credit](/platform/clean-room-and-credit/#the-same-rule-for-the-platforms-own-services) explains why.
+Plainforge, Lazarette, Keelworks and Shipkeeper are written from scratch as small Go programs instead of being assembled from large existing projects. [Clean room and credit](/platform/clean-room-and-credit/#the-same-rule-for-the-platforms-own-services) explains why.
 
 ## From a push to a running pod
 
@@ -48,11 +48,11 @@ Every change follows the same path, and no step uses Docker.
   caption="How a change to any repository becomes a running pod"
   direction="down"
   steps={[
-    { tag: "Plainforge", label: "A commit lands", detail: "On main or as a tag. Plainforge mirrors the code to GitHub and tells Slipway." },
-    { tag: "Slipway", label: "A build job starts", detail: "A temporary, unprivileged job is created for this one build." },
-    { tag: "Build job", label: "Test, build, sign", detail: "The repository’s tests run first. Then the image is built, signed and pushed to Stow." },
-    { tag: "Slipway", label: "Record what was built", detail: "The image’s digest is written into the app’s manifest in Plainforge." },
-    { tag: "Bosun", label: "Deploy", detail: "Bosun sees the new digest and rolls the pods forward one at a time." },
+    { tag: "Plainforge", label: "A commit lands", detail: "On main or as a tag. Plainforge mirrors the code to GitHub and tells Keelworks." },
+    { tag: "Keelworks", label: "A build job starts", detail: "A temporary, unprivileged job is created for this one build." },
+    { tag: "Build job", label: "Test, build, sign", detail: "The repository’s tests run first. Then the image is built, signed and pushed to Lazarette." },
+    { tag: "Keelworks", label: "Record what was built", detail: "The image’s digest is written into the app’s manifest in Plainforge." },
+    { tag: "Shipkeeper", label: "Deploy", detail: "Shipkeeper sees the new digest and rolls the pods forward one at a time." },
   ]}
 />
 
@@ -60,7 +60,7 @@ Every change follows the same path, and no step uses Docker.
 
 | Builder | Used for | How |
 | --- | --- | --- |
-| `ko` | Everything written in Go: Plainforge, Stow, Slipway, Bosun, Muster and the ten workers | Compiles the source straight into a minimal image, with no build file and no daemon |
+| `ko` | Everything written in Go: Plainforge, Lazarette, Keelworks, Shipkeeper, Muster and the ten workers | Compiles the source straight into a minimal image, with no build file and no daemon |
 | Rootless BuildKit | The website | Builds the image from the repository’s `Containerfile` inside an unprivileged pod |
 
 **Tests come first.** A build job runs the repository’s tests, including the saved examples for every [sub-tool](/platform/pipeline/#sub-tools-one-rule-for-each-case), before it builds anything. Code that fails never reaches the registry.
@@ -73,7 +73,7 @@ Plainforge is the primary copy of every repository. It sits inside the cluster a
 
 GitHub is a mirror of the code only. Built images never leave the cluster.
 
-| | GitHub | Stow |
+| | GitHub | Lazarette |
 | --- | --- | --- |
 | What is there | Source code and tags | Signed images |
 | How it gets there | Pushed outward by Plainforge on each change | Pushed by a build job, inside the cluster |
@@ -83,12 +83,12 @@ Keeping images inside means no registry passwords in the worker pods, and a roll
 
 ## Install, upgrade, pause, roll back
 
-Bosun reads each app’s manifest from Plainforge and applies it to the cluster with Kubernetes’ own server-side apply. It adds no custom resource types. For the owner it offers four actions on any service or worker:
+Shipkeeper reads each app’s manifest from Plainforge and applies it to the cluster with Kubernetes’ own server-side apply. It adds no custom resource types. For the owner it offers four actions on any service or worker:
 
 - **Install** applies the app’s manifests for the first time.
 - **Upgrade** moves it to the newest signed image.
 - **Pause** scales it down without deleting its configuration or data.
-- **Rollback** returns it to one of the five previous images kept in Stow.
+- **Rollback** returns it to one of the five previous images kept in Lazarette.
 
 It also watches the health of every pod and reports it, after removing anything that would reveal the layout of the cluster. See [what stays private](/platform/public-edits/#what-is-public-and-what-is-private).
 
@@ -110,13 +110,13 @@ Workers ask Muster for work over the cluster’s private network and identify th
 
 ## Network, priority and privilege
 
-**Closed unless opened.** Both namespaces block all traffic by default. Only Conn accepts connections from outside. Workers may call Muster, and the workers that read public sources may fetch them from outside. Workers cannot reach the database, Plainforge or Stow.
+**Closed unless opened.** Both namespaces block all traffic by default. Only Conn accepts connections from outside. Workers may call Muster, and the workers that read public sources may fetch them from outside. Workers cannot reach the database, Plainforge or Lazarette.
 
 **Who keeps running under pressure.**
 
 | Priority | Workloads | When memory is short |
 | --- | --- | --- |
-| High | The database, the queue service, the website, Plainforge, Stow, Bosun | Kept running, so the site and the queue stay up |
+| High | The database, the queue service, the website, Plainforge, Lazarette, Shipkeeper | Kept running, so the site and the queue stay up |
 | Standard | The ten workers | Give way before the control plane does |
 | Low | Build jobs and browser jobs | Run when there is room, and are stopped first |
 
@@ -131,7 +131,7 @@ The design calls for the cluster to set itself up from one manifest applied to a
 | Secrets | Generates the database passwords, service tokens, signing keys and the salt used to hash visitor addresses | Credentials are created inside the cluster and never appear in Git |
 | Database | Creates the `core` tables and the `pub` views | Private data and public data are separate from the first minute |
 | Repositories | Creates a repository in Plainforge for each service and worker | The cluster has its own source of truth |
-| First builds | Has Slipway build and sign every image | Nothing is pulled ready-made from outside |
+| First builds | Has Keelworks build and sign every image | Nothing is pulled ready-made from outside |
 | Network rules | Applies the rules that leave only the website reachable | The database, Git, the registry and the workers are closed from the start |
 
 Because every repository is MIT licensed and written from scratch, the design can be forked without asking: rebranded, given different scoring weights, or run privately with the GitHub mirror turned off.
@@ -143,8 +143,8 @@ Nothing in the design depends on an outside service while it runs, so the whole 
 | Part | Connected | Disconnected |
 | --- | --- | --- |
 | Plainforge | Mirrors code to GitHub | The mirror is off. All code stays inside |
-| Dogwatch | Checks public regulation feeds | Paused, or pointed at copies kept inside |
-| Spyglass | Fetches public pages | Reads only what can be reached inside, or files brought in |
-| Stow | Stores images built by Slipway | The same. Nothing is pulled from outside |
+| Tidegauge | Checks public regulation feeds | Paused, or pointed at copies kept inside |
+| Sextant | Fetches public pages | Reads only what can be reached inside, or files brought in |
+| Lazarette | Stores images built by Keelworks | The same. Nothing is pulled from outside |
 
 What crosses the boundary is a bundle of signed image archives, the manifests and the repositories, with a checksum to prove it arrived intact. [Working on disconnected networks](/guides/disconnected-networks/) covers that discipline.

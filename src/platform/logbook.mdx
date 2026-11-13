@@ -38,7 +38,7 @@ Only two services in the entire cluster are permitted to connect to Logbook:
 | --- | --- | --- | --- |
 | **Muster** | `core.*` | Read / Write | Manages worker queue leases, `needs_subtool` pauses, replay, edit proposals, and append-only ledger entries |
 | **Conn** | `pub.*` | Read-Only (`pub_ro`) | Reads sanitized public views for the Portal, App Store UI, and monthly restore drill status |
-| **`cs-workers` (Trawl through Foghorn)** | None | Blocked | Zero network access (`NetworkPolicy`) and zero database credentials |
+| **`cs-workers` (Trawl through Bellbuoy)** | None | Blocked | Zero network access (`NetworkPolicy`) and zero database credentials |
 
 ## Failure Modes & Recovery
 

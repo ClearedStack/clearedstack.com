@@ -4,9 +4,9 @@ import registry from "@/data/registry.json";
  * The platform's components, read from the naming registry.
  *
  * src/data/registry.json is the single place a component's name is written
- * down. To rename one, change `name` and `slug` there, move the old slug into
- * `formerly`, and rename its page in src/platform to match the new slug. The
- * old addresses keep working (see lib/docs.ts).
+ * down. To rename one, change `name` and `slug` there, add the name it had to
+ * `earlierNames`, and rename its page in src/platform to match the new slug.
+ * The old addresses keep working (see lib/docs.ts).
  *
  * The same file is published at /platform/registry.json for manifests,
  * pipelines and other repositories to read.
@@ -18,6 +18,8 @@ export type PlatformComponent = {
   name: string;
   /** The identifier this name replaced. */
   formerly: string;
+  /** Names it has carried since, before the current one. Their addresses still work. */
+  earlierNames?: string[];
   kind: "control-plane" | "worker";
   /** Workers only: position in the pipeline, 1 to 10. */
   stage?: number;

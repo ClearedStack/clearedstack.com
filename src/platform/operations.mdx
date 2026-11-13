@@ -69,8 +69,8 @@ Status pages are assembled from six parts, so that every page reads the same way
       state="recovering"
       errorCode="E_NEEDS_SUBTOOL"
       summary="Sample card. A worker met a page layout it has no rule for, paused that one item and asked for a sub-tool. Everything else in the queue carries on."
-      ownerRepo="spyglass"
-      elementId="pipeline.spyglass"
+      ownerRepo="sextant"
+      elementId="pipeline.sextant"
       editClass="ISSUE"
       whyTitle="Why a worker stops instead of guessing"
       whySummary="No worker uses AI to interpret an unfamiliar page. It pauses the item and waits for a tested rule."
@@ -104,11 +104,11 @@ Because no worker guesses, a failure is a predictable sequence instead of a myst
   caption="The path of a failure, from the pod to a fix"
   direction="down"
   steps={[
-    { tag: "1", label: "Noticed and cleaned", detail: "Bosun sees the failing pod, removes anything that names a machine or an address, and reports a public error code." },
+    { tag: "1", label: "Noticed and cleaned", detail: "Shipkeeper sees the failing pod, removes anything that names a machine or an address, and reports a public error code." },
     { tag: "2", label: "Shown", detail: "The failure appears at the top of the status view as P0 or P1." },
     { tag: "3", label: "Work is kept", detail: "The item stays in the queue. A result the worker had finished waits on its own disk." },
     { tag: "4", label: "Stopped or rolled back", detail: "The owner can pause the worker, or return it to an earlier image." },
-    { tag: "5", label: "One task, not hundreds", detail: "Foghorn opens a single task for the pattern in the repository that owns the fix." },
+    { tag: "5", label: "One task, not hundreds", detail: "Bellbuoy opens a single task for the pattern in the repository that owns the fix." },
   ]}
 />
 
@@ -137,7 +137,7 @@ Most of the platform holds no data of its own. If the website, the build runner 
 | --- | --- | --- |
 | The database | The queue, each item’s history, the scores, the decisions and the proposals | It is the record of everything that has been decided |
 | Plainforge | Every repository, including each app’s manifest | It is the primary copy. GitHub has the code, not necessarily the latest commit |
-| Stow | The signed images | Images are not on GitHub. Without them nothing can roll back until everything is rebuilt |
+| Lazarette | The signed images | Images are not on GitHub. Without them nothing can roll back until everything is rebuilt |
 
 **Every night**, a job takes a consistent copy of all three and sends it off the machine.
 
@@ -159,6 +159,6 @@ So once a month the design restores everything for real, into a temporary space 
 | Decrypt and unpack | The archive downloads and opens with the current key | The backup is readable and the key has not drifted |
 | Database | It loads without errors and its tables pass integrity checks | The queue, the items and the decisions are intact |
 | Plainforge | The repositories pass Git’s own consistency check | The code and the manifests are whole |
-| Stow | The image manifests and signatures resolve | Components can start and roll back without the internet |
+| Lazarette | The image manifests and signatures resolve | Components can start and roll back without the internet |
 
 The result of each drill is meant to be published: when it ran, whether it passed, and the outcome of each of the four checks. A broken backup should show up as a visible warning, not as a surprise during an outage.
