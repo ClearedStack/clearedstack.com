@@ -69,6 +69,9 @@ export default function Home() {
             <Link href="/tools/" className={`${button} border-ink bg-ink text-paper hover:border-accent hover:bg-accent hover:text-accent-ink`}>
               Browse the tools
             </Link>
+            <Link href="/guides/" className={`${button} border-line text-ink hover:border-ink`}>
+              How to use it
+            </Link>
             <Link href="/about/" className={`${button} border-line text-ink hover:border-ink`}>
               Read the mission
             </Link>

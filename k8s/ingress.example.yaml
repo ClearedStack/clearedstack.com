@@ -1,0 +1,26 @@
+# Example: expose the site at your own host name through an ingress controller.
+#
+# Copy this file, set the host and the ingress class your cluster uses, then:
+#
+#   kubectl apply -f k8s/ingress.yaml
+#
+# HTTPS is handled by your ingress controller. Add a `tls` section here if
+# yours expects one.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: clearedstack
+  namespace: clearedstack
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: clearedstack.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: clearedstack
+                port:
+                  name: http

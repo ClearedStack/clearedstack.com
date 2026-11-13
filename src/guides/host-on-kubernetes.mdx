@@ -1,0 +1,123 @@
+export const meta = {
+  title: "Host on Kubernetes",
+  summary: "Run your own copy of this site on a Kubernetes cluster, using the manifests in the repository.",
+  order: 6,
+};
+
+If you already run a Kubernetes cluster, the site fits on it as a small deployment. The repository includes the manifests. If you only need one server, [Docker on its own](/guides/host-with-docker/) is simpler.
+
+## What you need
+
+- A Kubernetes cluster and `kubectl` set up to talk to it.
+- A container registry your cluster can pull from.
+- Docker, to build the image.
+
+There is no published image to pull. You build your own, so you know exactly what is in it.
+
+## Build and push the image
+
+Replace `registry.example.com` with your registry’s address.
+
+```bash
+git clone https://github.com/ClearedStack/clearedstack.com.git
+cd clearedstack.com
+docker build -t registry.example.com/clearedstack:1 .
+docker push registry.example.com/clearedstack:1
+```
+
+## Point the manifest at your image
+
+Open `k8s/clearedstack.yaml` and change the `image:` line to the name you just pushed:
+
+```yaml
+image: registry.example.com/clearedstack:1
+```
+
+## Deploy
+
+```bash
+kubectl apply -f k8s/clearedstack.yaml
+```
+
+This creates a namespace named `clearedstack`, a deployment with two copies of the site, and a service in front of them. Wait for it to finish starting:
+
+```bash
+kubectl -n clearedstack rollout status deployment/clearedstack
+```
+
+## Check that it works
+
+Forward a local port to the service:
+
+```bash
+kubectl -n clearedstack port-forward service/clearedstack 8080:80
+```
+
+Open `http://localhost:8080`. Press Ctrl-C to stop forwarding.
+
+## Put it on your own domain
+
+How you expose a service depends on your cluster. If it has an ingress controller, the repository has an example to start from:
+
+```bash
+cp k8s/ingress.example.yaml k8s/ingress.yaml
+```
+
+Edit `k8s/ingress.yaml` to set your host name and the ingress class your cluster uses, then apply it:
+
+```bash
+kubectl apply -f k8s/ingress.yaml
+```
+
+Your ingress controller handles HTTPS. If your copy lives at a different address than clearedstack.com, change `url` in `src/data/site.ts` before you build the image.
+
+## What the manifest locks down
+
+The pods are set up to need as little trust as possible:
+
+- They run as an ordinary user, not root.
+- The container’s filesystem is read-only, apart from a small scratch folder.
+- All Linux capabilities are dropped and privilege escalation is off.
+- They get no Kubernetes API credentials.
+- Each one asks for 16 MB of memory and is capped at 64 MB. In testing the site used about 5 MB.
+
+These settings are written to meet the “restricted” Pod Security Standard.
+
+## Update it
+
+Build and push the new version under a new tag, then tell the deployment to use it:
+
+```bash
+git pull
+docker build -t registry.example.com/clearedstack:2 .
+docker push registry.example.com/clearedstack:2
+kubectl -n clearedstack set image deployment/clearedstack web=registry.example.com/clearedstack:2
+```
+
+Kubernetes replaces the pods one at a time, so the site stays up during the change.
+
+## Move it to a closed network
+
+Build the image on a connected machine and save it to a file:
+
+```bash
+docker save registry.example.com/clearedstack:1 | gzip > clearedstack.tar.gz
+```
+
+Carry the file across by whatever transfer process your network requires. On the other side, load it, give it the name of the registry inside that network, and push it there:
+
+```bash
+docker load < clearedstack.tar.gz
+docker tag registry.example.com/clearedstack:1 registry.internal.example/clearedstack:1
+docker push registry.internal.example/clearedstack:1
+```
+
+Then set that name in `k8s/clearedstack.yaml` and deploy as above.
+
+## Remove it
+
+```bash
+kubectl delete namespace clearedstack
+```
+
+This removes the deployment, the service and the ingress in one step.
