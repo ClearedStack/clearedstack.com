@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Lanes, Layers } from "@/components/Diagram";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -93,6 +94,99 @@ export default function AboutPage() {
               this site’s repository
             </a>
             , so adding a tool to the list is a one-entry pull request.
+          </p>
+        </Block>
+
+        <Block id="ideas" label="Where ideas come from">
+          <p>
+            ClearedStack finds ideas through a process called Prior Art. We look at tools that already exist for
+            government-contracting paperwork, record what each one does from its public pages, screen and score the idea
+            in public, let the human owner make the call, and credit where every idea came from. Tools are then built
+            from the public regulation, never from the other tool’s code, text or design.
+          </p>
+          <p className="font-mono text-xs text-muted">
+            Draft notice: This process describes intent. The engine is not running yet, no repository{" "}
+            <code className="text-ink">ClearedStack/prior-art</code> exists, and nothing has been collected. Read our{" "}
+            <Link href="/how-we-decide/">Section M evaluation factors</Link> and the{" "}
+            <Link href="/guides/prior-art-engine/">Prior Art engine guide</Link>.
+          </p>
+        </Block>
+
+        <Block id="how-work-is-done" label="How the work is done">
+          <p>
+            All work on ClearedStack is done with AI assistance (Claude Code and Antigravity) under one human owner who
+            sets direction, decides every outcome, reviews every change, merges, and is accountable.
+          </p>
+          <p>
+            Every regulatory statement and mathematical formula is checked by a person against the cited public source
+            before it ships. AI output is never the source of a rule. Furthermore, we never enter controlled
+            unclassified information (CUI), non-public material, real contract figures, or personal data into an AI tool.
+          </p>
+          <p>
+            Most importantly: <strong>the tools themselves contain no AI and make no network calls</strong>. AI is
+            used only while writing code and guides, never at runtime.
+          </p>
+
+          <div className="mt-6">
+            <Lanes
+              caption="Responsibilities across the human owner and AI assistants."
+              lanes={["Human owner", "AI agents (Claude Code, Antigravity)"]}
+              steps={[
+                {
+                  lane: 0,
+                  label: "Direction and scope",
+                  detail: "Selects priorities, defines guardrails, and sets architectural principles.",
+                },
+                {
+                  lane: 1,
+                  label: "Drafting",
+                  detail: "Drafts code, unit tests, guides, and structured evaluation records.",
+                },
+                {
+                  lane: 0,
+                  label: "Regulatory verification",
+                  detail: "Line-by-line check of every rule and arithmetic vector against official statutes.",
+                },
+                {
+                  lane: 0,
+                  label: "Merge and release",
+                  detail: "Reviews pull requests, signs git commits, publishes repositories, and remains accountable.",
+                },
+              ]}
+            />
+          </div>
+
+          <div className="mt-8">
+            <Layers
+              caption="AI builds, never runs: architectural boundaries protecting contractor privacy."
+              layers={[
+                {
+                  tag: "Client runtime",
+                  label: "Your browser runs the tool",
+                  detail: "All computation executes locally on your machine in client-side TypeScript.",
+                },
+                {
+                  tag: "Air-gap safety",
+                  label: "Tool has no AI and no network calls",
+                  detail: "No backend, no database, no model inference, and blocked third-party endpoints.",
+                },
+                {
+                  tag: "Development",
+                  label: "AI used only while writing code and guides",
+                  detail: "Claude Code and Antigravity assist in authoring under strict zero-CUI data rules.",
+                },
+                {
+                  tag: "Accountability",
+                  label: "Owner reviews and merges",
+                  detail: "Human maintainer audits against primary public sources before shipping.",
+                },
+              ]}
+            />
+          </div>
+
+          <p className="mt-6">
+            Read the complete disclosure in{" "}
+            <Link href="/guides/built-with-ai/">How AI is used to build this project</Link>.
           </p>
         </Block>
 

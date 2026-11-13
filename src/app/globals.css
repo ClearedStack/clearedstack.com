@@ -303,3 +303,290 @@ body {
   margin-right: 0.5rem;
   accent-color: var(--accent);
 }
+
+/*
+ * Diagrams (src/components/Diagram.tsx): boxes, arrows and lanes drawn in
+ * plain CSS. The selectors are prefixed with .diagram so they win over the
+ * list styles of guide prose.
+ */
+.diagram {
+  margin-top: 1.75rem;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--ink);
+  border-radius: 2px;
+  background: var(--surface);
+  padding: 1.25rem 1.125rem 1rem;
+}
+
+.diagram ol,
+.diagram ul,
+.prose-cs .diagram ol,
+.prose-cs .diagram ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.diagram li,
+.prose-cs .diagram li {
+  margin: 0;
+  padding: 0;
+}
+
+.diagram-caption {
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.625rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.diagram-caption-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.dg-box {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--paper);
+  padding: 0.625rem 0.75rem;
+}
+
+.dg-box-accent {
+  border-color: var(--accent);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.dg-tag {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.dg-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.dg-detail {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* Flow: arrows between consecutive steps. */
+.dg-flow {
+  display: flex;
+  flex-direction: column;
+}
+
+.dg-flow-item {
+  position: relative;
+}
+
+.dg-flow-item + .dg-flow-item {
+  margin-top: 1.5rem !important;
+}
+
+.dg-flow-item + .dg-flow-item::before {
+  content: "↓";
+  position: absolute;
+  top: -1.4rem;
+  left: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--accent);
+}
+
+@media (min-width: 768px) {
+  .dg-flow-across {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .dg-flow-across .dg-flow-item {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .dg-flow-across .dg-flow-item + .dg-flow-item {
+    margin-top: 0 !important;
+    margin-left: 1.5rem !important;
+  }
+
+  .dg-flow-across .dg-flow-item + .dg-flow-item::before {
+    content: "→";
+    top: 50%;
+    left: -1.2rem;
+    transform: translateY(-50%);
+  }
+}
+
+.dg-loop {
+  margin-top: 0.75rem !important;
+  border: 1px dashed var(--line);
+  border-radius: 2px;
+  padding: 0.375rem 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem !important;
+  color: var(--muted);
+}
+
+/* Branch: a question fanning out to its answers. */
+.dg-question {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: var(--paper);
+  padding: 0.625rem 0.75rem;
+}
+
+.dg-options {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem !important;
+  border-top: 1px solid var(--accent);
+  padding-top: 0.875rem !important;
+}
+
+@media (min-width: 640px) {
+  .dg-options {
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  }
+}
+
+.dg-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.dg-when {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.dg-when::before {
+  content: "↳ ";
+}
+
+/* Layers: a stack with touching edges. */
+.dg-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dg-layers li:nth-child(odd) .dg-box {
+  background: var(--paper);
+}
+
+.dg-layers li:nth-child(even) .dg-box {
+  background: var(--surface);
+}
+
+/* Lanes: one column per role, one row per step. */
+.dg-lane-heads {
+  display: none;
+}
+
+.dg-lane-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dg-lane-row {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .dg-lane-heads {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .dg-lane-head {
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 0.375rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .dg-lane-row {
+    display: grid;
+    gap: 0.75rem;
+    background-image: linear-gradient(var(--line), var(--line));
+    background-size: 100% 1px;
+    background-position: 0 50%;
+    background-repeat: no-repeat;
+  }
+}
+
+/* States: cards with their outgoing transitions. */
+.dg-states {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .dg-states {
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  }
+}
+
+.dg-state {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.dg-transitions li {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.dg-transitions li + li {
+  margin-top: 0.2rem !important;
+}
+
+.dg-transitions strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.dg-arrow {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+.dg-terminal {
+  margin: 0 !important;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}

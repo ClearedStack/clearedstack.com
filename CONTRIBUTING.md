@@ -2,11 +2,16 @@
 
 Thanks for wanting to help. There are three ways to do it.
 
-## Suggest a tool
+## Suggest an idea
 
-Open an issue describing the job the tool should do, who needs it, and the
-regulation, standard or guide it would be based on. A link to the public
-source is the most useful thing you can include.
+Suggestions from the community feed directly into the **Discover** stage of our Prior Art process (currently in draft). Open an issue describing:
+
+- The job the tool should do (in one sentence, starting with a verb).
+- Who needs it (the small-business paperwork problem it addresses).
+- Where the idea was seen (if inspired by an existing product, spreadsheet or government tool).
+- The public regulation, standard or guide it would be based on (with a link to the official public source).
+
+Community suggestions are recorded as candidate ideas and walk through the same observation, screening gates and scoring rubric described at [How we decide](https://clearedstack.com/how-we-decide/).
 
 ## Fix or improve this site
 
@@ -44,6 +49,22 @@ listed when it meets all of these:
   government has officially released to the public, and it says which ones.
 - **Honest about limits.** It states what it does not cover and that its output
   is not legal, accounting or compliance advice.
+
+### Provenance and clean-room rules for listed tools
+
+Every tool listed in the catalog must record its **provenance** (where the idea came from):
+
+- **What we take**: We take only the *idea* of a job to be done.
+- **Clean-room rule**: Never copy code, text, screenshots, UI layout, data files, names or logos from another tool. Builders work strictly from the public regulation and our own functional specification. Reusing open-source code is allowed only under its license with its copyright notice preserved.
+- **Credit**: The tool's catalog entry records who inspired it (e.g. government tool, commercial product, spreadsheet or community suggestion) in its `provenance` block.
+
+## Using AI tools
+
+Using AI tools (such as Claude Code, Antigravity, GitHub Copilot or ChatGPT) to help write code, tests, guides or suggestions is welcome, under the same strict rules we follow:
+
+- **Strict data rules**: Never paste Controlled Unclassified Information (CUI), non-public government information, real company contract numbers, real labor rates, or personal data into any AI prompt. All test fixtures and examples must be made up.
+- **Human verification**: A human must review every line of code, verify every mathematical formula, and check every regulatory citation against the official government source before submitting a pull request. AI output is never the authoritative source of a rule.
+- **Commit trailer**: Going forward, commits created with AI assistance should include a git trailer naming the tool used (for example: `Assisted-by: Claude Code` or `Assisted-by: Antigravity`).
 
 ## Ground rules for all contributions
 

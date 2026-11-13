@@ -19,6 +19,15 @@ A good deal of security compliance is now exchanged as structured files instead 
 
 They work at different levels. An SBOM describes one piece of software. A STIG describes the secure settings for one product. OSCAL describes a whole system and the controls around it, and can point to the other two as evidence.
 
+<Layers
+  caption="How machine-readable security data formats fit together"
+  layers={[
+    { label: "OSCAL", detail: "System security plans, control baselines, and assessment findings across the whole system.", tag: "System Level" },
+    { label: "STIGs", detail: "Configuration rules, checks, and fixes for specific operating systems, databases, and apps.", tag: "Product Level" },
+    { label: "SBOMs", detail: "Component inventories, library dependencies, and package versions for software.", tag: "Component Level" },
+  ]}
+/>
+
 ## What a STIG is
 
 A Security Technical Implementation Guide is a list of configuration rules for a specific product and version: an operating system, a database, a web server, a network device. Each rule says what to check and how to fix it. Systems on Department of Defense networks are expected to be configured to the STIGs that apply to them.
@@ -87,6 +96,15 @@ OSCAL is several related formats, called models, grouped in three layers.
 
 Each file refers to the ones above it. A system security plan points to a profile, and the profile points to a catalog. To read a plan fully you need the files it refers to.
 
+<Layers
+  caption="The three layers of OSCAL models"
+  layers={[
+    { label: "Assessment layer", detail: "Assessment plans, assessment results, and plan of action and milestones (POA&M).", tag: "Results" },
+    { label: "Implementation layer", detail: "Component definitions and system security plans (SSP) mapping controls to systems.", tag: "System Plan" },
+    { label: "Controls layer", detail: "Catalogs of standard controls and profiles defining baselines with adjustments.", tag: "Baselines" },
+  ]}
+/>
+
 ## Checking an OSCAL file
 
 There are three levels of “valid”, and they are worth keeping apart.
@@ -98,6 +116,15 @@ There are three levels of “valid”, and they are worth keeping apart.
 A validator checks the first two, and some of the third. No validator can tell you whether the plan describes your system accurately. A file can pass every check and still be wrong.
 
 Note the OSCAL version in the file’s metadata and validate against the schema for that version. An older file checked against a newer schema can fail for reasons that have nothing to do with its content.
+
+<Flow
+  caption="Three-stage validation check for an OSCAL file"
+  steps={[
+    { label: "Well-formed check", detail: "Verify syntax is valid JSON, XML, or YAML without parse errors.", tag: "Stage 1" },
+    { label: "Schema-valid check", detail: "Validate structure and data types against the official NIST schema for that OSCAL version.", tag: "Stage 2" },
+    { label: "Meaningful check", detail: "Confirm references resolve and the content accurately describes the real system.", tag: "Stage 3" },
+  ]}
+/>
 
 ## What an SBOM is
 

@@ -24,6 +24,17 @@ npm run build
 
 `npm ci` installs exactly the dependency versions recorded in the repository. The build takes under a minute and writes the site to a folder named `out`.
 
+<Flow
+  caption="Static site build and export pipeline"
+  direction="across"
+  steps={[
+    { tag: "Source", label: "Clone repository", detail: "Next.js pages, MDX guides and TypeScript catalog data." },
+    { tag: "Install", label: "Clean install", detail: "npm ci installs dependencies pinned in package-lock.json." },
+    { tag: "Build", label: "Export static files", detail: "npm run build exports HTML, CSS and JS into the out/ folder." },
+    { tag: "Deploy", label: "Sync to server", detail: "rsync copies out/ to your web server document root." },
+  ]}
+/>
+
 If your copy will live at a different address than clearedstack.com, change `url` in `src/data/site.ts` before you build.
 
 ## What is in the folder
@@ -71,6 +82,16 @@ Copy the contents of `out` to the folder your server reads from:
 ```bash
 rsync -a --delete out/ /var/www/clearedstack/
 ```
+
+<Branch
+  caption="Web server options for static files"
+  question="Which web server do you already run?"
+  options={[
+    { when: "nginx", then: "try_files $uri $uri/ =404", detail: "Fast static delivery with security headers in a server block." },
+    { when: "Apache", then: "ErrorDocument 404 /404.html", detail: "VirtualHost with mod_headers for security headers and caching." },
+    { when: "Caddy", then: "file_server", detail: "Automatic TLS with simple handle_errors block for 404 rewriting." },
+  ]}
+/>
 
 ## nginx
 
@@ -166,6 +187,16 @@ The web server configurations above add four response headers. The site works wi
 | `X-Frame-Options: DENY` | Stops another site from showing these pages inside a frame |
 | `Referrer-Policy: no-referrer` | Stops the browser from telling other sites which page a link was clicked on |
 | `Cache-Control: ... immutable` on `/_next/static/` | Lets browsers keep those files, which never change under the same name |
+
+<Layers
+  caption="Browser defense layers for static hosting"
+  layers={[
+    { tag: "Transport", label: "HTTPS & Referrer", detail: "TLS delivery with Referrer-Policy no-referrer to keep internal URLs private." },
+    { tag: "Framing", label: "X-Frame-Options DENY", detail: "Prevents clickjacking by forbidding embedding in outside iframes." },
+    { tag: "MIME types", label: "nosniff enforcement", detail: "Stops the browser from executing non-script assets as code." },
+    { tag: "Static CSP", label: "Baked-in Content Security Policy", detail: "Embedded in static HTML files at build time, traveling with the export everywhere." },
+  ]}
+/>
 
 The content security policy is not a server header here. It is written into every page at build time, so it travels with the files wherever you host them.
 

@@ -40,6 +40,16 @@ Three rules make the list reliable:
 
 Do not stop at Sections L, M and C. Requirements also hide in Section H, in the attachments and in the answers to bidders’ questions. Go through every amendment the same way.
 
+<Flow
+  caption="How requirements are extracted and prepared"
+  steps={[
+    { label: "Find the binding sentences", detail: "Mark sentences with “shall”, “must”, or “should” across all sections and amendments.", tag: "1" },
+    { label: "Split and copy exactly", detail: "One requirement per line, keeping the original words and noting section, paragraph, and page.", tag: "2" },
+    { label: "Assign stable identifiers", detail: "Give each requirement a prefix and number (such as L-001, M-001, C-001).", tag: "3" },
+    { label: "Populate compliance matrix", detail: "Enter source, requirement text, proposal location, owner, status, and notes.", tag: "4" },
+  ]}
+/>
+
 ## Number them
 
 Give every requirement an identifier that will not change when you add or remove rows. A prefix for the source and a running number works well:
@@ -79,6 +89,15 @@ The strongest proposals connect each part of the work to the factor it will be s
 - For each of those, list the **work requirements** in Section C that belong under it.
 
 Where the three do not line up, you have found something worth a question to the contracting officer. A factor in Section M with no instruction in Section L, or the reverse, is a common flaw in solicitations, and other bidders will be confused by it too.
+
+<Layers
+  caption="How the three requirement types crosswalk into each other"
+  layers={[
+    { label: "Section L Instructions", detail: "Tell you where to address the topic, how to format it, and page limits.", tag: "Where" },
+    { label: "Section M Evaluation Factors", detail: "Define what the government evaluates and where points are won.", tag: "Score" },
+    { label: "Section C Work Requirements", detail: "Specify the tasks the contractor will perform after award.", tag: "What" },
+  ]}
+/>
 
 ## Let the instructions set the outline
 
@@ -149,6 +168,18 @@ Before you submit, walk the matrix from top to bottom.
 ## What a tool can and cannot do here
 
 Pulling out sentences with “shall” and “must”, numbering them and laying out a matrix is mechanical work, and a tool can do it in seconds. Deciding what a requirement means, whether your answer satisfies it and what the evaluator is really worried about is judgment. Use a tool for the first, and read every row yourself for the second. A tool can miss a requirement that is phrased unusually, or sitting in a table or an image.
+
+<Lanes
+  caption="Division of work between software tools and human reviewers"
+  lanes={["Tool", "Reviewer"]}
+  steps={[
+    { lane: 0, label: "Extract binding sentences", detail: "Scans text for “shall”, “must”, and “should”." },
+    { lane: 0, label: "Number requirements", detail: "Assigns consistent IDs and lays out empty matrix." },
+    { lane: 1, label: "Check unusual phrasing", detail: "Catches requirements hidden in tables, images, and attachments." },
+    { lane: 1, label: "Judge meaning and intent", detail: "Decides what the requirement means and what evaluators look for." },
+    { lane: 1, label: "Verify proposal answer", detail: "Confirms the drafted response satisfies the actual requirement." },
+  ]}
+/>
 
 ## Sources
 

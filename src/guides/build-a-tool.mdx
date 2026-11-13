@@ -35,6 +35,17 @@ If you cannot point to an officially released source for a rule, the rule does n
 
 This is the condition people check first, and the one that takes a tool off the list if it fails.
 
+<Flow
+  caption="Client-side execution and data isolation boundary"
+  direction="down"
+  steps={[
+    { tag: "Static bundle", label: "Page loads once", detail: "Browser fetches HTML, JavaScript, CSS, and reference data." },
+    { tag: "In-memory", label: "Local processing", detail: "Calculations, parsing, and file readers run strictly inside tab memory." },
+    { tag: "Egress blocked", label: "CSP enforcement", detail: "Content Security Policy blocks remote API calls and tracking beacons." },
+    { tag: "Local save", label: "Optional browser storage", detail: "State stays in local storage with a user-facing button to clear it." },
+  ]}
+/>
+
 - **No backend.** The tool is static files: HTML, CSS, JavaScript and data. All processing happens in the page.
 - **No calls out.** No analytics, no error-reporting service, no remote logging, no “anonymous usage statistics”.
 - **Nothing loaded from other servers.** Bundle your scripts. Host your own fonts. Do not link to a CDN, a font service or an icon service.
@@ -117,6 +128,34 @@ Tests are how you keep a rule right after the tenth change.
 - Results can be copied as text, and tables can be exported in an open format such as CSV.
 
 Government work has accessibility expectations of its own. A tool for this audience should not be the thing that fails them.
+
+## Say where the idea came from
+
+If your tool was inspired by another tool, a vendor product, an open-source project, or a spreadsheet, say so openly. ClearedStack believes in clear provenance and clean-room implementation:
+
+- **We take the job, never the code.** You may take the idea of what problem to solve. You must never copy another tool’s code, styling, text, templates, or design.
+- **Implement clean-room from the regulation.** Build the calculations directly from the public statutory source (such as FAR Part 31 or NIST SP 800-171).
+- **The provenance note.** Pull requests can include an optional `provenance` block in `src/data/catalog.ts` specifying the source kind (`government`, `vendor-free`, `commercial`, `open-source`, `template`, `community`, or `owner`) and an explanatory note.
+- See [How ideas are credited](/guides/credit-and-clean-room/) for our full provenance and clean-room policy.
+
+<Branch
+  caption="Clean-room build decision: what may be taken from an existing tool"
+  question="What are you taking from the existing tool?"
+  options={[
+    { when: "The job to be done", then: "Allowed with credit", detail: "Solve the same problem, building clean-room from the underlying public regulation." },
+    { when: "Code, text, UI or assets", then: "Forbidden", detail: "Never copy source code, markup, styling, screenshots, or proprietary data." },
+  ]}
+/>
+
+## If you build with AI
+
+If you use AI assistance (such as Claude Code, Antigravity, or other coding agents) to write or test your tool:
+
+- **Same review rules apply.** An AI-drafted tool must pass the same five listing conditions, audit checks, and CSP tests as any human-written code.
+- **Same prompt data rules.** Never paste CUI, non-public procurement information, proprietary contractor rates, or private personnel data into an AI tool. Use made-up examples exclusively.
+- **Human verification of math and citations.** A person must verify every regulatory citation and mathematical formula against primary federal publications before submitting a pull request.
+- **Commit trailers.** Disclose AI assistance by including trailers in your git commit messages (such as `Co-authored-by: Claude <noreply@anthropic.com>` or `Assisted-by: Antigravity`).
+- See [How AI is used to build this project](/guides/built-with-ai/) for our detailed guidelines.
 
 ## Write the README
 

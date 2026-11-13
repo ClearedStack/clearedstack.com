@@ -8,6 +8,17 @@ export const meta = {
 
 Short answers, each with a link to the guide that has the long one.
 
+<Flow
+  caption="Common questions guide finder"
+  direction="down"
+  steps={[
+    { tag: "Pricing & costs", label: "Free and open source", detail: "Why tools cost $0.00 and have no paid tiers." },
+    { tag: "Privacy & CUI", label: "Client-side execution", detail: "Why numbers stay in browser RAM and how to verify it." },
+    { tag: "AI authoring", label: "Zero AI at runtime", detail: "How AI is used to draft code under human review." },
+    { tag: "Tool decisions", label: "Prior art and clean room", detail: "How ideas are chosen, credited, and built from regulations." },
+  ]}
+/>
+
 ## About the project
 
 ### Is it really free?
@@ -141,6 +152,37 @@ Yes, if it is free, open source, client-side, free of tracking, built from publi
 ### I work for the government. Can I contribute?
 
 Your own obligations come first. Contribute only on your own time and equipment, and only what you are free to share. If you are not sure something is public, treat it as not public.
+
+## Prior art and tool selection
+
+### Where do tool ideas come from?
+
+Ideas come from observing tools that already exist for government-contracting paperwork (public pages, open-source projects, public spreadsheets), community requests, and the maintainer's own experience. The process is documented in [How the project chooses what to build](/guides/prior-art-engine/) and [How candidates are found](/guides/find-candidates/) (both draft intent; the engine is not running yet).
+
+### Do you copy other tools?
+
+No. We take the *idea* of a job to be done, never the code, text, screenshots, styling, or design. Tools are built clean-room directly from the public regulation. Where another tool inspired the job, it is credited openly. See [How ideas are credited](/guides/credit-and-clean-room/).
+
+### Is this built with AI?
+
+Yes, with AI assistance (Claude Code and Antigravity) under one human maintainer who directs, reviews every line of code, verifies every formula and citation against primary government publications, and is accountable. The tools themselves contain no AI models and make zero network calls at runtime. See [How AI is used to build this project](/guides/built-with-ai/).
+
+### Can a vendor ask to be removed from a credit?
+
+Yes. If a vendor or creator asks to have their name removed from an inspiration note, we honor that request promptly: the note is updated to say “a commercial product” while the factual record notes that one existed. Citations to official government sources are never removed. See [How ideas are credited](/guides/credit-and-clean-room/).
+
+### How is a tool chosen?
+
+Through a ten-stage Prior Art process (draft): candidate discovery, recording, public observation, five knockout gates (public source, browser, private, one job, arithmetic), an advisory 100-point scoring rubric, and a public decision made solely by the human owner. See [Section M · How we decide](/how-we-decide/) and [How an idea is scored and decided](/guides/score-and-decide/).
+
+<Branch
+  caption="Clean-room build vs copy: what ClearedStack takes from prior art"
+  question="What is taken from an existing tool?"
+  options={[
+    { when: "Job to be done", then: "Clean-room implementation", detail: "Built from the official regulation; original tool credited in provenance note." },
+    { when: "Code, styling, or text", then: "Never copied", detail: "Zero proprietary code or layout is copied or inspected during build." },
+  ]}
+/>
 
 ## When something does not work
 

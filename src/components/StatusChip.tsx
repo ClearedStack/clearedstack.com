@@ -15,3 +15,11 @@ export function StatusChip({ status }: { status: ToolStatus }) {
     </span>
   );
 }
+
+export function DraftChip() {
+  return (
+    <span className="inline-block shrink-0 rounded-sm border border-line px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider whitespace-nowrap text-muted">
+      Draft · intent, not running yet
+    </span>
+  );
+}

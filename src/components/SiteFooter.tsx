@@ -16,11 +16,23 @@ export function SiteFooter() {
               Read the full disclaimer
             </Link>
           </p>
+          <p className="mt-4 leading-relaxed">
+            Built with Claude Code and Antigravity, reviewed by a person. Read{" "}
+            <Link href="/guides/built-with-ai/" className={footLink}>
+              how AI is used to build this project
+            </Link>
+            .
+          </p>
         </div>
         <ul className="flex flex-col gap-2.5 font-mono text-[13px] md:items-end">
           <li>
             <Link href="/tools/" className={footLink}>
               Tools
+            </Link>
+          </li>
+          <li>
+            <Link href="/how-we-decide/" className={footLink}>
+              How we decide
             </Link>
           </li>
           <li>

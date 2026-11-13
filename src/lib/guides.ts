@@ -46,6 +46,13 @@ export const guideGroups = [
     name: "Reference",
     blurb: "Terms, sources and short answers to look up when you need them.",
   },
+  {
+    id: "project",
+    code: "L.6",
+    name: "How this project is run",
+    blurb:
+      "Where tool ideas come from, how they are chosen and credited, and how AI is used to do the work. Describes intent; the process is not running yet.",
+  },
 ] as const;
 
 export type GuideGroup = (typeof guideGroups)[number];
@@ -66,6 +73,8 @@ export type GuideMeta = {
   reviewed?: string;
   /** Month the guide was last revised, as "YYYY-MM". */
   revised?: string;
+  /** Whether the guide describes intent/draft status rather than active operations. */
+  draft?: boolean;
 };
 
 export type GuideHeading = { id: string; text: string };

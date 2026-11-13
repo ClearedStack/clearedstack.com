@@ -1,0 +1,332 @@
+export const meta = {
+  title: "How an idea is scored and decided",
+  summary: "The five knockout gates, the seven-factor scoring rubric, deterministic tie-breakers, and the public decision log.",
+  group: "project",
+  order: 4,
+  draft: true,
+  revised: "2026-11",
+};
+
+<Callout kind="warning" title="Draft">
+This guide describes planned process and intent. The Prior Art engine is not running, no candidate tools have been evaluated, and no decision records have been collected yet.
+</Callout>
+
+Every tool in the ClearedStack catalog starts as an observation of what contractors do by hand or what existing software does on the web. Once an idea is recorded and its public surfaces are observed, the project does not immediately begin writing code. It runs the idea through a structured screening and scoring process in the open.
+
+Evaluating candidates in public keeps the project focused on genuine gaps, prevents duplicate work, and ensures that every listed tool stays faithful to official federal regulations.
+
+## The five knockout gates
+
+Before an idea receives a numerical score, it must pass five binary screening gates. If an idea fails any single gate, evaluation stops immediately. The idea is screened out, and the specific failure reason is logged in the public decision record.
+
+1. **Public source.** The underlying rules, formulas, thresholds, or validation tables must come from officially released public materials. Codified statutes, the Federal Acquisition Regulation (FAR), agency supplements (such as the DFARS), and NIST Special Publications qualify. Unwritten industry folklore, private consulting methodologies, and paywalled manuals do not.
+2. **Runs in the browser.** The tool must execute entirely on the visitor’s own computer using HTML, CSS, client-side JavaScript, or WebAssembly. Workflows that require a backend server, a central database, or remote computing APIs are screened out.
+3. **Private by design.** The tool must work offline, require no user accounts or registration, and emit zero tracking telemetry. It must operate under a strict Content Security Policy (`connect-src 'self'`) that prevents network calls.
+4. **One job.** The tool must perform a single, focused task that can be described in one active sentence starting with a verb (such as “Calculate a fully burdened labor rate” or “Format a small-business subcontracting report”). Sprawling all-in-one management suites fail this gate, though they may be split into separate candidate proposals.
+5. **Arithmetic, not advice.** The tool must compute numbers, structure data, or look up citations. It must never deliver subjective legal advice, evaluate past performance, or substitute for a contracting officer’s discretion.
+
+<Flow
+  caption="The five binary knockout gates: fail any gate to exit immediately as Screened Out"
+  steps={[
+    {
+      tag: "Gate 1",
+      label: "Public source",
+      detail: "Formulas and rules must come from officially released public materials.",
+    },
+    {
+      tag: "Gate 2",
+      label: "Runs in the browser",
+      detail: "Must execute client-side with no backend server, database, or API.",
+    },
+    {
+      tag: "Gate 3",
+      label: "Private by design",
+      detail: "Operates offline with zero tracking, no accounts, and a strict content security policy.",
+    },
+    {
+      tag: "Gate 4",
+      label: "One job",
+      detail: "Must do one thing describable in an active sentence starting with a verb.",
+    },
+    {
+      tag: "Gate 5",
+      label: "Arithmetic, not advice",
+      detail: "Computes, structures, or looks up without rendering legal or contracting determinations.",
+    },
+  ]}
+/>
+
+## The scoring rubric
+
+Ideas that pass all five gates are evaluated across seven weighted factors. Each factor receives an integer rating from 1 to 5. The rating is multiplied by the factor’s weight, yielding a composite score from 20 to 100 points.
+
+<Layers
+  caption="The 100-point scoring rubric: seven factors weighted by importance"
+  layers={[
+    {
+      tag: "20 points (×4)",
+      label: "Need for small businesses",
+      detail: "Severity of manual pain and administrative burden for small contractors.",
+    },
+    {
+      tag: "20 points (×4)",
+      label: "Gap in existing free options",
+      detail: "Scarcity of private, tracking-free alternatives; 5 means only paywalled products exist.",
+    },
+    {
+      tag: "15 points (×3)",
+      label: "Strength of the public source",
+      detail: "Grounding in codified statute, federal regulations, or official government test suites.",
+    },
+    {
+      tag: "15 points (×3)",
+      label: "Fits in a browser",
+      detail: "Feasibility of running cleanly in browser memory without remote processing.",
+    },
+    {
+      tag: "10 points (×2)",
+      label: "Small enough to read",
+      detail: "Core calculation logic can be audited by a reviewer in a single sitting.",
+    },
+    {
+      tag: "10 points (×2)",
+      label: "Can be checked",
+      detail: "Official worked examples, sample audit vectors, or agency forms exist to prove the math.",
+    },
+    {
+      tag: "10 points (×2)",
+      label: "Low upkeep of reference data",
+      detail: "Static regulatory formulas preferred over volatile tables requiring frequent manual refreshes.",
+    },
+  ]}
+/>
+
+The seven factors measure practical utility and long-term maintainability:
+
+- **Need for small businesses (Weight: ×4, Max: 20 points).** A rating of 1 represents a rare edge case affecting few contractors. A rating of 3 represents an occasional requirement, such as an annual reporting form. A rating of 5 represents a recurring administrative bottleneck or a calculation with severe contractual penalties if misapplied.
+- **Gap in existing free options (Weight: ×4, Max: 20 points).** A rating of 1 means high-quality, free, client-side tools already exist. A rating of 3 means an agency provides a usable form or an open-source tool exists with limited accessibility. A rating of 5 means only expensive subscription software or lead-generation forms exist.
+- **Strength of the public source (Weight: ×3, Max: 15 points).** A rating of 1 represents an informal agency slide presentation or draft discussion paper. A rating of 3 represents an agency policy memorandum or interim rule. A rating of 5 represents an enacted statute, a codified regulation in Title 48 of the CFR, or a published NIST standard.
+- **Fits in a browser (Weight: ×3, Max: 15 points).** A rating of 1 indicates large datasets exceeding browser memory limits. A rating of 3 requires a bundled lookup file under two megabytes. A rating of 5 represents lightweight, pure mathematics or text transformation with zero external dependencies.
+- **Small enough to read (Weight: ×2, Max: 10 points).** A rating of 1 indicates complex, multi-state logic. A rating of 5 indicates concise, straightforward logic readable in one sitting—typically under 300 lines of core code.
+- **Can be checked (Weight: ×2, Max: 10 points).** A rating of 1 means formulas require subjective interpretation. A rating of 5 means the government publishes worked examples or official test vectors against which outputs can be verified down to the penny.
+- **Low upkeep of reference data (Weight: ×2, Max: 10 points).** A rating of 1 requires weekly or monthly scraping of shifting government pages. A rating of 3 requires an annual update of fiscal-year rate tables. A rating of 5 represents permanent statutory arithmetic that remains valid until the regulation itself is amended.
+
+## Decision outcomes and overrides
+
+The composite score produces a default recommendation, which the human project owner reviews:
+
+- **Build (Score ≥ 75).** ClearedStack designs, builds, and maintains a clean-room, client-side tool in its own repository under an open-source license.
+- **Park (Score 55 to 74).** The idea is valid and passed all gates, but is deferred because of missing public data files, pending federal rulemaking, or capacity constraints. It enters the backlog with a documented blocker.
+- **Reject (Score &lt; 55).** The candidate falls below the threshold for inclusion. The rationale and points breakdown are published in the log.
+
+Two automated override rules refine this baseline:
+
+1. **The Gap = 1 override (Link over rebuild).** If an idea achieves a score of 75 or higher but scores 1 on the Gap factor, an acceptable, free, and privacy-respecting tool already exists. Rather than duplicating existing open-source work, ClearedStack routes the candidate to **Link**, pointing users to the existing tool in guides or catalog listings.
+2. **The split/merge review.** If an idea scores 4 or 5 on Need but 1 or 2 on Single-Job Fit, it represents a real contractor pain point bundled inside an oversized scope. The engine flags the idea for review: the owner splits it into atomic single-job tools or merges specific functions into an existing project.
+
+<Branch
+  caption="Determining the outcome from rubric score and the Gap override"
+  question="What is the composite rubric score and gap level?"
+  options={[
+    {
+      when: "Score ≥ 75 and Gap > 1",
+      then: "Build",
+      detail: "Approved for development as a new client-side tool in the catalog.",
+    },
+    {
+      when: "Score ≥ 75 but Gap = 1",
+      then: "Link",
+      detail: "Override: an acceptable free tool already exists, so link to it rather than rebuilding.",
+    },
+    {
+      when: "Score 55 to 74",
+      then: "Park",
+      detail: "Valid idea deferred due to external blockers, pending rules, or capacity.",
+    },
+    {
+      when: "Score < 55 (or gate fail)",
+      then: "Reject",
+      detail: "Disqualified from roadmap with the published rationale recorded.",
+    },
+  ]}
+/>
+
+Scores are advisory. An AI assistant may draft the initial points and rationale, but the human owner holds sole decision authority. If the owner overrides a score recommendation, the decision log explicitly records the override and the reasoning behind it.
+
+## Resolving ties
+
+When multiple candidates share identical composite scores, the project prioritizes work using five deterministic tie-breakers:
+
+<Flow
+  caption="Deterministic tie-breaking priority when candidates share the same score"
+  steps={[
+    {
+      tag: "Priority 1",
+      label: "Roadmap phase fit",
+      detail: "Aligns directly with the core goal of the active project roadmap phase.",
+    },
+    {
+      tag: "Priority 2",
+      label: "Gap severity",
+      detail: "Higher score on Dimension 2 (greater lack of free, private options) wins.",
+    },
+    {
+      tag: "Priority 3",
+      label: "Low upkeep",
+      detail: "Higher score on Dimension 7 (static regulation over volatile data) wins.",
+    },
+    {
+      tag: "Priority 4",
+      label: "Small code footprint",
+      detail: "Higher score on Dimension 5 (smaller, more auditable codebase) wins.",
+    },
+    {
+      tag: "Priority 5",
+      label: "Community demand",
+      detail: "Higher count of independent community requests and issue upvotes wins.",
+    },
+  ]}
+/>
+
+## Decision lifecycle and revisits
+
+Decisions are living records, not permanent dead ends. A tool that is parked or rejected today may become viable when an agency modernizes its data or browsers gain new capabilities.
+
+The project conducts a monthly review of recorded items. In addition, specific external events trigger an immediate re-evaluation:
+
+- **Regulatory amendments.** A proposed rule is finalized in the Federal Register, or an agency simplifies a calculation procedure.
+- **Machine-readable datasets.** An agency releases a structured JSON or CSV data feed, eliminating the need for manual data extraction.
+- **Browser platform features.** Web standards advance, enabling local file processing or WebAssembly performance that was previously impractical.
+- **Status change of linked tools.** A third-party tool previously linked by ClearedStack adds a paywall, introduces tracking scripts, or shuts down, triggering a fresh **Build** evaluation.
+
+<States
+  caption="Lifecycle and revisit states of a candidate record"
+  states={[
+    {
+      id: "discovered",
+      label: "Discovered",
+      detail: "Found via sweep, suggestion, or owner research.",
+      to: [{ id: "recorded", when: "given a PA identifier" }],
+    },
+    {
+      id: "recorded",
+      label: "Recorded",
+      detail: "Duplicate checks completed.",
+      to: [{ id: "observed", when: "public pages inspected" }],
+    },
+    {
+      id: "observed",
+      label: "Observed",
+      detail: "Inputs, outputs, and license documented.",
+      to: [
+        { id: "screened-out", when: "fails any knockout gate" },
+        { id: "scored", when: "passes all five gates" },
+      ],
+    },
+    {
+      id: "screened-out",
+      label: "Screened out",
+      detail: "Logged with gate failure reason.",
+      to: [{ id: "observed", when: "scope changes or owner reopens" }],
+    },
+    {
+      id: "scored",
+      label: "Scored",
+      detail: "Evaluated across seven rubric factors.",
+      to: [
+        { id: "approved", when: "owner approves score ≥ 75 (Gap > 1)" },
+        { id: "linked", when: "free alternative exists (Gap = 1)" },
+        { id: "parked", when: "score 55–74 or blocked" },
+        { id: "rejected", when: "score < 55 or out of scope" },
+        { id: "merged", when: "fits existing tool feature" },
+      ],
+    },
+    {
+      id: "parked",
+      label: "Parked",
+      detail: "Held in backlog with tagged blocker.",
+      to: [{ id: "observed", when: "revisit trigger or monthly check" }],
+    },
+    {
+      id: "approved",
+      label: "Approved",
+      detail: "Planned in catalog; ready to build.",
+      to: [{ id: "building", when: "clean-room coding begins" }],
+    },
+    {
+      id: "building",
+      label: "Building",
+      detail: "Implementation in progress in own repository.",
+      to: [{ id: "live", when: "passes listing conditions" }],
+    },
+    {
+      id: "live",
+      label: "Live",
+      detail: "Listed in catalog with provenance note.",
+      to: [{ id: "retired", when: "rule repealed or obsolete" }],
+    },
+    {
+      id: "linked",
+      label: "Linked",
+      detail: "Referenced in catalog or guide; not built here.",
+    },
+    {
+      id: "merged",
+      label: "Merged",
+      detail: "Folded into an existing tool repository issue.",
+    },
+    {
+      id: "rejected",
+      label: "Rejected",
+      detail: "Logged publicly with rationale.",
+    },
+    {
+      id: "retired",
+      label: "Retired",
+      detail: "Decommissioned with historical record preserved.",
+    },
+  ]}
+/>
+
+## Blank decision-log entry template
+
+Every evaluated candidate receives an entry in the version-controlled decision log. Below is the standard template used for new records:
+
+```yaml
+record_id: "PA-0000"
+title: "Candidate Tool Abstract Title"
+category: "pricing" # pricing | proposal | cyber | market | devsecops
+evaluation_date: "YYYY-MM-DD"
+roadmap_phase: "phase-1-free-arsenal"
+
+gating_checks:
+  public_source_integrity: true
+  client_side_feasibility: true
+  privacy_air_gap_safety: true
+  single_job_scope: true
+  legal_interpretive_boundary: true
+
+rubric_scores:
+  small_business_need: 5 # x4 = 20 max
+  gap_vs_existing_free: 5 # x4 = 20 max
+  authority_of_source: 5 # x3 = 15 max
+  client_side_feasibility: 5 # x3 = 15 max
+  single_job_fit: 5 # x2 = 10 max
+  verification_risk: 5 # x2 = 10 max
+  maintenance_burden: 5 # x2 = 10 max
+  composite_score: 100 # 20 to 100
+
+evaluation:
+  preliminary_outcome: "Build" # Build | Link | Park | Reject | Merge
+  drafted_by: "Antigravity (Google) / Claude Code (Anthropic)"
+  draft_notes: "Initial evaluation notes summarizing regulatory citations and technical fit."
+
+owner_determination:
+  final_outcome: "Build" # Build | Link | Park | Reject | Merge
+  reviewed_by: "Human Project Owner"
+  determination_date: "YYYY-MM-DD"
+  rationale: "Summary of final decision and alignment with project goals."
+  override_applied: false
+  override_reason: null
+  next_step: "Allocate catalog slug and create tracking repository issue."
+```

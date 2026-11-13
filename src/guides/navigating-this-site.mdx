@@ -22,13 +22,27 @@ ClearedStack borrows this exact structure across its pages. Instead of arbitrary
 | **Section C** | Description/specifications/statement of work | [Home](/) and [Tools](/tools/) | The statement of work for all 18 single-purpose browser tools. |
 | **Section F** | Deliveries or performance | [Home](/) | The delivery roadmap across three phases: the free arsenal, the community, and the institution. |
 | **Section H** | Special contract requirements | [Home](/) and [About](/about/) | The four core ground rules: free, open source, client-side execution, and independent governance. |
-| **Section L** | Instructions, conditions and notices to offerors | [Guides](/guides/) | The documentation library, numbered from L.1 through L.5 (Start here, Field guides, Hosting, Contributing, Reference). |
+| **Section L** | Instructions, conditions and notices to offerors | [Guides](/guides/) | The documentation library, numbered from L.1 through L.6 (Start here, Field guides, Hosting, Contributing, Reference, How this project is run). |
+| **Section M** | Evaluation factors for award | [How we decide](/how-we-decide/) | The Prior Art decision engine (draft): ten stages, five knockout gates, scoring rubric, and public decision log. |
+
+<Flow
+  caption="Federal contract structure (UCF) mapped to ClearedStack pages"
+  direction="down"
+  steps={[
+    { tag: "Section B", label: "Pricing schedule", detail: "Firm-fixed-price of $0.00 across all tool categories on Home." },
+    { tag: "Section C", label: "Statement of work", detail: "Functional scope and specifications for 18 tools in the Catalog." },
+    { tag: "Section F", label: "Deliveries and roadmap", detail: "Three delivery phases: arsenal, community, and institution on Home." },
+    { tag: "Section H", label: "Special contract requirements", detail: "Ground rules: free, open-source, client-side, independent on About." },
+    { tag: "Section L", label: "Instructions to offerors", detail: "Guides library organized into Sections L.1 through L.6." },
+    { tag: "Section M", label: "Evaluation factors for award", detail: "Prior Art engine, knockout gates, and decision log on How we decide." },
+  ]}
+/>
 
 Learning this layout once helps you navigate both ClearedStack and federal requests for proposals (RFPs). When you see a reference like `CLIN 0001` or `Section L.2.3`, you are reading standard acquisition shorthand.
 
-## The four main areas
+## The main areas
 
-The site is divided into four primary pages. You can move between them at any time using the navigation links in the persistent header (`SiteHeader`) at the top of every page, or the index links in the footer (`SiteFooter`) at the bottom.
+The site is organized into five primary sections: [Home](/), [Tools](/tools/), [Guides](/guides/), [How we decide](/how-we-decide/), and [About](/about/). You can move between them at any time using the navigation links in the persistent header (`SiteHeader`) at the top of every page, or the index links in the footer (`SiteFooter`) at the bottom. The footer also carries our AI disclosure—stating that the site is built with Claude Code and Antigravity and reviewed by a person—linking to [How AI is used to build this project](/guides/built-with-ai/).
 
 ### 1. Home (`/`)
 The home page provides an executive summary of the project:
@@ -46,13 +60,19 @@ The tool catalog is the functional core of the site. It lists all 18 planned too
 - Access the direct links and open-source source code repositories as tools become live.
 
 ### 3. Guides (`/guides/`)
-The documentation hub contains more than 20 detailed operational guides. It is structured under UCF Section L ("Instructions to offerors"):
+The documentation hub contains detailed operational guides. It is structured under UCF Section L ("Instructions to offerors"):
 - **Metrics Bar:** Summary counts of total guides, sections, combined reading time, and pricing ($0.00).
-- **Curated Reading Routes:** Four tailored sequence paths designed for specific visitor objectives.
-- **Section Index (L.1–L.5):** An interactive, searchable library of all guides with real-time text matching and section jump anchors.
-- **Short Answers:** Quick answers to the six most common questions regarding data security, costs, accounts, and trust.
+- **Curated Reading Routes:** Tailored sequence paths designed for specific visitor objectives.
+- **Section Index (L.1–L.6):** An interactive, searchable library of all guides with real-time text matching and section jump anchors.
+- **Short Answers:** Quick answers to common questions regarding data security, costs, accounts, and trust.
 
-### 4. About (`/about/`)
+### 4. How we decide (`/how-we-decide/`)
+The decision engine under UCF Section M ("Evaluation factors for award"):
+- **Prior Art Process (Draft):** How existing tools are discovered, observed from public pages, screened, scored, and decided.
+- **Five Knockout Gates:** The non-negotiable checks every idea must pass before scoring.
+- **Advisory Rubric:** The 100-point rubric and public decision log with human owner accountability.
+
+### 5. About (`/about/`)
 The project background and governance statement:
 - **The Problem & Mission:** Why good engineers should not need a full compliance department to bid on federal work.
 - **Architecture:** Why each tool is built as an independent, auditable open-source repository rather than a monolithic platform.
@@ -100,12 +120,26 @@ For details on contributing your own tools, see [Request a tool or add your own]
 The [Guides](/guides/) page contains in-depth documentation covering contracting regulations, site architecture, self-hosting, and contribution.
 
 ### The Section L organization
-Guides are grouped into five logical sections under UCF Section L:
+Guides are grouped into six logical sections under UCF Section L:
 - **L.1 Start here:** Essential onboarding guides covering site navigation, browser data isolation, result verification, and core operating principles.
 - **L.2 Field guides:** Detailed primers on government contracting mechanics—reading RFPs, answering requirements, building labor rates, submitting proper invoices, protecting CUI, handling STIGs and OSCAL, and working on disconnected networks.
 - **L.3 Host your own copy:** Complete engineering guides for deploying ClearedStack on Docker, Kubernetes, bare static web servers, or air-gapped security enclaves.
 - **L.4 Contribute:** Step-by-step instructions for submitting tool requests, reporting regulatory errors, building compliant client-side tools, and maintaining this website.
 - **L.5 Reference:** Quick lookups including a comprehensive contracting acronym glossary, regulatory source links, and answers to common questions.
+- **L.6 How this project is run:** How ClearedStack discovers and observes existing tools, scores ideas in public, credits prior art, builds clean-room software with AI assistance, and logs decisions.
+
+<Flow
+  caption="Six Section L guide groups"
+  direction="down"
+  steps={[
+    { tag: "L.1", label: "Start here", detail: "Onboarding, data privacy, and verifying results." },
+    { tag: "L.2", label: "Field guides", detail: "Solicitations, labor rates, invoices, CUI, and air gaps." },
+    { tag: "L.3", label: "Host your own copy", detail: "Docker, Kubernetes, static files, and closed networks." },
+    { tag: "L.4", label: "Contribute", detail: "Request a tool, build a tool, and work on this site." },
+    { tag: "L.5", label: "Reference", detail: "Acronym glossary, regulatory sources, and common questions." },
+    { tag: "L.6", label: "How this project is run", detail: "Prior art process, scoring, credit, and AI assistance." },
+  ]}
+/>
 
 ### The four reading routes
 If you are looking for a guided sequence rather than browsing the full list, use the four curated routes at the top of `/guides/`:

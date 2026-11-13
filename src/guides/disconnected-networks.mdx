@@ -65,6 +65,17 @@ The two numbers should match.
 
 A useful manifest for a transfer record also notes who prepared it, when, from what source and for what purpose. Keep it with the approval paperwork.
 
+<Flow
+  caption="Transfer manifest verification across a network boundary"
+  steps={[
+    { label: "Generate manifest", detail: "Compute sorted list of SHA-256 checksums for all files in payload folder.", tag: "Outside" },
+    { label: "Count source files", detail: "Record total file count alongside payload.sha256 manifest.", tag: "Outside" },
+    { label: "Carry across boundary", detail: "Move payload and manifest across according to network transfer rules.", tag: "Transfer" },
+    { label: "Verify checksums", detail: "Run sha256sum -c to ensure all files are unchanged (OK) with no FAILED lines.", tag: "Inside" },
+    { label: "Verify file count", detail: "Confirm file count matches manifest lines to ensure no extra files were introduced.", tag: "Inside" },
+  ]}
+/>
+
 ## Reading a certificate
 
 A certificate binds a name to a public key and is signed by an authority that vouches for it. On a disconnected network you often have to inspect one by hand, because the browser’s usual machinery cannot reach outside.
@@ -115,6 +126,33 @@ Two things are particular to closed networks:
 
 - **Private authorities.** Internal networks, including government ones, run their own certificate authorities. Their root certificates are not built into ordinary browsers and operating systems. They have to be installed, from a source you trust, before anything they signed will verify.
 - **Clocks.** A machine with no time source drifts. A wrong clock makes good certificates look expired or not yet valid. Check the date before you blame the certificate.
+
+<Branch
+  caption="Common certificate verification outcomes"
+  question="What result does openssl verify return?"
+  options={[
+    {
+      when: "server.pem: OK",
+      then: "Certificate trusted",
+      detail: "Chain is complete, signatures are valid, and dates are currently valid.",
+    },
+    {
+      when: "unable to get local issuer certificate",
+      then: "Missing authority",
+      detail: "An intermediate or root CA certificate is missing from the CAfile.",
+    },
+    {
+      when: "certificate has expired / not yet valid",
+      then: "Time error or drift",
+      detail: "Current date is outside validity window, or the disconnected machine’s clock drifted.",
+    },
+    {
+      when: "self-signed certificate",
+      then: "Untrusted origin",
+      detail: "The certificate vouches for itself and has not been added to your trusted CA bundle.",
+    },
+  ]}
+/>
 
 ## Expiry and revocation
 
@@ -175,6 +213,18 @@ To see what an image is made of before you approve it, list its layers and the c
 ```bash
 docker history --no-trunc clearedstack:1
 ```
+
+<Lanes
+  caption="Moving and verifying a container image across a boundary"
+  lanes={["Outside", "Transit", "Inside"]}
+  steps={[
+    { lane: 0, label: "Inspect image ID", detail: "docker image inspect to capture unique image ID." },
+    { lane: 0, label: "Save to tar file", detail: "docker save export and generate sha256sum." },
+    { lane: 1, label: "Media transfer", detail: "Carry file across network boundary per transfer rules." },
+    { lane: 2, label: "Verify checksum", detail: "Check file integrity using sha256sum -c before loading." },
+    { lane: 2, label: "Load image & check ID", detail: "docker load and verify image ID matches outside ID exactly." },
+  ]}
+/>
 
 ## Keep a record
 

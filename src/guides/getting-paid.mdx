@@ -37,6 +37,28 @@ When an invoice is not proper, the agency is supposed to send it back within 7 d
 
 If the agency takes longer than 7 days to tell you, the extra days are taken off the time it has to pay.
 
+<Branch
+  caption="Invoice acceptance or rejection notice"
+  question="Is the submitted invoice proper and complete?"
+  options={[
+    {
+      when: "Yes",
+      then: "Clock runs",
+      detail: "Agency has 30 days from invoice receipt or acceptance to pay.",
+    },
+    {
+      when: "Defective (within 7 days)",
+      then: "Returned to contractor",
+      detail: "Agency returns invoice stating defects; 30-day clock restarts upon receipt of corrected invoice.",
+    },
+    {
+      when: "Defective (after 7 days)",
+      then: "Days deducted from agency",
+      detail: "Days past the 7-day notice limit reduce the agency’s 30-day payment window.",
+    },
+  ]}
+/>
+
 ## Find the due date
 
 Three dates decide when payment is due. Write each one down as it happens.
@@ -53,6 +75,17 @@ Two details catch people out:
 - **The payment date is the date of the transfer**, not the day the money shows in your account.
 
 Contracts can set shorter periods, and some categories of goods have their own by law. The contract is where to look.
+
+<Flow
+  caption="Prompt Payment Act 30-day statutory timeline"
+  steps={[
+    { label: "Invoice received", detail: "Proper invoice arrives at the designated billing office.", tag: "Day 0" },
+    { label: "Defect notice limit", detail: "Agency must notify contractor of any invoice defect within 7 days.", tag: "Day 7" },
+    { label: "Deemed acceptance", detail: "Work treated as accepted if no actual acceptance/rejection occurred (unless contract specifies otherwise).", tag: "Day 7" },
+    { label: "Payment due date", detail: "Payment due within 30 days of the later of invoice receipt or work acceptance.", tag: "Day 30" },
+    { label: "Interest begins", detail: "Late payment interest accrues automatically starting the day after the due date.", tag: "Day 31" },
+  ]}
+/>
 
 ## The interest rate
 
@@ -107,6 +140,17 @@ Interest should arrive with the late payment, without a request. If it does not,
 - You send a written demand to the payment office no later than 40 days after the payment was made.
 
 The additional penalty is equal to the unpaid interest, with a minimum of $25 and a maximum of $5,000. The 40-day limit is strict, which is one more reason to keep the dates.
+
+<Lanes
+  caption="Process for demanding unpaid late payment interest penalty"
+  lanes={["Agency", "Contractor"]}
+  steps={[
+    { lane: 0, label: "Pays invoice late", detail: "Issues payment after the due date without including accrued interest." },
+    { lane: 0, label: "Fails to cure within 10 days", detail: "Does not pay the missing interest within 10 days of the late payment." },
+    { lane: 1, label: "Submits written demand", detail: "Sends written demand to payment office no later than 40 days after payment." },
+    { lane: 0, label: "Pays additional penalty", detail: "Owes penalty equal to unpaid interest (between $25 and $5,000)." },
+  ]}
+/>
 
 ## Sending invoices to the Department of Defense
 

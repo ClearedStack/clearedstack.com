@@ -16,6 +16,22 @@ The tools listed here have only the first half. When you open one, your browser 
 
 That is also why the tools cost nothing to run and need no account. There is nothing on the other end to pay for or to sign in to.
 
+<Layers
+  caption="Client-side execution boundary: tools contain zero AI at runtime"
+  layers={[
+    { tag: "Your browser", label: "User interface and input data", detail: "Rates, proposal text, and numbers stay in local workstation memory." },
+    { tag: "Local engine", label: "Deterministic math and parsing", detail: "TypeScript logic runs entirely client-side. No AI models or neural weights." },
+    { tag: "Security barrier", label: "Content Security Policy (connect-src 'self')", detail: "Browser blocks all network egress, analytics, and third-party APIs." },
+    { tag: "Authoring only", label: "AI tools (Claude Code and Antigravity)", detail: "Used strictly at development time to draft code and guides under human review." },
+  ]}
+/>
+
+## Tools contain no AI at runtime
+
+The tools themselves contain no artificial intelligence models, make no network calls to language model APIs, and process no data with machine learning. Calculations and parsers are 100% deterministic code that you can inspect in each tool’s public repository.
+
+AI tools (Claude Code and Antigravity) are used only at development time to assist the human maintainer in drafting code, documentation, and tests. All facts and formulas are verified line by line against official public regulations by a person before release. See [How AI is used to build this project](/guides/built-with-ai/).
+
 ## This website
 
 clearedstack.com is a set of plain files. It has:

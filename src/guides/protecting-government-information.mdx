@@ -38,6 +38,28 @@ The government is responsible for telling you what is CUI under your contract an
 
 Read the clauses in your own contract. They are what bind you. A prime contractor must pass the same requirements down to any subcontractor that will handle the same information, so they reach you as a subcontractor too.
 
+<Branch
+  caption="Which safeguarding rule applies to your systems"
+  question="What kind of government information will your systems hold?"
+  options={[
+    {
+      when: "FCI only",
+      then: "FAR 52.204-21",
+      detail: "15 basic security safeguards for systems holding federal contract information.",
+    },
+    {
+      when: "CUI (defense contract)",
+      then: "DFARS 252.204-7012",
+      detail: "110 requirements of NIST SP 800-171, FedRAMP Moderate cloud baseline, and 72-hour incident reporting.",
+    },
+    {
+      when: "Solicitation specifies CMMC",
+      then: "DFARS 252.204-7021",
+      detail: "Must hold required CMMC level status (Level 1, 2, or 3) at the time of award.",
+    },
+  ]}
+/>
+
 ## The 15 basic safeguards
 
 The basic safeguarding clause lists fifteen practices. In plain terms:
@@ -104,6 +126,15 @@ The Cybersecurity Maturity Model Certification program is how the Department of 
 
 The level you need is stated in the solicitation.
 
+<Layers
+  caption="The three Cybersecurity Maturity Model Certification (CMMC) levels"
+  layers={[
+    { label: "Level 3", detail: "Protects high-priority CUI; Level 2 plus selected NIST SP 800-172 requirements; assessed by government.", tag: "Highest" },
+    { label: "Level 2", detail: "Protects CUI; all 110 NIST SP 800-171 Revision 2 requirements; triennial self or C3PAO assessment.", tag: "CUI Baseline" },
+    { label: "Level 1", detail: "Protects FCI; 15 basic safeguards from FAR 52.204-21; annual self-assessment and affirmation.", tag: "FCI Baseline" },
+  ]}
+/>
+
 ## Where the CMMC rollout stands
 
 The program rule, 32 CFR Part 170, took effect in December 2024. The contract clause followed in November 2025, with requirements to be phased in over three years.
@@ -127,6 +158,17 @@ The order matters more than the speed.
 8. **Be ready to report.** Know how you would detect an incident and how you would report it within 72 hours. Reporting to the Department of Defense needs an account and a certificate that take time to obtain, so set them up before you need them.
 
 A checklist tool helps with steps 4 to 6. It does not do steps 1 to 3 for you, and it cannot tell you whether a requirement is truly met.
+
+<Flow
+  caption="Recommended implementation sequence for protecting government data"
+  steps={[
+    { label: "Find the information", detail: "List where FCI and CUI arrive, where they are stored, and who touches them.", tag: "1" },
+    { label: "Shrink the boundary", detail: "Isolate CUI in a separate, controlled environment to minimize security scope.", tag: "2" },
+    { label: "Check cloud services", detail: "Verify cloud services storing defense CUI meet FedRAMP Moderate baseline.", tag: "3" },
+    { label: "Assess and document", detail: "Assess requirements honestly, write system security plan, and record gaps in POA&M.", tag: "4" },
+    { label: "Close gaps and prepare", detail: "Close highest-point gaps first, and establish 72-hour incident reporting access.", tag: "5" },
+  ]}
+/>
 
 ## Marking CUI
 

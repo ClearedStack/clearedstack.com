@@ -18,6 +18,9 @@ export function SiteHeader() {
             <Link href="/tools/" className={navLink}>
               Tools
             </Link>
+            <Link href="/how-we-decide/" className={navLink}>
+              How we decide
+            </Link>
             <Link href="/guides/" className={navLink}>
               Guides
             </Link>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Flow } from "@/components/Diagram";
 import { SectionLabel } from "@/components/SectionLabel";
 import { StatusChip } from "@/components/StatusChip";
 import { categories, liveCount, tools, toolsIn } from "@/data/catalog";
@@ -216,6 +217,30 @@ export default function Home() {
           <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.015em] text-balance">
             Where this is going.
           </h2>
+          <div className="mt-8">
+            <Flow
+              caption="ClearedStack delivery roadmap across three phases."
+              direction="across"
+              highlight={0}
+              steps={[
+                {
+                  tag: "Phase 1 · Now",
+                  label: "The free arsenal",
+                  detail: "Ship single-purpose tools one by one until small contractors keep this tab open all day.",
+                },
+                {
+                  tag: "Phase 2",
+                  label: "The community",
+                  detail: "Open the catalog to tools built by other engineers, practitioners, and veterans.",
+                },
+                {
+                  tag: "Phase 3",
+                  label: "The institution",
+                  detail: "Grow the community into a lasting public alternative that can compete for the work directly.",
+                },
+              ]}
+            />
+          </div>
           <ol className="mt-10 grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-3">
             {deliveries.map((item, index) => (
               <li key={item.phase} className="bg-surface p-5 sm:p-6">
@@ -228,6 +253,55 @@ export default function Home() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      {/* How a tool gets here (Section M) */}
+      <section className="border-t border-line">
+        <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <SectionLabel section="Section M">Evaluation factors</SectionLabel>
+            <Link
+              href="/how-we-decide/"
+              className="font-mono text-xs text-accent underline decoration-accent underline-offset-4 hover:text-ink"
+            >
+              Read full Section M evaluation factors →
+            </Link>
+          </div>
+          <div className="mt-4 grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+            <h2 className="text-3xl font-semibold tracking-[-0.015em] text-balance">
+              How a tool gets here.
+            </h2>
+            <p className="leading-relaxed text-muted">
+              We look at tools that already exist for government-contracting paperwork, record what they do from public
+              pages, screen against knockout gates, score them in public, and credit their provenance before building
+              from the regulation.
+            </p>
+          </div>
+
+          <div className="mt-8">
+            <Flow
+              caption="The path an idea follows from initial discovery to live listing in the catalog."
+              direction="across"
+              steps={[
+                { label: "Discover", detail: "Find candidate ideas." },
+                { label: "Observe", detail: "Read public pages only." },
+                { label: "Screen & score", detail: "Five gates, 100-pt rubric." },
+                { label: "Owner decides", detail: "Build, link, park, or reject." },
+                { label: "Credit", detail: "Write provenance note." },
+                { label: "Build", detail: "Clean-room from public rule." },
+                { label: "List", detail: "Live in catalog." },
+              ]}
+            />
+          </div>
+
+          <p className="mt-6 font-mono text-xs text-muted">
+            Built with Claude Code and Antigravity, reviewed by a person. Read our{" "}
+            <Link href="/guides/built-with-ai/" className="text-ink underline decoration-accent underline-offset-4 hover:text-accent">
+              AI disclosure and verification guide
+            </Link>
+            .
+          </p>
         </div>
       </section>
 

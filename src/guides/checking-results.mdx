@@ -8,6 +8,17 @@ export const meta = {
 
 A tool gives you a worked answer quickly. You are still the one who signs the proposal, so treat every result as a draft until you have checked it. This guide is a method for doing that. It works for any tool, here or elsewhere, and it takes less time than explaining a wrong number later.
 
+<Flow
+  caption="The four-step check for any tool’s result"
+  direction="down"
+  steps={[
+    { tag: "Step 1", label: "Find the source", detail: "Locate the cited regulation, standard, and paragraph." },
+    { tag: "Step 2", label: "Open current text", detail: "Read the rule on acquisition.gov, ecfr.gov, or nist.gov." },
+    { tag: "Step 3", label: "Compare dates", detail: "Verify the tool data matches the effective date of the rule." },
+    { tag: "Step 4", label: "Work by hand", detail: "Recalculate one simple example with a hand calculator." },
+  ]}
+/>
+
 ## Find the source
 
 Each listed tool has to say which regulation, standard or guide it is built on. Look for that reference in three places:
@@ -51,6 +62,15 @@ Two habits help. First, read the “effective date” or “last amended” line
 <Callout kind="warning" title="When the tool and the text disagree">
 The text wins. Use the figure from the current regulation, and tell the project so the tool can be fixed.
 </Callout>
+
+<Branch
+  caption="What to do when tool and published regulation disagree"
+  question="Does the tool result match the current regulation?"
+  options={[
+    { when: "Matches", then: "Use in proposal", detail: "Note the citation and verification date in your proposal records." },
+    { when: "Disagrees", then: "Official text wins", detail: "Use the published statutory figure and open an issue or email us." },
+  ]}
+/>
 
 ## Work one example by hand
 

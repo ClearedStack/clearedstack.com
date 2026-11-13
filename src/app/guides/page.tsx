@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Flow } from "@/components/Diagram";
 import { GuideIndex } from "@/components/GuideIndex";
 import { SectionLabel } from "@/components/SectionLabel";
 import { site } from "@/data/site";
@@ -166,6 +167,12 @@ export default async function GuidesPage() {
         <h2 id="all-title" className="mt-3 text-2xl font-semibold tracking-[-0.015em]">
           Everything, in reading order.
         </h2>
+        <Flow
+          direction="across"
+          caption="The six sections of the guides, from first visit to how the project itself is run."
+          steps={guideGroups.map((group) => ({ tag: group.code, label: group.name }))}
+          highlight={guideGroups.length - 1}
+        />
         <div className="mt-8">
           <GuideIndex
             groups={guideGroups}
@@ -176,6 +183,7 @@ export default async function GuidesPage() {
               summary: guide.summary,
               group: guide.group,
               minutes: guide.minutes,
+              draft: guide.draft,
               // "Sources" closes every field guide, so it says nothing in a list.
               topics: guide.headings.map((heading) => heading.text).filter((text) => text !== "Sources"),
             }))}

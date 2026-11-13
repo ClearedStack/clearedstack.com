@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { StatusChip } from "@/components/StatusChip";
 import { categories, tools, type Tool } from "@/data/catalog";
@@ -89,7 +90,43 @@ export function ToolCatalog() {
                       tool.name
                     )}
                   </h3>
-                  <p className="text-sm leading-relaxed text-muted">{tool.summary}</p>
+                  <div>
+                    <p className="text-sm leading-relaxed text-muted">{tool.summary}</p>
+                    <p className="mt-1.5 font-mono text-xs text-muted">
+                      {tool.provenance?.inspiredBy && tool.provenance.inspiredBy.length > 0 ? (
+                        <span>
+                          <span className="text-muted">Where the idea came from: </span>
+                          {tool.provenance.inspiredBy.map((item, idx) => (
+                            <span key={item.name}>
+                              {idx > 0 ? ", " : ""}
+                              {item.url ? (
+                                <a
+                                  href={item.url}
+                                  rel="noopener"
+                                  className="text-ink underline decoration-accent underline-offset-4 hover:text-accent"
+                                >
+                                  {item.name}
+                                </a>
+                              ) : (
+                                <span className="text-ink">{item.name}</span>
+                              )}
+                            </span>
+                          ))}
+                          {tool.provenance.note ? <span> — {tool.provenance.note}</span> : null}
+                        </span>
+                      ) : (
+                        <span>
+                          Provenance: not yet recorded ·{" "}
+                          <Link
+                            href="/guides/prior-art-engine/"
+                            className="underline decoration-line underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+                          >
+                            Prior Art process
+                          </Link>
+                        </span>
+                      )}
+                    </p>
+                  </div>
                   <p className="flex items-center gap-3">
                     {tool.repo ? (
                       <a

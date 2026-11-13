@@ -1,0 +1,172 @@
+export const meta = {
+  title: "How AI is used to build this project",
+  summary: "How Claude Code and Antigravity help draft code and guides, the human review rule, and what never goes into an AI prompt.",
+  group: "project",
+  order: 6,
+  draft: true,
+  revised: "2026-11",
+};
+
+This website, its guides, and its diagrams are drafted using artificial intelligence tools—specifically Claude Code by Anthropic and Antigravity by Google. Every line of code, prose, and regulatory reference is reviewed, verified, and merged by a single human project owner, who decides what gets built and remains solely accountable for everything on this site.
+
+We do not make claims about how external AI vendors handle or store data behind the scenes. Instead, our policy is based on what this project does: we never put sensitive, proprietary, or non-public information into an AI tool in the first place.
+
+## The division of labor
+
+AI assistants do not set project policy, choose which tools to build, or publish updates autonomously. They serve as authoring and research aids under human direction.
+
+<Lanes
+  caption="Division of labor for a typical change across human owner and AI tools"
+  lanes={["Human Owner", "Claude Code", "Antigravity"]}
+  steps={[
+    {
+      lane: 0,
+      label: "Sets task and scope",
+      detail: "Defines the feature, identifies the governing regulation, and sets boundaries.",
+    },
+    {
+      lane: 1,
+      label: "Drafts code and text",
+      detail: "Drafts TypeScript components, Tailwind styles, and explanatory guide sections.",
+    },
+    {
+      lane: 2,
+      label: "Generates diagrams and tests",
+      detail: "Constructs accessible Diagram components, edge-case test suites, and layouts.",
+    },
+    {
+      lane: 0,
+      label: "Reviews, verifies, and merges",
+      detail: "Checks every statutory citation against official text, audits math, and signs commits.",
+    },
+  ]}
+/>
+
+- **What AI tools do:** Draft initial TypeScript components, style layouts, format Markdown and MDX guides, structure complex regulatory ideas into clear steps, build accessible diagram data structures, and draft test cases for mathematical formulas. In the future Prior Art engine, automated sweeps will assist in discovering candidate tools and drafting initial score recommendations.
+- **What the human owner does:** Decides what to build and what to decline, directs every architecture decision, independently validates every citation against primary government publications, verifies mathematical formulas with worked manual calculations, and holds sole legal and editorial responsibility.
+
+## The review rule: zero unverified citations
+
+Large language models can produce convincing statements that are entirely incorrect. In federal contracting, an invented FAR clause or an outdated dollar threshold can lead to non-compliant proposals or audit findings.
+
+To prevent this, the project enforces a strict human review rule:
+
+<Flow
+  caption="The mandatory human verification gate before any change is merged"
+  steps={[
+    {
+      tag: "Step 1",
+      label: "AI draft",
+      detail: "An AI tool generates candidate code, text, or regulatory citations from a prompt.",
+    },
+    {
+      tag: "Step 2",
+      label: "Human source check",
+      detail: "The human owner opens primary official sources (eCFR, NIST, Acquisition.gov) to verify the rule.",
+    },
+    {
+      tag: "Step 3",
+      label: "Math and code audit",
+      detail: "Calculations are verified independently by hand across normal and boundary cases.",
+    },
+    {
+      tag: "Step 4",
+      label: "Human merge",
+      detail: "The owner approves, signs, and commits the change. Unverified drafts are discarded.",
+    },
+  ]}
+/>
+
+Every regulatory citation on this site must be verified against official federal repositories—such as eCFR.gov, Acquisition.gov, GovInfo.gov, or the NIST Computer Security Resource Center. AI output is never treated as an authoritative source of a rule.
+
+## AI builds, never runs
+
+There is an absolute boundary between how this project is built and how its tools run.
+
+<Layers
+  caption="The separation between build-time development aids and runtime browser execution"
+  layers={[
+    {
+      tag: "Build time (development)",
+      label: "AI-assisted drafting",
+      detail: "Claude Code and Antigravity assist with writing static files under direct human oversight.",
+    },
+    {
+      tag: "Human gate",
+      label: "Independent verification",
+      detail: "Human owner verifies every calculation, validates sources, and signs the build.",
+    },
+    {
+      tag: "Run time (production)",
+      label: "Deterministic client-side code",
+      detail: "Zero AI models, zero machine learning calls, and zero external network requests.",
+    },
+  ]}
+/>
+
+The tools listed in the ClearedStack catalog are not AI wrappers. They contain no large language models, query no third-party machine learning APIs, and make zero network calls. When you open a tool, your browser executes plain, deterministic JavaScript or WebAssembly entirely on your machine. The site’s Content Security Policy (`connect-src 'self'`) guarantees that what you type cannot be transmitted to an AI provider or external server.
+
+## What can go into an AI tool
+
+Because we do not control third-party AI platforms, we maintain a zero-trust prompt policy: we never submit private, sensitive, or real contracting information to any AI tool.
+
+<Branch
+  caption="Determining what can be entered into an AI prompt during development"
+  question="What type of data does the text or problem contain?"
+  options={[
+    {
+      when: "CUI, classified, or non-public government data",
+      then: "Never enter into AI",
+      detail: "Absolute ban. No defense technical data, draft solicitations, or source selection data.",
+    },
+    {
+      when: "Real company rates, bids, or indirect pools",
+      then: "Never enter into AI",
+      detail: "Proprietary financial figures and business secrets are strictly barred.",
+    },
+    {
+      when: "Personal information or real contract IDs",
+      then: "Never enter into AI",
+      detail: "No individual names, email correspondence, or active contract numbers.",
+    },
+    {
+      when: "Public regulations or synthetic examples",
+      then: "Safe for prompts",
+      detail: "Public statutes, enacted rules, and made-up test cases (such as $50.00/hr) are permitted.",
+    },
+  ]}
+/>
+
+All test scenarios, guide demonstrations, and benchmark calculations use 100 percent synthetic, fictitious data. We use invented company names (such as “Example Systems LLC”), dummy contract numbers (`FA0000-00-C-0000`), and rounded financial numbers so anyone can check the arithmetic without specialized software.
+
+## Known failure modes of AI tools
+
+We monitor AI-generated drafts for three common failure modes:
+
+1. **Invented citations.** Language models frequently hallucinate clause numbers that follow realistic FAR or DFARS numbering conventions but do not exist in the published regulation.
+2. **Outdated regulatory text.** Models often reference repealed provisions, former statutory dollar thresholds (such as superseded micro-purchase limits), or older revisions of NIST publications.
+3. **Confident wrong arithmetic.** Models can articulate calculation steps convincingly while making subtle rounding errors or failing on boundary conditions such as leap years or zero-dollar overhead pools.
+
+The human-in-the-loop review protocol and manual worked examples exist specifically to intercept these errors before anything ships.
+
+## Commit-trailer policy
+
+To ensure transparency across version control history, commits created with the assistance of AI tools carry a trailer naming the tool. Going forward, commit messages adhere to this convention:
+
+```text
+Add Prior Art engine documentation
+
+Assisted-by: Claude Code
+Assisted-by: Antigravity
+```
+
+In addition, entries in the public decision log explicitly identify which AI tool drafted the initial evaluation and which human reviewer signed off on the outcome.
+
+## How to report a mistake
+
+If you find an incorrect statutory citation, a misquoted rule, or a mathematical error in any guide or tool on this site, please let us know immediately:
+
+- **Open a GitHub issue:** Submit a report on [this site’s repository](https://github.com/ClearedStack/clearedstack.com/issues).
+- **Send an email:** Write to [contact@clearedstack.com](mailto:contact@clearedstack.com) if you do not use GitHub.
+
+When reporting a mistake, please include the specific page URL, the sentence or calculation in question, what the correct value should be, and the governing regulation or official publication that supports the correction. We verify and correct reported errors promptly.

@@ -31,6 +31,17 @@ Registration gives you two identifiers and holds a set of statements:
 
 Those statements are made to the government. Read each one before you confirm it.
 
+<Flow
+  caption="Entity registration and identifier sequence in SAM.gov"
+  steps={[
+    { label: "Validate name & address", detail: "Legal business name and physical address validated against official records.", tag: "Validation" },
+    { label: "Receive Unique Entity ID", detail: "12-character UEI assigned directly in SAM.gov.", tag: "Identifier" },
+    { label: "Receive CAGE code", detail: "5-character CAGE code assigned for your physical location.", tag: "Identifier" },
+    { label: "Complete reps and certs", detail: "Confirm size, ownership, and compliance statements; renew annually.", tag: "Statements" },
+  ]}
+  loop="Renew registration every year"
+/>
+
 ## NAICS codes
 
 The North American Industry Classification System sorts businesses by what they do. A NAICS code has six digits, and each digit narrows the industry. Codes in the 54 group, for example, cover professional, scientific and technical services, and the codes under 5415 cover computer systems design and related services.
@@ -93,6 +104,28 @@ Dollar value changes the default. As of October 2025:
 
 This is why answering a request for information matters. Those answers are how a contracting officer learns that two capable small businesses exist.
 
+<Branch
+  caption="How purchase dollar thresholds govern set-asides"
+  question="What is the anticipated dollar value of the purchase?"
+  options={[
+    {
+      when: "Up to $15,000",
+      then: "Micro-purchase threshold",
+      detail: "Bought without competition, often by government purchase card.",
+    },
+    {
+      when: "Above $15,000 up to $350,000",
+      then: "Simplified acquisition threshold",
+      detail: "Reserved for small businesses unless two capable small businesses cannot be expected.",
+    },
+    {
+      when: "Above $350,000",
+      then: "Rule of two applies",
+      detail: "Set aside for small businesses when offers are expected from at least two capable small businesses at fair prices.",
+    },
+  ]}
+/>
+
 ## The programs
 
 Beyond the general small business set-aside there are programs for particular groups, each with its own eligibility rules. All require the business to be small under the relevant code.
@@ -125,6 +158,23 @@ The status matters because some ways of doing business with the department are b
 - **Commercial treatment.** The law lets the department treat what a nontraditional contractor supplies as commercial, which brings simpler terms.
 
 Nobody issues a certificate for this status. You establish it by comparing your own contract history with the definition, and you may be asked to represent it in an offer. If you have ever held a large cost-type defense contract or subcontract, look closely before you claim it.
+
+<Branch
+  caption="Determining nontraditional defense contractor status"
+  question="Has your business performed a DoD contract subject to full CAS coverage in the past year?"
+  options={[
+    {
+      when: "No (includes all small businesses)",
+      then: "Qualifies as nontraditional",
+      detail: "Eligible for prototype other transaction agreements and potential commercial treatment.",
+    },
+    {
+      when: "Yes",
+      then: "Traditional defense contractor",
+      detail: "Must partner with nontraditional contractors or small businesses, or share costs, on prototype OTAs.",
+    },
+  ]}
+/>
 
 ## Put it to use
 

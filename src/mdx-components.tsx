@@ -2,6 +2,7 @@ import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import { Children, isValidElement, type ReactNode } from "react";
 import { slugify } from "@/lib/slug";
+import { Branch, Flow, Lanes, Layers, States } from "@/components/Diagram";
 
 function textOf(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -72,6 +73,11 @@ const components: MDXComponents = {
     </div>
   ),
   Callout,
+  Flow,
+  Branch,
+  Layers,
+  Lanes,
+  States,
 };
 
 export function useMDXComponents(): MDXComponents {

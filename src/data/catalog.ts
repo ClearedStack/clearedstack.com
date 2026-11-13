@@ -18,6 +18,25 @@ export type Category = {
 
 export type ToolStatus = "planned" | "building" | "live";
 
+export type ProvenanceKind =
+  | "government"
+  | "vendor-free"
+  | "commercial"
+  | "open-source"
+  | "template"
+  | "community"
+  | "owner";
+
+export type Provenance = {
+  /** Where the idea came from. Empty until recorded. */
+  inspiredBy?: { name: string; kind: ProvenanceKind; url?: string; observed?: string /* YYYY-MM */ }[];
+  /** What was taken (the job) and what was done differently. */
+  note?: string;
+  /** Prior Art record and decision-log IDs, once the dataset exists. */
+  record?: string;
+  decision?: string;
+};
+
 export type Tool = {
   slug: string;
   name: string;
@@ -28,6 +47,8 @@ export type Tool = {
   url?: string;
   /** Source repository. Set once it is public. */
   repo?: string;
+  /** Where the idea came from, what was taken and what was done differently. */
+  provenance?: Provenance;
 };
 
 export const categories: Category[] = [

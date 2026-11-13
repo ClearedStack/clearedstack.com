@@ -36,6 +36,16 @@ The first build takes a few minutes. It runs in two stages:
 1. A Node.js container installs the dependencies and builds the site into plain files.
 2. Those files are copied into a small nginx image. The Node.js stage is thrown away.
 
+<Flow
+  caption="Two-stage container image build"
+  direction="across"
+  steps={[
+    { tag: "Stage 1", label: "Build static export", detail: "Node.js 22 installs dependencies and builds the site into out/." },
+    { tag: "Stage 2", label: "Copy to nginx", detail: "nginx-unprivileged receives the out/ files and nginx.conf." },
+    { tag: "Result", label: "Runtime image", detail: "Node.js is discarded, leaving a 100 MB image with nginx and static files." },
+  ]}
+/>
+
 The result is an image of roughly 100 MB that holds a web server and the finished pages. It contains no database, no application server and no source code, and the web server runs as an ordinary user, not as root.
 
 There is no published image to pull. You build your own, so you know exactly what is in it.
@@ -85,6 +95,16 @@ docker run -d --name clearedstack --restart unless-stopped \
 | `--security-opt no-new-privileges` | Stops any process inside from gaining privileges |
 | `-p 127.0.0.1:8080:8080` | Accepts connections only from the server itself |
 
+<Layers
+  caption="Hardened container runtime boundaries"
+  layers={[
+    { tag: "Reverse proxy", label: "TLS termination", detail: "Caddy or nginx handles HTTPS and proxies 127.0.0.1:8080." },
+    { tag: "Port binding", label: "Loopback only", detail: "Exposed on 127.0.0.1:8080; unreachable from outside the host directly." },
+    { tag: "Process", label: "Non-root nginx", detail: "Runs as unprivileged user with cap-drop ALL and no-new-privileges." },
+    { tag: "Filesystem", label: "Read-only with tmpfs", detail: "Immutable root filesystem; writable tmpfs scratch space at /tmp only." },
+  ]}
+/>
+
 The last option is the one to use when something else on the same server handles HTTPS, as described below. Leave out `127.0.0.1:` if other machines need to reach port 8080 directly.
 
 ## Use Docker Compose
@@ -115,6 +135,16 @@ docker compose up -d --build
 ## Put it on your own domain
 
 The container speaks plain HTTP on port 8080. For anything beyond your own machine, keep it behind a program that handles HTTPS and point that at the container.
+
+<Branch
+  caption="Choosing an HTTPS reverse proxy"
+  question="Which reverse proxy matches your setup?"
+  options={[
+    { when: "Caddy", then: "Automatic TLS", detail: "Obtains and renews public certificates automatically with a one-block config." },
+    { when: "nginx", then: "Custom certificate", detail: "Terminates TLS using your own certificate and key, then proxy_pass to 127.0.0.1:8080." },
+    { when: "Internal CA", then: "Private trust", detail: "Use your organization’s internal certificate authority for air-gap or intranet networks." },
+  ]}
+/>
 
 With [Caddy](https://caddyserver.com), which obtains and renews certificates by itself, the whole configuration is:
 

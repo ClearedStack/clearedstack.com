@@ -42,6 +42,23 @@ Anything the tool must NOT do or ask for:
 
 The last line matters more than it looks. If a tool would be useless to you the moment it asked for a company name, say so.
 
+### How a suggestion enters the Prior Art process
+
+Community suggestions enter the project’s [Prior Art engine (draft)](/guides/prior-art-engine/) at the **Discover** stage and go through the same stages as any other candidate:
+
+<Flow
+  caption="How community tool requests flow through the Prior Art process"
+  direction="down"
+  steps={[
+    { tag: "Stage 1", label: "Discover", detail: "Community suggestion submitted via GitHub issue or email." },
+    { tag: "Stage 2", label: "Record & Observe", detail: "Given a candidate ID; public pages and regulatory sources observed." },
+    { tag: "Stage 3", label: "Screen", detail: "Tested against five knockout gates (public source, browser, private, one job, arithmetic)." },
+    { tag: "Stage 4", label: "Score & Decide", detail: "Scored against the 100-point rubric; human owner decides outcome on /how-we-decide/." },
+  ]}
+/>
+
+*(Note: The Prior Art engine describes pure intent and is currently in draft. It is not running yet, and nothing has been collected. See [Section M · How we decide](/how-we-decide/) and [How the project chooses what to build](/guides/prior-art-engine/).)*
+
 ## Ask for one that is already planned
 
 Every tool in the [catalog](/tools/) starts out as Planned. Saying which of them you are waiting for helps decide what gets built first. A one-line message is enough: the name of the tool and what you would use it for.
@@ -90,12 +107,30 @@ The entry looks like this:
   status: "live",
   url: "https://example.com/wrap-rate/",
   repo: "https://github.com/your-name/wrap-rate-calculator",
+  provenance: {
+    inspiredBy: [
+      { name: "Public Spreadsheets", kind: "template", observed: "2026-11" }
+    ],
+    note: "Built clean-room from FAR Part 31 cost principles.",
+  },
 },
 ```
 
-The home page, the catalog and their counts are generated from that file, so the one entry is the whole change. [Build a tool that can be listed](/guides/build-a-tool/) goes through each condition in detail, with a checklist to run before you open the pull request.
+The home page, the catalog and their counts are generated from that file, so the one entry is the whole change. Pull requests may include an optional `provenance` field documenting where the inspiration originated. [Build a tool that can be listed](/guides/build-a-tool/) goes through each condition in detail, with a checklist to run before you open the pull request.
 
 ## How a listing is reviewed
+
+<Flow
+  caption="Review checklist for listing a tool"
+  direction="down"
+  steps={[
+    { tag: "1. License", label: "OSI-approved open source", detail: "Verify LICENSE file exists with no commercial barriers or ads." },
+    { tag: "2. Client-side", label: "Zero network egress", detail: "Check Network tab is quiet and tool functions fully offline." },
+    { tag: "3. No tracking", label: "Strict Content Security Policy", detail: "No remote fonts, scripts, analytics, or cookies loaded." },
+    { tag: "4. Sources", label: "Public regulations cited", detail: "README and outputs link directly to authoritative rules." },
+    { tag: "5. Operational limits", label: "Clear boundaries", detail: "Clear statement that results are computational aids, not professional advice." },
+  ]}
+/>
 
 A person reads the pull request and uses the tool. The review checks the five conditions and nothing else:
 

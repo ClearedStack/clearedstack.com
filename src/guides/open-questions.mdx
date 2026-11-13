@@ -1,0 +1,181 @@
+export const meta = {
+  title: "What is not decided yet",
+  summary: "Review open architectural, governance, and transparency questions, see the current draft defaults, and understand how decisions get made.",
+  group: "project",
+  order: 7,
+  draft: true,
+  revised: "2026-11",
+};
+
+Publishing undecided questions is part of being transparent about the project’s direction. ClearedStack has not locked down every operational, legal, and architectural detail. Rather than hiding uncertainty behind vague statements, this guide lists the questions that remain open, the current draft default for each, and the process used to decide them.
+
+The Prior Art engine described here is pure intent and is not running yet. No separate repository exists, and no records have been collected. The defaults below reflect the working assumptions used in the draft site architecture.
+
+<Callout kind="note" title="Status of this guide">
+  This guide is part of Section L.6 (How this project is run). The questions below focus on site architecture, engine design, data boundaries, and governance. They do not decide which specific commercial tools to inspect or which compliance calculators to build next.
+</Callout>
+
+## How questions get decided
+
+Every architectural or policy question follows a four-step lifecycle. Decisions are not made in private or buried in chat threads; they are discussed in public, decided by the human owner, and recorded in git history.
+
+<Flow
+  caption="How an architectural or governance question gets decided"
+  direction="down"
+  steps={[
+    {
+      tag: "Step 1",
+      label: "Question raised",
+      detail: "An open question is identified during development, research, or by a community reader.",
+    },
+    {
+      tag: "Step 2",
+      label: "Public GitHub discussion",
+      detail: "The question and trade-offs are posted in a public GitHub issue for open feedback.",
+    },
+    {
+      tag: "Step 3",
+      label: "Owner decides",
+      detail: "The human project owner evaluates options and makes the final decision.",
+    },
+    {
+      tag: "Step 4",
+      label: "Guide updated",
+      detail: "The open question guide is updated with the resolution and revision date.",
+    },
+  ]}
+/>
+
+## Question lifecycle states
+
+A question transitions between three states. Once decided, a question may still be reopened if statutory changes, vendor practices, or technical constraints make the previous decision unworkable.
+
+<States
+  caption="Lifecycle states for architectural questions"
+  states={[
+    {
+      id: "open",
+      label: "Open",
+      detail: "Under active consideration with a draft default.",
+      to: [
+        { id: "decided", when: "the project owner chooses a resolution" },
+      ],
+    },
+    {
+      id: "decided",
+      label: "Decided",
+      detail: "Settled and documented in guides and architecture.",
+      to: [
+        { id: "revisited", when: "new evidence, laws, or constraints emerge" },
+      ],
+    },
+    {
+      id: "revisited",
+      label: "Revisited",
+      detail: "Reopened for review due to changed conditions.",
+      to: [
+        { id: "decided", when: "the revised policy is confirmed" },
+      ],
+    },
+  ]}
+/>
+
+## Scope and cadence
+
+These questions define the operational heartbeat and functional boundaries of the tools and engine.
+
+| Question | Options considered | Draft default | Why it matters |
+| --- | --- | --- | --- |
+| **Revisit cadence** | Monthly check; quarterly review cycle; event-driven review only | Monthly scheduled check (Stage 10 Revisit) | Prevents tools from drifting into regulatory obsolescence while maintaining a steady rhythm. |
+| **Data persistence** | Client-side export/import only; optional browser IndexedDB; self-hosted local SQLite | Pure static client-side execution with local JSON and CSV export | Guarantees zero-trust privacy by ensuring contract data never leaves the user’s device. |
+| **Phased thresholds** | Phased threshold (80 Phase 1, 75 Phase 2); rigid 75 across all phases; category-specific thresholds | Rigid 75 threshold for Build across all roadmap phases | Keeps selection criteria objective and predictable across development phases. |
+| **New categories** | Owner-determined at 5+ approved ideas; permanently locked at five CLINs; community RFC consensus | Owner-determined expansion when at least 5 approved ideas fail to fit CLINs 0001–0005 | Preserves alignment with Uniform Contract Format structure without arbitrary category sprawl. |
+
+## Discovery
+
+These questions govern how candidate compliance workflows and tools are found and cataloged.
+
+| Question | Options considered | Draft default | Why it matters |
+| --- | --- | --- | --- |
+| **Discovery execution** | Scripted quarterly sweeps; pure manual research logs; continuous automated CI web scrapers | Scripted quarterly assistant sweeps staged into a local review branch | Balances landscape coverage against maintainer review capacity. |
+| **Coverage tracking** | Categories $\times$ sources matrix; simple linear candidate backlog; detailed search query logs | Structured coverage matrix of categories $\times$ source kinds | Prevents overlooking valuable government worksheets or training center guides. |
+| **Template relevance** | Broad federal applicability only; major buying command templates; exhaustive local template index | Broad federal and DoD-wide applicability only | Focuses engineering effort on tools that serve the widest small-business audience. |
+| **Duplicate handling** | Canonical ID aliasing; separate records for every URL; exclude forks entirely | Stage 2 Record aliasing (canonical ID PA-0001 with alias list) | Eliminates duplicate evaluation work and skewed gap analysis. |
+
+## Observation
+
+These questions set the rules of engagement when examining existing compliance tools and websites.
+
+| Question | Options considered | Draft default | Why it matters |
+| --- | --- | --- | --- |
+| **Website boundaries** | Unauthenticated public pages only; accept crowdsourced gated notes; inspect-only trial accounts | Unauthenticated public pages only; no accounts, trials, or logins | Provides a strict legal safe harbor against CFAA and terms-of-service disputes. |
+| **Evidence grading** | Three-tier confidence (Seen, Stated, Unknown); binary verified/unverified; reject unverified claims | Three-tier confidence grading: Seen, Stated, or Unknown | Prevents vendor marketing claims from being recorded as verified architectural facts. |
+| **Observation shelf life** | 12-month limit; 6-month limit; indefinite until broken | 12-month shelf life; older observations marked stale | Ensures build and link decisions rely on current pricing and feature sets. |
+| **Snapshot archival** | Public web archive permalinks; raw HTML/MHTML committed to git; live outbound URLs only | Public web archive permalinks (Wayback Machine or Archive.today) | Preserves verifiable evidentiary audit trails without committing third-party page assets to git. |
+
+## Scoring and decisions
+
+These questions govern how observed ideas are evaluated and how final build outcomes are reached.
+
+| Question | Options considered | Draft default | Why it matters |
+| --- | --- | --- | --- |
+| **Division of authority** | AI drafts scores, human decides; automated score thresholding; human evaluates without AI | AI drafts scores and rationale; human owner decides outcome | Preserves sole human accountability while using AI speed for initial rubric drafting. |
+| **Link over rebuild** | Mandatory link if free tool exists; rebuild allowed for UX flaws; park candidate instead | Mandatory Link outcome whenever a free tool satisfies listing conditions (Gap = 1) | Prevents duplicating viable community tools and directs effort toward true market gaps. |
+| **Government calculators** | Build private client-side alternative; link government tool in all cases; build only if deprecated | Score Gap as 3; build an offline-first, client-side, privacy-respecting alternative | Provides defense contractors in secure air-gapped areas with tools they can run locally. |
+| **Tie-breaking rules** | Roadmap $\rightarrow$ Gap $\rightarrow$ Upkeep $\rightarrow$ Size $\rightarrow$ Community; community upvotes top; need score top | Roadmap phase fit $\rightarrow$ Gap severity $\rightarrow$ Low upkeep $\rightarrow$ Small size $\rightarrow$ Community requests | Maintains strategic delivery discipline over short-term popularity spikes. |
+
+## Credit and vendors
+
+These questions define how conceptual inspiration is acknowledged and how vendor relationships are handled.
+
+| Question | Options considered | Draft default | Why it matters |
+| --- | --- | --- | --- |
+| **Provenance phrasing** | Three-part factual template; minimal rule citation only; detailed comparative feature matrix | Standard three-part factual template (*Idea seen in*, *What we took*, *What we did differently*) | Credits inspiration truthfully without copying creative expression or making disparaging claims. |
+| **Vendor opt-out** | Honor request promptly with generic descriptor; refuse request under nominative fair use; delist tool | Replace vendor name with generic descriptor (“a commercial product”) while keeping the tool | Defuses trademark friction while preserving public access to clean-room implementations. |
+| **Dispute intake** | 48-hour safe-harbor intake and public log; formal legal process required; silent git purging | 48-hour safe-harbor intake with public logging in `TRANSPARENCY.md` | Resolves disputes quickly and openly without expensive legal confrontation. |
+| **Open-source reuse** | Permissive reuse (MIT/Apache) with attribution; 100% scratch code only; runtime CDN packages | Permissive open-source code permitted with attribution; no runtime CDNs | Avoids reinventing established algorithms while keeping zero-runtime network boundaries. |
+
+## AI transparency
+
+These questions establish how artificial intelligence tools are used and disclosed across the project.
+
+| Question | Options considered | Draft default | Why it matters |
+| --- | --- | --- | --- |
+| **Disclosure surface** | Multi-tier site disclosure; repository-only disclosure; top banner on every page | Multi-tier disclosure: About page + footer link + dedicated guide + decision logs | Establishes credibility through radical transparency about human-AI collaboration. |
+| **Commit attribution** | Dual trailers (AI-Assisted-By and Co-authored-by); human author only; dedicated AI bot committer | Dual git trailers: `AI-Assisted-By: [Tool]` and `Co-authored-by: [Tool] <noreply@...>` | Creates a machine-readable, permanent record of AI drafting in repository history. |
+| **Verification gates** | 100% parity with published government test vectors + human check; automated mock tests; beta launch | Mandatory dual-audit: deterministic tests matching worked government examples + human eCFR check | Prevents AI hallucinations from producing incorrect compliance arithmetic. |
+| **Errata handling** | Prompt code fix with regression test and credit; silent fix with date bump; formal ERRATA.md log | Code correction with regression test, commit attribution, and date bump | Encourages public review and upholds strict standards of regulatory accuracy. |
+
+## Data and repository
+
+These questions address how data is structured, licensed, and protected from malicious submissions.
+
+| Question | Options considered | Draft default | Why it matters |
+| --- | --- | --- | --- |
+| **Dataset location** | Standalone `ClearedStack/prior-art` repo; subfolder in website repo; GitHub Issues as database | Standalone repository `ClearedStack/prior-art` with static browser app | Keeps the main publishing site lean and fast while isolating research data. |
+| **Dataset licensing** | Dual CC0 for data and MIT for code; unified MIT license; CC-BY-SA copyleft | Dual license: CC0 1.0 Universal for dataset records; MIT License for code | Maximizes public domain reuse of regulatory data while protecting software tools. |
+| **File organization** | Granular flat JSON files; category subfolder tree; single monolithic JSON array | Granular flat files: `records/PA-XXXX.json` and `decisions/PA-XXXX-YYYY-MM-DD.json` | Avoids git merge conflicts during collaborative reviews and enables clean atomic history. |
+| **Submission security** | Schema validation and prompt sanitization; no AI processing of issues; raw unvalidated ingestion | Rigid schema validation, prompt-injection sanitization, and human pre-merge audit | Protects maintainer development environments from adversarial prompt injection. |
+
+## Governance and legal
+
+These questions define legal entity ownership, revenue policies, and project continuity.
+
+| Question | Options considered | Draft default | Why it matters |
+| --- | --- | --- | --- |
+| **Entity structure** | Unincorporated Phase 1, LLC/non-profit Phase 2; immediate foundation transfer; permanent individual | Unincorporated personal project for Phase 1, evaluating LLC or fiscal sponsorship for Phase 2 | Manages legal liability proportionally as project adoption grows. |
+| **Revenue policy** | Inviolable zero revenue; non-directed community micro-donations; corporate underwriting | Inviolable zero-revenue rule: no ads, sponsorships, donations, or paid tiers | Ensures complete editorial independence and uncompromised public trust. |
+| **Contributor ethics** | Mandatory attestation of off-duty personal work; ban defense employees; formal employer CCLAs | Mandatory contributor attestation confirming personal time, personal equipment, and public data | Protects contributors from federal ethics violations and keeps proprietary data out. |
+| **Project continuity** | Static architecture + backup org admin + git mirror; 10-year domain pre-pay; uncoordinated forks | Pure static files + backup organization co-admin + secondary git mirror | Ensures tools remain available and self-hostable even if the primary owner departs. |
+| **Liability disclaimers** | Persistent header banner + export watermarks; footer disclaimer only; mandatory click-wrap EULA | Persistent header banner on tools and watermarks on all exported calculation summaries | Clarifies that tools are computational aids rather than legal or accounting counsel. |
+
+## Site presentation
+
+These questions determine how governance, provenance, and mathematical formulas appear in the user interface.
+
+| Question | Options considered | Draft default | Why it matters |
+| --- | --- | --- | --- |
+| **Navigation placement** | 4th header nav link (`/how-we-decide/`); link from Home and footer only; subpage under About | New top-level page `/how-we-decide/` ("Section M · Evaluation factors") in header and home | Elevates evaluation transparency to the primary site navigation structure. |
+| **Guide categorization** | Dedicated Group L.6; fold into Group L.4 Contribute; distribute across L.1 and L.5 | Dedicated Guide Group L.6 "How this project is run" (`id: "project"`) | Provides a clear reading path for project governance without diluting practitioner guides. |
+| **Provenance visibility** | Subtle inline link on `/tools/`; interactive modal drawer; repository README only | Subtle inline text link beneath tool description on `/tools/` | Delivers ethical attribution without cluttering the catalog interface. |
+| **Formula transparency** | Collapsible inline drawer on tools; external link to guide; tooltip hover bubbles | Collapsible "Regulatory Math & Citation" drawer embedded directly in the tool UI | Enables compliance officers and auditors to verify math without leaving the page. |

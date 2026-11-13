@@ -113,11 +113,61 @@ Text, lists, tables and code blocks.
 | --- | --- |
 | `title` | The title, in sentence case |
 | `summary` | One sentence. It appears in the list, under the title and in search results |
-| `group` | The section it belongs to: `start`, `field`, `host`, `contribute` or `reference` |
+| `group` | The section it belongs to: `start`, `field`, `host`, `contribute`, `reference` or `project` |
 | `order` | Its position within the section, lowest first |
+| `draft` | Optional boolean (`draft: true`). Shows a “Draft — describes intent; not running yet” banner on the guide |
 | `reviewed` | Optional. For guides about regulations: the month the facts were last checked, as `"2026-11"` |
 
 The guides page, the table of contents, the reading time, the previous and next links and the sitemap all pick the file up on the next build.
+
+## Diagram components
+
+All guides and site pages have access to five static, accessible diagram components built with plain semantic HTML and CSS (no client-side JavaScript or external CDNs). In MDX files, they are available globally without an `import`:
+
+- `<Flow caption="..." steps={[{ label: "...", detail: "..." }]} />`: Ordered sequential flows or pipelines. Optional props: `direction="across" | "down"`, `loop="Label for return"`, `highlight={0}`.
+- `<Branch caption="..." question="..." options={[{ when: "...", then: "...", detail: "..." }]} />`: Decision points and branching choices.
+- `<Layers caption="..." layers={[{ label: "...", detail: "..." }]} />`: Top-to-bottom stacks for rate build-ups and isolation boundaries.
+- `<Lanes caption="..." lanes={["Owner", "AI agent"]} steps={[{ lane: 1, label: "...", detail: "..." }]} />`: Swimlanes mapping steps to responsible actors.
+- `<States caption="..." states={[{ id: "x", label: "...", to: [{ id: "y", when: "..." }] }]} />`: State machine cards showing transitions and terminal states.
+
+Here is an example in MDX:
+
+```mdx
+<Flow
+  caption="How a contribution is reviewed"
+  direction="down"
+  steps={[
+    { tag: "1", label: "Open pull request", detail: "Contributor submits branch with tests and source citations." },
+    { tag: "2", label: "Audit sources", detail: "Human maintainer verifies claims against official publications." },
+    { tag: "3", label: "Merge", detail: "Shipped with git attribution trailers." },
+  ]}
+/>
+```
+
+## AI-assisted work and commit trailers
+
+ClearedStack uses AI coding agents (Claude Code and Antigravity) to assist with drafting code, documentation, and tests under human direction and review.
+
+- **Accountability:** The human repository maintainer sets priorities, reviews every line of code, verifies every calculation against primary sources, and merges pull requests.
+- **Commit trailers:** Commits drafted or iterated with AI assistance should include a Git trailer identifying the tool:
+  ```text
+  Add Prior Art engine documentation
+
+  Assisted-by: Claude Code
+  Assisted-by: Antigravity
+  ```
+- **Zero AI at runtime:** Tools in the catalog contain zero AI models and make zero network calls. AI is strictly authoring assistance. See [How AI is used to build this project](/guides/built-with-ai/).
+
+<Lanes
+  caption="Division of labor: human maintainer and AI coding agents"
+  lanes={["Human Maintainer", "AI Agent (Claude / Antigravity)"]}
+  steps={[
+    { lane: 0, label: "Sets direction & architecture", detail: "Defines the job, constraints, and underlying official regulations." },
+    { lane: 1, label: "Drafts code & documentation", detail: "Proposes TypeScript logic, static diagrams, tests, and MDX guides." },
+    { lane: 0, label: "Verifies against official text", detail: "Checks formulas and citations line by line against eCFR or NIST." },
+    { lane: 0, label: "Reviews and merges", detail: "Tests client-side CSP boundaries and signs commit with trailers." },
+  ]}
+/>
 
 ## What you can use in a guide
 

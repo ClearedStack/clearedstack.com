@@ -20,6 +20,23 @@ Direct costs are charged to the contract they belong to. Indirect costs are gath
 
 The rule that matters is consistency. The same kind of cost, in the same circumstances, has to be treated the same way every time. A cost cannot be direct on one contract and indirect on another because that is convenient.
 
+<Branch
+  caption="How costs are assigned"
+  question="Was the cost spent for one specific contract?"
+  options={[
+    {
+      when: "Yes",
+      then: "Direct cost",
+      detail: "Charged directly to the contract it belongs to (e.g. project labor, specific travel, dedicated equipment).",
+    },
+    {
+      when: "No",
+      then: "Indirect cost",
+      detail: "Grouped into an indirect pool (fringe, overhead, or G&A) and allocated across contracts over a base.",
+    },
+  ]}
+/>
+
 ## The three usual pools
 
 A small company commonly has three pools. The names are standard. What goes in each, and what each is divided by, is a choice the company makes and then sticks to.
@@ -85,6 +102,17 @@ Now price one hour of an engineer paid $60.00 an hour. Each layer is applied to 
 | Fee | 8% | $8.39 | $113.22 |
 
 The fully burdened rate is $113.22 an hour.
+
+<Layers
+  caption="Cumulative wrap rate build-up for one hour of labor"
+  layers={[
+    { label: "Fee (8%)", detail: "+$8.39 on total cost, bringing the fully burdened billing rate to $113.22.", tag: "$113.22" },
+    { label: "G&A (12%)", detail: "+$11.23 on all costs beneath it ($93.60), bringing running total to $104.83.", tag: "$104.83" },
+    { label: "Overhead (20%)", detail: "+$15.60 on direct labor plus fringe ($78.00), bringing running total to $93.60.", tag: "$93.60" },
+    { label: "Fringe (30%)", detail: "+$18.00 on direct labor wage ($60.00), bringing running total to $78.00.", tag: "$78.00" },
+    { label: "Hourly wage", detail: "Direct hourly wage of $60.00 for an engineer ($124,800 salary / 2,080 hours).", tag: "$60.00" },
+  ]}
+/>
 
 ## The wrap rate
 
@@ -157,6 +185,16 @@ How much of this the government looks at depends on the kind of contract.
 Even on a fixed-price bid, building your rates properly tells you whether the price you are offering covers your costs.
 
 For cost-reimbursement work, a few more things follow. You bill during the year at provisional rates agreed in advance. After the year ends you submit your actual indirect costs, and the difference is settled. Your accounting system has to be able to produce those figures. The Defense Contract Audit Agency publishes a plain-language manual for small contractors on what that takes.
+
+<Flow
+  caption="Annual indirect cost cycle on cost-reimbursement contracts"
+  steps={[
+    { label: "Provisional rates agreed", detail: "Provisional billing rates agreed in advance with the government for the fiscal year.", tag: "Start" },
+    { label: "Interim billing during year", detail: "Bill indirect costs provisionally on interim vouchers as direct costs are incurred.", tag: "Execution" },
+    { label: "Submit final indirect costs", detail: "Calculate and submit incurred indirect cost rate proposal after fiscal year ends.", tag: "Submission" },
+    { label: "Audit and rate settlement", detail: "Final rates audited/negotiated, and differences between provisional and actual costs are settled.", tag: "Settlement" },
+  ]}
+/>
 
 The Cost Accounting Standards, a further set of rules for large contracts, do not apply to contracts with small businesses.
 

@@ -1,0 +1,247 @@
+export const meta = {
+  title: "How the project chooses what to build",
+  summary: "Follow the ten-stage pipeline from public observation to catalog listing, and see how the project keeps decisions open.",
+  group: "project",
+  order: 1,
+  draft: true,
+  revised: "2026-11",
+};
+
+<Callout kind="warning" title="Draft">
+  This guide describes intent. The prior-art engine is not running, the `ClearedStack/prior-art` repository does not exist yet, and nothing has been collected. When the process starts, records and decisions will be published in public.
+</Callout>
+
+Instead of guessing what federal contractors and small businesses need, ClearedStack plans to study tools that already exist for government-contracting paperwork. The project records what each tool does from its public pages, screens and scores the idea in public, lets the human owner make the final decision, and credits where every idea came from.
+
+Tools are then built clean-room from the public regulation, never from another tool’s code, text, or design. All research and development is conducted with AI assistance (Claude Code and Antigravity) under one human owner who decides, reviews, and remains accountable.
+
+To see the evaluation factors and current roadmap, visit [How we decide](/how-we-decide/).
+
+## Why an engine is needed
+
+Government contracting paperwork carries heavy regulatory friction. Small businesses, solo practitioners, and subcontractors frequently face complex calculations, formatting rules, and compliance checklists.
+
+Commercial products, spreadsheets, and agency calculators exist across the industry, but they often present significant barriers:
+- They require paid subscriptions that small teams cannot afford.
+- They gate basic calculations behind sales forms, account creation, or email collection.
+- They embed third-party tracking scripts that report user activity.
+- They send proprietary bid data or labor rates to remote servers.
+
+The prior-art engine systematically discovers these existing tools to identify what jobs need solving, document where free privacy-respecting alternatives are missing, and schedule independent clean-room implementations.
+
+## The ten stages
+
+Work flows through ten canonical stages. The sequence is linear by default, with explicit review gates, knockout criteria, and a feedback loop for maintenance.
+
+<Flow
+  caption="The ten stages of the prior-art engine, from discovery to monthly audit"
+  loop="Revisit feeds back into Observe for parked records or Build when regulations change"
+  steps={[
+    { tag: "Stage 1", label: "Discover", detail: "Find candidates through agent sweeps, owner research, or community issues." },
+    { tag: "Stage 2", label: "Record", detail: "Assign a persistent PA-XXXX identifier and resolve duplicates, forks, and white-labels." },
+    { tag: "Stage 3", label: "Observe", detail: "Read public pages to document the job, inputs, outputs, cited rules, and network behavior." },
+    { tag: "Stage 4", label: "Screen", detail: "Apply five knockout gates: public source, runs in browser, private, one job, arithmetic." },
+    { tag: "Stage 5", label: "Score", detail: "Evaluate seven weighted rubric factors out of 100 points." },
+    { tag: "Stage 6", label: "Decide", detail: "Human owner selects one of five outcomes: Build, Link, Merge, Park, or Reject." },
+    { tag: "Stage 7", label: "Credit", detail: "Draft and approve a factual provenance note crediting the original inspiration." },
+    { tag: "Stage 8", label: "Build", detail: "Implement clean-room from public regulations in an isolated repository." },
+    { tag: "Stage 9", label: "List", detail: "Verify the five listing conditions and publish to the live catalog." },
+    { tag: "Stage 10", label: "Revisit", detail: "Run monthly checks on regulatory revisions, upstream changes, and tool health." },
+  ]}
+/>
+
+1. **Discover**: Find a candidate tool, spreadsheet, or portal. Candidates originate from automated web sweeps, human owner findings, or community issue submissions. See [How candidates are found](/guides/find-candidates/).
+2. **Record**: Assign a persistent record identifier (such as `PA-0001`). Normalize the URL and identify mirrors, upstream forks, and white-label re-skins.
+3. **Observe**: Read public pages only. Capture the discrete job, required inputs, generated outputs, access requirements, network tracking profile, license, pricing model, cited public standard, and permanent web archive snapshot. See [How an existing tool is observed](/guides/observe-a-tool/).
+4. **Screen**: Test the candidate against five knockout gates. A candidate that fails any gate is screened out immediately with the reason recorded.
+5. **Score**: Grade eligible ideas against a seven-factor rubric totaling 100 points. AI agents draft factor scores with written rationales; all scores are public. See [How an idea is scored and decided](/guides/score-and-decide/).
+6. **Decide**: The human owner makes the binding determination: Build, Link, Merge, Park, or Reject.
+7. **Credit**: Prepare a public provenance statement naming the observed tool, what job was taken, what was done differently, and the governing regulation. See [How ideas are credited](/guides/credit-and-clean-room/).
+8. **Build**: Write an independent client-side application in its own repository, working strictly from the official regulation and decision record. The catalog status transitions from `planned` to `building`.
+9. **List**: Verify that the finished tool satisfies all five listing conditions. The catalog status transitions to `live`, and provenance appears on [/tools](/tools/).
+10. **Revisit**: Conduct monthly checks. If the cited regulation changes or the observed tool alters its public terms, re-open the record to update, rebuild, or retire the tool.
+
+## The five knockout gates
+
+During Stage 4 (Screen), every candidate must satisfy five non-negotiable criteria before receiving a score:
+
+1. **Public source**: The underlying calculations, rules, or checklists exist in an officially released public statute, regulation, standard, or agency bulletin.
+2. **Runs in the browser**: The calculation or workflow can execute completely inside a web browser without a remote server, external database, or network API.
+3. **Private by design**: The tool operates offline, requires no user account, records no telemetry, and functions under a strict content security policy.
+4. **One job**: The tool solves one discrete task that can be stated in a single sentence starting with an active verb. Candidates solving multiple disparate jobs are split into separate records.
+5. **Arithmetic, not advice**: The tool computes formulas, formats data, or checks rule checklists. It never provides legal opinions, subjective assessments, or contracting officer determinations.
+
+## Record lifecycle and states
+
+A candidate record transitions through deterministic states from intake to retirement.
+
+<States
+  caption="How a prior-art record moves through states"
+  states={[
+    {
+      id: "discovered",
+      label: "Discovered",
+      detail: "Candidate URL detected via search sweep or community issue.",
+      to: [
+        { id: "recorded", when: "URL is verified accessible and unique" },
+        { id: "rejected", when: "URL is duplicate, dead, or inaccessible" },
+      ],
+    },
+    {
+      id: "recorded",
+      label: "Recorded",
+      detail: "Assigned a PA-XXXX ID and queued for observation.",
+      to: [
+        { id: "observed", when: "Public pages and network behavior are documented" },
+      ],
+    },
+    {
+      id: "observed",
+      label: "Observed",
+      detail: "Public dossier complete with inputs, outputs, and citations.",
+      to: [
+        { id: "screened-out", when: "Fails any of the five knockout gates" },
+        { id: "scored", when: "Passes all five knockout gates" },
+      ],
+    },
+    {
+      id: "screened-out",
+      label: "Screened out",
+      detail: "Ineligible for client-side catalog. Reason recorded.",
+      to: [
+        { id: "observed", when: "Project scope expands (owner override only)" },
+      ],
+    },
+    {
+      id: "scored",
+      label: "Scored",
+      detail: "Ranked against the seven-factor rubric out of 100 points.",
+      to: [
+        { id: "approved", when: "Owner selects candidate for clean-room build" },
+        { id: "linked", when: "Free privacy-respecting tool already exists" },
+        { id: "merged", when: "Feature fits into an existing planned tool" },
+        { id: "parked", when: "Deferred due to regulatory flux or capacity" },
+        { id: "rejected", when: "Fails rubric thresholds or project scope" },
+      ],
+    },
+    {
+      id: "approved",
+      label: "Approved",
+      detail: "Enters site catalog as planned.",
+      to: [
+        { id: "building", when: "Dedicated repository initialized and coding starts" },
+      ],
+    },
+    {
+      id: "building",
+      label: "Building",
+      detail: "Clean-room implementation underway in dedicated repo.",
+      to: [
+        { id: "live", when: "Passes five listing conditions and tests" },
+        { id: "parked", when: "Development blocked by regulatory ambiguity" },
+      ],
+    },
+    {
+      id: "live",
+      label: "Live",
+      detail: "Published in catalog and deployed to production.",
+      to: [
+        { id: "building", when: "Regulation updates require code revisions" },
+        { id: "retired", when: "Underlying rule repealed or tool decommissioned" },
+      ],
+    },
+    {
+      id: "parked",
+      label: "Parked",
+      detail: "Held in backlog pending regulatory update or maintainer bandwidth.",
+      to: [
+        { id: "observed", when: "Monthly revisit unblocks the candidate" },
+      ],
+    },
+    {
+      id: "linked",
+      label: "Linked",
+      detail: "Catalog links directly to existing open-source tool.",
+    },
+    {
+      id: "merged",
+      label: "Merged",
+      detail: "Absorbed as a sub-feature into another tool repository.",
+    },
+    {
+      id: "rejected",
+      label: "Rejected",
+      detail: "Declined with public rationale recorded in decision log.",
+    },
+    {
+      id: "retired",
+      label: "Retired",
+      detail: "Decommissioned from catalog with historical note retained.",
+    },
+  ]}
+/>
+
+## Division of labor
+
+The prior-art engine pairs AI automation with human accountability. AI agents handle data extraction and code generation, while the human owner retains sole decision authority.
+
+<Lanes
+  caption="Division of responsibilities across the prior-art pipeline"
+  lanes={["Human owner", "AI agents", "Community"]}
+  steps={[
+    { lane: 2, label: "Suggest candidate", detail: "Submits a public tool link or paperwork task via a GitHub issue." },
+    { lane: 1, label: "Discover and deduplicate", detail: "Executes automated search sweeps and normalizes candidate URLs." },
+    { lane: 1, label: "Observe public profile", detail: "Extracts inputs, outputs, cited rules, and network tracking calls." },
+    { lane: 1, label: "Screen and draft score", detail: "Validates knockout gates and computes initial rubric point draft." },
+    { lane: 0, label: "Decide outcome", detail: "Evaluates dossier and determines Build, Link, Merge, Park, or Reject." },
+    { lane: 0, label: "Approve provenance text", detail: "Reviews and signs off on attribution wording and public credits." },
+    { lane: 1, label: "Draft clean-room code", detail: "Implements TypeScript logic, UI, and unit tests from official rules." },
+    { lane: 0, label: "Verify and merge", detail: "Conducts offline tests, reviews code, and merges pull requests." },
+    { lane: 2, label: "Audit and verify", detail: "Re-checks observations and submits issue corrections on live tools." },
+  ]}
+/>
+
+AI agents never make build decisions, never assign final scores without review, and never execute inside the client-side tools themselves. For full details on our AI policies, read [How AI is used to build this project](/guides/built-with-ai/).
+
+## Where information lives
+
+To maintain site performance and separate research observations from production code, data is organized across four distinct layers:
+
+<Layers
+  caption="Where data lives across repositories and public pages"
+  layers={[
+    { tag: "clearedstack.com /tools", label: "Public catalog presentation", detail: "Static cards show live tools, planned tools, and provenance notes with zero client-side scripts." },
+    { tag: "clearedstack.com catalog.ts", label: "Site catalog configuration", detail: "Single source of truth for site builds, defining status (planned, building, live) and provenance metadata." },
+    { tag: "prior-art repo: decisions/", label: "Owner decision logs", detail: "Signed records of build determinations, rubric scores, evaluator notes, and override explanations." },
+    { tag: "prior-art repo: records/", label: "Prior art observation dataset", detail: "Machine-readable PA-XXXX records documenting public inputs, outputs, and archived snapshots." },
+  ]}
+/>
+
+- **Prior-art records (`records/PA-XXXX.json`)**: Version-controlled JSON records stored in the future `ClearedStack/prior-art` repository. Each file contains public URLs, input and output schemas, network audit results, and snapshot links.
+- **Decision logs (`decisions/PA-XXXX-YYYY-MM-DD.json`)**: Immutable records of owner decisions. They record the date, the outcome, the rubric scores, the drafting AI model, and the owner’s sign-off rationale.
+- **Site catalog (`src/data/catalog.ts`)**: The source of truth for tools displayed on `clearedstack.com`. When a tool is approved, an entry is added with `status: "planned"` and an optional `provenance` reference.
+- **Public catalog (/tools/)**: The static web presentation where visitors browse tools, filter by CLIN category, and read provenance notes.
+
+## What we never do
+
+The engine operates under strict ethical and legal boundaries. We never:
+
+- Access non-public, classified, Controlled Unclassified Information (CUI), or export-controlled materials.
+- Create user accounts, register credentials, submit email addresses, or join mailing lists.
+- Start free trials, request sales demonstrations, or submit marketing lead forms.
+- Bypass paywalls, password prompts, session gates, or access controls.
+- Solve, click through, or script around CAPTCHAs, Turnstiles, or anti-bot challenges.
+- Disregard `robots.txt` instructions or terms of service scraping prohibitions.
+- Enter real company data, real contract numbers, real labor rates, personal identifiable information (PII), or live bids into any external tool.
+- Copy source code, markup, CSS, icons, documentation text, or visual design from an observed tool.
+- Probe, fuzz, scan, or conduct security testing against third-party servers.
+
+## Further reading
+
+- [How candidates are found](/guides/find-candidates/) (L.6.2)
+- [How an existing tool is observed](/guides/observe-a-tool/) (L.6.3)
+- [How an idea is scored and decided](/guides/score-and-decide/) (L.6.4)
+- [How ideas are credited](/guides/credit-and-clean-room/) (L.6.5)
+- [How AI is used to build this project](/guides/built-with-ai/) (L.6.6)
+- [What is not decided yet](/guides/open-questions/) (L.6.7)
+- [How we decide](/how-we-decide/)

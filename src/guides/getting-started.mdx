@@ -65,6 +65,16 @@ Every tool in the catalog displays a status badge:
 - **In development:** The tool is actively being built in its own open-source repository.
 - **Live:** The tool is operational in the browser, with direct links to the application and source repository.
 
+<Flow
+  caption="The lifecycle of a catalog tool"
+  direction="across"
+  steps={[
+    { tag: "Stage 1", label: "Planned", detail: "Defined in the catalog with scope and governing regulation." },
+    { tag: "Stage 2", label: "In development", detail: "Actively implemented clean-room in its own repository." },
+    { tag: "Stage 3", label: "Live", detail: "Audited against sources, verified client-side, and listed." },
+  ]}
+/>
+
 ### How to influence what gets built first
 
 Because tools are published as planned line items first, user demand determines the active build order. If a specific tool would solve an immediate problem for your team:
@@ -74,6 +84,18 @@ Because tools are published as planned line items first, user demand determines 
 3. Specify your use case, required inputs, and the governing regulation.
 
 ## What every tool will have in common
+
+<Flow
+  caption="How every ClearedStack tool executes: zero setup, browser memory, zero egress"
+  direction="across"
+  steps={[
+    { tag: "1", label: "Open in browser", detail: "Static files download once over HTTPS." },
+    { tag: "2", label: "Enter data", detail: "Rates or files remain in local browser RAM." },
+    { tag: "3", label: "Compute locally", detail: "Deterministic client-side math and parsing." },
+    { tag: "4", label: "Export results", detail: "Save PDF, CSV, or clean Markdown files." },
+    { tag: "5", label: "Close tab", detail: "Memory is cleared immediately." },
+  ]}
+/>
 
 When tools ship, each must satisfy five mandatory listing criteria:
 

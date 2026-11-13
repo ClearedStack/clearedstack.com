@@ -20,6 +20,16 @@ There are three things you could move. Pick the one that matches what is already
 | The built site, as one archive | You have a web server inside | Any web server |
 | The source code and its dependencies | You are required to build from source inside | Node.js, an internal package mirror and base images |
 
+<Branch
+  caption="Choosing an air-gap transfer format"
+  question="What runtime is available on the closed network?"
+  options={[
+    { when: "Docker / Podman / K8s", then: "Container image archive", detail: "Single clearedstack.tar.gz file (~27 MB) with web server and files included." },
+    { when: "Existing web server", then: "Built static site archive", detail: "Single clearedstack-site.tar.gz file (<2 MB) to extract into document root." },
+    { when: "Build from source required", then: "Source bundle & dependencies", detail: "Git bundle, internal npm mirror and mirrored base images needed inside." },
+  ]}
+/>
+
 The first two are a single file with nothing to install on arrival. The third is much more work, and is only worth it when policy demands it.
 
 ## Build on a connected machine
@@ -69,6 +79,17 @@ The `.sha256` file holds one line: the fingerprint and the file name. Carry it w
 ## Carry it across
 
 Use the transfer process your network requires. That might be approved removable media, a one-way transfer device or a transfer service run by your security office. This guide cannot tell you which, and no tool here is a substitute for it.
+
+<Flow
+  caption="Air-gap transfer and verification sequence"
+  direction="across"
+  steps={[
+    { tag: "Outside", label: "Build & package", detail: "Build image or export static files on an internet-connected machine." },
+    { tag: "Outside", label: "Record SHA-256", detail: "Generate .sha256 checksum fingerprint before moving the archive." },
+    { tag: "Transfer", label: "Carry across", detail: "Move across the air-gap via approved transfer media or diode." },
+    { tag: "Inside", label: "Verify checksum", detail: "Run sha256sum -c to confirm exact byte integrity before running." },
+  ]}
+/>
 
 What you are moving is small: about 27 MB for the image and under 2 MB for the built site.
 
@@ -124,6 +145,16 @@ tar -xzf clearedstack-site.tar.gz -C /var/www/clearedstack
 ## Confirm it is self-contained
 
 Open the site from a workstation on the closed network, with the browser’s developer tools on the **Network** tab, and visit each page. Every line in the list should be a request to your own server. Nothing should fail, and nothing should be waiting on an outside address.
+
+<Layers
+  caption="Self-contained air-gap execution layers"
+  layers={[
+    { tag: "Browser", label: "Workstation browser tab", detail: "Renders HTML/CSS and runs client-side calculations entirely in memory." },
+    { tag: "Security policy", label: "Local CSP sandbox", detail: "connect-src self forbids all outside network calls even if attempted." },
+    { tag: "Web server", label: "Internal host", detail: "Serves static assets locally via nginx, container or plain file server." },
+    { tag: "Network", label: "Air-gapped intranet", detail: "Completely disconnected from public internet; zero egress possible." },
+  ]}
+/>
 
 ## What will not work inside
 

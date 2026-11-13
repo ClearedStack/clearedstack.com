@@ -57,10 +57,21 @@ documents.push({
   content: "Mission Ground rules No revenue No data collection Public sources only Show the work Legal disclaimer Independent personal project not DoD"
 });
 
+documents.push({
+  id: "page-how-we-decide",
+  type: "page",
+  title: "How We Decide",
+  subtitle: "Section M · Evaluation Factors",
+  summary: "Evaluation factors, knockout gates, scoring rubric, outcomes, and AI disclosure for ClearedStack tools and prior art.",
+  url: "/how-we-decide/",
+  badge: "Section M",
+  content: "Section M evaluation factors how we decide prior art engine ten stages knockout gates scoring rubric outcomes Build Link Merge Park Reject record states clean room AI disclosure Claude Code Antigravity review accountability"
+});
+
 // 2. Tools from src/data/catalog.ts
 const catalogSource = fs.readFileSync(path.join(dataDir, "catalog.ts"), "utf8");
-const toolsMatch = catalogSource.match(/export const tools: readonly Tool\[\] = (\[[\s\S]*?\n\]);/);
-const categoriesMatch = catalogSource.match(/export const categories: readonly Category\[\] = (\[[\s\S]*?\n\]);/);
+const toolsMatch = catalogSource.match(/export const tools: (?:readonly )?Tool\[\] = (\[[\s\S]*?\n\]);/);
+const categoriesMatch = catalogSource.match(/export const categories: (?:readonly )?Category\[\] = (\[[\s\S]*?\n\]);/);
 
 const categoryMap = new Map();
 if (categoriesMatch) {
@@ -79,6 +90,17 @@ if (toolsMatch) {
       const cat = categoryMap.get(t.category);
       const clin = cat ? `CLIN ${cat.clin}` : "CLIN";
       const catName = cat ? cat.name : t.category;
+
+      let provenanceText = "";
+      if (t.provenance) {
+        if (t.provenance.inspiredBy && t.provenance.inspiredBy.length > 0) {
+          provenanceText += " " + t.provenance.inspiredBy.map((i) => `${i.name} ${i.kind} ${i.url || ""}`).join(" ");
+        }
+        if (t.provenance.note) {
+          provenanceText += " " + t.provenance.note;
+        }
+      }
+
       documents.push({
         id: `tool-${t.slug}`,
         type: "tool",
@@ -88,7 +110,7 @@ if (toolsMatch) {
         url: `/tools/#${t.category}`,
         badge: clin,
         status: t.status,
-        content: `${t.name} ${t.summary} ${clin} ${catName} ${t.status} ${cat?.blurb || ""}`
+        content: `${t.name} ${t.summary} ${clin} ${catName} ${t.status} ${cat?.blurb || ""}${provenanceText}`
       });
     });
   } catch (err) {
@@ -115,16 +137,19 @@ files.forEach((f) => {
     .replace(/\s+/g, " ")
     .trim();
 
+  const groupLabel = meta.group ? (meta.group === "project" ? "L.6" : meta.group.toUpperCase()) : "L";
+  const badgeLabel = meta.draft ? "DRAFT" : (meta.group ? meta.group.toUpperCase() : "GUIDE");
+
   // Primary Guide document
   documents.push({
     id: `guide-${slug}`,
     type: "guide",
     title: meta.title || slug,
-    subtitle: `Guide · Section ${meta.group ? meta.group.toUpperCase() : "L"}`,
+    subtitle: `Guide · Section ${groupLabel}`,
     summary: meta.summary || cleanBody.slice(0, 160) + "...",
     url: `/guides/${slug}/`,
-    badge: meta.group ? meta.group.toUpperCase() : "GUIDE",
-    content: `${meta.title} ${meta.summary || ""} ${meta.group || ""} ${cleanBody.slice(0, 500)}`
+    badge: badgeLabel,
+    content: `${meta.title} ${meta.summary || ""} ${meta.group || ""} ${meta.draft ? "draft intent" : ""} ${cleanBody.slice(0, 500)}`
   });
 
   // Split into heading sections

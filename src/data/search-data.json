@@ -40,6 +40,214 @@
     "content": "Mission Ground rules No revenue No data collection Public sources only Show the work Legal disclaimer Independent personal project not DoD"
   },
   {
+    "id": "page-how-we-decide",
+    "type": "page",
+    "title": "How We Decide",
+    "subtitle": "Section M · Evaluation Factors",
+    "summary": "Evaluation factors, knockout gates, scoring rubric, outcomes, and AI disclosure for ClearedStack tools and prior art.",
+    "url": "/how-we-decide/",
+    "badge": "Section M",
+    "content": "Section M evaluation factors how we decide prior art engine ten stages knockout gates scoring rubric outcomes Build Link Merge Park Reject record states clean room AI disclosure Claude Code Antigravity review accountability"
+  },
+  {
+    "id": "tool-wrap-rate-calculator",
+    "type": "tool",
+    "title": "Wrap Rate Calculator",
+    "subtitle": "CLIN 0001: Pricing & cost accounting",
+    "summary": "Build a fully burdened labor rate from base pay, fringe, overhead, G&A and fee.",
+    "url": "/tools/#pricing",
+    "badge": "CLIN 0001",
+    "status": "planned",
+    "content": "Wrap Rate Calculator Build a fully burdened labor rate from base pay, fringe, overhead, G&A and fee. CLIN 0001 Pricing & cost accounting planned Labor rates, indirect rates and price tables that hold up under FAR Part 31."
+  },
+  {
+    "id": "tool-indirect-rate-estimator",
+    "type": "tool",
+    "title": "Indirect Rate Estimator",
+    "subtitle": "CLIN 0001: Pricing & cost accounting",
+    "summary": "Turn your cost pools and allocation bases into fringe, overhead and G&A rates.",
+    "url": "/tools/#pricing",
+    "badge": "CLIN 0001",
+    "status": "planned",
+    "content": "Indirect Rate Estimator Turn your cost pools and allocation bases into fringe, overhead and G&A rates. CLIN 0001 Pricing & cost accounting planned Labor rates, indirect rates and price tables that hold up under FAR Part 31."
+  },
+  {
+    "id": "tool-section-b-pricing-table",
+    "type": "tool",
+    "title": "Section B Pricing Table Builder",
+    "subtitle": "CLIN 0001: Pricing & cost accounting",
+    "summary": "Lay out CLINs, quantities and extended prices the way the solicitation asks for them.",
+    "url": "/tools/#pricing",
+    "badge": "CLIN 0001",
+    "status": "planned",
+    "content": "Section B Pricing Table Builder Lay out CLINs, quantities and extended prices the way the solicitation asks for them. CLIN 0001 Pricing & cost accounting planned Labor rates, indirect rates and price tables that hold up under FAR Part 31."
+  },
+  {
+    "id": "tool-prompt-payment-interest",
+    "type": "tool",
+    "title": "Prompt Payment Interest Tracker",
+    "subtitle": "CLIN 0001: Pricing & cost accounting",
+    "summary": "Work out the interest owed on a late government invoice under the Prompt Payment Act.",
+    "url": "/tools/#pricing",
+    "badge": "CLIN 0001",
+    "status": "planned",
+    "content": "Prompt Payment Interest Tracker Work out the interest owed on a late government invoice under the Prompt Payment Act. CLIN 0001 Pricing & cost accounting planned Labor rates, indirect rates and price tables that hold up under FAR Part 31."
+  },
+  {
+    "id": "tool-rfp-requirement-shredder",
+    "type": "tool",
+    "title": "RFP Requirement Shredder",
+    "subtitle": "CLIN 0002: Proposal & capture",
+    "summary": "Pull every “shall”, “must” and “will” out of a solicitation into a numbered requirements list.",
+    "url": "/tools/#proposal",
+    "badge": "CLIN 0002",
+    "status": "planned",
+    "content": "RFP Requirement Shredder Pull every “shall”, “must” and “will” out of a solicitation into a numbered requirements list. CLIN 0002 Proposal & capture planned Take a solicitation apart and prove your response answers all of it."
+  },
+  {
+    "id": "tool-compliance-matrix-generator",
+    "type": "tool",
+    "title": "Compliance Matrix Generator",
+    "subtitle": "CLIN 0002: Proposal & capture",
+    "summary": "Map Section L instructions and Section M criteria to the proposal sections that answer them.",
+    "url": "/tools/#proposal",
+    "badge": "CLIN 0002",
+    "status": "planned",
+    "content": "Compliance Matrix Generator Map Section L instructions and Section M criteria to the proposal sections that answer them. CLIN 0002 Proposal & capture planned Take a solicitation apart and prove your response answers all of it."
+  },
+  {
+    "id": "tool-acronym-table-builder",
+    "type": "tool",
+    "title": "Acronym Table Builder",
+    "subtitle": "CLIN 0002: Proposal & capture",
+    "summary": "Find every acronym in a draft and produce the definition table reviewers expect.",
+    "url": "/tools/#proposal",
+    "badge": "CLIN 0002",
+    "status": "planned",
+    "content": "Acronym Table Builder Find every acronym in a draft and produce the definition table reviewers expect. CLIN 0002 Proposal & capture planned Take a solicitation apart and prove your response answers all of it."
+  },
+  {
+    "id": "tool-page-budget-planner",
+    "type": "tool",
+    "title": "Page Budget Planner",
+    "subtitle": "CLIN 0002: Proposal & capture",
+    "summary": "Split a page limit across volumes and sections by evaluation weight.",
+    "url": "/tools/#proposal",
+    "badge": "CLIN 0002",
+    "status": "planned",
+    "content": "Page Budget Planner Split a page limit across volumes and sections by evaluation weight. CLIN 0002 Proposal & capture planned Take a solicitation apart and prove your response answers all of it."
+  },
+  {
+    "id": "tool-nist-800-171-checklist",
+    "type": "tool",
+    "title": "NIST SP 800-171 / CMMC Readiness Checklist",
+    "subtitle": "CLIN 0003: Cybersecurity & compliance",
+    "summary": "Walk the requirements one by one, track what is implemented and see where you stand before an assessment.",
+    "url": "/tools/#cyber",
+    "badge": "CLIN 0003",
+    "status": "planned",
+    "content": "NIST SP 800-171 / CMMC Readiness Checklist Walk the requirements one by one, track what is implemented and see where you stand before an assessment. CLIN 0003 Cybersecurity & compliance planned NIST SP 800-171, CMMC and CUI handling, worked through one requirement at a time."
+  },
+  {
+    "id": "tool-cui-marking-generator",
+    "type": "tool",
+    "title": "CUI Marking Generator",
+    "subtitle": "CLIN 0003: Cybersecurity & compliance",
+    "summary": "Produce banner lines and designation indicator blocks for controlled unclassified information.",
+    "url": "/tools/#cyber",
+    "badge": "CLIN 0003",
+    "status": "planned",
+    "content": "CUI Marking Generator Produce banner lines and designation indicator blocks for controlled unclassified information. CLIN 0003 Cybersecurity & compliance planned NIST SP 800-171, CMMC and CUI handling, worked through one requirement at a time."
+  },
+  {
+    "id": "tool-stig-reference-lookup",
+    "type": "tool",
+    "title": "DISA STIG Reference Lookup",
+    "subtitle": "CLIN 0003: Cybersecurity & compliance",
+    "summary": "Search STIG rules by ID, severity or keyword without leaving the browser.",
+    "url": "/tools/#cyber",
+    "badge": "CLIN 0003",
+    "status": "planned",
+    "content": "DISA STIG Reference Lookup Search STIG rules by ID, severity or keyword without leaving the browser. CLIN 0003 Cybersecurity & compliance planned NIST SP 800-171, CMMC and CUI handling, worked through one requirement at a time."
+  },
+  {
+    "id": "tool-oscal-validator",
+    "type": "tool",
+    "title": "OSCAL Validator",
+    "subtitle": "CLIN 0003: Cybersecurity & compliance",
+    "summary": "Check OSCAL catalogs, profiles and system security plans against the schema, locally.",
+    "url": "/tools/#cyber",
+    "badge": "CLIN 0003",
+    "status": "planned",
+    "content": "OSCAL Validator Check OSCAL catalogs, profiles and system security plans against the schema, locally. CLIN 0003 Cybersecurity & compliance planned NIST SP 800-171, CMMC and CUI handling, worked through one requirement at a time."
+  },
+  {
+    "id": "tool-naics-psc-crosswalk",
+    "type": "tool",
+    "title": "NAICS-to-PSC Crosswalk",
+    "subtitle": "CLIN 0004: Market research & small business",
+    "summary": "Go from an industry code to the product and service codes buyers search on.",
+    "url": "/tools/#market",
+    "badge": "CLIN 0004",
+    "status": "planned",
+    "content": "NAICS-to-PSC Crosswalk Go from an industry code to the product and service codes buyers search on. CLIN 0004 Market research & small business planned Find the right codes, the right set-asides and the status you already qualify for."
+  },
+  {
+    "id": "tool-ndc-eligibility-checker",
+    "type": "tool",
+    "title": "NDC Eligibility Checker",
+    "subtitle": "CLIN 0004: Market research & small business",
+    "summary": "Check whether you count as a nontraditional defense contractor, and what that opens up.",
+    "url": "/tools/#market",
+    "badge": "CLIN 0004",
+    "status": "planned",
+    "content": "NDC Eligibility Checker Check whether you count as a nontraditional defense contractor, and what that opens up. CLIN 0004 Market research & small business planned Find the right codes, the right set-asides and the status you already qualify for."
+  },
+  {
+    "id": "tool-set-aside-guide",
+    "type": "tool",
+    "title": "Small Business Set-Aside Guide",
+    "subtitle": "CLIN 0004: Market research & small business",
+    "summary": "See which set-aside programs you may qualify for and what each one requires.",
+    "url": "/tools/#market",
+    "badge": "CLIN 0004",
+    "status": "planned",
+    "content": "Small Business Set-Aside Guide See which set-aside programs you may qualify for and what each one requires. CLIN 0004 Market research & small business planned Find the right codes, the right set-asides and the status you already qualify for."
+  },
+  {
+    "id": "tool-offline-manifest-inspector",
+    "type": "tool",
+    "title": "Offline Manifest Inspector",
+    "subtitle": "CLIN 0005: Tactical & DevSecOps",
+    "summary": "Read container manifests, package lockfiles and SBOMs with no network connection.",
+    "url": "/tools/#devsecops",
+    "badge": "CLIN 0005",
+    "status": "planned",
+    "content": "Offline Manifest Inspector Read container manifests, package lockfiles and SBOMs with no network connection. CLIN 0005 Tactical & DevSecOps planned Utilities for disconnected networks, where nothing can phone home."
+  },
+  {
+    "id": "tool-certificate-verifier",
+    "type": "tool",
+    "title": "Certificate Verifier",
+    "subtitle": "CLIN 0005: Tactical & DevSecOps",
+    "summary": "Decode X.509 certificates and check chains and expiry dates on your own machine.",
+    "url": "/tools/#devsecops",
+    "badge": "CLIN 0005",
+    "status": "planned",
+    "content": "Certificate Verifier Decode X.509 certificates and check chains and expiry dates on your own machine. CLIN 0005 Tactical & DevSecOps planned Utilities for disconnected networks, where nothing can phone home."
+  },
+  {
+    "id": "tool-air-gap-transfer-helpers",
+    "type": "tool",
+    "title": "Air-Gap Transfer Helpers",
+    "subtitle": "CLIN 0005: Tactical & DevSecOps",
+    "summary": "Checksums and transfer manifests for moving files onto a disconnected system.",
+    "url": "/tools/#devsecops",
+    "badge": "CLIN 0005",
+    "status": "planned",
+    "content": "Air-Gap Transfer Helpers Checksums and transfer manifests for moving files onto a disconnected system. CLIN 0005 Tactical & DevSecOps planned Utilities for disconnected networks, where nothing can phone home."
+  },
+  {
     "id": "guide-answer-a-solicitation",
     "type": "guide",
     "title": "Answer every requirement",
@@ -47,7 +255,7 @@
     "summary": "Turn a solicitation into a numbered list of requirements, a compliance matrix, an outline and a page budget, so nothing is missed.",
     "url": "/guides/answer-a-solicitation/",
     "badge": "FIELD",
-    "content": "Answer every requirement Turn a solicitation into a numbered list of requirements, a compliance matrix, an outline and a page budget, so nothing is missed. field Proposals are rarely lost on brilliance. They are lost because a required form was missing, a volume ran over its page limit or one instruction in a long list went unanswered. The cure is mechanical: write down every requirement, give each one a number and record where your proposal answers it. This guide walks through that process. It assumes you have read Read a solicitation. Three kinds of requirement A solicitation asks for three different things, in three different places. Keep them apart, "
+    "content": "Answer every requirement Turn a solicitation into a numbered list of requirements, a compliance matrix, an outline and a page budget, so nothing is missed. field  Proposals are rarely lost on brilliance. They are lost because a required form was missing, a volume ran over its page limit or one instruction in a long list went unanswered. The cure is mechanical: write down every requirement, give each one a number and record where your proposal answers it. This guide walks through that process. It assumes you have read Read a solicitation. Three kinds of requirement A solicitation asks for three different things, in three different places. Keep them apart, "
   },
   {
     "id": "section-answer-a-solicitation-three-kinds-of-requirement",
@@ -177,7 +385,7 @@
     "summary": "The five listing conditions in practical terms, with a way to meet each one and a checklist to run before you ask for a listing.",
     "url": "/guides/build-a-tool/",
     "badge": "CONTRIBUTE",
-    "content": "Build a tool that can be listed The five listing conditions in practical terms, with a way to meet each one and a checklist to run before you ask for a listing. contribute If you have turned a regulation into a spreadsheet, a script or a checklist, you have most of a tool already. This guide is about the rest: shaping it so that a stranger can use it, trust it and check it. Nothing here requires a particular language or framework. Start from one job The tools in the catalog each do a single thing. That is the main design rule, and it does most of the work for you. - One input, one output. Rates in, a burdened rate out. A solicitation in, a list of requirements out"
+    "content": "Build a tool that can be listed The five listing conditions in practical terms, with a way to meet each one and a checklist to run before you ask for a listing. contribute  If you have turned a regulation into a spreadsheet, a script or a checklist, you have most of a tool already. This guide is about the rest: shaping it so that a stranger can use it, trust it and check it. Nothing here requires a particular language or framework. Start from one job The tools in the catalog each do a single thing. That is the main design rule, and it does most of the work for you. - One input, one output. Rates in, a burdened rate out. A solicitation in, a list of requirements out"
   },
   {
     "id": "section-build-a-tool-start-from-one-job",
@@ -280,6 +488,26 @@
     "content": "Make it usable by everyone Build a tool that can be listed - It works with a keyboard alone. - Inputs have labels. Errors say what is wrong and how to fix it. - Text has enough contrast in both light and dark settings. - It is readable on a small screen. - Results can be copied as text, and tables can be exported in an open format such as CSV. Government work has accessibility expectations of its own. A tool for this audience should not be the thing that fails them."
   },
   {
+    "id": "section-build-a-tool-say-where-the-idea-came-from",
+    "type": "section",
+    "title": "Say where the idea came from",
+    "subtitle": "Build a tool that can be listed",
+    "summary": "If your tool was inspired by another tool, a vendor product, an open-source project, or a spreadsheet, say so openly. ClearedStack believes in clear provenance ...",
+    "url": "/guides/build-a-tool/#say-where-the-idea-came-from",
+    "badge": "Section",
+    "content": "Say where the idea came from Build a tool that can be listed If your tool was inspired by another tool, a vendor product, an open-source project, or a spreadsheet, say so openly. ClearedStack believes in clear provenance and clean-room implementation: - We take the job, never the code. You may take the idea of what problem to solve. You must never copy another tool’s code, styling, text, templates, or design. - Implement clean-room from the regulation. Build the calculations directly from the public statutory source (such as FAR Part 31 or NIST SP 800-171). - The provenance note. Pull requests can include an optional provenance block in src/data/catalog.ts specifying the source kind ( government , vendor-free , commercial , open-source , template , community , or owner ) and an explanatory note. - See How ideas are credited for our full provenance and clean-room policy."
+  },
+  {
+    "id": "section-build-a-tool-if-you-build-with-ai",
+    "type": "section",
+    "title": "If you build with AI",
+    "subtitle": "Build a tool that can be listed",
+    "summary": "If you use AI assistance (such as Claude Code, Antigravity, or other coding agents) to write or test your tool: - Same review rules apply. An AI-drafted tool mu...",
+    "url": "/guides/build-a-tool/#if-you-build-with-ai",
+    "badge": "Section",
+    "content": "If you build with AI Build a tool that can be listed If you use AI assistance (such as Claude Code, Antigravity, or other coding agents) to write or test your tool: - Same review rules apply. An AI-drafted tool must pass the same five listing conditions, audit checks, and CSP tests as any human-written code. - Same prompt data rules. Never paste CUI, non-public procurement information, proprietary contractor rates, or private personnel data into an AI tool. Use made-up examples exclusively. - Human verification of math and citations. A person must verify every regulatory citation and mathematical formula against primary federal publications before submitting a pull request. - Commit trailers. Disclose AI assistance by including trailers in your git commit messages (such as Co-authored-by: Claude or Assisted-by: Antigravity ). - See How AI is used to build this project for our detailed guidelines."
+  },
+  {
     "id": "section-build-a-tool-write-the-readme",
     "type": "section",
     "title": "Write the README",
@@ -320,6 +548,86 @@
     "content": "Keep it current Build a tool that can be listed A listed tool is a small commitment. Regulations change, and a tool that quietly goes out of date is worse than no tool. - Watch the sources you cite for new revisions. - When a figure changes, update the data, its date and a test. - If you can no longer maintain the tool, say so in the README. Its listing can be marked or removed, and someone else may pick it up. The license makes that possible."
   },
   {
+    "id": "guide-built-with-ai",
+    "type": "guide",
+    "title": "How AI is used to build this project",
+    "subtitle": "Guide · Section L.6",
+    "summary": "How Claude Code and Antigravity help draft code and guides, the human review rule, and what never goes into an AI prompt.",
+    "url": "/guides/built-with-ai/",
+    "badge": "DRAFT",
+    "content": "How AI is used to build this project How Claude Code and Antigravity help draft code and guides, the human review rule, and what never goes into an AI prompt. project draft intent This website, its guides, and its diagrams are drafted using artificial intelligence tools—specifically Claude Code by Anthropic and Antigravity by Google. Every line of code, prose, and regulatory reference is reviewed, verified, and merged by a single human project owner, who decides what gets built and remains solely accountable for everything on this site. We do not make claims about how external AI vendors handle or store data behind the scenes. Instead, our policy is based on what this pro"
+  },
+  {
+    "id": "section-built-with-ai-the-division-of-labor",
+    "type": "section",
+    "title": "The division of labor",
+    "subtitle": "How AI is used to build this project",
+    "summary": "AI assistants do not set project policy, choose which tools to build, or publish updates autonomously. They serve as authoring and research aids under human dir...",
+    "url": "/guides/built-with-ai/#the-division-of-labor",
+    "badge": "Section",
+    "content": "The division of labor How AI is used to build this project AI assistants do not set project policy, choose which tools to build, or publish updates autonomously. They serve as authoring and research aids under human direction. - What AI tools do: Draft initial TypeScript components, style layouts, format Markdown and MDX guides, structure complex regulatory ideas into clear steps, build accessible diagram data structures, and draft test cases for mathematical formulas. In the future Prior Art engine, automated sweeps will assist in discovering candidate tools and drafting initial score recommendations. - What the human owner does: Decides what to build and what to decline, directs every architecture decision, independently validates every citation against primary government publications, verifies mathematical formulas with worked manual calculations, and holds sole legal and editorial responsibility."
+  },
+  {
+    "id": "section-built-with-ai-the-review-rule-zero-unverified-citations",
+    "type": "section",
+    "title": "The review rule: zero unverified citations",
+    "subtitle": "How AI is used to build this project",
+    "summary": "Large language models can produce convincing statements that are entirely incorrect. In federal contracting, an invented FAR clause or an outdated dollar thresh...",
+    "url": "/guides/built-with-ai/#the-review-rule-zero-unverified-citations",
+    "badge": "Section",
+    "content": "The review rule: zero unverified citations How AI is used to build this project Large language models can produce convincing statements that are entirely incorrect. In federal contracting, an invented FAR clause or an outdated dollar threshold can lead to non-compliant proposals or audit findings. To prevent this, the project enforces a strict human review rule: Every regulatory citation on this site must be verified against official federal repositories—such as eCFR.gov, Acquisition.gov, GovInfo.gov, or the NIST Computer Security Resource Center. AI output is never treated as an authoritative source of a rule."
+  },
+  {
+    "id": "section-built-with-ai-ai-builds-never-runs",
+    "type": "section",
+    "title": "AI builds, never runs",
+    "subtitle": "How AI is used to build this project",
+    "summary": "There is an absolute boundary between how this project is built and how its tools run. The tools listed in the ClearedStack catalog are not AI wrappers. They co...",
+    "url": "/guides/built-with-ai/#ai-builds-never-runs",
+    "badge": "Section",
+    "content": "AI builds, never runs How AI is used to build this project There is an absolute boundary between how this project is built and how its tools run. The tools listed in the ClearedStack catalog are not AI wrappers. They contain no large language models, query no third-party machine learning APIs, and make zero network calls. When you open a tool, your browser executes plain, deterministic JavaScript or WebAssembly entirely on your machine. The site’s Content Security Policy ( connect-src 'self' ) guarantees that what you type cannot be transmitted to an AI provider or external server."
+  },
+  {
+    "id": "section-built-with-ai-what-can-go-into-an-ai-tool",
+    "type": "section",
+    "title": "What can go into an AI tool",
+    "subtitle": "How AI is used to build this project",
+    "summary": "Because we do not control third-party AI platforms, we maintain a zero-trust prompt policy: we never submit private, sensitive, or real contracting information ...",
+    "url": "/guides/built-with-ai/#what-can-go-into-an-ai-tool",
+    "badge": "Section",
+    "content": "What can go into an AI tool How AI is used to build this project Because we do not control third-party AI platforms, we maintain a zero-trust prompt policy: we never submit private, sensitive, or real contracting information to any AI tool. All test scenarios, guide demonstrations, and benchmark calculations use 100 percent synthetic, fictitious data. We use invented company names (such as “Example Systems LLC”), dummy contract numbers ( FA0000-00-C-0000 ), and rounded financial numbers so anyone can check the arithmetic without specialized software."
+  },
+  {
+    "id": "section-built-with-ai-known-failure-modes-of-ai-tools",
+    "type": "section",
+    "title": "Known failure modes of AI tools",
+    "subtitle": "How AI is used to build this project",
+    "summary": "We monitor AI-generated drafts for three common failure modes: 1. Invented citations. Language models frequently hallucinate clause numbers that follow realisti...",
+    "url": "/guides/built-with-ai/#known-failure-modes-of-ai-tools",
+    "badge": "Section",
+    "content": "Known failure modes of AI tools How AI is used to build this project We monitor AI-generated drafts for three common failure modes: 1. Invented citations. Language models frequently hallucinate clause numbers that follow realistic FAR or DFARS numbering conventions but do not exist in the published regulation. 2. Outdated regulatory text. Models often reference repealed provisions, former statutory dollar thresholds (such as superseded micro-purchase limits), or older revisions of NIST publications. 3. Confident wrong arithmetic. Models can articulate calculation steps convincingly while making subtle rounding errors or failing on boundary conditions such as leap years or zero-dollar overhead pools. The human-in-the-loop review protocol and manual worked examples exist specifically to intercept these errors before anything ships."
+  },
+  {
+    "id": "section-built-with-ai-commit-trailer-policy",
+    "type": "section",
+    "title": "Commit-trailer policy",
+    "subtitle": "How AI is used to build this project",
+    "summary": "To ensure transparency across version control history, commits created with the assistance of AI tools carry a trailer naming the tool. Going forward, commit me...",
+    "url": "/guides/built-with-ai/#commit-trailer-policy",
+    "badge": "Section",
+    "content": "Commit-trailer policy How AI is used to build this project To ensure transparency across version control history, commits created with the assistance of AI tools carry a trailer naming the tool. Going forward, commit messages adhere to this convention: In addition, entries in the public decision log explicitly identify which AI tool drafted the initial evaluation and which human reviewer signed off on the outcome."
+  },
+  {
+    "id": "section-built-with-ai-how-to-report-a-mistake",
+    "type": "section",
+    "title": "How to report a mistake",
+    "subtitle": "How AI is used to build this project",
+    "summary": "If you find an incorrect statutory citation, a misquoted rule, or a mathematical error in any guide or tool on this site, please let us know immediately: - Open...",
+    "url": "/guides/built-with-ai/#how-to-report-a-mistake",
+    "badge": "Section",
+    "content": "How to report a mistake How AI is used to build this project If you find an incorrect statutory citation, a misquoted rule, or a mathematical error in any guide or tool on this site, please let us know immediately: - Open a GitHub issue: Submit a report on this site’s repository. - Send an email: Write to contact@clearedstack.com if you do not use GitHub. When reporting a mistake, please include the specific page URL, the sentence or calculation in question, what the correct value should be, and the governing regulation or official publication that supports the correction. We verify and correct reported errors promptly."
+  },
+  {
     "id": "guide-checking-results",
     "type": "guide",
     "title": "Check a tool’s answer",
@@ -327,7 +635,7 @@
     "summary": "How to verify a result against the regulation behind it before it goes into a bid, and what to keep as a record.",
     "url": "/guides/checking-results/",
     "badge": "START",
-    "content": "Check a tool’s answer How to verify a result against the regulation behind it before it goes into a bid, and what to keep as a record. start A tool gives you a worked answer quickly. You are still the one who signs the proposal, so treat every result as a draft until you have checked it. This guide is a method for doing that. It works for any tool, here or elsewhere, and it takes less time than explaining a wrong number later. Find the source Each listed tool has to say which regulation, standard or guide it is built on. Look for that reference in three places: - in the tool itself, next to the result or under a heading such as “Sour"
+    "content": "Check a tool’s answer How to verify a result against the regulation behind it before it goes into a bid, and what to keep as a record. start  A tool gives you a worked answer quickly. You are still the one who signs the proposal, so treat every result as a draft until you have checked it. This guide is a method for doing that. It works for any tool, here or elsewhere, and it takes less time than explaining a wrong number later. Find the source Each listed tool has to say which regulation, standard or guide it is built on. Look for that reference in three places: - in the tool itself, next to the result or under a heading such as “Sour"
   },
   {
     "id": "section-checking-results-find-the-source",
@@ -427,7 +735,7 @@
     "summary": "Move a copy onto a network with no internet connection: what to carry, how to prove it arrived intact and how to keep it current.",
     "url": "/guides/closed-networks/",
     "badge": "HOST",
-    "content": "Run it on a closed network Move a copy onto a network with no internet connection: what to carry, how to prove it arrived intact and how to keep it current. host The site was built to work where nothing can reach the internet. It loads its fonts, scripts and styles from itself, it has no database, and it makes no outside request while running. Getting it onto a closed network is a matter of building it outside, carrying one file across and proving that file is the one you built. This guide describes the mechanics. It does not replace your organization’s transfer rules. Whatever process your network requires for bringing software in, that process comes fi"
+    "content": "Run it on a closed network Move a copy onto a network with no internet connection: what to carry, how to prove it arrived intact and how to keep it current. host  The site was built to work where nothing can reach the internet. It loads its fonts, scripts and styles from itself, it has no database, and it makes no outside request while running. Getting it onto a closed network is a matter of building it outside, carrying one file across and proving that file is the one you built. This guide describes the mechanics. It does not replace your organization’s transfer rules. Whatever process your network requires for bringing software in, that process comes fi"
   },
   {
     "id": "section-closed-networks-choose-what-to-carry",
@@ -547,7 +855,7 @@
     "summary": "SAM registration, NAICS and PSC codes, size standards, the set-aside programs and what it means to be a nontraditional defense contractor.",
     "url": "/guides/codes-and-small-business/",
     "badge": "FIELD",
-    "content": "Codes, registration and small business status SAM registration, NAICS and PSC codes, size standards, the set-aside programs and what it means to be a nontraditional defense contractor. field Before the government can pay you, it has to be able to identify you, classify what you sell and decide which competitions you are eligible for. That is done with a registration and a handful of codes. This guide explains each one and how they connect. Dollar thresholds, size standards and program rules in this guide were checked in November 2026. Several small business programs were being revised at the time. Confirm anything you rely on with the Small Business Administration and the current re"
+    "content": "Codes, registration and small business status SAM registration, NAICS and PSC codes, size standards, the set-aside programs and what it means to be a nontraditional defense contractor. field  Before the government can pay you, it has to be able to identify you, classify what you sell and decide which competitions you are eligible for. That is done with a registration and a handful of codes. This guide explains each one and how they connect. Dollar thresholds, size standards and program rules in this guide were checked in November 2026. Several small business programs were being revised at the time. Confirm anything you rely on with the Small Business Administration and the current re"
   },
   {
     "id": "section-codes-and-small-business-register-in-sam",
@@ -647,7 +955,7 @@
     "summary": "Three machine-readable formats that security compliance work runs on: what each one is, what is inside the file and how to check one.",
     "url": "/guides/compliance-as-data/",
     "badge": "FIELD",
-    "content": "STIGs, OSCAL and SBOMs Three machine-readable formats that security compliance work runs on: what each one is, what is inside the file and how to check one. field A good deal of security compliance is now exchanged as structured files instead of documents. Three kinds come up again and again: STIGs, which say how to configure a product securely, OSCAL, which describes controls and how a system meets them, and SBOMs, which list what software is made of. This guide explains each one at the level you need to open the file and understand what you are looking at. How they fit together | Format | Answers the question | Published by | File types | | --- | --- | "
+    "content": "STIGs, OSCAL and SBOMs Three machine-readable formats that security compliance work runs on: what each one is, what is inside the file and how to check one. field  A good deal of security compliance is now exchanged as structured files instead of documents. Three kinds come up again and again: STIGs, which say how to configure a product securely, OSCAL, which describes controls and how a system meets them, and SBOMs, which list what software is made of. This guide explains each one at the level you need to open the file and understand what you are looking at. How they fit together | Format | Answers the question | Published by | File types | | --- | --- | "
   },
   {
     "id": "section-compliance-as-data-how-they-fit-together",
@@ -750,6 +1058,66 @@
     "content": "Before you load a file into a tool STIGs, OSCAL and SBOMs These files can describe a real system in detail: host names, addresses, open findings, software versions. A filled-in checklist or a system security plan may itself be controlled information. - Use made-up or public sample files to learn how a tool behaves. - Handle real ones only on a system approved for what they contain. - A tool that runs in the browser does not send the file anywhere, but it also does not change the rules for the computer it runs on. See What happens to what you type. The blank STIGs, the OSCAL schemas and NIST’s published catalogs are public and safe to use anywhere."
   },
   {
+    "id": "guide-credit-and-clean-room",
+    "type": "guide",
+    "title": "How ideas are credited",
+    "subtitle": "Guide · Section L.6",
+    "summary": "Our clean-room engineering rules, how we acknowledge prior art without taking code or design, and our opt-out policy.",
+    "url": "/guides/credit-and-clean-room/",
+    "badge": "DRAFT",
+    "content": "How ideas are credited Our clean-room engineering rules, how we acknowledge prior art without taking code or design, and our opt-out policy. project draft intent This guide describes planned process and intent. The Prior Art engine is not running, no tools have been observed under it, and no provenance records have been published yet. Federal procurement rules and public regulations belong to everyone, but software implementations belong to their authors. ClearedStack honors that line through a strict clean-room doctrine: we observe what jobs need doing from public surfaces, but we never copy anyone else’s code, text, design, or data. When a tool is insp"
+  },
+  {
+    "id": "section-credit-and-clean-room-build-link-or-skip",
+    "type": "section",
+    "title": "Build, link, or skip?",
+    "subtitle": "How ideas are credited",
+    "summary": "ClearedStack does not exist to replace good open-source work. If someone has already built a free, privacy-respecting tool that runs client-side and cites publi...",
+    "url": "/guides/credit-and-clean-room/#build-link-or-skip",
+    "badge": "Section",
+    "content": "Build, link, or skip? How ideas are credited ClearedStack does not exist to replace good open-source work. If someone has already built a free, privacy-respecting tool that runs client-side and cites public sources, rebuilding it wastes effort. The project follows a firm “link over rebuild” preference:"
+  },
+  {
+    "id": "section-credit-and-clean-room-what-we-take-and-what-we-never-take",
+    "type": "section",
+    "title": "What we take and what we never take",
+    "subtitle": "How ideas are credited",
+    "summary": "Every software product consists of functional ideas and copyrightable expression. We draw an absolute boundary between the two. We observe the job to be done: t...",
+    "url": "/guides/credit-and-clean-room/#what-we-take-and-what-we-never-take",
+    "badge": "Section",
+    "content": "What we take and what we never take How ideas are credited Every software product consists of functional ideas and copyrightable expression. We draw an absolute boundary between the two. We observe the job to be done: the public calculation, the statutory threshold, or the regulatory requirement that contractors must meet. We never take the expression that another developer or vendor created to do that job. When reusable open-source code with a permissive license (such as MIT, BSD, or Apache 2.0) is incorporated into a tool, we preserve all original copyright notices, include the upstream license file, and state the reuse openly in the repository. Strong copyleft code is not mixed into MIT-licensed repositories; compliant copyleft tools are linked externally instead."
+  },
+  {
+    "id": "section-credit-and-clean-room-the-clean-room-build-path",
+    "type": "section",
+    "title": "The clean-room build path",
+    "subtitle": "How ideas are credited",
+    "summary": "To prevent accidental intellectual property contamination, development follows an isolated clean-room procedure. Builders work directly from the governing publi...",
+    "url": "/guides/credit-and-clean-room/#the-clean-room-build-path",
+    "badge": "Section",
+    "content": "The clean-room build path How ideas are credited To prevent accidental intellectual property contamination, development follows an isolated clean-room procedure. Builders work directly from the governing public regulation and an abstract decision record, never by inspecting the competitor’s implementation. During observation, researchers observe strict ethical boundaries: - We read only publicly accessible web pages, product documentation, and public repositories. - We never register for accounts, start trials, sign non-disclosure agreements, or bypass paywalls. - We never bypass anti-bot protections, ignore robots.txt directives, or probe undocumented endpoints. - We never input non-public, proprietary, or Controlled Unclassified Information (CUI) into any external system. If a commercial tool produces an answer that conflicts with an official government publication, ClearedStack always follows the official publication. The government text is the sole source of truth."
+  },
+  {
+    "id": "section-credit-and-clean-room-the-provenance-note-template",
+    "type": "section",
+    "title": "The provenance note template",
+    "subtitle": "How ideas are credited",
+    "summary": "Transparency means acknowledging where an idea came from without claiming endorsement or making disparaging comparisons. Every tool inspired by an existing prod...",
+    "url": "/guides/credit-and-clean-room/#the-provenance-note-template",
+    "badge": "Section",
+    "content": "The provenance note template How ideas are credited Transparency means acknowledging where an idea came from without claiming endorsement or making disparaging comparisons. Every tool inspired by an existing product carries a standardized provenance note in its catalog entry and repository README: Provenance statements are strictly factual: - They state that a workflow was observed on a public web page at a specific date. - They do not rate, criticize, or disparage the observed commercial product. - They do not imply partnership, sponsorship, or endorsement by the observed vendor. - Third-party product names are used solely in a nominative sense to identify prior art."
+  },
+  {
+    "id": "section-credit-and-clean-room-handling-correction-and-opt-out-requests",
+    "type": "section",
+    "title": "Handling correction and opt-out requests",
+    "subtitle": "How ideas are credited",
+    "summary": "We respect creators and tool authors. If a vendor, maintainer, or author contacts ClearedStack regarding an entry, we handle requests through an open, predictab...",
+    "url": "/guides/credit-and-clean-room/#handling-correction-and-opt-out-requests",
+    "badge": "Section",
+    "content": "Handling correction and opt-out requests How ideas are credited We respect creators and tool authors. If a vendor, maintainer, or author contacts ClearedStack regarding an entry, we handle requests through an open, predictable process: - Factual corrections. If an observation record misstates what a tool does, what public rule it implements, or its license terms, we correct the record upon verification. - Nominative opt-outs. If a product owner prefers not to have their product named on ClearedStack, we honor that preference. We replace the product and company name in the provenance note with a neutral phrase (such as “a commercial product”), while maintaining the factual record that an existing tool inspired the workflow. - Public source integrity. Citations to official government statutes, regulations, and standards are never removed, as they belong to the public domain."
+  },
+  {
     "id": "guide-disconnected-networks",
     "type": "guide",
     "title": "Working on disconnected networks",
@@ -757,7 +1125,7 @@
     "summary": "The checks you run by hand when nothing can phone home: checksums, transfer manifests, certificates, lockfiles and image digests.",
     "url": "/guides/disconnected-networks/",
     "badge": "FIELD",
-    "content": "Working on disconnected networks The checks you run by hand when nothing can phone home: checksums, transfer manifests, certificates, lockfiles and image digests. field On a network with no route to the internet, the things a connected machine does quietly in the background stop working. Package managers cannot fetch, certificate checks cannot reach a revocation server, and nothing updates itself. The work moves to people, and it comes down to answering three questions about every file that crosses the boundary: is it the file I meant to bring, is it intact, and what is inside it? This guide covers the basic techniques. It is not a transfer policy. The rules fo"
+    "content": "Working on disconnected networks The checks you run by hand when nothing can phone home: checksums, transfer manifests, certificates, lockfiles and image digests. field  On a network with no route to the internet, the things a connected machine does quietly in the background stop working. Package managers cannot fetch, certificate checks cannot reach a revocation server, and nothing updates itself. The work moves to people, and it comes down to answering three questions about every file that crosses the boundary: is it the file I meant to bring, is it intact, and what is inside it? This guide covers the basic techniques. It is not a transfer policy. The rules fo"
   },
   {
     "id": "section-disconnected-networks-checksums",
@@ -847,7 +1215,7 @@
     "summary": "Short answers about cost, privacy, trust, using the tools at work and what to do when something does not behave.",
     "url": "/guides/faq/",
     "badge": "REFERENCE",
-    "content": "Common questions Short answers about cost, privacy, trust, using the tools at work and what to do when something does not behave. reference Short answers, each with a link to the guide that has the long one. About the project Is it really free? Yes. There is no paid tier, no trial, no ads, no sponsorship and no donation button. The project takes in no revenue. It can stay that way because the tools run on your computer, so there are no servers doing work that someone has to pay for. Who runs it? It is an independent personal project, built on personal time with personal equipment. It is not affiliated with, endorsed by or sponsored "
+    "content": "Common questions Short answers about cost, privacy, trust, using the tools at work and what to do when something does not behave. reference  Short answers, each with a link to the guide that has the long one. About the project Is it really free? Yes. There is no paid tier, no trial, no ads, no sponsorship and no donation button. The project takes in no revenue. It can stay that way because the tools run on your computer, so there are no servers doing work that someone has to pay for. Who runs it? It is an independent personal project, built on personal time with personal equipment. It is not affiliated with, endorsed by or sponsored "
   },
   {
     "id": "section-faq-about-the-project",
@@ -900,6 +1268,16 @@
     "content": "Contributing Common questions How do I ask for a tool? Open an issue or send an email describing the job, who needs it and the public source it would rest on. Request a tool or add your own has an outline to copy. I found a mistake. Where do I report it? In the tool’s own repository for a wrong result, or in this site’s repository for anything on the site. Email works for both. Leave real contract data out of the report. Can I get my own tool listed? Yes, if it is free, open source, client-side, free of tracking, built from public sources and honest about its limits. Build a tool that can be listed goes through each condition. I work for the government. Can I contribute? Your own obligations come first. Contribute only on your own time and equipment, and only what you are free to share. If you are not sure something is public, treat it as not public."
   },
   {
+    "id": "section-faq-prior-art-and-tool-selection",
+    "type": "section",
+    "title": "Prior art and tool selection",
+    "subtitle": "Common questions",
+    "summary": "Where do tool ideas come from? Ideas come from observing tools that already exist for government-contracting paperwork (public pages, open-source projects, publ...",
+    "url": "/guides/faq/#prior-art-and-tool-selection",
+    "badge": "Section",
+    "content": "Prior art and tool selection Common questions Where do tool ideas come from? Ideas come from observing tools that already exist for government-contracting paperwork (public pages, open-source projects, public spreadsheets), community requests, and the maintainer's own experience. The process is documented in How the project chooses what to build and How candidates are found (both draft intent; the engine is not running yet). Do you copy other tools? No. We take the idea of a job to be done, never the code, text, screenshots, styling, or design. Tools are built clean-room directly from the public regulation. Where another tool inspired the job, it is credited openly. See How ideas are credited. Is this built with AI? Yes, with AI assistance (Claude Code and Antigravity) under one human maintainer who directs, reviews every line of code, verifies every formula and citation against primary government publications, and is accountable. The tools themselves contain no AI models and make zero network calls at runtime. See How AI is used to build this project. Can a vendor ask to be removed from a credit? Yes. If a vendor or creator asks to have their name removed from an inspiration note, we honor that request promptly: the note is updated to say “a commercial product” while the factual record notes that one existed. Citations to official government sources are never removed. See How ideas are credited. How is a tool chosen? Through a ten-stage Prior Art process (draft): candidate discovery, recording, public observation, five knockout gates (public source, browser, private, one job, arithmetic), an advisory 100-point scoring rubric, and a public decision made solely by the human owner. See Section M · How we decide and How an idea is scored and decided."
+  },
+  {
     "id": "section-faq-when-something-does-not-work",
     "type": "section",
     "title": "When something does not work",
@@ -910,6 +1288,86 @@
     "content": "When something does not work Common questions A page loads without its styling The site is being opened straight from a disk or a file share, or served from a sub-folder of an address. It has to be served by a web server from the root of a host name. See Host as plain files. The filter box does nothing The filter needs JavaScript. If your browser or an extension blocks scripts, allow them for the site. Everything else on the site, including every guide, can be read with scripts turned off. A link to GitHub or to a regulation does not open On a closed network, links to the public internet lead nowhere. The pages hosted on your copy still work. Something else Email contact@clearedstack.com or open an issue on GitHub. Say which page, which browser and what you expected to happen."
   },
   {
+    "id": "guide-find-candidates",
+    "type": "guide",
+    "title": "How candidates are found",
+    "subtitle": "Guide · Section L.6",
+    "summary": "Search systematically across seven source kinds and five contract categories, resolve duplicates, and turn public ideas into prior-art records.",
+    "url": "/guides/find-candidates/",
+    "badge": "DRAFT",
+    "content": "How candidates are found Search systematically across seven source kinds and five contract categories, resolve duplicates, and turn public ideas into prior-art records. project draft intent This guide describes intent. The discovery process is not running, the ClearedStack/prior-art repository does not exist yet, and nothing has been collected. Discovery is the first stage of the prior-art engine. It searches the federal contracting landscape to find software, spreadsheets, templates, and calculators that already help people do government-contracting paperwork. The goal is not to copy what others built. The goal is to see what problems people are already solving, find where free an"
+  },
+  {
+    "id": "section-find-candidates-the-discovery-flow",
+    "type": "section",
+    "title": "The discovery flow",
+    "subtitle": "How candidates are found",
+    "summary": "A candidate is any public tool, workbook, or script that helps with federal paperwork. Discovery sweeps run across public repositories, agency websites, and ope...",
+    "url": "/guides/find-candidates/#the-discovery-flow",
+    "badge": "Section",
+    "content": "The discovery flow How candidates are found A candidate is any public tool, workbook, or script that helps with federal paperwork. Discovery sweeps run across public repositories, agency websites, and open community suggestions. 1. Identify candidate : The discovery engine or human maintainer identifies a tool that addresses a specific paperwork task, such as indirect cost calculations, solicitation shredding, or compliance crosswalks. 2. Intake boundary check : Before any link is saved, it is checked against strict boundary rules. It must be accessible on the public web without credentials, payment, or anti-bot bypass. 3. Normalize URL : URLs are cleaned to remove marketing tracking parameters ( utm , ref ), session IDs, and trailing slashes. 4. Resolve duplicates : The engine checks whether the tool is already recorded, whether it is an upstream fork of an existing open-source project, or whether it is a white-label wrapper of an engine already indexed. 5. Mint record : Once validated as unique or a distinct derivative, the tool receives an identifier (such as PA-0001 ) and moves to Stage 2 (Record) and Stage 3 (Observe)."
+  },
+  {
+    "id": "section-find-candidates-seven-source-kinds",
+    "type": "section",
+    "title": "Seven source kinds",
+    "subtitle": "How candidates are found",
+    "summary": "The discovery engine looks across seven distinct source kinds to ensure broad coverage of federal contracting paperwork: 1. Government sites : Official calculat...",
+    "url": "/guides/find-candidates/#seven-source-kinds",
+    "badge": "Section",
+    "content": "Seven source kinds How candidates are found The discovery engine looks across seven distinct source kinds to ensure broad coverage of federal contracting paperwork: 1. Government sites : Official calculators, interactive web forms, and portals hosted on .gov or .mil domains. These provide authoritative statutory baselines, but are often server-dependent or unavailable on disconnected networks. 2. Free vendor tools : Ungated calculators and estimating utilities published by defense contractors, consulting firms, or software vendors as informational resources. 3. Commercial product public pages : Public landing pages, documentation, and feature overviews of commercial software suites. Observers read public documentation only; they never sign up or request sales demos. 4. Open-source projects : Public repositories hosted on platforms like GitHub or GitLab containing compliance scripts, document parsers, or command-line utilities. 5. Spreadsheets and templates : Downloadable .xlsx , .ods , or hosted spreadsheet workbooks published by agencies, buying commands, or industry practitioners. 6. Assistance centers : Public guides, worksheets, and bid templates published by APEX Accelerators (formerly PTACs), Small Business Development Centers (SBDCs), and university procurement institutes. 7. Community suggestions : Specific tools and paperwork tasks submitted directly by contractors, developers, and agency staff through GitHub issues or email."
+  },
+  {
+    "id": "section-find-candidates-duplicate-handling",
+    "type": "section",
+    "title": "Duplicate handling",
+    "subtitle": "How candidates are found",
+    "summary": "Many tools on the web share code, run under multiple brand names, or mirror upstream repositories. The discovery engine uses a decision branch to classify each ...",
+    "url": "/guides/find-candidates/#duplicate-handling",
+    "badge": "Section",
+    "content": "Duplicate handling How candidates are found Many tools on the web share code, run under multiple brand names, or mirror upstream repositories. The discovery engine uses a decision branch to classify each candidate accurately: - Mirrors : If an agency moves a calculator from an old URL to a new path, the new URL is recorded as an alias on the original record. - Forks : Open-source repositories that merely duplicate an existing project without changes are aliased to the upstream maintainer. If a fork introduces substantial independent calculations or updates an obsolete standard, it receives its own record linked to the parent. - White-labels : In government contracting, consulting firms frequently re-skin an identical underlying spreadsheet or calculation engine. The discovery engine identifies shared mathematical models and assets, designating the original developer as primary and aliasing re-branded variants."
+  },
+  {
+    "id": "section-find-candidates-the-coverage-grid",
+    "type": "section",
+    "title": "The coverage grid",
+    "subtitle": "How candidates are found",
+    "summary": "Discovery operates across a two-dimensional grid crossing the catalog’s five contract categories (CLINs) with the seven source kinds. Because the prior-art engi...",
+    "url": "/guides/find-candidates/#the-coverage-grid",
+    "badge": "Section",
+    "content": "The coverage grid How candidates are found Discovery operates across a two-dimensional grid crossing the catalog’s five contract categories (CLINs) with the seven source kinds. Because the prior-art engine has not started running and nothing has been collected, every cell in the grid is currently not searched yet . | Category | Government sites | Free vendor tools | Commercial docs | Open-source repos | Spreadsheets & templates | Assistance centers | Community suggestions | | --- | --- | --- | --- | --- | --- | --- | --- | | CLIN 0001: Pricing & Cost Accounting | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | | CLIN 0002: Proposal & Capture | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | | CLIN 0003: Cyber & Compliance | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | | CLIN 0004: Market Research & Small Business | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | | CLIN 0005: Tactical & DevSecOps | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | When discovery begins, each cell will track its status: - Not searched : No systematic search sweep has been performed for this category and source kind. - Searched : A sweep was completed, verified against public listings, and logged with a timestamp. - Has candidates : One or more tools or workbooks have been identified, recorded, and queued for observation. If enough approved ideas emerge that do not fit into the existing five categories, the project owner may establish a new category (such as CLIN 0006) once at least five distinct candidates share a distinct statutory baseline."
+  },
+  {
+    "id": "section-find-candidates-community-suggestions",
+    "type": "section",
+    "title": "Community suggestions",
+    "subtitle": "How candidates are found",
+    "summary": "Community suggestions are a vital discovery vector. When a contractor or agency specialist finds a useful spreadsheet or struggles with a paperwork task, they c...",
+    "url": "/guides/find-candidates/#community-suggestions",
+    "badge": "Section",
+    "content": "Community suggestions How candidates are found Community suggestions are a vital discovery vector. When a contractor or agency specialist finds a useful spreadsheet or struggles with a paperwork task, they can suggest it through a GitHub issue. Suggestions enter the exact same pipeline as automated sweeps. They do not skip screening, scoring, or owner review. To submit a tool or task idea, visit Request a tool or add your own."
+  },
+  {
+    "id": "section-find-candidates-what-we-never-do",
+    "type": "section",
+    "title": "What we never do",
+    "subtitle": "How candidates are found",
+    "summary": "Discovery is passive and public. To preserve project ethics and legal compliance, we never: - Create user accounts, fill out registration forms, or submit conta...",
+    "url": "/guides/find-candidates/#what-we-never-do",
+    "badge": "Section",
+    "content": "What we never do How candidates are found Discovery is passive and public. To preserve project ethics and legal compliance, we never: - Create user accounts, fill out registration forms, or submit contact information to access tools. - Sign up for product trials, request sales demonstrations, or negotiate pilot agreements. - Circumvent paywalls, subscription requirements, access gates, or session limits. - Solve, bypass, or script around CAPTCHAs, Turnstiles, or anti-bot challenges. - Ignore or violate robots.txt directives or site terms of use regarding automated indexing. - Submit real company rates, actual proposal text, Controlled Unclassified Information (CUI), or proprietary bid figures into any online form. - Execute vulnerability scans, penetration testing, fuzzing, or high-volume crawling. If a tool cannot be inspected from its public pages and documentation without accepting restrictive terms or logging in, discovery records only the public claims and stops."
+  },
+  {
+    "id": "section-find-candidates-further-reading",
+    "type": "section",
+    "title": "Further reading",
+    "subtitle": "How candidates are found",
+    "summary": "- How the project chooses what to build (L.6.1) - How an existing tool is observed (L.6.3) - How an idea is scored and decided (L.6.4) - How ideas are credited ...",
+    "url": "/guides/find-candidates/#further-reading",
+    "badge": "Section",
+    "content": "Further reading How candidates are found - How the project chooses what to build (L.6.1) - How an existing tool is observed (L.6.3) - How an idea is scored and decided (L.6.4) - How ideas are credited (L.6.5) - How AI is used to build this project (L.6.6) - What is not decided yet (L.6.7) - How we decide"
+  },
+  {
     "id": "guide-getting-paid",
     "type": "guide",
     "title": "Invoices and late payment interest",
@@ -917,7 +1375,7 @@
     "summary": "What makes an invoice proper, when the government’s payment is due and how Prompt Payment Act interest is worked out when it is late.",
     "url": "/guides/getting-paid/",
     "badge": "FIELD",
-    "content": "Invoices and late payment interest What makes an invoice proper, when the government’s payment is due and how Prompt Payment Act interest is worked out when it is late. field The government is required by law to pay its bills on time, and to pay interest when it does not. That law is the Prompt Payment Act. It only helps you if your invoice is correct and you know which dates start the clock. This guide covers both, with a worked interest calculation. The rule in one paragraph Under the Prompt Payment Act, an agency generally has to pay within 30 days of receiving a proper invoice or of accepting the work, whichever is later. If it pays after that, it owes interest f"
+    "content": "Invoices and late payment interest What makes an invoice proper, when the government’s payment is due and how Prompt Payment Act interest is worked out when it is late. field  The government is required by law to pay its bills on time, and to pay interest when it does not. That law is the Prompt Payment Act. It only helps you if your invoice is correct and you know which dates start the clock. This guide covers both, with a worked interest calculation. The rule in one paragraph Under the Prompt Payment Act, an agency generally has to pay within 30 days of receiving a proper invoice or of accepting the work, whichever is later. If it pays after that, it owes interest f"
   },
   {
     "id": "section-getting-paid-the-rule-in-one-paragraph",
@@ -1037,7 +1495,7 @@
     "summary": "What ClearedStack is, who it is for, how to navigate the site, and how to use the catalog and guides today.",
     "url": "/guides/getting-started/",
     "badge": "START",
-    "content": "Getting started What ClearedStack is, who it is for, how to navigate the site, and how to use the catalog and guides today. start ClearedStack is an open-source hub for federal government contracting. It combines a catalog of 18 planned client-side tools with an extensive library of plain-language reference guides. There is no account to create, nothing to install, and nothing to pay. Because tools are currently in the planning stage, the site functions today as a complete reference manual and demand-driven catalog. This guide introduces the site's purpose and how to get the most out of it right away. For an in-depth walkt"
+    "content": "Getting started What ClearedStack is, who it is for, how to navigate the site, and how to use the catalog and guides today. start  ClearedStack is an open-source hub for federal government contracting. It combines a catalog of 18 planned client-side tools with an extensive library of plain-language reference guides. There is no account to create, nothing to install, and nothing to pay. Because tools are currently in the planning stage, the site functions today as a complete reference manual and demand-driven catalog. This guide introduces the site's purpose and how to get the most out of it right away. For an in-depth walkt"
   },
   {
     "id": "section-getting-started-who-it-is-for",
@@ -1117,7 +1575,7 @@
     "summary": "The acronyms and terms used across the tools and guides, in plain language, grouped by subject.",
     "url": "/guides/glossary/",
     "badge": "REFERENCE",
-    "content": "Glossary The acronyms and terms used across the tools and guides, in plain language, grouped by subject. reference Government contracting has a large vocabulary, and much of it is acronyms. These are the terms used on this site, grouped by the subject they belong to. Use your browser’s find command to jump to one. Definitions here are short on purpose. Where a term has a legal definition, the regulation is the authority, not this page. Buying and contracts - Acquisition. The government’s word for buying: the whole process from deciding a need to closing out the contract. - Amendment. A written change to a so"
+    "content": "Glossary The acronyms and terms used across the tools and guides, in plain language, grouped by subject. reference  Government contracting has a large vocabulary, and much of it is acronyms. These are the terms used on this site, grouped by the subject they belong to. Use your browser’s find command to jump to one. Definitions here are short on purpose. Where a term has a legal definition, the regulation is the authority, not this page. Buying and contracts - Acquisition. The government’s word for buying: the whole process from deciding a need to closing out the contract. - Amendment. A written change to a so"
   },
   {
     "id": "section-glossary-buying-and-contracts",
@@ -1127,7 +1585,7 @@
     "summary": "- Acquisition. The government’s word for buying: the whole process from deciding a need to closing out the contract. - Amendment. A written change to a solicita...",
     "url": "/guides/glossary/#buying-and-contracts",
     "badge": "Section",
-    "content": "Buying and contracts Glossary - Acquisition. The government’s word for buying: the whole process from deciding a need to closing out the contract. - Amendment. A written change to a solicitation before award. Each one is part of the solicitation. - Award. The government’s decision to give a contract to an offeror, and the act of signing it. - BPA (blanket purchase agreement). A standing arrangement for repeated small purchases from the same vendor. - CFR (Code of Federal Regulations). The collected regulations of federal agencies, arranged in numbered titles. Title 48 holds the acquisition regulations. - CLIN (contract line item number). A numbered line in a contract for one thing being bought, with its quantity and price. A SLIN is a sub-line under it. - Contracting officer (CO or KO). The government official with authority to sign, change and end a contract. Only a contracting officer can commit the government. - COR (contracting officer’s representative). A government employee who monitors the work day to day. A COR cannot change the contract. - DFARS (Defense Federal Acquisition Regulation Supplement). The Department of Defense’s additions to the FAR. - FAR (Federal Acquisition Regulation). The main rulebook for how federal executive agencies buy goods and services. - GWAC (government-wide acquisition contract). A large ordering contract for technology that any agency can use. - IDIQ (indefinite delivery, indefinite quantity). A contract that sets terms and prices in advance and is then used by placing individual orders. - IFB (invitation for bids). A solicitation for sealed bids, awarded on price. - Modification. A written change to a contract after award. - Offeror. A company that submits a proposal. Also called a bidder, quoter or respondent, depending on the kind of solicitation. - Option. A right the government holds to extend a contract or buy more at prices already agreed. - OT (other transaction). An agreement that is not a FAR contract, used by some agencies for research and prototypes. Also called an OTA. - Period of performance. The dates between which the work is done. - Prime contractor. The company that holds the contract with the government. A subcontractor holds a contract with the prime. - PWS (performance work statement). A description of the work in terms of results required. - RFI (request for information). Market research. Not a solicitation. - RFP (request for proposals). A solicitation for negotiated contracts. - RFQ (request for quotation). A request for prices, usually for simpler purchases. - SBIR and STTR. Small Business Innovation Research and Small Business Technology Transfer: programs that fund research by small businesses in phases. - Section L and Section M. The parts of a solicitation that give the proposal instructions and the evaluation factors. - Solicitation. The government’s written request for offers. - SOO (statement of objectives). A short statement of goals. The offeror proposes how to meet them. - Sources sought. A notice asking who is capable of doing a piece of work. Market research, like an RFI. - SOW (statement of work). A description of the work to be done. - Task order. An individual order for services placed under an ordering contract. - UCF (uniform contract format). The traditional layout of a solicitation in lettered Sections A through M."
+    "content": "Buying and contracts Glossary - Acquisition. The government’s word for buying: the whole process from deciding a need to closing out the contract. - Amendment. A written change to a solicitation before award. Each one is part of the solicitation. - Award. The government’s decision to give a contract to an offeror, and the act of signing it. - BPA (blanket purchase agreement). A standing arrangement for repeated small purchases from the same vendor. - CFR (Code of Federal Regulations). The collected regulations of federal agencies, arranged in numbered titles. Title 48 holds the acquisition regulations. - CLIN (contract line item number). A numbered line in a contract for one thing being bought, with its quantity and price. A SLIN is a sub-line under it. - Contracting officer (CO or KO). The government official with authority to sign, change and end a contract. Only a contracting officer can commit the government. - COR (contracting officer’s representative). A government employee who monitors the work day to day. A COR cannot change the contract. - DFARS (Defense Federal Acquisition Regulation Supplement). The Department of Defense’s additions to the FAR. - FAR (Federal Acquisition Regulation). The main rulebook for how federal executive agencies buy goods and services. - GWAC (government-wide acquisition contract). A large ordering contract for technology that any agency can use. - IDIQ (indefinite delivery, indefinite quantity). A contract that sets terms and prices in advance and is then used by placing individual orders. - IFB (invitation for bids). A solicitation for sealed bids, awarded on price. - Modification. A written change to a contract after award. - Offeror. A company that submits a proposal. Also called a bidder, quoter or respondent, depending on the kind of solicitation. - Option. A right the government holds to extend a contract or buy more at prices already agreed. - OT (other transaction). An agreement that is not a FAR contract, used by some agencies for research and prototypes. Also called an OTA. - Period of performance. The dates between which the work is done. - Prime contractor. The company that holds the contract with the government. A subcontractor holds a contract with the prime. - PWS (performance work statement). A description of the work in terms of results required. - RFI (request for information). Market research. Not a solicitation. - RFP (request for proposals). A solicitation for negotiated contracts. - RFQ (request for quotation). A request for prices, usually for simpler purchases. - SBIR and STTR. Small Business Innovation Research and Small Business Technology Transfer: programs that fund research by small businesses in phases. - Section L and Section M. The parts of a solicitation that give proposal instructions (Section L) and evaluation factors for award (Section M). - Section M. The evaluation factors for award in a federal solicitation, used metaphorically on this site for the Prior Art decision engine. - Solicitation. The government’s written request for offers. - SOO (statement of objectives). A short statement of goals. The offeror proposes how to meet them. - Sources sought. A notice asking who is capable of doing a piece of work. Market research, like an RFI. - SOW (statement of work). A description of the work to be done. - Task order. An individual order for services placed under an ordering contract. - UCF (uniform contract format). The traditional layout of a solicitation in lettered Sections A through M."
   },
   {
     "id": "section-glossary-contract-types-and-evaluation",
@@ -1190,6 +1648,16 @@
     "content": "Agencies and names Glossary - DISA. The Defense Information Systems Agency. It publishes the STIGs. - DoD. The Department of Defense. Since 2025 the department has also used the name Department of War on its own sites and correspondence. The regulations and contract clauses cited in these guides still say Department of Defense, and so do the guides. - GSA. The General Services Administration. It runs SAM.gov and many government-wide contracts. - NARA. The National Archives and Records Administration. It oversees the CUI program across the government. - OMB. The Office of Management and Budget. - Treasury. The Department of the Treasury. Its Bureau of the Fiscal Service publishes the Prompt Payment interest rate."
   },
   {
+    "id": "section-glossary-project-and-authoring",
+    "type": "section",
+    "title": "Project and authoring",
+    "subtitle": "Glossary",
+    "summary": "- Antigravity. An agentic AI coding assistant used during development to draft code, tests, and documentation under human direction. - Claude Code. An agentic A...",
+    "url": "/guides/glossary/#project-and-authoring",
+    "badge": "Section",
+    "content": "Project and authoring Glossary - Antigravity. An agentic AI coding assistant used during development to draft code, tests, and documentation under human direction. - Claude Code. An agentic AI coding tool used during development to draft code, tests, and documentation under human direction. - Clean room. Building software from functional specifications and public regulations without examining or copying another tool's proprietary code, text, or design. - Decision log. A public record documenting every evaluation outcome, score rationale, drafting agent, and maintainer decision. - Knockout gate. A non-negotiable pass/fail screening check that an idea must satisfy before being scored or built. - Prior art. Pre-existing tools, spreadsheets, or documents solving a compliance or paperwork task, observed from public pages to identify the job to be done. - Provenance. A record stating where the idea for a tool came from, what was taken (the job), and what was done differently."
+  },
+  {
     "id": "section-glossary-a-term-is-missing",
     "type": "section",
     "title": "A term is missing",
@@ -1207,7 +1675,7 @@
     "summary": "Run your own copy on a Kubernetes cluster with the manifests in the repository: deploy, expose, lock down, update and troubleshoot.",
     "url": "/guides/host-on-kubernetes/",
     "badge": "HOST",
-    "content": "Host on Kubernetes Run your own copy on a Kubernetes cluster with the manifests in the repository: deploy, expose, lock down, update and troubleshoot. host If you already run a Kubernetes cluster, the site fits on it as a small deployment. The repository includes the manifests. If you only need one server, Docker on its own is simpler. What you need - A Kubernetes cluster and kubectl set up to talk to it. - A container registry your cluster can pull from. - Docker or Podman, to build the image. There is no published image to pull. You build your own, so you know exactly what is in it. What gets created The manifest in k8s/clearedstack.yaml creates "
+    "content": "Host on Kubernetes Run your own copy on a Kubernetes cluster with the manifests in the repository: deploy, expose, lock down, update and troubleshoot. host  If you already run a Kubernetes cluster, the site fits on it as a small deployment. The repository includes the manifests. If you only need one server, Docker on its own is simpler. What you need - A Kubernetes cluster and kubectl set up to talk to it. - A container registry your cluster can pull from. - Docker or Podman, to build the image. There is no published image to pull. You build your own, so you know exactly what is in it. What gets created The manifest in k8s/clearedstack.yaml creates "
   },
   {
     "id": "section-host-on-kubernetes-what-you-need",
@@ -1357,7 +1825,7 @@
     "summary": "Build the site into a folder of ordinary files and serve it from any web server, with no containers involved.",
     "url": "/guides/host-static-files/",
     "badge": "HOST",
-    "content": "Host as plain files Build the site into a folder of ordinary files and serve it from any web server, with no containers involved. host The site is a static export. Building it produces a folder of HTML, CSS, JavaScript, fonts and images, and any program that can serve files can host it. This is the simplest way to run a copy if you already have a web server. What you need - Node.js 20 or newer, and git, on the machine that builds the site. - A web server of any kind to put the result on. It does not need Node.js. Build the site npm ci installs exactly the dependency versions recorded in the repository. The build takes under a m"
+    "content": "Host as plain files Build the site into a folder of ordinary files and serve it from any web server, with no containers involved. host  The site is a static export. Building it produces a folder of HTML, CSS, JavaScript, fonts and images, and any program that can serve files can host it. This is the simplest way to run a copy if you already have a web server. What you need - Node.js 20 or newer, and git, on the machine that builds the site. - A web server of any kind to put the result on. It does not need Node.js. Build the site npm ci installs exactly the dependency versions recorded in the repository. The build takes under a m"
   },
   {
     "id": "section-host-static-files-what-you-need",
@@ -1487,7 +1955,7 @@
     "summary": "Build this site into a container image and run it on your own server, with HTTPS, tighter settings, updates and troubleshooting.",
     "url": "/guides/host-with-docker/",
     "badge": "HOST",
-    "content": "Host your own copy with Docker Build this site into a container image and run it on your own server, with HTTPS, tighter settings, updates and troubleshooting. host You do not have to use clearedstack.com to use ClearedStack. Everything is MIT licensed, and the repository includes a Dockerfile that packs the whole site into one small container. This guide covers a single server. For a cluster, see Host on Kubernetes. For no containers at all, see Host as plain files. Why host a copy - Your company blocks outside websites, or allows only approved ones. - You want the address a tool is loaded from to be one you control. - You work on a network with no interne"
+    "content": "Host your own copy with Docker Build this site into a container image and run it on your own server, with HTTPS, tighter settings, updates and troubleshooting. host  You do not have to use clearedstack.com to use ClearedStack. Everything is MIT licensed, and the repository includes a Dockerfile that packs the whole site into one small container. This guide covers a single server. For a cluster, see Host on Kubernetes. For no containers at all, see Host as plain files. Why host a copy - Your company blocks outside websites, or allows only approved ones. - You want the address a tool is loaded from to be one you control. - You work on a network with no interne"
   },
   {
     "id": "section-host-with-docker-why-host-a-copy",
@@ -1647,7 +2115,7 @@
     "summary": "How a wage becomes a billing rate: direct and indirect costs, fringe, overhead, G&A and fee, with a worked example you can check by hand.",
     "url": "/guides/labor-rates/",
     "badge": "FIELD",
-    "content": "Labor rates and wrap rates How a wage becomes a billing rate: direct and indirect costs, fringe, overhead, G&A and fee, with a worked example you can check by hand. field When the government buys labor, the hourly price has to cover far more than the wage. It carries a share of payroll taxes, benefits, rent, software, accounting and every other cost of running the company, plus profit. This guide explains how that price is built, using one made-up company from start to finish. Every number in it is invented. Direct and indirect costs Every cost a company has falls on one side of a line. - A direct cost is spent for one specific contract. The hours an engineer wor"
+    "content": "Labor rates and wrap rates How a wage becomes a billing rate: direct and indirect costs, fringe, overhead, G&A and fee, with a worked example you can check by hand. field  When the government buys labor, the hourly price has to cover far more than the wage. It carries a share of payroll taxes, benefits, rent, software, accounting and every other cost of running the company, plus profit. This guide explains how that price is built, using one made-up company from start to finish. Every number in it is invented. Direct and indirect costs Every cost a company has falls on one side of a line. - A direct cost is spent for one specific contract. The hours an engineer wor"
   },
   {
     "id": "section-labor-rates-direct-and-indirect-costs",
@@ -1757,7 +2225,7 @@
     "summary": "A complete guide to using ClearedStack: the four main areas, the contract-style structure, searching the catalog, reading routes, keyboard navigation and offline use.",
     "url": "/guides/navigating-this-site/",
     "badge": "START",
-    "content": "How to navigate this site A complete guide to using ClearedStack: the four main areas, the contract-style structure, searching the catalog, reading routes, keyboard navigation and offline use. start ClearedStack is built like a contract, runs entirely in your browser, and requires no account, payment, or installation. It consists of two things: an open catalog of 18 planned browser-based contracting tools, and an exhaustive library of plain-language reference guides. This guide explains how the website is organized, how to search and filter the catalog and guides, how to navigate efficiently using keyboard shortcuts and screen readers, and how to use the site offline or on disconnected netw"
+    "content": "How to navigate this site A complete guide to using ClearedStack: the four main areas, the contract-style structure, searching the catalog, reading routes, keyboard navigation and offline use. start  ClearedStack is built like a contract, runs entirely in your browser, and requires no account, payment, or installation. It consists of two things: an open catalog of 18 planned browser-based contracting tools, and an exhaustive library of plain-language reference guides. This guide explains how the website is organized, how to search and filter the catalog and guides, how to navigate efficiently using keyboard shortcuts and screen readers, and how to use the site offline or on disconnected netw"
   },
   {
     "id": "section-navigating-this-site-the-contract-structure",
@@ -1767,17 +2235,17 @@
     "summary": "Federal solicitations under FAR Part 15 follow the Uniform Contract Format (UCF). The UCF organizes complex requirements into standardized lettered sections so ...",
     "url": "/guides/navigating-this-site/#the-contract-structure",
     "badge": "Section",
-    "content": "The contract structure How to navigate this site Federal solicitations under FAR Part 15 follow the Uniform Contract Format (UCF). The UCF organizes complex requirements into standardized lettered sections so that contractors always know where to find line items, statements of work, and submission instructions. ClearedStack borrows this exact structure across its pages. Instead of arbitrary marketing layouts, the site uses UCF conventions to label its data, navigation, and documentation: | UCF Section | Title in Federal Contracting | ClearedStack Location | What you find there | | --- | --- | --- | --- | | Section B | Supplies or services and prices/costs | Home and Tools | The 5 Contract Line Item Number (CLIN) categories, all priced at a firm-fixed-price of $0.00. | | Section C | Description/specifications/statement of work | Home and Tools | The statement of work for all 18 single-purpose browser tools. | | Section F | Deliveries or performance | Home | The delivery roadmap across three phases: the free arsenal, the community, and the institution. | | Section H | Special contract requirements | Home and About | The four core ground rules: free, open source, client-side execution, and independent governance. | | Section L | Instructions, conditions and notices to offerors | Guides | The documentation library, numbered from L.1 through L.5 (Start here, Field guides, Hosting, Contributing, Reference). | Learning this layout once helps you navigate both ClearedStack and federal requests for proposals (RFPs). When you see a reference like CLIN 0001 or Section L.2.3 , you are reading standard acquisition shorthand."
+    "content": "The contract structure How to navigate this site Federal solicitations under FAR Part 15 follow the Uniform Contract Format (UCF). The UCF organizes complex requirements into standardized lettered sections so that contractors always know where to find line items, statements of work, and submission instructions. ClearedStack borrows this exact structure across its pages. Instead of arbitrary marketing layouts, the site uses UCF conventions to label its data, navigation, and documentation: | UCF Section | Title in Federal Contracting | ClearedStack Location | What you find there | | --- | --- | --- | --- | | Section B | Supplies or services and prices/costs | Home and Tools | The 5 Contract Line Item Number (CLIN) categories, all priced at a firm-fixed-price of $0.00. | | Section C | Description/specifications/statement of work | Home and Tools | The statement of work for all 18 single-purpose browser tools. | | Section F | Deliveries or performance | Home | The delivery roadmap across three phases: the free arsenal, the community, and the institution. | | Section H | Special contract requirements | Home and About | The four core ground rules: free, open source, client-side execution, and independent governance. | | Section L | Instructions, conditions and notices to offerors | Guides | The documentation library, numbered from L.1 through L.6 (Start here, Field guides, Hosting, Contributing, Reference, How this project is run). | | Section M | Evaluation factors for award | How we decide | The Prior Art decision engine (draft): ten stages, five knockout gates, scoring rubric, and public decision log. | Learning this layout once helps you navigate both ClearedStack and federal requests for proposals (RFPs). When you see a reference like CLIN 0001 or Section L.2.3 , you are reading standard acquisition shorthand."
   },
   {
-    "id": "section-navigating-this-site-the-four-main-areas",
+    "id": "section-navigating-this-site-the-main-areas",
     "type": "section",
-    "title": "The four main areas",
+    "title": "The main areas",
     "subtitle": "How to navigate this site",
-    "summary": "The site is divided into four primary pages. You can move between them at any time using the navigation links in the persistent header ( SiteHeader ) at the top...",
-    "url": "/guides/navigating-this-site/#the-four-main-areas",
+    "summary": "The site is organized into five primary sections: Home, Tools, Guides, How we decide, and About. You can move between them at any time using the navigation link...",
+    "url": "/guides/navigating-this-site/#the-main-areas",
     "badge": "Section",
-    "content": "The four main areas How to navigate this site The site is divided into four primary pages. You can move between them at any time using the navigation links in the persistent header ( SiteHeader ) at the top of every page, or the index links in the footer ( SiteFooter ) at the bottom. 1. Home ( / ) The home page provides an executive summary of the project: - Hero & Mission: A concise statement of why ClearedStack exists—to help small businesses and engineers get through contracting paperwork without buying enterprise software or hiring compliance consultants. - Section B Price Schedule: An interactive pricing table laying out the five tool categories as CLINs 0001 through 0005, showing unit prices and total evaluated price ($0.00). - Section C Catalog Preview: Summary cards for all five areas showing the tools planned under each CLIN. - Section H Principles: The mandatory operational boundaries (free forever, MIT licensed, strictly client-side, unaffiliated with the government). - Section F Roadmap: The phased delivery timeline showing current focus and future trajectory. 2. Tools ( /tools/ ) The tool catalog is the functional core of the site. It lists all 18 planned tools organized by their 4-digit CLINs. On this page, you can: - Filter tools in real time using the interactive search input. - Jump directly to specific categories using category anchor buttons ( pricing , proposal , cyber , market , devsecops ). - Check development statuses ( Planned , In development , Live ). - Access the direct links and open-source source code repositories as tools become live. 3. Guides ( /guides/ ) The documentation hub contains more than 20 detailed operational guides. It is structured under UCF Section L (\"Instructions to offerors\"): - Metrics Bar: Summary counts of total guides, sections, combined reading time, and pricing ($0.00). - Curated Reading Routes: Four tailored sequence paths designed for specific visitor objectives. - Section Index (L.1–L.5): An interactive, searchable library of all guides with real-time text matching and section jump anchors. - Short Answers: Quick answers to the six most common questions regarding data security, costs, accounts, and trust. 4. About ( /about/ ) The project background and governance statement: - The Problem & Mission: Why good engineers should not need a full compliance department to bid on federal work. - Architecture: Why each tool is built as an independent, auditable open-source repository rather than a monolithic platform. - Ground Rules: Absolute rules governing no revenue, zero telemetry or tracking, public sources only, and verifiable math. - Legal Disclaimer: Clear statements that ClearedStack is not a government agency, does not grant security clearances or CMMC certifications, and provides self-service reference tools rather than legal or accounting advice. - Contact: Direct links to the GitHub organization and maintainer email."
+    "content": "The main areas How to navigate this site The site is organized into five primary sections: Home, Tools, Guides, How we decide, and About. You can move between them at any time using the navigation links in the persistent header ( SiteHeader ) at the top of every page, or the index links in the footer ( SiteFooter ) at the bottom. The footer also carries our AI disclosure—stating that the site is built with Claude Code and Antigravity and reviewed by a person—linking to How AI is used to build this project. 1. Home ( / ) The home page provides an executive summary of the project: - Hero & Mission: A concise statement of why ClearedStack exists—to help small businesses and engineers get through contracting paperwork without buying enterprise software or hiring compliance consultants. - Section B Price Schedule: An interactive pricing table laying out the five tool categories as CLINs 0001 through 0005, showing unit prices and total evaluated price ($0.00). - Section C Catalog Preview: Summary cards for all five areas showing the tools planned under each CLIN. - Section H Principles: The mandatory operational boundaries (free forever, MIT licensed, strictly client-side, unaffiliated with the government). - Section F Roadmap: The phased delivery timeline showing current focus and future trajectory. 2. Tools ( /tools/ ) The tool catalog is the functional core of the site. It lists all 18 planned tools organized by their 4-digit CLINs. On this page, you can: - Filter tools in real time using the interactive search input. - Jump directly to specific categories using category anchor buttons ( pricing , proposal , cyber , market , devsecops ). - Check development statuses ( Planned , In development , Live ). - Access the direct links and open-source source code repositories as tools become live. 3. Guides ( /guides/ ) The documentation hub contains detailed operational guides. It is structured under UCF Section L (\"Instructions to offerors\"): - Metrics Bar: Summary counts of total guides, sections, combined reading time, and pricing ($0.00). - Curated Reading Routes: Tailored sequence paths designed for specific visitor objectives. - Section Index (L.1–L.6): An interactive, searchable library of all guides with real-time text matching and section jump anchors. - Short Answers: Quick answers to common questions regarding data security, costs, accounts, and trust. 4. How we decide ( /how-we-decide/ ) The decision engine under UCF Section M (\"Evaluation factors for award\"): - Prior Art Process (Draft): How existing tools are discovered, observed from public pages, screened, scored, and decided. - Five Knockout Gates: The non-negotiable checks every idea must pass before scoring. - Advisory Rubric: The 100-point rubric and public decision log with human owner accountability. 5. About ( /about/ ) The project background and governance statement: - The Problem & Mission: Why good engineers should not need a full compliance department to bid on federal work. - Architecture: Why each tool is built as an independent, auditable open-source repository rather than a monolithic platform. - Ground Rules: Absolute rules governing no revenue, zero telemetry or tracking, public sources only, and verifiable math. - Legal Disclaimer: Clear statements that ClearedStack is not a government agency, does not grant security clearances or CMMC certifications, and provides self-service reference tools rather than legal or accounting advice. - Contact: Direct links to the GitHub organization and maintainer email."
   },
   {
     "id": "section-navigating-this-site-finding-tools-in-the-catalog",
@@ -1797,7 +2265,7 @@
     "summary": "The Guides page contains in-depth documentation covering contracting regulations, site architecture, self-hosting, and contribution. The Section L organization ...",
     "url": "/guides/navigating-this-site/#using-the-guides-library",
     "badge": "Section",
-    "content": "Using the guides library How to navigate this site The Guides page contains in-depth documentation covering contracting regulations, site architecture, self-hosting, and contribution. The Section L organization Guides are grouped into five logical sections under UCF Section L: - L.1 Start here: Essential onboarding guides covering site navigation, browser data isolation, result verification, and core operating principles. - L.2 Field guides: Detailed primers on government contracting mechanics—reading RFPs, answering requirements, building labor rates, submitting proper invoices, protecting CUI, handling STIGs and OSCAL, and working on disconnected networks. - L.3 Host your own copy: Complete engineering guides for deploying ClearedStack on Docker, Kubernetes, bare static web servers, or air-gapped security enclaves. - L.4 Contribute: Step-by-step instructions for submitting tool requests, reporting regulatory errors, building compliant client-side tools, and maintaining this website. - L.5 Reference: Quick lookups including a comprehensive contracting acronym glossary, regulatory source links, and answers to common questions. The four reading routes If you are looking for a guided sequence rather than browsing the full list, use the four curated routes at the top of /guides/ : 1. New to the site: For first-time visitors wanting to understand how the tools work, where data goes, and how to verify calculations (Getting started, What happens to what you type, Check a tool’s answer, and Common questions). 2. New to government contracting: For engineers and founders preparing their first bid (Read a solicitation, Answer a solicitation, Labor rates and wrap rates, Protecting government information, and Codes, registration and small business status). 3. Running your own copy: For DevOps engineers and system administrators deploying inside corporate networks or secure labs (Host your own copy with Docker, Host on Kubernetes, Host as plain files, and Run it on a closed network). 4. Building or fixing something: For developers and technical contributors (Request a tool or add your own, Build a tool that can be listed, and Work on this site). The guide reading interface Every individual guide page provides structured navigation aids: - Header Breadcrumb: Located at the top left, linking back to /guides/ and directly to the parent section anchor (for example, Guides · L.1 Start here ). - Metadata Line: Displays the official Section L designation (such as L.1.1 ), estimated reading time based on a 220 word-per-minute standard, and regulatory currency (\"Checked against its sources in November 2026\"). - Sticky Desktop Table of Contents: On large screens, an \"On this page\" sidebar follows your scroll position on the right, listing all level-2 headings ( ) for instant jumping. - Section Sibling Navigation: Below the desktop TOC, the sidebar lists all sibling guides within the current Section L category, highlighting your active page. - Collapsible Mobile TOC: On mobile devices and small viewports, the table of contents folds into an accessible accordion labeled \"On this page\" located immediately above the text. - Previous and Next Navigation Cards: Large cards at the bottom of the article link sequentially to the preceding and following guides across the library. Searching and filtering guides Like the tool catalog, the guides index on /guides/ includes an instant search filter: - Enter any term (e.g. wrap rate , CUI , Docker , invoice , DFARS ). - The filter matches guide titles, summaries, section names, and second-level heading topics. - Section navigation pills ( L.1 Start here , L.2 Field guides , etc.) display live match counts and jump directly to the relevant section heading."
+    "content": "Using the guides library How to navigate this site The Guides page contains in-depth documentation covering contracting regulations, site architecture, self-hosting, and contribution. The Section L organization Guides are grouped into six logical sections under UCF Section L: - L.1 Start here: Essential onboarding guides covering site navigation, browser data isolation, result verification, and core operating principles. - L.2 Field guides: Detailed primers on government contracting mechanics—reading RFPs, answering requirements, building labor rates, submitting proper invoices, protecting CUI, handling STIGs and OSCAL, and working on disconnected networks. - L.3 Host your own copy: Complete engineering guides for deploying ClearedStack on Docker, Kubernetes, bare static web servers, or air-gapped security enclaves. - L.4 Contribute: Step-by-step instructions for submitting tool requests, reporting regulatory errors, building compliant client-side tools, and maintaining this website. - L.5 Reference: Quick lookups including a comprehensive contracting acronym glossary, regulatory source links, and answers to common questions. - L.6 How this project is run: How ClearedStack discovers and observes existing tools, scores ideas in public, credits prior art, builds clean-room software with AI assistance, and logs decisions. The four reading routes If you are looking for a guided sequence rather than browsing the full list, use the four curated routes at the top of /guides/ : 1. New to the site: For first-time visitors wanting to understand how the tools work, where data goes, and how to verify calculations (Getting started, What happens to what you type, Check a tool’s answer, and Common questions). 2. New to government contracting: For engineers and founders preparing their first bid (Read a solicitation, Answer a solicitation, Labor rates and wrap rates, Protecting government information, and Codes, registration and small business status). 3. Running your own copy: For DevOps engineers and system administrators deploying inside corporate networks or secure labs (Host your own copy with Docker, Host on Kubernetes, Host as plain files, and Run it on a closed network). 4. Building or fixing something: For developers and technical contributors (Request a tool or add your own, Build a tool that can be listed, and Work on this site). The guide reading interface Every individual guide page provides structured navigation aids: - Header Breadcrumb: Located at the top left, linking back to /guides/ and directly to the parent section anchor (for example, Guides · L.1 Start here ). - Metadata Line: Displays the official Section L designation (such as L.1.1 ), estimated reading time based on a 220 word-per-minute standard, and regulatory currency (\"Checked against its sources in November 2026\"). - Sticky Desktop Table of Contents: On large screens, an \"On this page\" sidebar follows your scroll position on the right, listing all level-2 headings ( ) for instant jumping. - Section Sibling Navigation: Below the desktop TOC, the sidebar lists all sibling guides within the current Section L category, highlighting your active page. - Collapsible Mobile TOC: On mobile devices and small viewports, the table of contents folds into an accessible accordion labeled \"On this page\" located immediately above the text. - Previous and Next Navigation Cards: Large cards at the bottom of the article link sequentially to the preceding and following guides across the library. Searching and filtering guides Like the tool catalog, the guides index on /guides/ includes an instant search filter: - Enter any term (e.g. wrap rate , CUI , Docker , invoice , DFARS ). - The filter matches guide titles, summaries, section names, and second-level heading topics. - Section navigation pills ( L.1 Start here , L.2 Field guides , etc.) display live match counts and jump directly to the relevant section heading."
   },
   {
     "id": "section-navigating-this-site-finding-what-you-need-by-role",
@@ -1840,6 +2308,296 @@
     "content": "Suggesting changes or reporting mistakes How to navigate this site Federal acquisition regulations, clauses, and standards change continuously. ClearedStack maintains accuracy through open peer review and transparent source tracking. Inspecting guide source code Every guide page features a direct \"Source of this page\" link at the bottom of the article. Clicking this link takes you directly to the raw Markdown/MDX file in the public GitHub repository ( src/guides/.mdx ). You can view the exact commit history, inspect when changes were made, and verify the authorship. Reporting errors or submitting corrections If you notice an outdated FAR clause number, an ambiguous instruction, or a broken cross-reference: - Open an issue: Visit ClearedStack issues on GitHub and submit a description of the error, citing the relevant current regulation. - Submit a pull request: If you know the fix, fork the repository, edit the .mdx file directly, and submit a pull request. Corrections are reviewed and merged promptly. - Send an email: If you do not use GitHub or work from an environment where code repositories are restricted, send your notes directly to contact@clearedstack.com. To learn how to develop tools or contribute larger guides, see Work on this site."
   },
   {
+    "id": "guide-observe-a-tool",
+    "type": "guide",
+    "title": "How an existing tool is observed",
+    "subtitle": "Guide · Section L.6",
+    "summary": "Inspect an existing tool using public pages only, audit whether data leaves the browser, and record verifiable findings.",
+    "url": "/guides/observe-a-tool/",
+    "badge": "DRAFT",
+    "content": "How an existing tool is observed Inspect an existing tool using public pages only, audit whether data leaves the browser, and record verifiable findings. project draft intent This guide describes intent. The observation process is not running, the ClearedStack/prior-art repository does not exist yet, and nothing has been collected. Observation is Stage 3 of the prior-art engine. Once a tool or spreadsheet is identified and assigned a record ID, an observer audits its public interface to understand what problem it solves, what data it handles, and whether it could be rebuilt as an independent, client-side tool. The observation protocol is strictly passive and public. "
+  },
+  {
+    "id": "section-observe-a-tool-the-observation-checklist",
+    "type": "section",
+    "title": "The observation checklist",
+    "subtitle": "How an existing tool is observed",
+    "summary": "When an observer inspects a candidate, they follow a standardized sequence of checks to collect objective evidence. 1. Check access : Determine whether the tool...",
+    "url": "/guides/observe-a-tool/#the-observation-checklist",
+    "badge": "Section",
+    "content": "The observation checklist How an existing tool is observed When an observer inspects a candidate, they follow a standardized sequence of checks to collect objective evidence. 1. Check access : Determine whether the tool is freely usable on the public web or restricted behind gates. 2. Audit network traffic : Monitor the browser’s Network tab during test calculations to determine whether user inputs remain local or are transmitted to remote endpoints. 3. Run offline test : Load the page, sever network connectivity (such as by turning off Wi-Fi), and run calculations to test for server dependencies. 4. Verify citations : Extract the legal authorities or standard clauses cited by the tool and cross-reference them against official government websites. 5. Archive snapshot : Submit the public URL to a permanent web archive (such as the Wayback Machine) so the exact page observed can be reviewed at any time. 6. Grade confidence : Record every observation field alongside an explicit confidence tier (Seen, Stated, or Unknown)."
+  },
+  {
+    "id": "section-observe-a-tool-the-access-boundary",
+    "type": "section",
+    "title": "The access boundary",
+    "subtitle": "How an existing tool is observed",
+    "summary": "The strictest rule of observation is that observers never bypass access controls or create credentials. If a tool requires an account, observation stops at the ...",
+    "url": "/guides/observe-a-tool/#the-access-boundary",
+    "badge": "Section",
+    "content": "The access boundary How an existing tool is observed The strictest rule of observation is that observers never bypass access controls or create credentials. If a tool requires an account, observation stops at the public surface. If a tool requires a corporate sales demonstration, a paid license, or a personal email address to view results, the observer records the vendor’s public marketing claims and marks them as unverified. The project never initiates sales calls or accepts commercial terms of service to evaluate software."
+  },
+  {
+    "id": "section-observe-a-tool-what-gets-recorded",
+    "type": "section",
+    "title": "What gets recorded",
+    "subtitle": "How an existing tool is observed",
+    "summary": "Every observed tool is documented in a structured record with verifiable evidence: - The job : A single sentence starting with an active verb describing the cor...",
+    "url": "/guides/observe-a-tool/#what-gets-recorded",
+    "badge": "Section",
+    "content": "What gets recorded How an existing tool is observed Every observed tool is documented in a structured record with verifiable evidence: - The job : A single sentence starting with an active verb describing the core task (for example, “Calculate fringe and overhead rates from cost pools”). - Inputs : The specific parameters, file formats, and data fields accepted. - Outputs : The reports, numbers, tables, or export files generated. - Login requirement : Whether the tool requires an account, offers optional login, or requires zero authentication. - Tracking profile : Third-party telemetry scripts, analytics beacons, tracking cookies, and content security policy headers seen on the page. - License or copyright : The declared intellectual property terms, such as an open-source license, public domain notice, or proprietary copyright statement. - Price model : Free public utility, freemium, paid subscription, or custom enterprise quote. - Public rule cited : The official standard, regulation, or procurement clause cited, including section numbers and official links. - Date observed : The ISO date ( YYYY-MM ) when the observation was conducted. Observations older than twelve months are marked stale and re-checked before making build decisions. - Archived snapshot link : A permanent permalink to an immutable public archive capture."
+  },
+  {
+    "id": "section-observe-a-tool-layers-of-confidence",
+    "type": "section",
+    "title": "Layers of confidence",
+    "subtitle": "How an existing tool is observed",
+    "summary": "Not all information on the web is equally reliable. To ensure transparent reporting, every field in an observation record is graded using three distinct confide...",
+    "url": "/guides/observe-a-tool/#layers-of-confidence",
+    "badge": "Section",
+    "content": "Layers of confidence How an existing tool is observed Not all information on the web is equally reliable. To ensure transparent reporting, every field in an observation record is graded using three distinct confidence layers: - Seen : High confidence. The observer loaded the tool, entered synthetic values, verified the offline behavior, and inspected network requests. If a tool claims to run in your browser and DevTools confirms zero outbound requests during calculation, browser confinement is marked as Seen . - Stated : Moderate confidence. The vendor’s public website states that a tool calculates specific clauses or supports particular file formats, but the feature is behind an account wall. The feature is documented as Stated by the vendor. - Unknown : Low confidence. Pricing, data retention policies, or backend architecture are not documented on public pages and would require contacting sales. These fields are marked as Unknown ."
+  },
+  {
+    "id": "section-observe-a-tool-re-check-an-observation-yourself",
+    "type": "section",
+    "title": "Re-check an observation yourself",
+    "subtitle": "How an existing tool is observed",
+    "summary": "Every observation is published with the links and archived snapshots needed to reproduce the audit in about a minute. You do not need specialized software or pr...",
+    "url": "/guides/observe-a-tool/#re-check-an-observation-yourself",
+    "badge": "Section",
+    "content": "Re-check an observation yourself How an existing tool is observed Every observation is published with the links and archived snapshots needed to reproduce the audit in about a minute. You do not need specialized software or programming experience to re-check our findings. If your findings disagree with a published observation—for instance, if an updated tool now sends form data to a tracking server or moved behind a paywall—please report it. Open an issue on GitHub or email contact@clearedstack.com so the record can be updated."
+  },
+  {
+    "id": "section-observe-a-tool-what-we-never-do",
+    "type": "section",
+    "title": "What we never do",
+    "subtitle": "How an existing tool is observed",
+    "summary": "Observation is strictly non-intrusive. To protect user privacy, maintain legal compliance, and ensure clean-room integrity, we never: - Access or inspect non-pu...",
+    "url": "/guides/observe-a-tool/#what-we-never-do",
+    "badge": "Section",
+    "content": "What we never do How an existing tool is observed Observation is strictly non-intrusive. To protect user privacy, maintain legal compliance, and ensure clean-room integrity, we never: - Access or inspect non-public, classified, Controlled Unclassified Information (CUI), or export-controlled material. - Register user accounts, create passwords, provide company email addresses, or fill out lead capture forms. - Request sales demonstrations, start free trials, or accept commercial software evaluation agreements. - Circumvent paywalls, subscription gates, authentication forms, or IP rate limits. - Solve, click through, wait out, or bypass CAPTCHAs, Turnstiles, or anti-bot verification challenges using any manual or automated method. - Disregard robots.txt instructions or terms of service restrictions regarding crawling. - Enter real company data, actual proposal text, real overhead rates, employee names, or live contract bids into any tool. All tests use published, synthetic dummy numbers. - Decompile, reverse engineer, or copy source code, markup, CSS styles, or user interface designs from an observed tool. - Conduct security audits, penetration testing, fuzzing, or vulnerability probing against external infrastructure."
+  },
+  {
+    "id": "section-observe-a-tool-further-reading",
+    "type": "section",
+    "title": "Further reading",
+    "subtitle": "How an existing tool is observed",
+    "summary": "- How the project chooses what to build (L.6.1) - How candidates are found (L.6.2) - How an idea is scored and decided (L.6.4) - How ideas are credited (L.6.5) ...",
+    "url": "/guides/observe-a-tool/#further-reading",
+    "badge": "Section",
+    "content": "Further reading How an existing tool is observed - How the project chooses what to build (L.6.1) - How candidates are found (L.6.2) - How an idea is scored and decided (L.6.4) - How ideas are credited (L.6.5) - How AI is used to build this project (L.6.6) - What is not decided yet (L.6.7) - How we decide"
+  },
+  {
+    "id": "guide-open-questions",
+    "type": "guide",
+    "title": "What is not decided yet",
+    "subtitle": "Guide · Section L.6",
+    "summary": "Review open architectural, governance, and transparency questions, see the current draft defaults, and understand how decisions get made.",
+    "url": "/guides/open-questions/",
+    "badge": "DRAFT",
+    "content": "What is not decided yet Review open architectural, governance, and transparency questions, see the current draft defaults, and understand how decisions get made. project draft intent Publishing undecided questions is part of being transparent about the project’s direction. ClearedStack has not locked down every operational, legal, and architectural detail. Rather than hiding uncertainty behind vague statements, this guide lists the questions that remain open, the current draft default for each, and the process used to decide them. The Prior Art engine described here is pure intent and is not running yet. No separate repository exists, and no records have been collected. The "
+  },
+  {
+    "id": "section-open-questions-how-questions-get-decided",
+    "type": "section",
+    "title": "How questions get decided",
+    "subtitle": "What is not decided yet",
+    "summary": "Every architectural or policy question follows a four-step lifecycle. Decisions are not made in private or buried in chat threads; they are discussed in public,...",
+    "url": "/guides/open-questions/#how-questions-get-decided",
+    "badge": "Section",
+    "content": "How questions get decided What is not decided yet Every architectural or policy question follows a four-step lifecycle. Decisions are not made in private or buried in chat threads; they are discussed in public, decided by the human owner, and recorded in git history."
+  },
+  {
+    "id": "section-open-questions-question-lifecycle-states",
+    "type": "section",
+    "title": "Question lifecycle states",
+    "subtitle": "What is not decided yet",
+    "summary": "A question transitions between three states. Once decided, a question may still be reopened if statutory changes, vendor practices, or technical constraints mak...",
+    "url": "/guides/open-questions/#question-lifecycle-states",
+    "badge": "Section",
+    "content": "Question lifecycle states What is not decided yet A question transitions between three states. Once decided, a question may still be reopened if statutory changes, vendor practices, or technical constraints make the previous decision unworkable."
+  },
+  {
+    "id": "section-open-questions-scope-and-cadence",
+    "type": "section",
+    "title": "Scope and cadence",
+    "subtitle": "What is not decided yet",
+    "summary": "These questions define the operational heartbeat and functional boundaries of the tools and engine. | Question | Options considered | Draft default | Why it mat...",
+    "url": "/guides/open-questions/#scope-and-cadence",
+    "badge": "Section",
+    "content": "Scope and cadence What is not decided yet These questions define the operational heartbeat and functional boundaries of the tools and engine. | Question | Options considered | Draft default | Why it matters | | --- | --- | --- | --- | | Revisit cadence | Monthly check; quarterly review cycle; event-driven review only | Monthly scheduled check (Stage 10 Revisit) | Prevents tools from drifting into regulatory obsolescence while maintaining a steady rhythm. | | Data persistence | Client-side export/import only; optional browser IndexedDB; self-hosted local SQLite | Pure static client-side execution with local JSON and CSV export | Guarantees zero-trust privacy by ensuring contract data never leaves the user’s device. | | Phased thresholds | Phased threshold (80 Phase 1, 75 Phase 2); rigid 75 across all phases; category-specific thresholds | Rigid 75 threshold for Build across all roadmap phases | Keeps selection criteria objective and predictable across development phases. | | New categories | Owner-determined at 5+ approved ideas; permanently locked at five CLINs; community RFC consensus | Owner-determined expansion when at least 5 approved ideas fail to fit CLINs 0001–0005 | Preserves alignment with Uniform Contract Format structure without arbitrary category sprawl. |"
+  },
+  {
+    "id": "section-open-questions-discovery",
+    "type": "section",
+    "title": "Discovery",
+    "subtitle": "What is not decided yet",
+    "summary": "These questions govern how candidate compliance workflows and tools are found and cataloged. | Question | Options considered | Draft default | Why it matters | ...",
+    "url": "/guides/open-questions/#discovery",
+    "badge": "Section",
+    "content": "Discovery What is not decided yet These questions govern how candidate compliance workflows and tools are found and cataloged. | Question | Options considered | Draft default | Why it matters | | --- | --- | --- | --- | | Discovery execution | Scripted quarterly sweeps; pure manual research logs; continuous automated CI web scrapers | Scripted quarterly assistant sweeps staged into a local review branch | Balances landscape coverage against maintainer review capacity. | | Coverage tracking | Categories $\\times$ sources matrix; simple linear candidate backlog; detailed search query logs | Structured coverage matrix of categories $\\times$ source kinds | Prevents overlooking valuable government worksheets or training center guides. | | Template relevance | Broad federal applicability only; major buying command templates; exhaustive local template index | Broad federal and DoD-wide applicability only | Focuses engineering effort on tools that serve the widest small-business audience. | | Duplicate handling | Canonical ID aliasing; separate records for every URL; exclude forks entirely | Stage 2 Record aliasing (canonical ID PA-0001 with alias list) | Eliminates duplicate evaluation work and skewed gap analysis. |"
+  },
+  {
+    "id": "section-open-questions-observation",
+    "type": "section",
+    "title": "Observation",
+    "subtitle": "What is not decided yet",
+    "summary": "These questions set the rules of engagement when examining existing compliance tools and websites. | Question | Options considered | Draft default | Why it matt...",
+    "url": "/guides/open-questions/#observation",
+    "badge": "Section",
+    "content": "Observation What is not decided yet These questions set the rules of engagement when examining existing compliance tools and websites. | Question | Options considered | Draft default | Why it matters | | --- | --- | --- | --- | | Website boundaries | Unauthenticated public pages only; accept crowdsourced gated notes; inspect-only trial accounts | Unauthenticated public pages only; no accounts, trials, or logins | Provides a strict legal safe harbor against CFAA and terms-of-service disputes. | | Evidence grading | Three-tier confidence (Seen, Stated, Unknown); binary verified/unverified; reject unverified claims | Three-tier confidence grading: Seen, Stated, or Unknown | Prevents vendor marketing claims from being recorded as verified architectural facts. | | Observation shelf life | 12-month limit; 6-month limit; indefinite until broken | 12-month shelf life; older observations marked stale | Ensures build and link decisions rely on current pricing and feature sets. | | Snapshot archival | Public web archive permalinks; raw HTML/MHTML committed to git; live outbound URLs only | Public web archive permalinks (Wayback Machine or Archive.today) | Preserves verifiable evidentiary audit trails without committing third-party page assets to git. |"
+  },
+  {
+    "id": "section-open-questions-scoring-and-decisions",
+    "type": "section",
+    "title": "Scoring and decisions",
+    "subtitle": "What is not decided yet",
+    "summary": "These questions govern how observed ideas are evaluated and how final build outcomes are reached. | Question | Options considered | Draft default | Why it matte...",
+    "url": "/guides/open-questions/#scoring-and-decisions",
+    "badge": "Section",
+    "content": "Scoring and decisions What is not decided yet These questions govern how observed ideas are evaluated and how final build outcomes are reached. | Question | Options considered | Draft default | Why it matters | | --- | --- | --- | --- | | Division of authority | AI drafts scores, human decides; automated score thresholding; human evaluates without AI | AI drafts scores and rationale; human owner decides outcome | Preserves sole human accountability while using AI speed for initial rubric drafting. | | Link over rebuild | Mandatory link if free tool exists; rebuild allowed for UX flaws; park candidate instead | Mandatory Link outcome whenever a free tool satisfies listing conditions (Gap = 1) | Prevents duplicating viable community tools and directs effort toward true market gaps. | | Government calculators | Build private client-side alternative; link government tool in all cases; build only if deprecated | Score Gap as 3; build an offline-first, client-side, privacy-respecting alternative | Provides defense contractors in secure air-gapped areas with tools they can run locally. | | Tie-breaking rules | Roadmap $\\rightarrow$ Gap $\\rightarrow$ Upkeep $\\rightarrow$ Size $\\rightarrow$ Community; community upvotes top; need score top | Roadmap phase fit $\\rightarrow$ Gap severity $\\rightarrow$ Low upkeep $\\rightarrow$ Small size $\\rightarrow$ Community requests | Maintains strategic delivery discipline over short-term popularity spikes. |"
+  },
+  {
+    "id": "section-open-questions-credit-and-vendors",
+    "type": "section",
+    "title": "Credit and vendors",
+    "subtitle": "What is not decided yet",
+    "summary": "These questions define how conceptual inspiration is acknowledged and how vendor relationships are handled. | Question | Options considered | Draft default | Wh...",
+    "url": "/guides/open-questions/#credit-and-vendors",
+    "badge": "Section",
+    "content": "Credit and vendors What is not decided yet These questions define how conceptual inspiration is acknowledged and how vendor relationships are handled. | Question | Options considered | Draft default | Why it matters | | --- | --- | --- | --- | | Provenance phrasing | Three-part factual template; minimal rule citation only; detailed comparative feature matrix | Standard three-part factual template ( Idea seen in , What we took , What we did differently ) | Credits inspiration truthfully without copying creative expression or making disparaging claims. | | Vendor opt-out | Honor request promptly with generic descriptor; refuse request under nominative fair use; delist tool | Replace vendor name with generic descriptor (“a commercial product”) while keeping the tool | Defuses trademark friction while preserving public access to clean-room implementations. | | Dispute intake | 48-hour safe-harbor intake and public log; formal legal process required; silent git purging | 48-hour safe-harbor intake with public logging in TRANSPARENCY.md | Resolves disputes quickly and openly without expensive legal confrontation. | | Open-source reuse | Permissive reuse (MIT/Apache) with attribution; 100% scratch code only; runtime CDN packages | Permissive open-source code permitted with attribution; no runtime CDNs | Avoids reinventing established algorithms while keeping zero-runtime network boundaries. |"
+  },
+  {
+    "id": "section-open-questions-ai-transparency",
+    "type": "section",
+    "title": "AI transparency",
+    "subtitle": "What is not decided yet",
+    "summary": "These questions establish how artificial intelligence tools are used and disclosed across the project. | Question | Options considered | Draft default | Why it ...",
+    "url": "/guides/open-questions/#ai-transparency",
+    "badge": "Section",
+    "content": "AI transparency What is not decided yet These questions establish how artificial intelligence tools are used and disclosed across the project. | Question | Options considered | Draft default | Why it matters | | --- | --- | --- | --- | | Disclosure surface | Multi-tier site disclosure; repository-only disclosure; top banner on every page | Multi-tier disclosure: About page + footer link + dedicated guide + decision logs | Establishes credibility through radical transparency about human-AI collaboration. | | Commit attribution | Dual trailers (AI-Assisted-By and Co-authored-by); human author only; dedicated AI bot committer | Dual git trailers: AI-Assisted-By: [Tool] and Co-authored-by: [Tool] | Creates a machine-readable, permanent record of AI drafting in repository history. | | Verification gates | 100% parity with published government test vectors + human check; automated mock tests; beta launch | Mandatory dual-audit: deterministic tests matching worked government examples + human eCFR check | Prevents AI hallucinations from producing incorrect compliance arithmetic. | | Errata handling | Prompt code fix with regression test and credit; silent fix with date bump; formal ERRATA.md log | Code correction with regression test, commit attribution, and date bump | Encourages public review and upholds strict standards of regulatory accuracy. |"
+  },
+  {
+    "id": "section-open-questions-data-and-repository",
+    "type": "section",
+    "title": "Data and repository",
+    "subtitle": "What is not decided yet",
+    "summary": "These questions address how data is structured, licensed, and protected from malicious submissions. | Question | Options considered | Draft default | Why it mat...",
+    "url": "/guides/open-questions/#data-and-repository",
+    "badge": "Section",
+    "content": "Data and repository What is not decided yet These questions address how data is structured, licensed, and protected from malicious submissions. | Question | Options considered | Draft default | Why it matters | | --- | --- | --- | --- | | Dataset location | Standalone ClearedStack/prior-art repo; subfolder in website repo; GitHub Issues as database | Standalone repository ClearedStack/prior-art with static browser app | Keeps the main publishing site lean and fast while isolating research data. | | Dataset licensing | Dual CC0 for data and MIT for code; unified MIT license; CC-BY-SA copyleft | Dual license: CC0 1.0 Universal for dataset records; MIT License for code | Maximizes public domain reuse of regulatory data while protecting software tools. | | File organization | Granular flat JSON files; category subfolder tree; single monolithic JSON array | Granular flat files: records/PA-XXXX.json and decisions/PA-XXXX-YYYY-MM-DD.json | Avoids git merge conflicts during collaborative reviews and enables clean atomic history. | | Submission security | Schema validation and prompt sanitization; no AI processing of issues; raw unvalidated ingestion | Rigid schema validation, prompt-injection sanitization, and human pre-merge audit | Protects maintainer development environments from adversarial prompt injection. |"
+  },
+  {
+    "id": "section-open-questions-governance-and-legal",
+    "type": "section",
+    "title": "Governance and legal",
+    "subtitle": "What is not decided yet",
+    "summary": "These questions define legal entity ownership, revenue policies, and project continuity. | Question | Options considered | Draft default | Why it matters | | --...",
+    "url": "/guides/open-questions/#governance-and-legal",
+    "badge": "Section",
+    "content": "Governance and legal What is not decided yet These questions define legal entity ownership, revenue policies, and project continuity. | Question | Options considered | Draft default | Why it matters | | --- | --- | --- | --- | | Entity structure | Unincorporated Phase 1, LLC/non-profit Phase 2; immediate foundation transfer; permanent individual | Unincorporated personal project for Phase 1, evaluating LLC or fiscal sponsorship for Phase 2 | Manages legal liability proportionally as project adoption grows. | | Revenue policy | Inviolable zero revenue; non-directed community micro-donations; corporate underwriting | Inviolable zero-revenue rule: no ads, sponsorships, donations, or paid tiers | Ensures complete editorial independence and uncompromised public trust. | | Contributor ethics | Mandatory attestation of off-duty personal work; ban defense employees; formal employer CCLAs | Mandatory contributor attestation confirming personal time, personal equipment, and public data | Protects contributors from federal ethics violations and keeps proprietary data out. | | Project continuity | Static architecture + backup org admin + git mirror; 10-year domain pre-pay; uncoordinated forks | Pure static files + backup organization co-admin + secondary git mirror | Ensures tools remain available and self-hostable even if the primary owner departs. | | Liability disclaimers | Persistent header banner + export watermarks; footer disclaimer only; mandatory click-wrap EULA | Persistent header banner on tools and watermarks on all exported calculation summaries | Clarifies that tools are computational aids rather than legal or accounting counsel. |"
+  },
+  {
+    "id": "section-open-questions-site-presentation",
+    "type": "section",
+    "title": "Site presentation",
+    "subtitle": "What is not decided yet",
+    "summary": "These questions determine how governance, provenance, and mathematical formulas appear in the user interface. | Question | Options considered | Draft default | ...",
+    "url": "/guides/open-questions/#site-presentation",
+    "badge": "Section",
+    "content": "Site presentation What is not decided yet These questions determine how governance, provenance, and mathematical formulas appear in the user interface. | Question | Options considered | Draft default | Why it matters | | --- | --- | --- | --- | | Navigation placement | 4th header nav link ( /how-we-decide/ ); link from Home and footer only; subpage under About | New top-level page /how-we-decide/ (\"Section M · Evaluation factors\") in header and home | Elevates evaluation transparency to the primary site navigation structure. | | Guide categorization | Dedicated Group L.6; fold into Group L.4 Contribute; distribute across L.1 and L.5 | Dedicated Guide Group L.6 \"How this project is run\" ( id: \"project\" ) | Provides a clear reading path for project governance without diluting practitioner guides. | | Provenance visibility | Subtle inline link on /tools/ ; interactive modal drawer; repository README only | Subtle inline text link beneath tool description on /tools/ | Delivers ethical attribution without cluttering the catalog interface. | | Formula transparency | Collapsible inline drawer on tools; external link to guide; tooltip hover bubbles | Collapsible \"Regulatory Math & Citation\" drawer embedded directly in the tool UI | Enables compliance officers and auditors to verify math without leaving the page. |"
+  },
+  {
+    "id": "guide-prior-art-engine",
+    "type": "guide",
+    "title": "How the project chooses what to build",
+    "subtitle": "Guide · Section L.6",
+    "summary": "Follow the ten-stage pipeline from public observation to catalog listing, and see how the project keeps decisions open.",
+    "url": "/guides/prior-art-engine/",
+    "badge": "DRAFT",
+    "content": "How the project chooses what to build Follow the ten-stage pipeline from public observation to catalog listing, and see how the project keeps decisions open. project draft intent This guide describes intent. The prior-art engine is not running, the ClearedStack/prior-art repository does not exist yet, and nothing has been collected. When the process starts, records and decisions will be published in public. Instead of guessing what federal contractors and small businesses need, ClearedStack plans to study tools that already exist for government-contracting paperwork. The project records what each tool does from its public pages, screens and scores the idea in public, let"
+  },
+  {
+    "id": "section-prior-art-engine-why-an-engine-is-needed",
+    "type": "section",
+    "title": "Why an engine is needed",
+    "subtitle": "How the project chooses what to build",
+    "summary": "Government contracting paperwork carries heavy regulatory friction. Small businesses, solo practitioners, and subcontractors frequently face complex calculation...",
+    "url": "/guides/prior-art-engine/#why-an-engine-is-needed",
+    "badge": "Section",
+    "content": "Why an engine is needed How the project chooses what to build Government contracting paperwork carries heavy regulatory friction. Small businesses, solo practitioners, and subcontractors frequently face complex calculations, formatting rules, and compliance checklists. Commercial products, spreadsheets, and agency calculators exist across the industry, but they often present significant barriers: - They require paid subscriptions that small teams cannot afford. - They gate basic calculations behind sales forms, account creation, or email collection. - They embed third-party tracking scripts that report user activity. - They send proprietary bid data or labor rates to remote servers. The prior-art engine systematically discovers these existing tools to identify what jobs need solving, document where free privacy-respecting alternatives are missing, and schedule independent clean-room implementations."
+  },
+  {
+    "id": "section-prior-art-engine-the-ten-stages",
+    "type": "section",
+    "title": "The ten stages",
+    "subtitle": "How the project chooses what to build",
+    "summary": "Work flows through ten canonical stages. The sequence is linear by default, with explicit review gates, knockout criteria, and a feedback loop for maintenance. ...",
+    "url": "/guides/prior-art-engine/#the-ten-stages",
+    "badge": "Section",
+    "content": "The ten stages How the project chooses what to build Work flows through ten canonical stages. The sequence is linear by default, with explicit review gates, knockout criteria, and a feedback loop for maintenance. 1. Discover : Find a candidate tool, spreadsheet, or portal. Candidates originate from automated web sweeps, human owner findings, or community issue submissions. See How candidates are found. 2. Record : Assign a persistent record identifier (such as PA-0001 ). Normalize the URL and identify mirrors, upstream forks, and white-label re-skins. 3. Observe : Read public pages only. Capture the discrete job, required inputs, generated outputs, access requirements, network tracking profile, license, pricing model, cited public standard, and permanent web archive snapshot. See How an existing tool is observed. 4. Screen : Test the candidate against five knockout gates. A candidate that fails any gate is screened out immediately with the reason recorded. 5. Score : Grade eligible ideas against a seven-factor rubric totaling 100 points. AI agents draft factor scores with written rationales; all scores are public. See How an idea is scored and decided. 6. Decide : The human owner makes the binding determination: Build, Link, Merge, Park, or Reject. 7. Credit : Prepare a public provenance statement naming the observed tool, what job was taken, what was done differently, and the governing regulation. See How ideas are credited. 8. Build : Write an independent client-side application in its own repository, working strictly from the official regulation and decision record. The catalog status transitions from planned to building . 9. List : Verify that the finished tool satisfies all five listing conditions. The catalog status transitions to live , and provenance appears on /tools. 10. Revisit : Conduct monthly checks. If the cited regulation changes or the observed tool alters its public terms, re-open the record to update, rebuild, or retire the tool."
+  },
+  {
+    "id": "section-prior-art-engine-the-five-knockout-gates",
+    "type": "section",
+    "title": "The five knockout gates",
+    "subtitle": "How the project chooses what to build",
+    "summary": "During Stage 4 (Screen), every candidate must satisfy five non-negotiable criteria before receiving a score: 1. Public source : The underlying calculations, rul...",
+    "url": "/guides/prior-art-engine/#the-five-knockout-gates",
+    "badge": "Section",
+    "content": "The five knockout gates How the project chooses what to build During Stage 4 (Screen), every candidate must satisfy five non-negotiable criteria before receiving a score: 1. Public source : The underlying calculations, rules, or checklists exist in an officially released public statute, regulation, standard, or agency bulletin. 2. Runs in the browser : The calculation or workflow can execute completely inside a web browser without a remote server, external database, or network API. 3. Private by design : The tool operates offline, requires no user account, records no telemetry, and functions under a strict content security policy. 4. One job : The tool solves one discrete task that can be stated in a single sentence starting with an active verb. Candidates solving multiple disparate jobs are split into separate records. 5. Arithmetic, not advice : The tool computes formulas, formats data, or checks rule checklists. It never provides legal opinions, subjective assessments, or contracting officer determinations."
+  },
+  {
+    "id": "section-prior-art-engine-record-lifecycle-and-states",
+    "type": "section",
+    "title": "Record lifecycle and states",
+    "subtitle": "How the project chooses what to build",
+    "summary": "A candidate record transitions through deterministic states from intake to retirement.",
+    "url": "/guides/prior-art-engine/#record-lifecycle-and-states",
+    "badge": "Section",
+    "content": "Record lifecycle and states How the project chooses what to build A candidate record transitions through deterministic states from intake to retirement."
+  },
+  {
+    "id": "section-prior-art-engine-division-of-labor",
+    "type": "section",
+    "title": "Division of labor",
+    "subtitle": "How the project chooses what to build",
+    "summary": "The prior-art engine pairs AI automation with human accountability. AI agents handle data extraction and code generation, while the human owner retains sole dec...",
+    "url": "/guides/prior-art-engine/#division-of-labor",
+    "badge": "Section",
+    "content": "Division of labor How the project chooses what to build The prior-art engine pairs AI automation with human accountability. AI agents handle data extraction and code generation, while the human owner retains sole decision authority. AI agents never make build decisions, never assign final scores without review, and never execute inside the client-side tools themselves. For full details on our AI policies, read How AI is used to build this project."
+  },
+  {
+    "id": "section-prior-art-engine-where-information-lives",
+    "type": "section",
+    "title": "Where information lives",
+    "subtitle": "How the project chooses what to build",
+    "summary": "To maintain site performance and separate research observations from production code, data is organized across four distinct layers: - Prior-art records ( recor...",
+    "url": "/guides/prior-art-engine/#where-information-lives",
+    "badge": "Section",
+    "content": "Where information lives How the project chooses what to build To maintain site performance and separate research observations from production code, data is organized across four distinct layers: - Prior-art records ( records/PA-XXXX.json ) : Version-controlled JSON records stored in the future ClearedStack/prior-art repository. Each file contains public URLs, input and output schemas, network audit results, and snapshot links. - Decision logs ( decisions/PA-XXXX-YYYY-MM-DD.json ) : Immutable records of owner decisions. They record the date, the outcome, the rubric scores, the drafting AI model, and the owner’s sign-off rationale. - Site catalog ( src/data/catalog.ts ) : The source of truth for tools displayed on clearedstack.com . When a tool is approved, an entry is added with status: \"planned\" and an optional provenance reference. - Public catalog (/tools/) : The static web presentation where visitors browse tools, filter by CLIN category, and read provenance notes."
+  },
+  {
+    "id": "section-prior-art-engine-what-we-never-do",
+    "type": "section",
+    "title": "What we never do",
+    "subtitle": "How the project chooses what to build",
+    "summary": "The engine operates under strict ethical and legal boundaries. We never: - Access non-public, classified, Controlled Unclassified Information (CUI), or export-c...",
+    "url": "/guides/prior-art-engine/#what-we-never-do",
+    "badge": "Section",
+    "content": "What we never do How the project chooses what to build The engine operates under strict ethical and legal boundaries. We never: - Access non-public, classified, Controlled Unclassified Information (CUI), or export-controlled materials. - Create user accounts, register credentials, submit email addresses, or join mailing lists. - Start free trials, request sales demonstrations, or submit marketing lead forms. - Bypass paywalls, password prompts, session gates, or access controls. - Solve, click through, or script around CAPTCHAs, Turnstiles, or anti-bot challenges. - Disregard robots.txt instructions or terms of service scraping prohibitions. - Enter real company data, real contract numbers, real labor rates, personal identifiable information (PII), or live bids into any external tool. - Copy source code, markup, CSS, icons, documentation text, or visual design from an observed tool. - Probe, fuzz, scan, or conduct security testing against third-party servers."
+  },
+  {
+    "id": "section-prior-art-engine-further-reading",
+    "type": "section",
+    "title": "Further reading",
+    "subtitle": "How the project chooses what to build",
+    "summary": "- How candidates are found (L.6.2) - How an existing tool is observed (L.6.3) - How an idea is scored and decided (L.6.4) - How ideas are credited (L.6.5) - How...",
+    "url": "/guides/prior-art-engine/#further-reading",
+    "badge": "Section",
+    "content": "Further reading How the project chooses what to build - How candidates are found (L.6.2) - How an existing tool is observed (L.6.3) - How an idea is scored and decided (L.6.4) - How ideas are credited (L.6.5) - How AI is used to build this project (L.6.6) - What is not decided yet (L.6.7) - How we decide"
+  },
+  {
     "id": "guide-protecting-government-information",
     "type": "guide",
     "title": "Protecting government information",
@@ -1847,7 +2605,7 @@
     "summary": "FCI and CUI, the security requirements that come with each, how NIST SP 800-171 and CMMC fit together, and how CUI is marked.",
     "url": "/guides/protecting-government-information/",
     "badge": "FIELD",
-    "content": "Protecting government information FCI and CUI, the security requirements that come with each, how NIST SP 800-171 and CMMC fit together, and how CUI is marked. field A government contract usually comes with information the government expects you to protect, and with security requirements that depend on what kind of information it is. This guide sorts out the vocabulary, shows which rule applies to which information, and describes the work in the order a small company would do it. The rules below were checked in November 2026. The CMMC rollout schedule was altered in 2026, and several contract clauses are being renumbered. Treat the dates and clause numbers h"
+    "content": "Protecting government information FCI and CUI, the security requirements that come with each, how NIST SP 800-171 and CMMC fit together, and how CUI is marked. field  A government contract usually comes with information the government expects you to protect, and with security requirements that depend on what kind of information it is. This guide sorts out the vocabulary, shows which rule applies to which information, and describes the work in the order a small company would do it. The rules below were checked in November 2026. The CMMC rollout schedule was altered in 2026, and several contract clauses are being renumbered. Treat the dates and clause numbers h"
   },
   {
     "id": "section-protecting-government-information-two-kinds-of-information",
@@ -1957,7 +2715,7 @@
     "summary": "The official places to read each regulation and standard the tools are built on, how citations work and how to tell that what you are reading is current.",
     "url": "/guides/public-sources/",
     "badge": "REFERENCE",
-    "content": "Where the rules live The official places to read each regulation and standard the tools are built on, how citations work and how to tell that what you are reading is current. reference Everything the tools and guides rest on has been officially released to the public, and all of it is free to read. This page lists where. Go to these sources, not to a summary, when you need to check a result or settle a disagreement. On a network with no internet connection, none of these links will open. Bring the documents you need across through your organization’s own process. Reading a citation A citation is an address. Once you can read one, you can find the text. | Citation | How to read"
+    "content": "Where the rules live The official places to read each regulation and standard the tools are built on, how citations work and how to tell that what you are reading is current. reference  Everything the tools and guides rest on has been officially released to the public, and all of it is free to read. This page lists where. Go to these sources, not to a summary, when you need to check a result or settle a disagreement. On a network with no internet connection, none of these links will open. Bring the documents you need across through your organization’s own process. Reading a citation A citation is an address. Once you can read one, you can find the text. | Citation | How to read"
   },
   {
     "id": "section-public-sources-reading-a-citation",
@@ -2057,7 +2815,7 @@
     "summary": "How a federal solicitation is laid out, which sections to read first and what to find before you decide to bid.",
     "url": "/guides/read-a-solicitation/",
     "badge": "FIELD",
-    "content": "Read a solicitation How a federal solicitation is laid out, which sections to read first and what to find before you decide to bid. field A solicitation is the government’s written request for offers. It can run to hundreds of pages, and most of those pages are not where the decisions are. This guide explains how the document is organized so you can find the dozen facts that tell you whether to bid, and what a winning answer has to contain. The kinds of request Not everything the government posts is a solicitation, and the different kinds are answered differently. | Name | What it is | What you send back | | --- | --- | --- | | Re"
+    "content": "Read a solicitation How a federal solicitation is laid out, which sections to read first and what to find before you decide to bid. field  A solicitation is the government’s written request for offers. It can run to hundreds of pages, and most of those pages are not where the decisions are. This guide explains how the document is organized so you can find the dozen facts that tell you whether to bid, and what a winning answer has to contain. The kinds of request Not everything the government posts is a solicitation, and the different kinds are answered differently. | Name | What it is | What you send back | | --- | --- | --- | | Re"
   },
   {
     "id": "section-read-a-solicitation-the-kinds-of-request",
@@ -2157,7 +2915,7 @@
     "summary": "How to ask for a tool or a guide, report a mistake, and get a tool you built listed in the catalog.",
     "url": "/guides/request-or-add-a-tool/",
     "badge": "CONTRIBUTE",
-    "content": "Request a tool or add your own How to ask for a tool or a guide, report a mistake, and get a tool you built listed in the catalog. contribute The catalog grows in two ways: someone asks for a tool, or someone builds one. Both are welcome, and neither needs permission to start. Where to send things | You want to | Do this | | --- | --- | | Ask for a new tool | Open an issue on this site’s repository, or email | | Say a planned tool matters to you | The same. It moves the tool up the list | | Report a wrong result | Open an issue in that tool’s repository, or email | | Report a mistake in a guide or on the site | Open an issue on this s"
+    "content": "Request a tool or add your own How to ask for a tool or a guide, report a mistake, and get a tool you built listed in the catalog. contribute  The catalog grows in two ways: someone asks for a tool, or someone builds one. Both are welcome, and neither needs permission to start. Where to send things | You want to | Do this | | --- | --- | | Ask for a new tool | Open an issue on this site’s repository, or email | | Say a planned tool matters to you | The same. It moves the tool up the list | | Report a wrong result | Open an issue in that tool’s repository, or email | | Report a mistake in a guide or on the site | Open an issue on this s"
   },
   {
     "id": "section-request-or-add-a-tool-where-to-send-things",
@@ -2177,7 +2935,7 @@
     "summary": "A useful request covers three things: - The job. What you need to produce, and what you do by hand today. “I rebuild a spreadsheet that turns our pools into rat...",
     "url": "/guides/request-or-add-a-tool/#request-a-tool",
     "badge": "Section",
-    "content": "Request a tool Request a tool or add your own A useful request covers three things: - The job. What you need to produce, and what you do by hand today. “I rebuild a spreadsheet that turns our pools into rates for every proposal” is a job. “A pricing tool” is not. - Who needs it. For example, a solo developer pricing a first bid, or a small company preparing for a first assessment. - The public source. The regulation, standard or guide the tool would be based on, with a link if you have one. You can copy this outline into an issue or an email: The last line matters more than it looks. If a tool would be useless to you the moment it asked for a company name, say so."
+    "content": "Request a tool Request a tool or add your own A useful request covers three things: - The job. What you need to produce, and what you do by hand today. “I rebuild a spreadsheet that turns our pools into rates for every proposal” is a job. “A pricing tool” is not. - Who needs it. For example, a solo developer pricing a first bid, or a small company preparing for a first assessment. - The public source. The regulation, standard or guide the tool would be based on, with a link if you have one. You can copy this outline into an issue or an email: The last line matters more than it looks. If a tool would be useless to you the moment it asked for a company name, say so. How a suggestion enters the Prior Art process Community suggestions enter the project’s Prior Art engine (draft) at the Discover stage and go through the same stages as any other candidate: (Note: The Prior Art engine describes pure intent and is currently in draft. It is not running yet, and nothing has been collected. See Section M · How we decide and How the project chooses what to build.)"
   },
   {
     "id": "section-request-or-add-a-tool-ask-for-one-that-is-already-planned",
@@ -2217,7 +2975,7 @@
     "summary": "Tools live in their own repositories, under your own name or organization. ClearedStack lists them. It does not take them over. To be listed, a tool has to be: ...",
     "url": "/guides/request-or-add-a-tool/#add-a-tool-you-built",
     "badge": "Section",
-    "content": "Add a tool you built Request a tool or add your own Tools live in their own repositories, under your own name or organization. ClearedStack lists them. It does not take them over. To be listed, a tool has to be: 1. Free and open source , under an OSI-approved license, with no paid tier and no ads. 2. Client-side. It runs in the browser or on the user’s own machine, and does not send what the user enters to any server. 3. Free of tracking : no analytics, no third-party scripts, no accounts. 4. Built from public sources , and clear about which ones. 5. Honest about its limits , including that its output is not professional advice. To list it: 1. Fork this site’s repository. 2. Add one entry to src/data/catalog.ts . 3. Open a pull request that links to your tool and its repository. The entry looks like this: The home page, the catalog and their counts are generated from that file, so the one entry is the whole change. Build a tool that can be listed goes through each condition in detail, with a checklist to run before you open the pull request."
+    "content": "Add a tool you built Request a tool or add your own Tools live in their own repositories, under your own name or organization. ClearedStack lists them. It does not take them over. To be listed, a tool has to be: 1. Free and open source , under an OSI-approved license, with no paid tier and no ads. 2. Client-side. It runs in the browser or on the user’s own machine, and does not send what the user enters to any server. 3. Free of tracking : no analytics, no third-party scripts, no accounts. 4. Built from public sources , and clear about which ones. 5. Honest about its limits , including that its output is not professional advice. To list it: 1. Fork this site’s repository. 2. Add one entry to src/data/catalog.ts . 3. Open a pull request that links to your tool and its repository. The entry looks like this: The home page, the catalog and their counts are generated from that file, so the one entry is the whole change. Pull requests may include an optional provenance field documenting where the inspiration originated. Build a tool that can be listed goes through each condition in detail, with a checklist to run before you open the pull request."
   },
   {
     "id": "section-request-or-add-a-tool-how-a-listing-is-reviewed",
@@ -2260,6 +3018,76 @@
     "content": "What you agree to Request a tool or add your own By contributing to this site’s repository you agree that your work is released under the MIT License. A tool in your own repository stays yours, under the open-source license you chose for it."
   },
   {
+    "id": "guide-score-and-decide",
+    "type": "guide",
+    "title": "How an idea is scored and decided",
+    "subtitle": "Guide · Section L.6",
+    "summary": "The five knockout gates, the seven-factor scoring rubric, deterministic tie-breakers, and the public decision log.",
+    "url": "/guides/score-and-decide/",
+    "badge": "DRAFT",
+    "content": "How an idea is scored and decided The five knockout gates, the seven-factor scoring rubric, deterministic tie-breakers, and the public decision log. project draft intent This guide describes planned process and intent. The Prior Art engine is not running, no candidate tools have been evaluated, and no decision records have been collected yet. Every tool in the ClearedStack catalog starts as an observation of what contractors do by hand or what existing software does on the web. Once an idea is recorded and its public surfaces are observed, the project does not immediately begin writing code. It runs the idea through a structured screening and scoring process in "
+  },
+  {
+    "id": "section-score-and-decide-the-five-knockout-gates",
+    "type": "section",
+    "title": "The five knockout gates",
+    "subtitle": "How an idea is scored and decided",
+    "summary": "Before an idea receives a numerical score, it must pass five binary screening gates. If an idea fails any single gate, evaluation stops immediately. The idea is...",
+    "url": "/guides/score-and-decide/#the-five-knockout-gates",
+    "badge": "Section",
+    "content": "The five knockout gates How an idea is scored and decided Before an idea receives a numerical score, it must pass five binary screening gates. If an idea fails any single gate, evaluation stops immediately. The idea is screened out, and the specific failure reason is logged in the public decision record. 1. Public source. The underlying rules, formulas, thresholds, or validation tables must come from officially released public materials. Codified statutes, the Federal Acquisition Regulation (FAR), agency supplements (such as the DFARS), and NIST Special Publications qualify. Unwritten industry folklore, private consulting methodologies, and paywalled manuals do not. 2. Runs in the browser. The tool must execute entirely on the visitor’s own computer using HTML, CSS, client-side JavaScript, or WebAssembly. Workflows that require a backend server, a central database, or remote computing APIs are screened out. 3. Private by design. The tool must work offline, require no user accounts or registration, and emit zero tracking telemetry. It must operate under a strict Content Security Policy ( connect-src 'self' ) that prevents network calls. 4. One job. The tool must perform a single, focused task that can be described in one active sentence starting with a verb (such as “Calculate a fully burdened labor rate” or “Format a small-business subcontracting report”). Sprawling all-in-one management suites fail this gate, though they may be split into separate candidate proposals. 5. Arithmetic, not advice. The tool must compute numbers, structure data, or look up citations. It must never deliver subjective legal advice, evaluate past performance, or substitute for a contracting officer’s discretion."
+  },
+  {
+    "id": "section-score-and-decide-the-scoring-rubric",
+    "type": "section",
+    "title": "The scoring rubric",
+    "subtitle": "How an idea is scored and decided",
+    "summary": "Ideas that pass all five gates are evaluated across seven weighted factors. Each factor receives an integer rating from 1 to 5. The rating is multiplied by the ...",
+    "url": "/guides/score-and-decide/#the-scoring-rubric",
+    "badge": "Section",
+    "content": "The scoring rubric How an idea is scored and decided Ideas that pass all five gates are evaluated across seven weighted factors. Each factor receives an integer rating from 1 to 5. The rating is multiplied by the factor’s weight, yielding a composite score from 20 to 100 points. The seven factors measure practical utility and long-term maintainability: - Need for small businesses (Weight: ×4, Max: 20 points). A rating of 1 represents a rare edge case affecting few contractors. A rating of 3 represents an occasional requirement, such as an annual reporting form. A rating of 5 represents a recurring administrative bottleneck or a calculation with severe contractual penalties if misapplied. - Gap in existing free options (Weight: ×4, Max: 20 points). A rating of 1 means high-quality, free, client-side tools already exist. A rating of 3 means an agency provides a usable form or an open-source tool exists with limited accessibility. A rating of 5 means only expensive subscription software or lead-generation forms exist. - Strength of the public source (Weight: ×3, Max: 15 points). A rating of 1 represents an informal agency slide presentation or draft discussion paper. A rating of 3 represents an agency policy memorandum or interim rule. A rating of 5 represents an enacted statute, a codified regulation in Title 48 of the CFR, or a published NIST standard. - Fits in a browser (Weight: ×3, Max: 15 points). A rating of 1 indicates large datasets exceeding browser memory limits. A rating of 3 requires a bundled lookup file under two megabytes. A rating of 5 represents lightweight, pure mathematics or text transformation with zero external dependencies. - Small enough to read (Weight: ×2, Max: 10 points). A rating of 1 indicates complex, multi-state logic. A rating of 5 indicates concise, straightforward logic readable in one sitting—typically under 300 lines of core code. - Can be checked (Weight: ×2, Max: 10 points). A rating of 1 means formulas require subjective interpretation. A rating of 5 means the government publishes worked examples or official test vectors against which outputs can be verified down to the penny. - Low upkeep of reference data (Weight: ×2, Max: 10 points). A rating of 1 requires weekly or monthly scraping of shifting government pages. A rating of 3 requires an annual update of fiscal-year rate tables. A rating of 5 represents permanent statutory arithmetic that remains valid until the regulation itself is amended."
+  },
+  {
+    "id": "section-score-and-decide-decision-outcomes-and-overrides",
+    "type": "section",
+    "title": "Decision outcomes and overrides",
+    "subtitle": "How an idea is scored and decided",
+    "summary": "The composite score produces a default recommendation, which the human project owner reviews: - Build (Score ≥ 75). ClearedStack designs, builds, and maintains ...",
+    "url": "/guides/score-and-decide/#decision-outcomes-and-overrides",
+    "badge": "Section",
+    "content": "Decision outcomes and overrides How an idea is scored and decided The composite score produces a default recommendation, which the human project owner reviews: - Build (Score ≥ 75). ClearedStack designs, builds, and maintains a clean-room, client-side tool in its own repository under an open-source license. - Park (Score 55 to 74). The idea is valid and passed all gates, but is deferred because of missing public data files, pending federal rulemaking, or capacity constraints. It enters the backlog with a documented blocker. - Reject (Score &lt; 55). The candidate falls below the threshold for inclusion. The rationale and points breakdown are published in the log. Two automated override rules refine this baseline: 1. The Gap = 1 override (Link over rebuild). If an idea achieves a score of 75 or higher but scores 1 on the Gap factor, an acceptable, free, and privacy-respecting tool already exists. Rather than duplicating existing open-source work, ClearedStack routes the candidate to Link , pointing users to the existing tool in guides or catalog listings. 2. The split/merge review. If an idea scores 4 or 5 on Need but 1 or 2 on Single-Job Fit, it represents a real contractor pain point bundled inside an oversized scope. The engine flags the idea for review: the owner splits it into atomic single-job tools or merges specific functions into an existing project. 1\", then: \"Build\", detail: \"Approved for development as a new client-side tool in the catalog.\", }, { when: \"Score ≥ 75 but Gap = 1\", then: \"Link\", detail: \"Override: an acceptable free tool already exists, so link to it rather than rebuilding.\", }, { when: \"Score 55 to 74\", then: \"Park\", detail: \"Valid idea deferred due to external blockers, pending rules, or capacity.\", }, { when: \"Score Scores are advisory. An AI assistant may draft the initial points and rationale, but the human owner holds sole decision authority. If the owner overrides a score recommendation, the decision log explicitly records the override and the reasoning behind it."
+  },
+  {
+    "id": "section-score-and-decide-resolving-ties",
+    "type": "section",
+    "title": "Resolving ties",
+    "subtitle": "How an idea is scored and decided",
+    "summary": "When multiple candidates share identical composite scores, the project prioritizes work using five deterministic tie-breakers:",
+    "url": "/guides/score-and-decide/#resolving-ties",
+    "badge": "Section",
+    "content": "Resolving ties How an idea is scored and decided When multiple candidates share identical composite scores, the project prioritizes work using five deterministic tie-breakers:"
+  },
+  {
+    "id": "section-score-and-decide-decision-lifecycle-and-revisits",
+    "type": "section",
+    "title": "Decision lifecycle and revisits",
+    "subtitle": "How an idea is scored and decided",
+    "summary": "Decisions are living records, not permanent dead ends. A tool that is parked or rejected today may become viable when an agency modernizes its data or browsers ...",
+    "url": "/guides/score-and-decide/#decision-lifecycle-and-revisits",
+    "badge": "Section",
+    "content": "Decision lifecycle and revisits How an idea is scored and decided Decisions are living records, not permanent dead ends. A tool that is parked or rejected today may become viable when an agency modernizes its data or browsers gain new capabilities. The project conducts a monthly review of recorded items. In addition, specific external events trigger an immediate re-evaluation: - Regulatory amendments. A proposed rule is finalized in the Federal Register, or an agency simplifies a calculation procedure. - Machine-readable datasets. An agency releases a structured JSON or CSV data feed, eliminating the need for manual data extraction. - Browser platform features. Web standards advance, enabling local file processing or WebAssembly performance that was previously impractical. - Status change of linked tools. A third-party tool previously linked by ClearedStack adds a paywall, introduces tracking scripts, or shuts down, triggering a fresh Build evaluation. 1)\" }, { id: \"linked\", when: \"free alternative exists (Gap = 1)\" }, { id: \"parked\", when: \"score 55–74 or blocked\" }, { id: \"rejected\", when: \"score"
+  },
+  {
+    "id": "section-score-and-decide-blank-decision-log-entry-template",
+    "type": "section",
+    "title": "Blank decision-log entry template",
+    "subtitle": "How an idea is scored and decided",
+    "summary": "Every evaluated candidate receives an entry in the version-controlled decision log. Below is the standard template used for new records:",
+    "url": "/guides/score-and-decide/#blank-decision-log-entry-template",
+    "badge": "Section",
+    "content": "Blank decision-log entry template How an idea is scored and decided Every evaluated candidate receives an entry in the version-controlled decision log. Below is the standard template used for new records:"
+  },
+  {
     "id": "guide-work-on-this-site",
     "type": "guide",
     "title": "Work on this site",
@@ -2267,7 +3095,7 @@
     "summary": "Set the site up on your own machine, find your way around the code, add a guide or a catalog entry, and send the change.",
     "url": "/guides/work-on-this-site/",
     "badge": "CONTRIBUTE",
-    "content": "Work on this site Set the site up on your own machine, find your way around the code, add a guide or a catalog entry, and send the change. contribute The site you are reading is one small repository. Fixing a typo, correcting a guide and adding a tool to the catalog are all changes to a text file in it. This guide shows where everything is. What the site is made of The site is built with Next.js, TypeScript and Tailwind CSS, and exported as static files. It has no server, no API routes and no database. The guides are written in MDX, which is Markdown that can also hold a few components. You do not need to know any of those to fix a sentence. "
+    "content": "Work on this site Set the site up on your own machine, find your way around the code, add a guide or a catalog entry, and send the change. contribute  The site you are reading is one small repository. Fixing a typo, correcting a guide and adding a tool to the catalog are all changes to a text file in it. This guide shows where everything is. What the site is made of The site is built with Next.js, TypeScript and Tailwind CSS, and exported as static files. It has no server, no API routes and no database. The guides are written in MDX, which is Markdown that can also hold a few components. You do not need to know any of those to fix a sentence. "
   },
   {
     "id": "section-work-on-this-site-what-the-site-is-made-of",
@@ -2337,7 +3165,27 @@
     "summary": "Text, lists, tables and code blocks. | Field | What to put there | | --- | --- | | title | The title, in sentence case | | summary | One sentence. It appears in...",
     "url": "/guides/work-on-this-site/#a-heading",
     "badge": "Section",
-    "content": "A heading Work on this site Text, lists, tables and code blocks. | Field | What to put there | | --- | --- | | title | The title, in sentence case | | summary | One sentence. It appears in the list, under the title and in search results | | group | The section it belongs to: start , field , host , contribute or reference | | order | Its position within the section, lowest first | | reviewed | Optional. For guides about regulations: the month the facts were last checked, as \"2026-11\" | The guides page, the table of contents, the reading time, the previous and next links and the sitemap all pick the file up on the next build."
+    "content": "A heading Work on this site Text, lists, tables and code blocks. | Field | What to put there | | --- | --- | | title | The title, in sentence case | | summary | One sentence. It appears in the list, under the title and in search results | | group | The section it belongs to: start , field , host , contribute , reference or project | | order | Its position within the section, lowest first | | draft | Optional boolean ( draft: true ). Shows a “Draft — describes intent; not running yet” banner on the guide | | reviewed | Optional. For guides about regulations: the month the facts were last checked, as \"2026-11\" | The guides page, the table of contents, the reading time, the previous and next links and the sitemap all pick the file up on the next build."
+  },
+  {
+    "id": "section-work-on-this-site-diagram-components",
+    "type": "section",
+    "title": "Diagram components",
+    "subtitle": "Work on this site",
+    "summary": "All guides and site pages have access to five static, accessible diagram components built with plain semantic HTML and CSS (no client-side JavaScript or externa...",
+    "url": "/guides/work-on-this-site/#diagram-components",
+    "badge": "Section",
+    "content": "Diagram components Work on this site All guides and site pages have access to five static, accessible diagram components built with plain semantic HTML and CSS (no client-side JavaScript or external CDNs). In MDX files, they are available globally without an import : - : Ordered sequential flows or pipelines. Optional props: direction=\"across\" | \"down\" , loop=\"Label for return\" , highlight={0} . - : Decision points and branching choices. - : Top-to-bottom stacks for rate build-ups and isolation boundaries. - : Swimlanes mapping steps to responsible actors. - : State machine cards showing transitions and terminal states. Here is an example in MDX:"
+  },
+  {
+    "id": "section-work-on-this-site-ai-assisted-work-and-commit-trailers",
+    "type": "section",
+    "title": "AI-assisted work and commit trailers",
+    "subtitle": "Work on this site",
+    "summary": "ClearedStack uses AI coding agents (Claude Code and Antigravity) to assist with drafting code, documentation, and tests under human direction and review. - Acco...",
+    "url": "/guides/work-on-this-site/#ai-assisted-work-and-commit-trailers",
+    "badge": "Section",
+    "content": "AI-assisted work and commit trailers Work on this site ClearedStack uses AI coding agents (Claude Code and Antigravity) to assist with drafting code, documentation, and tests under human direction and review. - Accountability: The human repository maintainer sets priorities, reviews every line of code, verifies every calculation against primary sources, and merges pull requests. - Commit trailers: Commits drafted or iterated with AI assistance should include a Git trailer identifying the tool: text Add Prior Art engine documentation Assisted-by: Claude Code Assisted-by: Antigravity - Zero AI at runtime: Tools in the catalog contain zero AI models and make zero network calls. AI is strictly authoring assistance. See How AI is used to build this project."
   },
   {
     "id": "section-work-on-this-site-what-you-can-use-in-a-guide",
@@ -2397,7 +3245,7 @@
     "summary": "Where your information goes when you use the site or a tool, what can still see it, and how to confirm all of it yourself.",
     "url": "/guides/your-data/",
     "badge": "START",
-    "content": "What happens to what you type Where your information goes when you use the site or a tool, what can still see it, and how to confirm all of it yourself. start The short answer is that it stays on your computer. This guide explains what that means, where the limits are, and how to check it without taking anyone’s word for it. What “runs in your browser” means Most web applications work in two halves. The page in front of you collects what you type and sends it to a server, the server does the work, and the answer comes back. Your information has left your computer by the time you see a result. The tools listed here have only the first half. When you op"
+    "content": "What happens to what you type Where your information goes when you use the site or a tool, what can still see it, and how to confirm all of it yourself. start  The short answer is that it stays on your computer. This guide explains what that means, where the limits are, and how to check it without taking anyone’s word for it. What “runs in your browser” means Most web applications work in two halves. The page in front of you collects what you type and sends it to a server, the server does the work, and the answer comes back. Your information has left your computer by the time you see a result. The tools listed here have only the first half. When you op"
   },
   {
     "id": "section-your-data-what-runs-in-your-browser-means",
@@ -2408,6 +3256,16 @@
     "url": "/guides/your-data/#what-runs-in-your-browser-means",
     "badge": "Section",
     "content": "What “runs in your browser” means What happens to what you type Most web applications work in two halves. The page in front of you collects what you type and sends it to a server, the server does the work, and the answer comes back. Your information has left your computer by the time you see a result. The tools listed here have only the first half. When you open one, your browser downloads the page and its code once. After that, the arithmetic, the text parsing and the file reading are all done by that code on your machine. There is no server waiting for your input, because the project does not run one. That is also why the tools cost nothing to run and need no account. There is nothing on the other end to pay for or to sign in to."
+  },
+  {
+    "id": "section-your-data-tools-contain-no-ai-at-runtime",
+    "type": "section",
+    "title": "Tools contain no AI at runtime",
+    "subtitle": "What happens to what you type",
+    "summary": "The tools themselves contain no artificial intelligence models, make no network calls to language model APIs, and process no data with machine learning. Calcula...",
+    "url": "/guides/your-data/#tools-contain-no-ai-at-runtime",
+    "badge": "Section",
+    "content": "Tools contain no AI at runtime What happens to what you type The tools themselves contain no artificial intelligence models, make no network calls to language model APIs, and process no data with machine learning. Calculations and parsers are 100% deterministic code that you can inspect in each tool’s public repository. AI tools (Claude Code and Antigravity) are used only at development time to assist the human maintainer in drafting code, documentation, and tests. All facts and formulas are verified line by line against official public regulations by a person before release. See How AI is used to build this project."
   },
   {
     "id": "section-your-data-this-website",

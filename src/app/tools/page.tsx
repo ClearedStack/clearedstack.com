@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Flow } from "@/components/Diagram";
 import { SectionLabel } from "@/components/SectionLabel";
 import { ToolCatalog } from "@/components/ToolCatalog";
 import { liveCount, tools } from "@/data/catalog";
@@ -36,6 +37,41 @@ export default function ToolsPage() {
         </a>
         .
       </p>
+
+      <p className="mt-4 max-w-2xl leading-relaxed text-muted">
+        The 18 planned tools below were chosen by the owner before the Prior Art evaluation process was written down.
+        Their provenance is not yet recorded and will be back-filled through the same public screening and scoring
+        pipeline. Learn{" "}
+        <Link href="/how-we-decide/" className={inlineLink}>
+          how we decide what to build
+        </Link>{" "}
+        and how each idea is evaluated.
+      </p>
+
+      <div className="mt-8">
+        <Flow
+          caption="How a tool moves from an approved idea to a live utility."
+          direction="across"
+          steps={[
+            {
+              tag: "Stage 6–7",
+              label: "Planned",
+              detail: "Idea approved by the human owner after passing five knockout gates and rubric scoring; provenance note approved.",
+            },
+            {
+              tag: "Stage 8",
+              label: "Building",
+              detail: "Clean-room development in its own repository, built from the public regulation without third-party code.",
+            },
+            {
+              tag: "Stage 9",
+              label: "Live",
+              detail: "Passes all five listing conditions: browser-only, zero network calls, offline, public sources, and permissive license.",
+            },
+          ]}
+        />
+      </div>
+
       <div className="mt-10">
         <ToolCatalog />
       </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DraftChip } from "@/components/StatusChip";
 import { site } from "@/data/site";
 import { formatReviewed, groupOf, guideSlugs, listGuides, loadGuide } from "@/lib/guides";
 
@@ -43,9 +44,12 @@ export default async function GuidePage({ params }: PageProps<"/guides/[slug]">)
           {group.code} {group.name}
         </Link>
       </p>
-      <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-[-0.02em] text-balance">
-        {guide.title}
-      </h1>
+      <div className="mt-4 flex flex-wrap items-baseline gap-3">
+        <h1 className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-[-0.02em] text-balance">
+          {guide.title}
+        </h1>
+        {guide.draft ? <DraftChip /> : null}
+      </div>
       <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">{guide.summary}</p>
       <p className="mt-5 flex flex-wrap gap-x-5 gap-y-1 font-mono text-xs text-muted">
         <span className="text-accent">{guide.code}</span>

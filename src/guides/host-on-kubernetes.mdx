@@ -26,6 +26,16 @@ The manifest in `k8s/clearedstack.yaml` creates three things:
 | Deployment | `clearedstack` | Two copies of the web server, each in its own pod |
 | Service | `clearedstack` | One stable address inside the cluster, on port 80, in front of the pods |
 
+<Layers
+  caption="Kubernetes deployment topology"
+  layers={[
+    { tag: "Ingress", label: "Ingress controller", detail: "Routes clearedstack.example.com and terminates TLS." },
+    { tag: "Service", label: "ClusterIP service", detail: "Port 80 balances requests across pod replicas in the namespace." },
+    { tag: "Pods", label: "Two deployment replicas", detail: "Pod replicas serve port 8080 with probes and resource limits." },
+    { tag: "Namespace", label: "clearedstack namespace", detail: "Isolates the deployment, service and optional network policy." },
+  ]}
+/>
+
 There is no database, no persistent volume, no config map and no secret. The pods hold nothing that needs backing up.
 
 ## Build and push the image
@@ -62,6 +72,17 @@ imagePullSecrets:
 kubectl apply -f k8s/clearedstack.yaml
 ```
 
+<Flow
+  caption="Deploying to Kubernetes"
+  direction="across"
+  steps={[
+    { tag: "Build", label: "Build container image", detail: "docker build creates the nginx-unprivileged image with static files." },
+    { tag: "Push", label: "Push to registry", detail: "Image pushed with immutable tag (e.g., :1) to your internal registry." },
+    { tag: "Configure", label: "Update manifest", detail: "Set image line in k8s/clearedstack.yaml to match pushed registry tag." },
+    { tag: "Apply", label: "Apply manifest", detail: "kubectl apply creates the namespace, deployment and service." },
+  ]}
+/>
+
 Wait for it to finish starting:
 
 ```bash
@@ -89,6 +110,16 @@ Open `http://localhost:8080`. Press Ctrl-C to stop forwarding.
 ## Put it on your own domain
 
 How you expose a service depends on your cluster. If it has an ingress controller, the repository has an example to start from:
+
+<Branch
+  caption="Exposing the cluster service"
+  question="How does your cluster route incoming traffic?"
+  options={[
+    { when: "Ingress controller", then: "k8s/ingress.yaml", detail: "Use an Ingress resource with TLS secret and route to port 80." },
+    { when: "Gateway API", then: "HTTPRoute resource", detail: "Route your Gateway listener directly to the clearedstack ClusterIP service." },
+    { when: "Load balancer", then: "LoadBalancer service", detail: "Expose service type LoadBalancer on port 80 directly from your cloud provider." },
+  ]}
+/>
 
 ```bash
 cp k8s/ingress.example.yaml k8s/ingress.yaml

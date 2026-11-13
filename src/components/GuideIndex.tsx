@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { DraftChip } from "@/components/StatusChip";
 import type { Guide, GuideGroup } from "@/lib/guides";
 
 /** What the list needs from each guide. Kept small because it is sent to the browser. */
 export type GuideIndexEntry = Pick<Guide, "slug" | "code" | "title" | "summary" | "group" | "minutes"> & {
   topics: string[];
+  draft?: boolean;
 };
 
 function matches(entry: GuideIndexEntry, groupName: string, query: string) {
@@ -99,8 +101,11 @@ export function GuideIndex({ groups, guides }: { groups: readonly GuideGroup[]; 
                   >
                     <span className="pt-1 font-mono text-xs text-accent">{guide.code}</span>
                     <span className="min-w-0">
-                      <span className="block text-lg font-semibold leading-snug transition-colors group-hover:text-accent">
-                        {guide.title}
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span className="text-lg font-semibold leading-snug transition-colors group-hover:text-accent">
+                          {guide.title}
+                        </span>
+                        {guide.draft ? <DraftChip /> : null}
                       </span>
                       <span className="mt-1.5 block text-[15px] leading-relaxed text-muted">{guide.summary}</span>
                       {guide.topics.length > 0 ? (

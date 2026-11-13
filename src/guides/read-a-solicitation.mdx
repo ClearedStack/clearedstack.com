@@ -47,6 +47,16 @@ Many solicitations follow the uniform contract format, which divides the documen
 
 Sections A through J become the contract. Section K is carried into it by reference. Sections L and M are about the competition, and are not part of the contract.
 
+<Layers
+  caption="How the uniform contract format divides solicitation sections"
+  layers={[
+    { label: "Sections L and M", detail: "Instructions and evaluation factors for the competition; not part of the contract.", tag: "Competition" },
+    { label: "Section K", detail: "Representations, certifications and other statements, carried into the contract by reference.", tag: "Reference" },
+    { label: "Sections A through J", detail: "The forms, pricing schedule, work description, and clauses that become the contract.", tag: "Contract" },
+  ]}
+/>
+
+
 <Callout kind="note" title="The numbering is in motion">
 The Federal Acquisition Regulation is being rewritten. For decades the uniform contract format has been at FAR 15.204-1, and it is still there in the codified text. The overhaul text that agencies have been working from since 2025 moves it to a different section and makes it optional. Expect to see both layouts for some time, and find the rule by its title on [acquisition.gov](https://www.acquisition.gov) instead of trusting a section number from memory, including the ones in this guide.
 </Callout>
@@ -74,6 +84,20 @@ Reading from page one is the slow way. This order gets you to a bid decision fas
 6. **Section H.** Anything unusual: clearances, key personnel, special security terms.
 7. **Sections I and K.** The clauses and the statements you must make.
 8. **Section J attachments.** Often the real detail lives here: the pricing workbook, the labor category descriptions, the data requirements.
+
+<Flow
+  caption="Suggested first-pass solicitation reading sequence"
+  steps={[
+    { label: "Cover page", detail: "Due date, time, time zone, how to submit, and who to ask.", tag: "1" },
+    { label: "Section L", detail: "Volumes, page limits, format, and required forms.", tag: "2" },
+    { label: "Section M", detail: "What the government will score, and what matters most.", tag: "3" },
+    { label: "Section C", detail: "The work itself, to determine if you can perform it.", tag: "4" },
+    { label: "Section B", detail: "How the pricing schedule is structured.", tag: "5" },
+    { label: "Section H", detail: "Clearances, key personnel, and special security terms.", tag: "6" },
+    { label: "Sections I and K", detail: "The standard clauses and required statements.", tag: "7" },
+    { label: "Section J", detail: "Attachments such as pricing workbooks and labor descriptions.", tag: "8" },
+  ]}
+/>
 
 ## The first-pass list
 
@@ -144,6 +168,23 @@ A proposal costs real time. Before you commit, answer these honestly:
 - Can we produce everything Section L asks for by the due date?
 
 Deciding not to bid is a legitimate result of reading a solicitation well. When the answer is yes, the next guide covers [answering every requirement](/guides/answer-a-solicitation/).
+
+<Branch
+  caption="The bid or no-bid decision"
+  question="Do you meet every requirement and pass-or-fail condition?"
+  options={[
+    {
+      when: "Yes",
+      then: "Prepare proposal",
+      detail: "Proceed to shredding requirements, compliance matrix, and writing answers.",
+    },
+    {
+      when: "No",
+      then: "Decline to bid",
+      detail: "Conserve resources; failing any pass-or-fail item eliminates the proposal.",
+    },
+  ]}
+/>
 
 ## Sources
 
