@@ -63,26 +63,15 @@ The list on the site is generated from [`src/data/catalog.ts`](src/data/catalog.
 2. **The community.** Open the catalog to tools and scripts written by other cleared engineers, veterans, and small builders who do this work for a living.
 3. **The sovereign alternative.** Grow that community into a decentralized, democratic platform where independent builders swarm on defense contracts directly, cutting out corporate middle management.
 
-## How tools are chosen (Prior Art — draft)
+## How tools are chosen
 
-ClearedStack uses a ten-stage process called Prior Art to decide what to build. It looks at paperwork tools that already exist across government contracting, observes what they do from their public pages without logging in, screens and scores candidate ideas openly, lets the human owner make the decision, and credits where every idea came from. Approved tools are then built from the public regulation from scratch, never from another tool's code, text or design.
+Tools are prioritized based on the real-world administrative friction between independent builders and federal contracts. We do not use automated scrapers or monitor competitors. Instead, every tool is built directly from primary public statutes:
 
-> **Draft / intent only**: This process is currently intent and in draft. The automated engine is not running, no separate repository (`ClearedStack/prior-art`) exists yet, and nothing has been collected. The full evaluation factors and scoring rubric are described at [https://clearedstack.com/how-we-decide/](https://clearedstack.com/how-we-decide/).
+1. **Regulatory & Statutory Friction:** Identifying where federal regulations (such as FAR Part 31 cost principles, DFARS 252.204-7012, and NIST SP 800-171) impose dense arithmetic, data formatting, or compliance checklists that traditionally force a small company to hire an expensive consultant.
+2. **Direct Builder Pain Points:** Focusing on the actual deckplate choke points faced by solo engineers, veteran founders, and small teams trying to submit a compliant bid.
+3. **Community & Contractor Requests:** Features and tools requested directly by the builder community via [GitHub Issues](https://github.com/ClearedStack/clearedstack.com/issues) or email to [contact@clearedstack.com](mailto:contact@clearedstack.com).
 
-```mermaid
-flowchart TD
-  S1[1. Discover<br/>Public sweeps & community ideas] --> S2[2. Record<br/>Assign ID & deduplicate]
-  S2 --> S3[3. Observe<br/>Public pages only, zero logins]
-  S3 --> S4[4. Screen<br/>Five knockout gates]
-  S4 --> S5[5. Score<br/>Seven-factor rubric, 100 pts]
-  S5 --> S6[6. Decide<br/>Human owner: Build, Link, Merge, Park, Reject]
-  S6 --> S7[7. Credit<br/>Write provenance note]
-  S7 --> S8[8. Build<br/>Clean-room from public rules]
-  S8 --> S9[9. List<br/>Catalog status live on site]
-  S9 --> S10[10. Revisit<br/>Monthly check on rules & tools]
-  S10 -.->|Revisit parked/linked| S3
-  S10 -.->|Rule change| S8
-```
+Every tool is built from scratch directly from official government regulations, standards, and agency guides.
 
 ## How this project is built
 

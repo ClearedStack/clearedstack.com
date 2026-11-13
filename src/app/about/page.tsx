@@ -113,14 +113,10 @@ export default function AboutPage() {
 
         <Block id="ideas" label="Where ideas come from">
           <p>
-            ClearedStack finds ideas through the 10-worker Prior Art engine. Workers observe public pages, score
-            candidates deterministically against five knockout gates and a 100-point rubric, surface decisions in{" "}
-            <Link href="/decide/">/decide</Link>, and compile clean-room specs from official public regulations—never
-            copying third-party code, text, or design.
-          </p>
-          <p className="font-mono text-xs text-muted">
-            Read our <Link href="/how-we-decide/">Section M evaluation factors</Link> and the{" "}
-            <Link href="/guides/prior-art-engine/">10-Worker Prior Art Engine guide</Link>.
+            ClearedStack prioritizes tools based on the real-world administrative friction between independent builders
+            and federal contracts. We do not use automated scrapers or monitor competitors. Instead, every tool is
+            built clean-room directly from official public statutes—such as FAR Part 31, DFARS, and NIST SP 800-171—and
+            from direct requests submitted by small contractors and veteran builders.
           </p>
         </Block>
 
