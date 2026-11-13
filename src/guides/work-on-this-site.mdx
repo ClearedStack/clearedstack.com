@@ -1,233 +1,74 @@
 export const meta = {
-  title: "Work on this site",
-  summary: "Set the site up on your own machine, find your way around the code, add a guide or a catalog entry, and send the change.",
+  title: "Work on this site & its 10 worker repos",
+  summary: "Propose edits directly on the live Portal with no login, or contribute deterministic sub-tools and golden fixtures to the MIT clean-room repositories.",
   group: "contribute",
   order: 3,
   revised: "2026-11",
 };
 
-The site you are reading is one small repository. Fixing a typo, correcting a guide and adding a tool to the catalog are all changes to a text file in it. This guide shows where everything is.
+ClearedStack is an open, MIT-licensed platform built from clean-room code. Everything runs in the open across the web Portal (`clearedstack.com`), four lightweight control-plane services (`cs-git`, `cs-registry`, `cs-runner`, `cs-store`), and ten deterministic worker repositories (`cs-01-intake` through `cs-10-notify`).
 
-## What the site is made of
+There are two ways to contribute: propose a change directly on the live Portal without creating an account, or work in the MIT clean-room repositories to add guides, catalog entries, or deterministic sub-tools.
 
-The site is built with Next.js, TypeScript and Tailwind CSS, and exported as static files. It has no server, no API routes and no database. The guides are written in MDX, which is Markdown that can also hold a few components.
+## Two ways to contribute
 
-You do not need to know any of those to fix a sentence. You need a text editor and a GitHub account.
+| Path | Best for | Login needed? | How it goes live |
+| :--- | :--- | :--- | :--- |
+| **Live Portal edit button** | Fixing text, correcting catalog data, or flagging an issue | No | Passes anti-spam checks, waits for owner approval in `cs-04-decide`, then flows into `cs-git` |
+| **MIT clean-room repositories** | Adding guides, building Portal features, or writing new worker sub-tools (`tools/<case>/`) | GitHub account for pull requests | Tested with golden fixtures, built without Docker by `cs-runner`, and deployed by `cs-store` |
 
-## Make a small fix without installing anything
+## 1. Edit directly on the live Portal (no login)
 
-For a typo or a wording change:
+Anyone visiting `clearedstack.com` can inspect what is running, view sanitized errors, and propose changes using the edit button (`✎`) shown on the Portal. You do not need an account, password, or local setup.
 
-1. Open the file on GitHub. Each guide ends with a **Source of this page** link that goes straight to it.
-2. Click the pencil icon to edit.
-3. Make the change and choose **Propose changes**.
+Because the edit button is open to the public, every submission passes through a five-layer safety shield before it can touch the codebase:
 
-GitHub creates a copy of the repository under your account and opens a pull request from it.
+| Layer | What it does |
+| :--- | :--- |
+| **Browser Proof-of-Work** | Runs a quick puzzle in your browser on submit to stop automated bots without using CAPTCHAs |
+| **Honeypot field** | A hidden form field that silently discards automated scraper submissions |
+| **Daily-salted IP hash** | Limits repeated submissions from the same source without ever storing raw IP addresses |
+| **Schema and size check** | Validates the target against `ownership_map.json`, caps edits at 4 KB, and strips any HTML or scripts |
+| **Human approval gate** | Holds every proposal in `cs-04-decide` until the site owner clicks **Approve** |
 
-## Set it up on your machine
+Once you submit an edit, the `✎` button turns into a live status pill that tracks your proposal from **Proposed** to **Approved**, **Building**, and **Live**.
 
-You need [Node.js](https://nodejs.org) 20 or newer, and git.
+## 2. Work on the MIT clean-room repositories
 
-```bash
-git clone https://github.com/ClearedStack/clearedstack.com.git
-cd clearedstack.com
-npm install
-npm run dev
-```
+All ClearedStack repositories are released under the **MIT License** and written from scratch as clean-room Go and TypeScript code, with zero copied upstream code and zero AI at runtime.
 
-Open `http://localhost:3000`. The page reloads as you save files.
+Inside the cluster, `cs-git` is the primary Git server. Whenever changes land on `main` or a tag, `cs-git` automatically pushes a **public code mirror to GitHub**. GitHub is a code mirror only—zero container images are stored or served from GitHub.
 
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Runs the site locally and reloads on every change |
-| `npm run lint` | Checks the code for common mistakes |
-| `npm run typecheck` | Checks the types |
-| `npm run build` | Builds the finished site into the `out` folder |
-| `npm run preview` | Serves the `out` folder, to look at the real build |
+| Repository group | What it holds | Typical contributions |
+| :--- | :--- | :--- |
+| **`clearedstack.com`** | Next.js, TypeScript, and Tailwind CSS Portal, tool catalog (`src/data/catalog.ts`), and guides (`src/guides/`) | Writing or updating guides, adding catalog entries, improving Portal UI |
+| **Control plane** (`cs-git`, `cs-registry`, `cs-runner`, `cs-store`) | Clean-room Go services for Git mirroring, internal OCI storage, Dockerless builds, and Kubernetes app deployment | Fixing bugs, tightening guardrails, improving build or deploy reliability |
+| **10 Worker repos** (`cs-01-intake` .. `cs-10-notify`) | Deterministic Go pipelines for intake, observation, evaluation, decisions, provenance, building, verification, cataloging, monitoring, and notifications | Adding deterministic sub-tools (`tools/<case>/`) and golden fixtures |
 
-## Find your way around
+## Adding deterministic sub-tools and golden fixtures
 
-```text
-src/
-  app/              pages: home, /tools, /guides, /about, plus icons and metadata
-  components/       header, footer, logo, the catalog list and the guides list
-  data/
-    catalog.ts      the areas and tools shown on the site
-    site.ts         name, addresses, contact email, short disclaimer
-  guides/           one .mdx file per guide
-  lib/guides.ts     reads the guides and puts them in order
-public/brand/       logo files
-Dockerfile          builds the site and serves it with nginx
-docker/             the nginx configuration used by the image
-k8s/                Kubernetes manifests
-```
+Every worker runs with **100% deterministic logic**—there are no language models, no guesswork, and no hidden network calls at runtime. When a worker encounters an unfamiliar page layout, document format, or edge case, it **fails closed**: it pauses the item in a `needs_subtool` state and opens a task in the owning worker repository.
 
-Two files hold nearly everything a contributor changes: `src/data/catalog.ts` for the tools, and the folder `src/guides` for the guides.
+Contributors solve these edge cases permanently by adding a deterministic sub-tool inside the worker repository:
 
-## Add or change a catalog entry
+1. Create a new folder under `tools/<case>/` and register it in `tools/registry.yaml`.
+2. Add the matching rules and deterministic Go extraction or evaluation logic for that specific case.
+3. Add **golden fixtures** in `fixtures/`—saved sample inputs paired with the exact expected JSON output—so the behavior is locked in and repeatable on every run.
 
-Open `src/data/catalog.ts` and add an entry to the `tools` list:
+When a sub-tool and its golden fixtures are merged into `cs-git`, `cs-runner` runs the golden test suite, builds the updated worker image, and `cs-store` deploys it. The queue service (`hub-queue-api`) then automatically replays all paused `needs_subtool` items that match the new pattern.
 
-```ts
-{
-  slug: "wrap-rate-calculator",
-  name: "Wrap Rate Calculator",
-  summary: "Build a fully burdened labor rate from base pay, fringe, overhead, G&A and fee.",
-  category: "pricing",
-  status: "planned",
-},
-```
+## How builds work (zero Docker anywhere)
 
-| Field | What to put there |
-| --- | --- |
-| `slug` | A short name in lowercase with hyphens. It must be unique |
-| `name` | The tool’s name as people will read it |
-| `summary` | One sentence that starts with a verb and says what the tool produces |
-| `category` | One of `pricing`, `proposal`, `cyber`, `market`, `devsecops` |
-| `status` | `planned`, `building` or `live` |
-| `url` | Where the tool runs. Add it when the tool is live |
-| `repo` | The source repository. Add it when the repository is public |
+ClearedStack uses **zero Docker anywhere**—not on contributor machines and not in cluster builds. Images are built directly from source using lightweight, rootless tools and stored in the internal `cs-registry` before running on `k3s` with `containerd`.
 
-The home page, the catalog page and every count on them are generated from this list. There is nothing else to update.
+| Component | Build tool | Where the image lives | Runtime |
+| :--- | :--- | :--- | :--- |
+| **Go workers & control-plane services** | `ko` | Internal `cs-registry` | `k3s` + `containerd` |
+| **Next.js Portal (`clearedstack.com`)** | Rootless BuildKit | Internal `cs-registry` | `k3s` + `containerd` |
 
-## Add a guide
+## Rules for every contribution
 
-Create a file in `src/guides`. The file name becomes the address: `src/guides/my-guide.mdx` is served at `/guides/my-guide/`. Start the file with its details, then write in Markdown:
-
-```mdx
-export const meta = {
-  title: "The title of the guide",
-  summary: "One sentence shown in the list and under the title.",
-  group: "field",
-  order: 9,
-};
-
-The first paragraph says what the guide covers and who it is for.
-
-## A heading
-
-Text, lists, tables and code blocks.
-```
-
-| Field | What to put there |
-| --- | --- |
-| `title` | The title, in sentence case |
-| `summary` | One sentence. It appears in the list, under the title and in search results |
-| `group` | The section it belongs to: `start`, `field`, `host`, `contribute`, `reference` or `project` |
-| `order` | Its position within the section, lowest first |
-| `draft` | Optional boolean (`draft: true`). Shows a “Draft — describes intent; not running yet” banner on the guide |
-| `reviewed` | Optional. For guides about regulations: the month the facts were last checked, as `"2026-11"` |
-
-The guides page, the table of contents, the reading time, the previous and next links and the sitemap all pick the file up on the next build.
-
-## Diagram components
-
-All guides and site pages have access to five static, accessible diagram components built with plain semantic HTML and CSS (no client-side JavaScript or external CDNs). In MDX files, they are available globally without an `import`:
-
-- `<Flow caption="..." steps={[{ label: "...", detail: "..." }]} />`: Ordered sequential flows or pipelines. Optional props: `direction="across" | "down"`, `loop="Label for return"`, `highlight={0}`.
-- `<Branch caption="..." question="..." options={[{ when: "...", then: "...", detail: "..." }]} />`: Decision points and branching choices.
-- `<Layers caption="..." layers={[{ label: "...", detail: "..." }]} />`: Top-to-bottom stacks for rate build-ups and isolation boundaries.
-- `<Lanes caption="..." lanes={["Owner", "AI agent"]} steps={[{ lane: 1, label: "...", detail: "..." }]} />`: Swimlanes mapping steps to responsible actors.
-- `<States caption="..." states={[{ id: "x", label: "...", to: [{ id: "y", when: "..." }] }]} />`: State machine cards showing transitions and terminal states.
-
-Here is an example in MDX:
-
-```mdx
-<Flow
-  caption="How a contribution is reviewed"
-  direction="down"
-  steps={[
-    { tag: "1", label: "Open pull request", detail: "Contributor submits branch with tests and source citations." },
-    { tag: "2", label: "Audit sources", detail: "Human maintainer verifies claims against official publications." },
-    { tag: "3", label: "Merge", detail: "Shipped with git attribution trailers." },
-  ]}
-/>
-```
-
-## AI-assisted work and commit trailers
-
-ClearedStack uses AI coding agents (Claude Code and Antigravity) to assist with drafting code, documentation, and tests under human direction and review.
-
-- **Accountability:** The human repository maintainer sets priorities, reviews every line of code, verifies every calculation against primary sources, and merges pull requests.
-- **Commit trailers:** Commits drafted or iterated with AI assistance should include a Git trailer identifying the tool:
-  ```text
-  Add Prior Art engine documentation
-
-  Assisted-by: Claude Code
-  Assisted-by: Antigravity
-  ```
-- **Zero AI at runtime:** Tools in the catalog contain zero AI models and make zero network calls. AI is strictly authoring assistance. See [How AI is used to build this project](/guides/built-with-ai/).
-
-<Lanes
-  caption="Division of labor: human maintainer and AI coding agents"
-  lanes={["Human Maintainer", "AI Agent (Claude / Antigravity)"]}
-  steps={[
-    { lane: 0, label: "Sets direction & architecture", detail: "Defines the job, constraints, and underlying official regulations." },
-    { lane: 1, label: "Drafts code & documentation", detail: "Proposes TypeScript logic, static diagrams, tests, and MDX guides." },
-    { lane: 0, label: "Verifies against official text", detail: "Checks formulas and citations line by line against eCFR or NIST." },
-    { lane: 0, label: "Reviews and merges", detail: "Tests client-side CSP boundaries and signs commit with trailers." },
-  ]}
-/>
-
-## What you can use in a guide
-
-Ordinary Markdown works: headings, bold text, links, numbered and bulleted lists, code blocks and tables.
-
-- **Second-level headings** (`##`) become the table of contents and get a link of their own. Keep them short, and do not repeat one within a guide.
-- **Links to other pages on the site** start with a slash, such as `/guides/your-data/`.
-- **Tables** use pipes. Put `---:` under a column to align numbers to the right.
-- **Callouts** set a short passage apart:
-
-```mdx
-<Callout kind="warning" title="Optional title">
-One or two sentences the reader should not miss.
-</Callout>
-```
-
-The `kind` can be `note`, `check` or `warning`. Use them sparingly. A page with five callouts has none.
-
-Two characters need care in MDX, because it reads them as code: a left curly brace and a less-than sign. Write “less than” in words, or put the text in backticks.
-
-## How the guides are written
-
-The guides are for people who are good at their own work and new to this subject. A few habits keep them readable:
-
-- **Plain words.** If a simpler word says the same thing, use it.
-- **Define a term the first time it appears**, and add it to the [glossary](/guides/glossary/).
-- **One idea per paragraph.** Short sentences.
-- **Say what to do**, then why.
-- **Cite the rule.** Name the regulation and the part, so the reader can check.
-- **Date anything that changes.** Do not print a rate or a threshold without saying when it was current, or better, tell the reader where to look it up.
-- **Made-up examples only.** No real companies, contracts or rates.
-
-Guides that describe regulations should set `reviewed` and end with a “Sources” section.
-
-## Check your change
-
-Before you open a pull request, run:
-
-```bash
-npm run lint
-npm run typecheck
-npm run build
-```
-
-All three should finish without errors. The build is the important one: it compiles every guide, and it stops with a message if a guide’s details are missing or a page links to a guide that does not exist.
-
-Then look at the result. Run `npm run dev`, open the pages you changed, and check them at a narrow window width and in dark mode. The site follows the system color setting.
-
-## Send it
-
-1. Create a branch for your change.
-2. Commit with a message that says what changed and why.
-3. Push the branch to your copy of the repository and open a pull request.
-
-Small fixes can go straight to a pull request. For anything larger, open an issue first so the work is not wasted.
-
-## Rules for every change
-
-- **Nothing loads from another server.** No external fonts, scripts, images, embeds or analytics. The content security policy would block them, and the project’s promise depends on it.
-- **No tracking of any kind.** No cookies, counters or forms that send data.
-- **No classified information, CUI, export-controlled data or real contract data**, in code, examples, screenshots, issues or commit messages.
-- **Public sources only.** “Public” means officially released.
-- By contributing you agree that your work is released under the [MIT License](https://github.com/ClearedStack/clearedstack.com/blob/main/LICENSE).
+- **MIT and clean-room only:** Write original code and documentation; never copy code from upstream projects or other licenses.
+- **Zero AI at runtime:** Workers and shipped tools must produce the exact same output every time for the same input.
+- **Zero tracking or external assets:** The Portal loads nothing from third-party servers and sets no tracking cookies.
+- **Public data only:** Never include classified information, CUI, export-controlled data, or real contract figures in code, fixtures, guides, or commit messages.

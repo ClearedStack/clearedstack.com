@@ -1,0 +1,53 @@
+export const meta = {
+  title: "The Live Command Portal & App Store",
+  summary: "How clearedstack.com moved from static pages to a live window into the cluster, how priority rules surface what needs attention, and how /apps, /pipeline, /decide, and /tools fit together.",
+  group: "start",
+  order: 5,
+  revised: "2026-11",
+};
+
+Most documentation sites ask you to read thousands of words of prose before you ever see software do anything. Folks are done reading. ClearedStack v3 turns `clearedstack.com` from a static manual into a live command portal—an open window directly into the cluster running the platform.
+
+Instead of reading about how the system is supposed to work, you can open the site and watch it work in real time: which apps are healthy, which workers are busy, what is waiting in a queue, and what just failed.
+
+## From static essays to a live window
+
+Earlier versions of the site explained the architecture through long-form guides. In v3, the homepage and navigation are built around live operational state powered by `hub-queue-api` and `cs-store`:
+
+- **Live status over static claims:** Every worker and app reports real health, version, and queue depth straight from the cluster.
+- **Short explanations in context:** Instead of sending you away to a separate essay, the portal uses compact `[Why?]` drawers right next to each stage so you can inspect the rule behind a status in a few seconds.
+- **100% deterministic behavior:** There is no AI running in the portal or in any of the 10 workers (`cs-01` through `cs-10`). Every status badge, queue transition, and priority ranking follows fixed, predictable rules.
+
+## How software rules promote what matters
+
+A live dashboard is useless if healthy background noise buries a real outage. On the Command view (`/`), deterministic priority rules automatically sort what appears at the top of the screen:
+
+| Priority | What triggers it | How the portal displays it |
+| --- | --- | --- |
+| **P0 (Critical)** | An app or worker is down, crashing, or reporting an active error code | Promoted to the top in crimson with the sanitized error code and affected component |
+| **P1 (Stalled)** | A worker queue is backed up, a job timed out, or an item is paused in `needs_subtool` | Surfaced directly below P0 items in amber so bottlenecks are obvious immediately |
+| **P2 (Pending)** | Items waiting in `cs-04-decide` or public edit proposals waiting for owner review | Listed as actionable pending work ready for a decision |
+| **Quiet / Idle** | Healthy workers with empty queues and no errors | Collapsed to a single quiet summary line so they stay out of your way |
+
+Because these rules are pure code rather than guesswork, the same cluster state always produces the exact same view.
+
+## How the portal views fit together
+
+Each top-level route in `clearedstack.com` serves a distinct job in the lifecycle of the platform:
+
+| Route | View Name | What it shows | Who uses it |
+| --- | --- | --- | --- |
+| `/` | **Command** | Priority-sorted live status (`P0` errors, `P1` stalls, `P2` pending work) and collapsed idle workers | Anyone checking cluster health at a glance |
+| `/apps` | **App Store** | CasaOS-style cards for every running app and worker, showing version, live health, active errors, and lifecycle controls | Public visitors and operators |
+| `/pipeline` | **Pipeline** | Real-time flow across all 10 deterministic workers (`cs-01-intake` through `cs-10-notify`), queue depths, item trails, and `[Why?]` rule drawers | Visitors and contributors tracing how candidates become catalog entries |
+| `/decide` | **Decide** | The decision inbox for `cs-04-decide`, holding candidate determinations (Approve, Link, Merge, Park, Reject, Override) and pending public edit proposals | Anyone reviewing queued decisions and community edits |
+| `/tools` | **Tools Catalog** | The published directory of verified, linked, merged, and retired client-side tools produced by the pipeline | End users looking for working, browser-based contracting tools |
+
+## One control plane, one lifecycle
+
+Behind the scenes, the portal connects two halves of the platform without mixing them up:
+
+1. **Software delivery (`/apps`):** `cs-git` stores the code, `cs-runner` builds container images without Docker (using `ko` for Go and rootless BuildKit for web apps) and pushes them to `cs-registry`, and `cs-store` applies those apps to Kubernetes and streams sanitized health back to `/apps`.
+2. **Data and tool production (`/pipeline`, `/decide`, `/tools`):** The 10 deterministic workers pull tasks from `hub-queue-api`, process public sources, pause for human judgment at `/decide`, and publish verified browser tools to `/tools`.
+
+Every piece you see in the portal is backed by open-source code mirrored to GitHub, so what you see running on `clearedstack.com` is the exact system you can inspect or host yourself.

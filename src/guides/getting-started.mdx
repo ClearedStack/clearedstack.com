@@ -1,115 +1,101 @@
 export const meta = {
   title: "Getting started",
-  summary: "What ClearedStack is, who it is for, how to navigate the site, and how to use the catalog and guides today.",
+  summary: "What ClearedStack v3.1 is, how to use the open no-login Portal, Snapshot Mode vs. the live cluster, and how anyone can inspect worker health or propose edits without an account.",
   group: "start",
   order: 2,
   revised: "2026-11",
 };
 
-ClearedStack is an open-source hub for federal government contracting. It combines a catalog of 18 planned client-side tools with an extensive library of plain-language reference guides. There is no account to create, nothing to install, and nothing to pay.
+ClearedStack is an open-source, 100% deterministic federal contracting platform and reference library. It combines client-side contracting tools, plain-language regulatory guides, and a transparent 10-worker automation pipeline—all licensed under MIT with no accounts, no paywalls, and no AI at runtime.
 
-Because tools are currently in the planning stage, the site functions today as a complete reference manual and demand-driven catalog. This guide introduces the site's purpose and how to get the most out of it right away.
+Everything running and being developed on ClearedStack is open to the public. You do not need to create an account or sign in to read guides, run verified tools, inspect live worker health, or propose edits to the platform.
 
-For an in-depth walkthrough of the site structure, keyboard shortcuts, and search filters, see [How to navigate this site](/guides/navigating-this-site/).
+For a deeper look at keyboard shortcuts and reading tracks, see [How to navigate this site](/guides/navigating-this-site/).
 
 ## Who it is for
 
-ClearedStack is written for people who handle federal contracting paperwork themselves:
+ClearedStack is built for people who handle federal contracting paperwork themselves and want transparent, verifiable tools:
 
 - a solo developer or consultant pricing a first proposal
-- a founder of a small business navigating SAM.gov and solicitations
-- an engineer or compliance lead tasked with NIST SP 800-171, CMMC, or CUI marking
-- a systems administrator running software inside an air-gapped network or SCIF
-- anyone tired of rebuilding complex compliance and pricing spreadsheets from scratch
-
-You do not need prior contracting experience. The [field guides](/guides/#field) explain the underlying regulatory concepts, and the [glossary](/guides/glossary/) covers common contracting vocabulary.
+- a small-business founder navigating SAM.gov, NAICS codes, and solicitations
+- an engineer or compliance lead working through NIST SP 800-171, CMMC, or CUI marking
+- a systems administrator deploying self-hosted tools inside an air-gapped enclave or SCIF
+- any visitor who wants to inspect how the platform works or suggest improvements without creating an account
 
 ## What you need
 
-A current web browser: Firefox, Chrome, Edge, or Safari. That is all.
+A current web browser (Firefox, Chrome, Edge, or Safari) is all you need.
 
-- **No account:** There is no registration, login, or email capture.
-- **No install:** The site is a lightweight, static web application. Nothing is installed on your workstation.
-- **No payment:** ClearedStack accepts no revenue, sponsorships, or paid tiers.
+- **No account:** There is no registration, login wall, or email capture.
+- **No tracking:** Zero cookies, analytics, or third-party tracking scripts.
+- **No cost:** ClearedStack is MIT-licensed open-source software with no paid tiers or ads.
 
-If you work inside an isolated environment with no internet access, the entire site can be hosted locally. See [Host your own copy](/guides/#host).
+## Navigating the open Portal
 
-## Navigating the site
+The ClearedStack v3.1 Portal (`clearedstack.com`) is organized into six public routes. Every route is readable without signing in:
 
-The site is organized into four main sections:
-
-1. **[Home](/)**: An executive summary formatted after federal solicitation conventions (FAR Uniform Contract Format).
-2. **[Tools](/tools/)**: The catalog of 18 planned tools across five Contract Line Item Number (CLIN) categories.
-3. **[Guides](/guides/)**: The reference library organized under Section L ("Instructions to offerors"), featuring curated reading tracks and search.
-4. **[About](/about/)**: The project mission, client-side architectural guarantees, and legal disclaimers.
-
-For full details on how the contract structure works and how to navigate with screen readers or keyboard shortcuts, see [How to navigate this site](/guides/navigating-this-site/).
-
-## Using the tool catalog today
-
-The [Tools](/tools/) page indexes 18 planned tools across five categories:
-
-| CLIN | Area | Focus |
+| Route | Name | What you see |
 | --- | --- | --- |
-| 0001 | Pricing & cost accounting | Wrap rates, indirect pools, Section B pricing tables, late interest |
-| 0002 | Proposal & capture | RFP requirement shredding, compliance matrices, acronym tables |
-| 0003 | Cybersecurity & compliance | NIST SP 800-171, CMMC, CUI marking, DISA STIGs, OSCAL |
-| 0004 | Market research & small business | NAICS-to-PSC codes, NDC eligibility, small business set-asides |
-| 0005 | Tactical & DevSecOps | Offline manifests, certificate chains, air-gap transfer checksums |
+| [`/`](/) | **Command** | Priority dashboard that floats `P0` errors, `P1` stalled queues, and `P2` pending decisions or edits to the top while collapsing quiet idle workers to a single line. |
+| [`/apps`](/apps) | **Apps** | Card view of every running control-plane service and worker (`cs-01` through `cs-10`), showing version, live health, and sanitized errors. Owner-only controls (**Install**, **Upgrade**, **Pause**, **Rollback**) stay locked to the owner. |
+| [`/pipeline`](/pipeline) | **Pipeline** | Real-time view of the 10-worker deterministic pipeline (`cs-01-intake` through `cs-10-notify`), queue depths, item trails, and `[Why?]` drawers explaining each rule. |
+| [`/decide`](/decide) | **Decide** | Publicly visible inbox for `cs-04-decide` item determinations and community edit proposals. Anyone can read pending items and rationale; only the owner can approve or reject them. |
+| [`/tools`](/tools/) | **Tools** | The catalog of MIT-licensed, client-side contracting tools across five Contract Line Item Number (CLIN) areas, including verification status and direct launch links. |
+| [`/guides`](/guides/) | **Guides** | The plain-language reference library covering federal contracting concepts, compliance frameworks, and ClearedStack architecture. |
 
-### Understanding tool status
+## Snapshot Mode vs. live cluster
 
-Every tool in the catalog displays a status badge:
+Depending on how you access ClearedStack, you will interact with either the **live cluster** or **Snapshot Mode**:
 
-- **Planned:** The tool's scope and requirements are defined, but code has not yet been written. **All 18 tools are currently Planned.**
-- **In development:** The tool is actively being built in its own open-source repository.
-- **Live:** The tool is operational in the browser, with direct links to the application and source repository.
+| Mode | How it runs | What is active | Best for |
+| --- | --- | --- | --- |
+| **Live cluster** | Full 17-pod Kubernetes platform (7 control-plane pods in `clearedstack` and 10 deterministic Go workers in `cs-workers`), backed by `cs-git`, `cs-registry`, `cs-runner`, `cs-store`, and Postgres. | Live worker health, real-time Server-Sent Events (SSE), queue inspection, and anonymous `✎` edit proposals. | Exploring the live public sandbox at `clearedstack.com` or running a self-hosted `k3s` cluster. |
+| **Snapshot Mode** | A frozen, timestamped static bundle (HTML, CSS, JavaScript, fonts, guides, catalog, and verified tools) with no backend database or workers. | Reading all guides, searching the catalog, and running verified client-side tools locally in browser memory. | Air-gapped networks, local folders, or single-file offline use where no cluster is needed. |
+
+In Snapshot Mode, interactive control-plane features—such as submitting `✎` proposals, watching live `cs-09-monitor` checks, or inspecting real-time worker queues—are turned off. Every snapshot displays its build timestamp so you always know the exact date of the catalog and rules you are using. See [Closed and air-gapped networks](/guides/closed-networks/) for deployment details.
+
+## Inspecting worker health without an account
+
+ClearedStack separates **cluster-private internals** from **public operational transparency**. Only the Portal (`clearedstack-web`) faces the internet, and it queries read-only `pub.*` database views (`pub_ro` role).
+
+When you open [`/`](/), [`/apps`](/apps), or [`/pipeline`](/pipeline) without signing in, you can inspect:
+
+- **Worker status and versions:** Live health for all 10 deterministic workers (`cs-01-intake` through `cs-10-notify`) and control-plane services.
+- **Queue depths and item trails:** Which items are queued, verified, parked, or waiting in `needs_subtool` for a new deterministic sub-tool.
+- **Sanitized error codes:** Structured failure codes such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL` so anyone can see why an item paused.
+
+At the same time, internal cluster IPs, node names, pod hostnames, `.svc.cluster.local` DNS names, credentials, and signing keys are stripped by `cs-store` and never exposed.
+
+## Proposing edits without an account
+
+Anyone can suggest a fix, report a broken extractor, or propose a catalog update directly from the Portal—no GitHub account or site login required.
 
 <Flow
-  caption="The lifecycle of a catalog tool"
+  caption="How an anonymous edit proposal moves from your browser to live deployment"
   direction="across"
   steps={[
-    { tag: "Stage 1", label: "Planned", detail: "Defined in the catalog with scope and governing regulation." },
-    { tag: "Stage 2", label: "In development", detail: "Actively implemented clean-room in its own repository." },
-    { tag: "Stage 3", label: "Live", detail: "Audited against sources, verified client-side, and listed." },
+    { tag: "1", label: "Click ✎", detail: "Select the edit button next to any eligible element on the Portal." },
+    { tag: "2", label: "5-layer check", detail: "Browser solves a ~1s SHA-256 Proof-of-Work puzzle and validates schema." },
+    { tag: "3", label: "Owner review", detail: "Proposal waits in /decide (cs-04-decide) as pending_approval." },
+    { tag: "4", label: "Build & deploy", detail: "Approved edits commit to cs-git, build via cs-runner, and go live." },
   ]}
 />
 
-### How to influence what gets built first
+To keep the open sandbox safe without CAPTCHAs or logins, every `✎` submission passes through a five-layer deterministic shield:
 
-Because tools are published as planned line items first, user demand determines the active build order. If a specific tool would solve an immediate problem for your team:
+1. **Browser Proof-of-Work:** Your browser solves a ~1-second SHA-256 puzzle on submit to stop automated spam.
+2. **Honeypot field:** A hidden form field silently discards automated scraper submissions.
+3. **Daily-salted IP hash rate limit:** Caps submission volume per hashed IP without ever storing raw IP addresses.
+4. **Strict schema validation:** Checks the target element against `ownership_map.json`, enforces the edit class (`DATA`, `CONFIG`, or `ISSUE`) and a 4 KB size limit, and strips all HTML or scripts.
+5. **Human approval gate:** Proposals sit in `pending_approval` inside [`/decide`](/decide) and never touch `cs-git` or the cluster until the owner clicks **Approve**.
 
-1. Browse the [Tools](/tools/) catalog to identify the relevant CLIN.
-2. Open an issue on [GitHub](https://github.com/ClearedStack/clearedstack.com/issues) or email [contact@clearedstack.com](mailto:contact@clearedstack.com).
-3. Specify your use case, required inputs, and the governing regulation.
-
-## What every tool will have in common
-
-<Flow
-  caption="How every ClearedStack tool executes: zero setup, browser memory, zero egress"
-  direction="across"
-  steps={[
-    { tag: "1", label: "Open in browser", detail: "Static files download once over HTTPS." },
-    { tag: "2", label: "Enter data", detail: "Rates or files remain in local browser RAM." },
-    { tag: "3", label: "Compute locally", detail: "Deterministic client-side math and parsing." },
-    { tag: "4", label: "Export results", detail: "Save PDF, CSV, or clean Markdown files." },
-    { tag: "5", label: "Close tab", detail: "Memory is cleared immediately." },
-  ]}
-/>
-
-When tools ship, each must satisfy five mandatory listing criteria:
-
-1. **Free and open source:** MIT licensed, with no paid tiers, ads, or sales gates.
-2. **Client-side execution:** All arithmetic, parsing, and file processing happen in your browser. No data is sent to a remote server.
-3. **No tracking:** Zero cookies, analytics, or third-party tracking scripts.
-4. **Public sources only:** Built exclusively from official government regulations, standards, and published guidance.
-5. **Clear operational limits:** Explicit statements about what the tool does not cover, reminding users that output is not professional advice.
+Once submitted, your `✎` button turns into a live status pill so you can track your proposal from **Proposed** to **Approved**, **Building**, and **Live**.
 
 ## What ClearedStack is not
 
 - **Not a government agency:** ClearedStack is an independent open-source project with no affiliation with the Department of Defense or any federal agency.
 - **Not a security clearance or certification:** The name refers to a technical stack for defense technology. It does not grant, verify, or imply security clearances, ATOs, or CMMC certification.
-- **Not professional legal or accounting advice:** Tools and guides provide calculated drafts and educational reference. They do not replace a contracting officer, CPA, or attorney.
+- **Not professional legal or accounting advice:** Tools and guides provide deterministic drafts and educational reference. They do not replace a contracting officer, CPA, or attorney.
 - **Not for classified information:** Never enter classified or secret data into any browser on any system.
 
 See the [About](/about/#disclaimer) page for the full legal disclaimer.
@@ -117,6 +103,6 @@ See the [About](/about/#disclaimer) page for the full legal disclaimer.
 ## Where to go next
 
 - [How to navigate this site](/guides/navigating-this-site/): Detailed walkthrough of site structure, keyboard shortcuts, and reading tracks.
-- [What happens to what you type](/guides/your-data/): How client-side execution protects your data and how to verify it in your browser.
-- [Check a tool’s answer](/guides/checking-results/): How to verify calculations against published regulations before placing numbers in a bid.
+- [Closed and air-gapped networks](/guides/closed-networks/): How to run the self-hosted `k3s` stack or export a Snapshot Mode bundle.
+- [What happens to what you type](/guides/your-data/): How client-side execution protects your data in browser memory.
 - [Read a solicitation](/guides/read-a-solicitation/): The best starting point if you are new to federal proposals.

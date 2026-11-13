@@ -1,117 +1,83 @@
 export const meta = {
   title: "What happens to what you type",
-  summary: "Where your information goes when you use the site or a tool, what can still see it, and how to confirm all of it yourself.",
+  summary: "Where your information goes when you use a shipped tool or the ClearedStack v3.1 Portal, how public views and anonymous edits protect privacy, and what never to enter.",
   group: "start",
   order: 3,
   revised: "2026-11",
 };
 
-The short answer is that it stays on your computer. This guide explains what that means, where the limits are, and how to check it without taking anyone’s word for it.
+The short answer is that everything you type into a shipped tool stays on your computer, and everything on the public Portal is sanitized before it ever leaves the cluster. This guide explains how both halves work in ClearedStack v3.1, where the limits are, and how to check them yourself.
 
-## What “runs in your browser” means
+## Shipped tools run locally in your browser
 
-Most web applications work in two halves. The page in front of you collects what you type and sends it to a server, the server does the work, and the answer comes back. Your information has left your computer by the time you see a result.
+Most web applications collect what you type, send it to a server, and return an answer. Your information leaves your machine before you see a result.
 
-The tools listed here have only the first half. When you open one, your browser downloads the page and its code once. After that, the arithmetic, the text parsing and the file reading are all done by that code on your machine. There is no server waiting for your input, because the project does not run one.
+Every shipped ClearedStack tool has only the local half. When you open a tool, your browser downloads the static page and its TypeScript logic once. After that, all arithmetic, text parsing, and file reading happen on your workstation. There is no backend server waiting for your input, no login, no analytics, and zero network calls.
 
-That is also why the tools cost nothing to run and need no account. There is nothing on the other end to pay for or to sign in to.
+Every page and shipped tool enforces a Content Security Policy with `connect-src 'self'`. That instruction tells your browser to block any outbound network request, third-party API call, or form submission to another server. If a line of code tried to send your numbers elsewhere, your browser would refuse.
 
 <Layers
-  caption="Client-side execution boundary: tools contain zero AI at runtime"
+  caption="Client-side execution boundary in ClearedStack v3.1: zero AI at runtime"
   layers={[
     { tag: "Your browser", label: "User interface and input data", detail: "Rates, proposal text, and numbers stay in local workstation memory." },
-    { tag: "Local engine", label: "Deterministic math and parsing", detail: "TypeScript logic runs entirely client-side. No AI models or neural weights." },
-    { tag: "Security barrier", label: "Content Security Policy (connect-src 'self')", detail: "Browser blocks all network egress, analytics, and third-party APIs." },
+    { tag: "Local engine", label: "100% deterministic math and parsing", detail: "Static client-side code with zero AI models, LLM calls, or neural weights." },
+    { tag: "Security barrier", label: "Content Security Policy (connect-src 'self')", detail: "Browser blocks all outbound network calls, analytics, and third-party APIs." },
     { tag: "Authoring only", label: "AI tools (Claude Code and Antigravity)", detail: "Used strictly at development time to draft code and guides under human review." },
   ]}
 />
 
-## Tools contain no AI at runtime
+## Zero AI at runtime
 
-The tools themselves contain no artificial intelligence models, make no network calls to language model APIs, and process no data with machine learning. Calculations and parsers are 100% deterministic code that you can inspect in each tool’s public repository.
+Neither the shipped tools nor the 10 platform workers (`cs-01` through `cs-10`) run artificial intelligence models at runtime. Calculations, parsers, and pipeline rules are 100% deterministic code that you can inspect in each MIT-licensed repository.
 
-AI tools (Claude Code and Antigravity) are used only at development time to assist the human maintainer in drafting code, documentation, and tests. All facts and formulas are verified line by line against official public regulations by a person before release. See [How AI is used to build this project](/guides/built-with-ai/).
+AI tools (Claude Code and Antigravity) are used only during development to help the human maintainer draft code, documentation, and tests. Every formula and rule is verified by a person against official regulations before release. See [How AI is used to build this project](/guides/built-with-ai/).
 
-## This website
+## What the public Portal exposes (`pub.*` views)
 
-clearedstack.com is a set of plain files. It has:
+ClearedStack v3.1 has a single public door: the `clearedstack-web` Portal at `clearedstack.com`. Everything running in the cluster is visible there without signing in—live app and worker health, queue depths, item trails, and sanitized error codes such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL`.
 
-- no accounts and no sign-in
-- no cookies
-- no analytics or visitor counting
-- no fonts, scripts or images loaded from other companies’ servers
+Internal infrastructure stays strictly cluster-private. The Portal queries Postgres only through read-only `pub.*` views under the `pub_ro` database role, and `cs-store` strips node, pod, and network metadata before reporting status. The following never appear in `pub.*` views or on the Portal:
 
-The last point is enforced, not just promised. Every page carries a content security policy, which is an instruction to your browser. This site’s policy says that scripts, styles, fonts and images may load only from the site itself, that the page may connect only to the site itself, and that forms may not be submitted anywhere. If a line of code tried to send something elsewhere, your browser would refuse.
+- internal cluster IPs, node names, pod hostnames, and `.svc.cluster.local` addresses
+- `NetworkPolicy` rules and Ingress internals
+- database passwords, ServiceAccount tokens, GitHub push tokens, signing keys, and the daily IP salt
 
-## What a web server always sees
+## Anonymous edits use daily-salted IP hashes
 
-One limit applies to every website, this one included. To send you a page, the server has to know where to send it. So the company that hosts the files can see:
+Anyone can propose an edit anywhere on the Portal using the `✎` button without creating an account. To stop spam and automated abuse without storing personal data or requiring a login, submissions pass through a five-layer shield:
 
-- the IP address the request came from
-- which page was asked for, and when
-- the browser name your browser reports
-
-Nothing you type into a tool is part of that. If even this is more than your situation allows, run a copy inside your own network. See [Host your own copy](/guides/#host).
+1. **Browser Proof-of-Work:** your browser solves a ~1-second SHA-256 puzzle on submit.
+2. **Honeypot field:** a hidden input silently discards automated scraper submissions.
+3. **Daily-salted IP hash rate limit:** the Portal hashes your IP address with a secret salt that rotates daily to enforce rate limits. Raw IP addresses are never stored in the database.
+4. **Strict schema validation:** `ownership_map.json` checks the target element, edit class (`DATA`, `CONFIG`, or `ISSUE`), and 4 KB maximum size, stripping all HTML and scripts.
+5. **Human approval gate:** accepted proposals sit in `core.edit_proposal` as `pending_approval` and never touch `cs-git` or the cluster until the owner approves them in `cs-04-decide`.
 
 ## Check it yourself
 
-You can confirm that a tool keeps your input on your machine in about a minute. Use made-up numbers for the test.
+You can confirm that a shipped tool makes zero network calls in about a minute using made-up numbers:
 
-1. Open the tool.
-2. Open your browser’s developer tools. Press F12 on Windows or Linux, or Command-Option-I on a Mac.
-3. Choose the **Network** tab. It lists every request the page makes.
-4. Clear the list. There is a clear button at the top left of the panel.
-5. Use the tool as you normally would. Type numbers, paste text, load a file.
-6. Watch the list.
+1. Open the tool and open your browser’s developer tools (`F12` on Windows or Linux, `Command-Option-I` on Mac).
+2. Select the **Network** tab and click the clear button.
+3. Type numbers, paste text, or load a file, then watch the list.
 
-A tool that works on your machine adds nothing to the list while you type. If a request does appear, click it and look at what was sent. A request that carries what you entered is a failure of the listing rules, and the project wants to hear about it.
+A compliant tool adds nothing to the Network tab while you work. You can also right-click any page, choose **View Page Source**, and search for `Content-Security-Policy` to confirm `connect-src 'self'` is present.
 
 <Callout kind="check" title="The offline test">
-A second check needs no developer tools. Load the tool, then disconnect from the network: turn off Wi-Fi or unplug the cable. Keep using the tool. If it still gives answers, the work is happening on your computer.
+Load any shipped tool, then disconnect from the network by turning off Wi-Fi or unplugging the cable. Keep using the tool. If it still computes answers, all work is happening locally on your computer.
 </Callout>
 
-## Read the policy
+## What a web server and your screen can still see
 
-To see the content security policy for yourself:
+To send you a webpage, the host serving `clearedstack.com` sees standard HTTP request metadata: your IP address, the page requested, the timestamp, and your browser user agent. Nothing you type into a local tool is part of that request.
 
-1. Open any page on this site.
-2. Right-click and choose **View Page Source**.
-3. Search for `Content-Security-Policy`.
+Keeping data off a server also does not protect your screen locally. Browser extensions, employer endpoint monitoring, clipboard managers, screen sharing, and built-in browser translation or AI assistant features can all read what is on your screen. Use a clean browser profile or private window for sensitive work, and clear browser storage when using a shared computer.
 
-You will find a line listing what the page is allowed to load and where it is allowed to connect. `connect-src 'self'` is the part that stops a page from sending data to another server.
+## What never to enter
 
-The same test works on any tool. A tool with no such policy is not necessarily sending anything, but one that has it gives you a stronger guarantee than a promise.
-
-## What can still see your screen
-
-Keeping data off a server does not make it invisible. Everything below runs on your side, outside any website’s control:
-
-- **Browser extensions.** Many extensions can read every page you open. A grammar checker, a password manager or a shopping helper may see what you type. For sensitive work, use a browser profile with no extensions or a private window with extensions turned off.
-- **Company monitoring.** A work computer may record screens, keystrokes or web traffic. That is your employer’s system and their rules apply.
-- **Clipboard tools.** If you copy a rate out of a tool, a clipboard manager or a cloud clipboard may keep it.
-- **Screen sharing.** A tool open in a shared window is visible to the meeting.
-- **Translation and “AI assistant” features** built into a browser may send page text to a service. Turn them off for the tab, or use a browser without them.
-
-## Saved work on a shared computer
-
-A tool may let you keep your work between visits by saving it in the browser’s own storage. That storage is on your computer and is not sent anywhere. It does mean the next person to use the same browser profile can open the tool and see what you left.
-
-On a shared or borrowed computer:
-
-- use a private window, which discards its storage when you close it, or
-- clear the site’s data when you finish, from your browser’s privacy settings.
-
-Files you export from a tool are ordinary files. Store and send them the way you would any other document with the same contents.
-
-## What not to enter
-
-- **Classified information**: never. No tool listed here is approved for it, and neither is an ordinary web browser.
-- **Controlled unclassified information (CUI)**: running in a browser does not change the rules for the computer you are sitting at. Handle CUI only on a system your contract and your company’s policy allow. If that system cannot reach the internet, host a copy of the tool on it.
-- **Export-controlled technical data**: the same reasoning applies. The tool does not send it anywhere, but your obligations attach to the machine and the people who can see it.
-- **Proprietary rates and bid data**: this is yours to decide. Nothing leaves your machine, so the question is the one above: who else can see your screen and your browser.
-
-If you are unsure whether something is safe to enter, use made-up numbers first to learn how the tool behaves.
+- **Classified information:** never enter it into any tool, browser, or form.
+- **Controlled Unclassified Information (CUI) and real contract rates:** never enter CUI, export-controlled technical data, or real contract rates into public Portal forms (such as `✎` edit proposals, which are public by design) or into AI prompts. For local shipped tools, remember that running in a browser does not change the rules for the workstation you sit at—handle CUI and proprietary rates only on systems your contract and company policy allow, or host a copy inside your own network.
+- **Unsure how a tool behaves?** Test it with made-up numbers first.
 
 ## If you find a tool that breaks the rule
 
-Stop using it, and report it. Email [contact@clearedstack.com](mailto:contact@clearedstack.com) or open an issue in the tool’s repository, and include the address of the request you saw in the Network tab. A tool that sends user input to a server is removed from the catalog until it is fixed.
+Stop using it and report it. Email [contact@clearedstack.com](mailto:contact@clearedstack.com) or open an issue in the tool’s repository with the request address you saw in the Network tab. Any tool that sends user input over the network is removed from the catalog until it is fixed.

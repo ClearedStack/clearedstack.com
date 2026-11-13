@@ -1,0 +1,67 @@
+export const meta = {
+  title: "100% Deterministic Workers & Sub-Tools",
+  summary: "Why zero AI runs in any worker or shipped tool, how per-case variations live as deterministic sub-tools inside each worker repo, and how unknown layouts fail closed and replay automatically.",
+  group: "project",
+  order: 7,
+  revised: "2026-11",
+};
+
+Every automated worker and every shipped tool in ClearedStack is **100% deterministic**. Given the same input, it produces the exact same output every single time—on our cluster, on your laptop, or in an offline environment. Zero artificial intelligence models run inside any of the ten pipeline workers or any tool published to the catalog.
+
+## Why zero AI runs at runtime
+
+AI assistants are useful when drafting code or prose under human review, because a person reads and verifies the result before it is merged. Running an AI model inside a live background worker or a compliance tool is a different story.
+
+| Concern | AI at Runtime | 100% Deterministic Workers |
+| --- | --- | --- |
+| **Repeatability** | Can give different answers to the same input | Identical output every time on any cluster |
+| **Auditability** | Hard to trace why a model picked a number or rule | Every decision traces to a specific line of code or rule |
+| **Operating cost** | Ongoing API token bills for every page or item | Zero token costs; runs on a single small server |
+| **Failure mode** | May guess or invent data when confused | Fails closed and pauses for a deterministic fix |
+
+In federal contracting, guessing is worse than stopping. By keeping AI completely out of the runtime pipeline, every calculation, rule check, and page extraction can be inspected, tested, and trusted.
+
+## How unique cases live as sub-tools
+
+Real-world websites, government PDFs, and vendor pages do not all look the same. One agency posts a neat table; another buries fees inside a multi-page brochure. Instead of asking an AI model to interpret each new layout on the fly, ClearedStack handles variations with **deterministic sub-tools**.
+
+Inside each worker repository, a registry file lists small, self-contained sub-tools organized by case. Each sub-tool has three parts:
+
+- **Matching rule:** Checks whether an incoming page, file, or item fits this specific pattern (such as a particular vendor slug or agency PDF format).
+- **Deterministic logic:** Extracts fields, scores criteria, or builds outputs using plain, predictable code.
+- **Golden test fixtures:** Saved sample inputs paired with exact expected outputs, so automated tests verify the sub-tool never breaks.
+
+Because each sub-tool lives right inside the worker repository that owns that stage of the pipeline, the team and contributors can see every supported variation in one place.
+
+| Worker Repo | Deterministic Job | Sub-Tool Variations |
+| --- | --- | --- |
+| `cs-01-intake` | Normalize URLs, deduplicate, and assign tracking IDs | Source adapters (`sam-gov`, `github-issues`, `web-sweep`, `site-form`) |
+| `cs-02-observe` | Fetch public pages and extract structured data | Layout extractors (`saas-marketing`, `gov-portal`, `agency-pdf`, per-vendor slugs) |
+| `cs-03-evaluate` | Run knockout gates, 100-point rubric, and tie-breakers | Category rubric profiles |
+| `cs-04-decide` | Decision inbox on the Portal | None (human decisions only) |
+| `cs-05-provenance` | Stamp provenance notes, enforce SLAs, and compile build specs | Tool-type spec profiles |
+| `cs-06-build` | Generate isolated static tool repos from clean-room specs | Stack templates (`calculator`, `checklist`, `validator`, `decision-tree`) |
+| `cs-07-verify` | Run the 5-condition offline and zero-tracking test suite | None (universal checks) |
+| `cs-08-catalog` | Publish verified, linked, merged, or retired catalog entries | None |
+| `cs-09-monitor` | Run scheduled checks on regulations, live tools, and blockers | Source watchers (`federal-register`, `ecfr`, `nist-csrc`, catalog watches) |
+| `cs-10-notify` | Route approved edits, sub-tool tasks, and alerts | Delivery targets (`internal-git`, `github-mirror`, `webhook-alert`, `portal-sse`) |
+
+## Failing closed into `needs_subtool`
+
+When a worker encounters a layout or format it does not recognize—for example, a vendor pricing table structured in a brand-new way—it never guesses or improvises. Instead, it **fails closed**:
+
+1. The worker stops processing that specific item and marks its status as `needs_subtool`.
+2. The notification worker (`cs-10-notify`) opens a clear task in the owning worker repository describing the unmatched pattern.
+3. The paused item becomes visible on the Portal so anyone inspecting the pipeline can see why it stopped and which worker needs a new sub-tool.
+
+All other items in the queue continue moving normally. Only the unrecognized pattern waits.
+
+## Adding a sub-tool and replaying paused items
+
+Once a contributor or maintainer writes a new deterministic sub-tool and includes a golden test fixture for the layout, the platform handles the rest automatically:
+
+1. **Test and build:** The build runner (`cs-runner`) runs the worker's test suite—including the new golden fixture—and packages an updated container image without Docker.
+2. **Deploy:** The app-store reconciler (`cs-store`) rolls out the updated worker in the cluster.
+3. **Automatic replay:** The queue API (`hub-queue-api`) detects the new capability and automatically replays every item that was paused in `needs_subtool` for that pattern.
+
+Each edge case is solved once, tested forever, and turned into permanent deterministic code. Over time, the system grows more capable without ever sacrificing predictability.

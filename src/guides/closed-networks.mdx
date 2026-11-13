@@ -1,201 +1,58 @@
 export const meta = {
   title: "Run it on a closed network",
-  summary: "Move a copy onto a network with no internet connection: what to carry, how to prove it arrived intact and how to keep it current.",
+  summary: "Run the entire self-contained Kubernetes stack inside a disconnected enclave, or carry a frozen Snapshot Mode bundle for single-file offline use.",
   group: "host",
   order: 4,
   revised: "2026-11",
 };
 
-The site was built to work where nothing can reach the internet. It loads its fonts, scripts and styles from itself, it has no database, and it makes no outside request while running. Getting it onto a closed network is a matter of building it outside, carrying one file across and proving that file is the one you built.
+ClearedStack is built to operate without an internet connection. Everything the platform needs to host code, build container images, store data, and run deterministic tools lives inside the platform itself, with no Docker anywhere and no runtime calls to outside AI services or third-party trackers.
 
-This guide describes the mechanics. It does not replace your organization’s transfer rules. Whatever process your network requires for bringing software in, that process comes first.
+When you move ClearedStack onto a closed or air-gapped network, you choose between two modes: running the **full self-contained Kubernetes stack** inside a disconnected enclave, or exporting a **Snapshot Mode** bundle for single-file offline use.
 
-## Choose what to carry
+## Choose your closed-network mode
 
-There are three things you could move. Pick the one that matches what is already running on the inside.
+| Mode | What runs inside | Best for | Updates and edits |
+| --- | --- | --- | --- |
+| **Full Enclave Stack** | Complete 17-pod Kubernetes platform (`clearedstack` and `cs-workers` namespaces) on `k3s` and `containerd` | Teams that want the live Portal, internal code hosting, in-cluster builds, and all 10 deterministic workers inside an enclave | Users can propose edits, build with `cs-runner`, and deploy via `cs-store` completely offline |
+| **Snapshot Mode** | A single frozen, timestamped static bundle (HTML, CSS, JavaScript, fonts, and verified tools) | Analysts or small teams who only need to read guides, search the catalog, and run tools in a browser without a cluster | Read-only and fixed at the export timestamp; refresh by carrying in a newer snapshot |
 
-| Carry this | When | What the inside needs |
+## Mode 1: Full self-contained Kubernetes stack
+
+Because ClearedStack does not depend on GitHub for container images or external registries at runtime, the entire platform can live inside a disconnected enclave with zero internet access.
+
+The stack runs on `k3s` with `containerd`—no Docker daemon is installed or used anywhere. Go services are built with `ko`, and the Next.js Portal is built with rootless BuildKit. Inside the cluster, two namespaces keep responsibilities separate:
+
+- **The `clearedstack` namespace (control plane):** Runs the seven core services—`clearedstack-web` (the Portal and App Store interface), `hub-queue-api` (queues and proposals), Postgres 17 (database storage), `cs-git` (internal Git repositories), `cs-registry` (internal OCI container image store), `cs-runner` (in-cluster builder and test runner), and `cs-store` (app reconciler and health monitor).
+- **The `cs-workers` namespace (workers):** Runs the 10 deterministic workers (`cs-01-intake` through `cs-10-notify`). Each worker runs predictable, rule-based Go code with zero AI at runtime. For JavaScript-heavy pages, `cs-02-observe` spawns on-demand headless browser jobs only when needed.
+
+Inside an enclave, `cs-git`, `cs-registry`, `cs-runner`, and `cs-store` form a closed loop. Teams can review proposals in the Portal, commit changes to `cs-git`, build and sign new images with `cs-runner`, push them to `cs-registry`, and roll them out with `cs-store` without ever touching the public internet.
+
+### What changes when disconnected
+
+| Component | Connected behavior | Disconnected enclave behavior |
 | --- | --- | --- |
-| The container image, as one file | You run Docker, Podman or Kubernetes inside | A container runtime, and for Kubernetes a registry |
-| The built site, as one archive | You have a web server inside | Any web server |
-| The source code and its dependencies | You are required to build from source inside | Node.js, an internal package mirror and base images |
+| **`cs-git`** | Mirrors `main` and tags outbound to GitHub | Outbound GitHub mirror is disabled; all code stays in local bare repositories |
+| **`cs-09-monitor`** | Checks public regulatory feeds (such as eCFR and NIST) on a schedule | External fetches are paused or pointed at internal enclave mirrors |
+| **`cs-02-observe`** | Fetches public candidate pages over HTTPS | Only fetches addresses reachable inside your enclave, or processes imported local bundles |
+| **`cs-registry`** | Stores signed OCI images built by `cs-runner` | Serves all cluster images locally via `containerd` with zero external pulls |
 
-<Branch
-  caption="Choosing an air-gap transfer format"
-  question="What runtime is available on the closed network?"
-  options={[
-    { when: "Docker / Podman / K8s", then: "Container image archive", detail: "Single clearedstack.tar.gz file (~27 MB) with web server and files included." },
-    { when: "Existing web server", then: "Built static site archive", detail: "Single clearedstack-site.tar.gz file (<2 MB) to extract into document root." },
-    { when: "Build from source required", then: "Source bundle & dependencies", detail: "Git bundle, internal npm mirror and mirrored base images needed inside." },
-  ]}
-/>
+## Mode 2: Snapshot Mode for single-file offline users
 
-The first two are a single file with nothing to install on arrival. The third is much more work, and is only worth it when policy demands it.
+Not every closed-network user needs a Kubernetes cluster, a Postgres database, or background workers. **Snapshot Mode** exports a frozen, timestamped static bundle containing the site, the guides, the tool catalog, and every verified client-side tool.
 
-## Build on a connected machine
+You can open a Snapshot Mode bundle directly from a local folder or serve it from any plain internal web server. Every font, stylesheet, script, and calculation runs locally in the visitor’s browser, and strict Content Security Policy rules (`connect-src 'self'`) prevent any outside network request.
 
-For the container image:
+Because Snapshot Mode has no backend cluster, interactive control-plane features—such as submitting new proposals, running the 10-worker pipeline, or viewing live `cs-09-monitor` checks—are turned off. The bundle carries a visible build timestamp so users always know the exact date of the catalog and regulatory rules they are reading.
 
-```bash
-git clone https://github.com/ClearedStack/clearedstack.com.git
-cd clearedstack.com
-docker build -t clearedstack:$(git rev-parse --short HEAD) .
-docker save clearedstack:$(git rev-parse --short HEAD) | gzip > clearedstack.tar.gz
-```
+## Moving files across the air gap
 
-For the built site:
+Both modes follow the same transfer discipline: package on a connected machine, record a SHA-256 fingerprint before the move, carry the bundle through your organization’s approved transfer process, and verify the fingerprint on arrival before loading anything.
 
-```bash
-git clone https://github.com/ClearedStack/clearedstack.com.git
-cd clearedstack.com
-npm ci
-npm run build
-tar -czf clearedstack-site.tar.gz -C out .
-```
+| Transfer item | Used for | What it contains |
+| --- | --- | --- |
+| **Enclave bundle** | Mode 1 (Full Enclave Stack) | Signed OCI image archives exported for `containerd` and `cs-registry`, Kubernetes manifests, and `cs-git` repository bundles |
+| **Snapshot archive** | Mode 2 (Snapshot Mode) | One compressed, timestamped static bundle ready to extract or open offline |
+| **SHA-256 checksum file** | Both modes | The cryptographic fingerprint used on the inside to prove not a single byte changed in transit |
 
-Tagging the image with the git commit, as above, records exactly which version of the source it came from. Write that commit down. It is how you will tell later whether your copy is behind.
-
-## Review it before it moves
-
-You are about to bring software into a protected network, so look at it first. The repository is small enough to review.
-
-- **Read the Dockerfile.** It is a dozen lines: install dependencies, build, copy the result into an nginx image.
-- **Check the dependencies.** `package.json` lists them, and `package-lock.json` pins the exact version and checksum of every package the build downloads.
-- **List what is in the archive.** For the built site, `tar -tzf clearedstack-site.tar.gz` prints every file. It should hold only HTML, CSS, JavaScript, fonts, images and a few text files.
-- **Run it and watch the network.** Start the copy on the connected machine, open it with the browser’s Network tab showing, and click through the pages. Every request should go to your own address.
-
-If your organization scans incoming software, the archive and the image file are what to hand to that process.
-
-## Record a checksum
-
-A checksum is a short fingerprint of a file. If one byte changes in transit, the fingerprint changes. Make it on the connected side:
-
-```bash
-sha256sum clearedstack.tar.gz > clearedstack.tar.gz.sha256
-```
-
-The `.sha256` file holds one line: the fingerprint and the file name. Carry it with the archive, or better, by a different path, such as reading it out or printing it.
-
-## Carry it across
-
-Use the transfer process your network requires. That might be approved removable media, a one-way transfer device or a transfer service run by your security office. This guide cannot tell you which, and no tool here is a substitute for it.
-
-<Flow
-  caption="Air-gap transfer and verification sequence"
-  direction="across"
-  steps={[
-    { tag: "Outside", label: "Build & package", detail: "Build image or export static files on an internet-connected machine." },
-    { tag: "Outside", label: "Record SHA-256", detail: "Generate .sha256 checksum fingerprint before moving the archive." },
-    { tag: "Transfer", label: "Carry across", detail: "Move across the air-gap via approved transfer media or diode." },
-    { tag: "Inside", label: "Verify checksum", detail: "Run sha256sum -c to confirm exact byte integrity before running." },
-  ]}
-/>
-
-What you are moving is small: about 27 MB for the image and under 2 MB for the built site.
-
-## Check it on the other side
-
-On Linux:
-
-```bash
-sha256sum -c clearedstack.tar.gz.sha256
-```
-
-It prints `clearedstack.tar.gz: OK` if the file is unchanged. On other systems, compute the fingerprint and compare it by eye with the one you recorded:
-
-| System | Command |
-| --- | --- |
-| Linux | `sha256sum clearedstack.tar.gz` |
-| macOS | `shasum -a 256 clearedstack.tar.gz` |
-| Windows PowerShell | `Get-FileHash clearedstack.tar.gz -Algorithm SHA256` |
-
-If the fingerprints differ, do not use the file. Transfer it again.
-
-## Load it and run it
-
-For a single server with Docker:
-
-```bash
-docker load < clearedstack.tar.gz
-docker images clearedstack
-docker run -d --name clearedstack --restart unless-stopped -p 8080:8080 clearedstack:<tag>
-```
-
-`docker images` shows the tag that was loaded. Use it in place of `<tag>`.
-
-For Kubernetes, load the image, rename it for the registry inside the network and push it there:
-
-```bash
-docker load < clearedstack.tar.gz
-docker tag clearedstack:<tag> registry.internal.example/clearedstack:<tag>
-docker push registry.internal.example/clearedstack:<tag>
-```
-
-Then set that name in `k8s/clearedstack.yaml` and apply it, as in [Host on Kubernetes](/guides/host-on-kubernetes/). You will need the `k8s` folder from the repository on the inside as well. It is two small text files.
-
-For a web server, unpack the archive into the folder it serves:
-
-```bash
-mkdir -p /var/www/clearedstack
-tar -xzf clearedstack-site.tar.gz -C /var/www/clearedstack
-```
-
-[Host as plain files](/guides/host-static-files/) has the web server configuration.
-
-## Confirm it is self-contained
-
-Open the site from a workstation on the closed network, with the browser’s developer tools on the **Network** tab, and visit each page. Every line in the list should be a request to your own server. Nothing should fail, and nothing should be waiting on an outside address.
-
-<Layers
-  caption="Self-contained air-gap execution layers"
-  layers={[
-    { tag: "Browser", label: "Workstation browser tab", detail: "Renders HTML/CSS and runs client-side calculations entirely in memory." },
-    { tag: "Security policy", label: "Local CSP sandbox", detail: "connect-src self forbids all outside network calls even if attempted." },
-    { tag: "Web server", label: "Internal host", detail: "Serves static assets locally via nginx, container or plain file server." },
-    { tag: "Network", label: "Air-gapped intranet", detail: "Completely disconnected from public internet; zero egress possible." },
-  ]}
-/>
-
-## What will not work inside
-
-A few links on the site point at the public internet. On a closed network they lead nowhere:
-
-- links to GitHub: the **Source** links, the repository links and the contributing guide
-- links to public sources, such as acquisition.gov or ecfr.gov, in the guides
-- links to a tool that is hosted outside
-- email links, if the workstation has no mail client set up for an outside address
-
-The pages themselves, the catalog, the filter boxes and the guides all work.
-
-To use a tool on a closed network, bring the tool across the same way. Each one has its own repository and its own build instructions, and each has to pass the same checks before it is carried in.
-
-## Keep it current
-
-A copy on a closed network does not update itself. Decide how often you will refresh it, then repeat the process:
-
-1. On the connected side, `git pull` and compare the newest commit with the one you recorded.
-2. Read what changed: `git log --oneline <old-commit>..HEAD`.
-3. Build, checksum, transfer and verify as before.
-4. Replace the running copy.
-
-Keep the previous archive until the new one is running, so you can go back.
-
-<Callout kind="warning" title="Regulations move even when your copy does not">
-A tool or a guide carried in last year still shows last year’s figures. Before you rely on a number from a copy that cannot update, check the date the copy was built against the date of the rule. [Check a tool’s answer](/guides/checking-results/) lists the figures that change on a schedule.
-</Callout>
-
-## If you must build inside
-
-Building from source on a closed network needs three things carried in or mirrored first:
-
-- **The two base images** named in the Dockerfile: a Node.js image for the build stage and an unprivileged nginx image for the final stage.
-- **Every npm package** in `package-lock.json`, served from an internal registry or a package mirror.
-- **The source code**, as a git bundle or an archive.
-
-Point npm at the internal registry before the build:
-
-```bash
-npm config set registry https://npm.internal.example/
-```
-
-Then change the `FROM` lines in the Dockerfile to the names of the mirrored images and build as usual. This path has many more moving parts than carrying one finished file. Use it when you are required to, not by default.
+If a checksum does not match on the closed side, discard the transfer and move a fresh copy. Before relying on any regulatory threshold or compliance rule inside a disconnected environment, compare the snapshot or enclave sync date against the effective date of the rule you are checking.

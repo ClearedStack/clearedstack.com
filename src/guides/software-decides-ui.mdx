@@ -1,0 +1,57 @@
+export const meta = {
+  title: "How Software Decides What Appears on Screen",
+  summary: "How deterministic priority rules, six fixed UI primitives, anti-flicker guardrails, and six screen states control what appears on ClearedStack without AI.",
+  group: "start",
+  order: 7,
+  revised: "2026-11",
+};
+
+Most dashboards force humans to hunt through dozens of charts to figure out if something is broken. ClearedStack flips that around: deterministic software rules—with zero AI at runtime—decide what floats to the top of your screen, what stays collapsed, and when a number is too old to trust.
+
+Every color, alert, and card position on the Portal follows the exact same public rules. Whether you are a visitor checking pipeline health or the owner reviewing pending decisions, the interface stays calm when things are quiet and loud only when something genuinely needs attention.
+
+## Deterministic P0–P4 attention rules (no AI)
+
+Instead of letting a language model guess what looks important, the Portal sorts every worker, app, and queued item into one of five fixed priority tiers (`P0` through `P4`). Because the rules are plain code, the same cluster state always produces the exact same screen layout.
+
+| Priority Tier | Name | What Triggers It | What Appears on Screen |
+| --- | --- | --- | --- |
+| **P0** | Critical | A pod crashes, a health check fails, an app goes down, or dead-lettered items are greater than zero. | Promoted to the top of the Command view in crimson (`--danger`) with a sanitized error code and a 1-click Rollback button for the owner. |
+| **P1** | Stalled / Attention | A worker pauses in `needs_subtool`, a queue backs up or times out, or the live data stream goes silent for more than 15 seconds. | Surfaced directly below P0 items in amber (`--warn`) with the error code and a link to the owning worker repository. |
+| **P2** | Human Action | Items are waiting in `cs-04-decide` for a determination, or anonymous public `✎` edit proposals are waiting for owner approval. | Listed in the `/decide` inbox and highlighted on Command with the oldest wait time so nothing stalls indefinitely. |
+| **P3** | Active / Healthy | Workers or apps are actively processing items with zero errors and fresh timestamps. | Shown in green with current counts and normal status indicators. |
+| **P4** | Quiet / Idle | A healthy worker has zero queued items and zero errors. | Collapsed into a single muted summary line so idle components never clutter the page. |
+
+## The 6 fixed UI primitives
+
+To keep the ink-on-paper interface predictable and easy to scan, every live page on ClearedStack is assembled from the same six building blocks.
+
+| Primitive | Role on Screen | How Visitors Use It |
+| --- | --- | --- |
+| **`PulseStrip`** | Top-of-page heartbeat bar summarizing overall cluster health, active counts, and stream freshness. | Tells you in one glance whether the platform is live, recovering, or paused. |
+| **`AttentionCard`** | Priority-sorted card reserved for `P0`, `P1`, and `P2` items that need eyes or action. | Surfaces the state color, sanitized error code, owning component, and action controls at the top. |
+| **`TrailRow`** | Compact single-line row for an individual pipeline item (`PA-XXXX`) or a collapsed `P4` idle worker. | Lets you scan item progress or quiet workers without walls of cards. |
+| **`MetricCell`** | Timestamped numeric readout (queue depth, latency, or item count) paired with a fixed unit. | Shows live numbers alongside their last-updated timestamp so stale counts never look current. |
+| **`WhyDrawer`** | Contextual slide-over drawer (`? Why`) placed directly next to live rules, gates, or rubric scores. | Explains *why* a rule or state exists on demand, replacing long static essays. |
+| **`EditTrigger`** | Inline `✎ Edit` button mapped to `ownership_map.json` on any editable element. | Lets any visitor propose a `DATA`, `CONFIG`, or `ISSUE` change without signing in, turning into a live status pill (`Proposed -> Approved -> Building -> Live`). |
+
+## Anti-flicker rules
+
+Live systems change state constantly. Without guardrails, pushing every raw queue tick straight to the browser makes numbers jitter and causes status badges to flap back and forth between green and amber.
+
+- **Hysteresis (~2-minute hold):** A status color cannot flip immediately on a single brief spike. A state change must hold steady for roughly two minutes before the UI promotes or clears a color, preventing noisy flapping.
+- **Batched updates:** Instead of streaming every individual database write to every visitor, updates are grouped into short batches every few seconds (or served as cached snapshots for anonymous visitors), keeping numbers readable.
+- **Freshness timestamps:** Every status and `MetricCell` carries a generation timestamp. If the server stream goes silent for more than 15 seconds, the UI refuses to show frozen green numbers and automatically switches to the `stale` state.
+
+## The 6 screen states
+
+Every component on screen is always in one of six explicit visual states. Idle components are never painted red, and missing data is never disguised as healthy.
+
+| Screen State | Visual Treatment | When It Appears |
+| --- | --- | --- |
+| **`healthy`** | Green indicator | The app or worker is running normally, health checks pass, and updates are arriving on time. |
+| **`idle`** | Muted grey (never red) | The worker is healthy and ready, with zero queued items and zero errors; collapsed into a quiet summary row. |
+| **`erroring`** | Crimson (`--danger`) + icon + code | An active failure, crash, or dead-lettered item exists; shows a sanitized code such as `E_TIMEOUT` or `E_PARSE` (never raw stack traces or internal IPs). |
+| **`recovering`** | Amber (`--warn`) | A component is retrying after an error, waiting on a `needs_subtool` fix, or inside its hysteresis cooldown window. |
+| **`stale`** | Dashed grey border | The live stream has been silent for more than 15 seconds, warning that the view is paused rather than live. |
+| **`empty`** | Muted placeholder | Initial clean state (*"Nothing has been collected yet"*) before any items have entered the pipeline. |

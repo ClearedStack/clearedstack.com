@@ -1,0 +1,55 @@
+export const meta = {
+  title: "Backups and Monthly Restore Drills",
+  summary: "What the three persistent storage volumes hold, how nightly encrypted backups protect them, and how automated monthly restore drills prove recovery works on the live Portal.",
+  group: "host",
+  order: 11,
+  revised: "2026-11",
+};
+
+Running a self-hosted platform on a single small server is simple and inexpensive, but it also means everything important lives on one machine unless it is copied elsewhere. ClearedStack separates **stateless** software (programs that can be restarted or recreated anytime) from **persistent volumes** (virtual hard drives that keep data even when a program restarts). Only three persistent volumes hold data that cannot be recreated automatically. Protecting those three volumes—and proving every month that they can actually be restored—is how the platform stays recoverable without guesswork.
+
+## What the three persistent volumes hold
+
+Most of ClearedStack's 17 programs do not store permanent data of their own. If the web Portal, the build runner, or any of the 10 deterministic workers (`cs-01` through `cs-10`) crashes, Kubernetes simply starts a fresh copy. All real state lives in three persistent volumes inside the `clearedstack` control-plane namespace.
+
+| Persistent Volume | Owner Service | What It Holds | Why It Cannot Be Recreated Easily |
+| --- | --- | --- | --- |
+| **Postgres** | `postgres` | Work queues, item history, evaluation records, public edit proposals (`core.*`), and sanitized public views (`pub.*`) | Holds the live operational memory of every item, decision, and approved edit |
+| **`cs-git`** | `cs-git` | Bare Git source repositories for the platform, all 10 workers, sub-tools, and `app.yaml` manifests | Serves as the internal source of truth before changes are mirrored to GitHub |
+| **`cs-registry`** | `cs-registry` | Signed container images built inside the cluster (keeping the last 5 versions per app for instant rollback) | GitHub mirrors only source code—zero container images are stored on GitHub |
+
+Because container images are never uploaded to GitHub, losing `cs-registry` without a backup would mean rebuilding every service from scratch before anything could roll back or restart. Likewise, losing Postgres would erase the queue history and decision trail, and losing `cs-git` would risk un-mirrored commits or internal configuration manifests.
+
+## Nightly encrypted backups
+
+Every night, an automated backup job captures a clean snapshot of all three persistent volumes and sends the result to off-node storage so a hardware failure or disk corruption on the host machine cannot wipe out both the live system and its backups.
+
+For **Postgres**, a database cannot simply be copied like a regular file while programs are actively writing to it; doing so can produce a half-written, unusable copy. Instead, the nightly job takes a consistent database dump (a complete, self-contained snapshot at one exact moment in time). For **`cs-git`** and **`cs-registry`**, the job captures the repository files and stored container image layers cleanly.
+
+Before any backup leaves the cluster, it is **encrypted**—scrambled using a secret key so the backup files are unreadable to anyone who does not hold that key. Even if an off-node storage bucket or backup drive were ever exposed, the contents remain locked. The decryption key itself is kept separate from the backup files so one does not compromise the other.
+
+| Backup Stage | What Happens | Why It Matters |
+| --- | --- | --- |
+| **Consistent snapshot** | Postgres is dumped cleanly; `cs-git` and `cs-registry` volumes are archived | Prevents half-written or corrupted files |
+| **Client-side encryption** | Archives are encrypted before leaving the host node | Protects data at rest in off-node storage |
+| **Off-node transfer** | Encrypted bundles are pushed away from the primary server | Survives full server loss or disk failure |
+| **Retention pruning** | Older nightly copies are rotated out on a fixed schedule | Keeps storage costs predictable |
+
+## Why an automated monthly restore drill proves backups work
+
+An untested backup is not a backup—it is a wish. Backups fail silently all the time: an encryption key rotates and no longer matches, a database schema changes and breaks an old restore script, or a disk fills up halfway through an archive. You rarely discover those problems until the worst possible day, when the live server is already down.
+
+To eliminate that blind spot, ClearedStack runs an **automated monthly restore drill**. Once a month, the cluster spins up a temporary, isolated scratch area that is completely separate from the live Portal and live databases. Inside that scratch area, the drill downloads the latest nightly encrypted backups, decrypts them, and restores all three volumes—Postgres, `cs-git`, and `cs-registry`—from scratch.
+
+Once restored, deterministic verification checks confirm that the recovered data is actually usable, then clean up the temporary scratch resources so no extra RAM or disk space stays consumed.
+
+| Drill Check | What It Verifies | What a Pass Proves |
+| --- | --- | --- |
+| **Decryption & unpack** | The off-node archive downloads cleanly and unlocks with the current key | The backup is readable and keys have not drifted |
+| **Postgres restore** | The database loads without errors and core tables pass integrity checks | Queue history, items, and public views are intact |
+| **`cs-git` restore** | Bare repositories mount and pass Git consistency checks | Source code, sub-tools, and `app.yaml` manifests are whole |
+| **`cs-registry` restore** | Stored container image manifests and signed digests resolve cleanly | Apps can actually start and roll back without internet access |
+
+## Live status on the public Portal
+
+In keeping with ClearedStack's open-by-default design, the outcome of every monthly restore drill is published directly on the live Portal. Visitors and the site owner can see when the last drill ran, whether it passed or failed, and a high-level summary of the four verification checks—without exposing internal IP addresses, server names, or decryption keys. If a backup or restore step ever breaks, it surfaces right away as a visible status alert rather than hiding in a log file until an outage occurs.

@@ -1,333 +1,216 @@
 import Link from "next/link";
-import { Flow } from "@/components/Diagram";
+import { EditTrigger } from "@/components/EditTrigger";
 import { SectionLabel } from "@/components/SectionLabel";
-import { StatusChip } from "@/components/StatusChip";
-import { categories, liveCount, tools, toolsIn } from "@/data/catalog";
+import { DraftChip, HealthChip } from "@/components/StatusChip";
+import { WhyDrawer } from "@/components/WhyDrawer";
+import { liveCount, tools } from "@/data/catalog";
+import { attentionRules, controlPlaneApps, workerApps } from "@/data/platform";
 import { site } from "@/data/site";
 
-const requirements = [
-  {
-    id: "H.1",
-    title: "Free",
-    body: "No paywall, no ads, no subscription, no “contact sales”. The project takes in no revenue.",
-  },
-  {
-    id: "H.2",
-    title: "Open source",
-    body: "MIT licensed. Read the code, check the math, fork it, host it yourself.",
-  },
-  {
-    id: "H.3",
-    title: "Client-side",
-    body: "Tools run in your browser. Your rates, proposal text and system details stay on your machine. There is no backend to send them to.",
-  },
-  {
-    id: "H.4",
-    title: "Independent",
-    body: "A personal project built from public sources. No affiliation with the Department of Defense or any agency.",
-  },
-];
+export default function CommandPortalHome() {
+  const activeErrors = [...controlPlaneApps, ...workerApps].filter((a) => a.health === "erroring");
+  const totalQueued = workerApps.reduce((sum, w) => sum + w.queued, 0);
 
-const deliveries = [
-  {
-    phase: "Phase 1",
-    title: "The free arsenal",
-    body: "Ship the catalog one tool at a time until this is the page a small contractor keeps open all day.",
-  },
-  {
-    phase: "Phase 2",
-    title: "The community",
-    body: "Open the catalog to tools written by other engineers, veterans and people who do this work for a living.",
-  },
-  {
-    phase: "Phase 3",
-    title: "The institution",
-    body: "Grow that community into something lasting that can compete for the work itself.",
-  },
-];
-
-const button =
-  "inline-flex items-center justify-center rounded-sm border px-4 py-2.5 text-sm font-medium transition-colors";
-
-export default function Home() {
   return (
-    <>
-      {/* Hero */}
-      <section className="mx-auto grid max-w-6xl gap-12 px-5 pb-16 pt-14 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16 lg:pb-24 lg:pt-24">
-        <div>
-          <p className="font-mono text-xs uppercase tracking-[0.14em] text-accent">
-            Free · Open source · Runs in your browser · Revised {site.revised}
-          </p>
-          <h1 className="mt-5 text-4xl font-semibold leading-[1.08] tracking-[-0.02em] text-balance sm:text-5xl">
-            Free tools for the paperwork between you and a government contract.
-          </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            ClearedStack is an open-source set of small, single-purpose tools for pricing, proposals and cyber
-            compliance. Built for solo developers, veteran founders and small shops that would rather build than fill
-            out forms.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/tools/" className={`${button} border-ink bg-ink text-paper hover:border-accent hover:bg-accent hover:text-accent-ink`}>
-              Browse the tools
-            </Link>
-            <Link href="/guides/" className={`${button} border-line text-ink hover:border-ink`}>
-              How to use it
-            </Link>
-            <Link href="/about/" className={`${button} border-line text-ink hover:border-ink`}>
-              Read the mission
-            </Link>
+    <div className="mx-auto max-w-6xl px-5 pt-10 lg:pt-14">
+      {/* Live Pulse Strip */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-line bg-surface px-4 py-2.5 font-mono text-xs">
+        <div className="flex flex-wrap items-center gap-3">
+          <HealthChip state="idle" label="Draft · Architecture Preview" />
+          <span className="text-muted">
+            2 namespaces (<code className="text-ink">clearedstack</code> +{" "}
+            <code className="text-ink">cs-workers</code>) · 7 control-plane pods · 10 deterministic workers
+          </span>
+        </div>
+        <div className="flex items-center gap-3 text-muted">
+          <span>0 records collected yet</span>
+          <span>·</span>
+          <span>Revised {site.revised}</span>
+        </div>
+      </div>
+
+      {/* Hero / Command Header */}
+      <section className="mt-10 border-b border-line pb-10">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <SectionLabel section="Command">Open Public Sandbox · No Login Lock</SectionLabel>
+          <div className="flex items-center gap-2">
+            <WhyDrawer
+              title="Why a live command portal instead of static essays?"
+              summary="Folks are done reading. Software rules—not AI—promote errors, stalled queues, and pending decisions to the top so anyone can see what is actually running."
+              guideHref="/guides/live-command-portal/"
+              details={[
+                "View = f(state): deterministic priority rules decide what appears on screen.",
+                "Zero AI at runtime: all 10 workers and all shipped tools run 100% deterministic code.",
+                "No lock on it: everything running and being developed is public and free under MIT.",
+                "Click Edit on any element to propose a change without signing in.",
+              ]}
+            />
+            <EditTrigger
+              elementId="portal.home.hero"
+              ownerRepo="clearedstack.com"
+              targetLabel="Command Portal Header"
+              editClass="CONFIG"
+            />
           </div>
         </div>
 
-        {/* The whole pitch, written as the price schedule of a contract. */}
-        <div className="rounded-sm border border-line bg-surface">
-          <div className="border-b border-line px-4 py-3 sm:px-5">
-            <SectionLabel section="Section B">Supplies or services and prices</SectionLabel>
-          </div>
-          <table className="w-full border-collapse font-mono text-[13px] sm:text-sm">
-            <caption className="sr-only">
-              The five tool categories, listed as contract line items, each priced at zero dollars.
-            </caption>
-            <thead>
-              <tr className="border-b border-line text-left text-[11px] uppercase tracking-wider text-muted">
-                <th scope="col" className="py-2.5 pl-4 pr-2 font-normal sm:pl-5">
-                  CLIN
-                </th>
-                <th scope="col" className="px-2 py-2.5 font-normal">
-                  Description
-                </th>
-                <th scope="col" className="hidden px-2 py-2.5 font-normal sm:table-cell">
-                  Unit
-                </th>
-                <th scope="col" className="py-2.5 pl-2 pr-4 text-right font-normal sm:pr-5">
-                  Amount
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((category) => (
-                <tr key={category.id} className="border-b border-line">
-                  <td className="py-3 pl-4 pr-2 align-top text-muted sm:pl-5">{category.clin}</td>
-                  <td className="px-2 py-3 align-top">
-                    <Link
-                      href={`/tools/#${category.id}`}
-                      className="underline decoration-line underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
-                    >
-                      {category.name}
-                    </Link>
-                  </td>
-                  <td className="hidden px-2 py-3 align-top text-muted sm:table-cell">EA</td>
-                  <td className="py-3 pl-2 pr-4 text-right align-top tabular-nums sm:pr-5">$0.00</td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <th scope="row" colSpan={2} className="py-3.5 pl-4 pr-2 text-left font-medium sm:pl-5">
-                  Total evaluated price
-                </th>
-                <td className="hidden sm:table-cell" />
-                <td className="py-3.5 pl-2 pr-4 text-right font-medium tabular-nums text-accent sm:pr-5">$0.00</td>
-              </tr>
-            </tfoot>
-          </table>
-          <p className="border-t border-line px-4 py-3 font-mono text-[11px] uppercase tracking-wider text-muted sm:px-5">
-            Firm-fixed-price · Period of performance: indefinite · Revised {site.revised}
-          </p>
+        <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-[-0.02em] text-balance sm:text-5xl">
+          Software decides what’s on screen. Everything is public.
+        </h1>
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted">
+          ClearedStack is a lightweight, Docker-free Kubernetes platform and free GovCon tool arsenal. Seven tiny Go
+          microservices (<code className="text-ink">cs-git</code>, <code className="text-ink">cs-registry</code>,{" "}
+          <code className="text-ink">cs-runner</code>, <code className="text-ink">cs-store</code>, Postgres,{" "}
+          <code className="text-ink">hub-queue-api</code>, and this Portal) run alongside ten deterministic workers (
+          <code className="text-ink">cs-01</code>–<code className="text-ink">cs-10</code>). No login wall, no hidden
+          status, zero AI at runtime.
+        </p>
+
+        <div className="mt-6 flex flex-wrap gap-3 font-mono text-xs">
+          <Link
+            href="/apps/"
+            className="rounded-sm bg-accent px-4 py-2 font-medium text-accent-ink transition-opacity hover:opacity-90"
+          >
+            Open App Store (/apps) -&gt;
+          </Link>
+          <Link
+            href="/pipeline/"
+            className="rounded-sm border border-line bg-surface px-4 py-2 text-ink transition-colors hover:border-ink"
+          >
+            10-Worker Pipeline (/pipeline)
+          </Link>
+          <Link
+            href="/decide/"
+            className="rounded-sm border border-line bg-surface px-4 py-2 text-ink transition-colors hover:border-ink"
+          >
+            Decisions &amp; Public Edits (/decide)
+          </Link>
+          <Link
+            href="/tools/"
+            className="rounded-sm border border-line bg-surface px-4 py-2 text-ink transition-colors hover:border-ink"
+          >
+            Tools Catalog ({liveCount}/{tools.length} live)
+          </Link>
         </div>
       </section>
 
-      {/* Catalog preview */}
-      <section className="border-t border-line">
-        <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
-          <SectionLabel section="Section C">Statement of work</SectionLabel>
-          <div className="mt-4 grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
-            <h2 className="text-3xl font-semibold tracking-[-0.015em] text-balance">
-              {tools.length} tools across five areas, each one doing a single job.
-            </h2>
-            <p className="leading-relaxed text-muted">
-              Every tool is its own repository, so it can be audited, forked and self-hosted on its own. This site is
-              the index.{" "}
-              {liveCount === 0
-                ? "None are live yet. The first ones are being built now."
-                : `${liveCount} ${liveCount === 1 ? "is" : "are"} live today.`}
-            </p>
-          </div>
+      {/* Promoted by Software Rules (P0 - P2) */}
+      <section className="mt-12">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <SectionLabel>Attention Feed (P0–P2)</SectionLabel>
+          <WhyDrawer
+            title="Deterministic Attention Rules"
+            summary="No language model ranks or summarizes this feed. Fixed rules promote failures and stalled queues first, and collapse quiet idle workers into one line."
+            guideHref="/guides/software-decides-ui/"
+            details={attentionRules.map((r) => `${r.tier}: ${r.trigger} -> ${r.behavior}`)}
+          />
+        </div>
 
-          <div className="mt-10 grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
-            {categories.map((category) => (
-              <div key={category.id} className="flex flex-col bg-surface p-5 sm:p-6">
-                <p className="font-mono text-xs text-muted">CLIN {category.clin}</p>
-                <h3 className="mt-2 text-lg font-semibold">
-                  <Link href={`/tools/#${category.id}`} className="transition-colors hover:text-accent">
-                    {category.name}
-                  </Link>
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{category.blurb}</p>
-                <ul className="mt-5 flex flex-col gap-2.5 border-t border-line pt-5 text-sm">
-                  {toolsIn(category.id).map((tool) => (
-                    <li key={tool.slug} className="flex items-start justify-between gap-3">
-                      <span>{tool.name}</span>
-                      <StatusChip status={tool.status} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-            <div className="flex flex-col justify-between gap-6 bg-paper p-5 sm:p-6">
-              <p className="leading-relaxed text-muted">
-                Missing the one you need? The catalog grows by request and by contribution.
-              </p>
-              <Link
-                href="/tools/"
-                className="font-mono text-sm text-ink underline decoration-accent underline-offset-4 transition-colors hover:text-accent"
-              >
-                See the full catalog →
-              </Link>
+        <div className="mt-5 grid gap-4 md:grid-cols-3">
+          <div className="rounded-sm border border-line border-t-2 border-t-ink bg-surface p-5">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-xs uppercase tracking-wider text-muted">P0 · Active Errors</span>
+              <HealthChip state={activeErrors.length > 0 ? "erroring" : "healthy"} label={`${activeErrors.length} errors`} />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Principles */}
-      <section className="border-t border-line">
-        <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
-          <SectionLabel section="Section H">Special contract requirements</SectionLabel>
-          <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.015em] text-balance">
-            Four terms that do not change.
-          </h2>
-          <dl className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-            {requirements.map((item) => (
-              <div key={item.id} className="border-t-2 border-ink pt-4">
-                <dt>
-                  <span className="font-mono text-xs text-accent">{item.id}</span>
-                  <span className="mt-1 block text-lg font-semibold">{item.title}</span>
-                </dt>
-                <dd className="mt-2 text-sm leading-relaxed text-muted">{item.body}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
-
-      {/* Roadmap */}
-      <section className="border-t border-line">
-        <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
-          <SectionLabel section="Section F">Deliveries or performance</SectionLabel>
-          <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.015em] text-balance">
-            Where this is going.
-          </h2>
-          <div className="mt-8">
-            <Flow
-              caption="ClearedStack delivery roadmap across three phases."
-              direction="across"
-              highlight={0}
-              steps={[
-                {
-                  tag: "Phase 1 · Now",
-                  label: "The free arsenal",
-                  detail: "Ship single-purpose tools one by one until small contractors keep this tab open all day.",
-                },
-                {
-                  tag: "Phase 2",
-                  label: "The community",
-                  detail: "Open the catalog to tools built by other engineers, practitioners, and veterans.",
-                },
-                {
-                  tag: "Phase 3",
-                  label: "The institution",
-                  detail: "Grow the community into a lasting public alternative that can compete for the work directly.",
-                },
-              ]}
-            />
-          </div>
-          <ol className="mt-10 grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-3">
-            {deliveries.map((item, index) => (
-              <li key={item.phase} className="bg-surface p-5 sm:p-6">
-                <p className="font-mono text-xs uppercase tracking-wider text-muted">
-                  {item.phase}
-                  {index === 0 ? <span className="text-accent"> · Now</span> : null}
-                </p>
-                <h3 className="mt-2 text-lg font-semibold">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{item.body}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* How a tool gets here (Section M) */}
-      <section className="border-t border-line">
-        <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <SectionLabel section="Section M">Evaluation factors</SectionLabel>
-            <Link
-              href="/how-we-decide/"
-              className="font-mono text-xs text-accent underline decoration-accent underline-offset-4 hover:text-ink"
-            >
-              Read full Section M evaluation factors →
-            </Link>
-          </div>
-          <div className="mt-4 grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
-            <h2 className="text-3xl font-semibold tracking-[-0.015em] text-balance">
-              How a tool gets here.
-            </h2>
-            <p className="leading-relaxed text-muted">
-              We look at tools that already exist for government-contracting paperwork, record what they do from public
-              pages, screen against knockout gates, score them in public, and credit their provenance before building
-              from the regulation.
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              Sanitized error codes (<code className="text-ink">E_TIMEOUT</code>, <code className="text-ink">E_PARSE</code>,{" "}
+              <code className="text-ink">E_NEEDS_SUBTOOL</code>) float here automatically when any pod fails. Internal IPs
+              and node names are stripped by <code className="text-ink">cs-store</code>.
             </p>
           </div>
 
-          <div className="mt-8">
-            <Flow
-              caption="The path an idea follows from initial discovery to live listing in the catalog."
-              direction="across"
-              steps={[
-                { label: "Discover", detail: "Find candidate ideas." },
-                { label: "Observe", detail: "Read public pages only." },
-                { label: "Screen & score", detail: "Five gates, 100-pt rubric." },
-                { label: "Owner decides", detail: "Build, link, park, or reject." },
-                { label: "Credit", detail: "Write provenance note." },
-                { label: "Build", detail: "Clean-room from public rule." },
-                { label: "List", detail: "Live in catalog." },
-              ]}
-            />
+          <div className="rounded-sm border border-line border-t-2 border-t-ink bg-surface p-5">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-xs uppercase tracking-wider text-muted">P1 · Queue &amp; Sub-Tools</span>
+              <HealthChip state="idle" label={`${totalQueued} queued`} />
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              Honest empty state: 0 records collected yet. When a worker hits an unknown layout, it pauses in{" "}
+              <code className="text-ink">needs_subtool</code> until a deterministic sub-tool and golden fixture are added.
+            </p>
           </div>
 
-          <p className="mt-6 font-mono text-xs text-muted">
-            Built with Claude Code and Antigravity, reviewed by a person. Read our{" "}
-            <Link href="/guides/built-with-ai/" className="text-ink underline decoration-accent underline-offset-4 hover:text-accent">
-              AI disclosure and verification guide
-            </Link>
-            .
-          </p>
+          <div className="rounded-sm border border-line border-t-2 border-t-ink bg-surface p-5">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-xs uppercase tracking-wider text-muted">P2 · Decisions &amp; Edits</span>
+              <DraftChip />
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              Anyone can click <code className="text-ink">✎ Edit</code> on any element without signing in. Proposals wait
+              in <code className="text-ink">cs-04-decide</code>, route to <code className="text-ink">cs-git</code>, build
+              without Docker, and mirror to GitHub.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Contribute */}
-      <section className="border-t border-line">
-        <div className="mx-auto grid max-w-6xl gap-8 px-5 pt-16 lg:grid-cols-[1.05fr_1fr] lg:items-end lg:gap-16 lg:pt-20">
+      {/* 10-Worker Pulse Strip */}
+      <section className="mt-14 border-t border-line pt-10">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <SectionLabel>Contribute</SectionLabel>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.015em] text-balance">
-              Rebuilding the same spreadsheet for every proposal? That is a tool.
+            <SectionLabel>cs-workers namespace</SectionLabel>
+            <h2 className="mt-2 text-2xl font-semibold tracking-[-0.015em]">
+              Ten deterministic workers
             </h2>
-            <p className="mt-4 max-w-xl leading-relaxed text-muted">
-              If you have turned a regulation into a checklist, a formula or a script, it can help the next person
-              skip the week you spent on it. Suggest a tool, or build one and add it to the catalog.
-            </p>
           </div>
-          <div className="flex flex-wrap gap-3 lg:justify-end">
-            <a href={site.github} rel="noopener" className={`${button} border-ink bg-ink text-paper hover:border-accent hover:bg-accent hover:text-accent-ink`}>
-              ClearedStack on GitHub
-            </a>
-            <a href={`mailto:${site.email}`} className={`${button} border-line text-ink hover:border-ink`}>
-              {site.email}
-            </a>
-          </div>
+          <Link href="/pipeline/" className="font-mono text-xs uppercase tracking-wider text-accent underline underline-offset-4">
+            Inspect full pipeline -&gt;
+          </Link>
+        </div>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {workerApps.map((w) => (
+            <div
+              key={w.id}
+              className="flex flex-col justify-between rounded-sm border border-line bg-surface p-3.5"
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs font-semibold text-ink">{w.name}</span>
+                  <HealthChip state={w.health} />
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-muted">{w.role}</p>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-line pt-2 font-mono text-[11px] text-muted">
+                <span>{w.queued} queued</span>
+                <EditTrigger
+                  elementId={`worker.${w.id}.role`}
+                  ownerRepo={w.ownerRepo}
+                  targetLabel={w.name}
+                  editClass="CONFIG"
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </section>
-    </>
+
+      {/* Control Plane Strip */}
+      <section className="mt-14 border-t border-line pt-10">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <SectionLabel>clearedstack namespace · ~640 MiB control plane</SectionLabel>
+            <h2 className="mt-2 text-2xl font-semibold tracking-[-0.015em]">
+              Seven clean-room MIT microservices
+            </h2>
+          </div>
+          <Link href="/apps/" className="font-mono text-xs uppercase tracking-wider text-accent underline underline-offset-4">
+            Open App Store (/apps) -&gt;
+          </Link>
+        </div>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {controlPlaneApps.map((app) => (
+            <div key={app.id} className="rounded-sm border border-line bg-surface p-4">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-mono text-xs font-semibold text-ink">{app.name}</span>
+                <span className="font-mono text-[11px] text-muted">{app.ramBudget}</span>
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-muted">{app.role}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }

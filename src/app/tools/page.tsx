@@ -39,13 +39,21 @@ export default function ToolsPage() {
       </p>
 
       <p className="mt-4 max-w-2xl leading-relaxed text-muted">
-        The 18 planned tools below were chosen by the owner before the Prior Art evaluation process was written down.
-        Their provenance is not yet recorded and will be back-filled through the same public screening and scoring
-        pipeline. Learn{" "}
+        Each tool below is verified by <code className="text-ink">cs-07-verify</code> and published by{" "}
+        <code className="text-ink">cs-08-catalog</code> from clean-room specifications—100% deterministic with zero AI
+        at runtime. Follow live progress on{" "}
+        <Link href="/pipeline/" className={inlineLink}>
+          Pipeline
+        </Link>
+        , review pending items in{" "}
+        <Link href="/decide/" className={inlineLink}>
+          Decide
+        </Link>
+        , or read{" "}
         <Link href="/how-we-decide/" className={inlineLink}>
           how we decide what to build
-        </Link>{" "}
-        and how each idea is evaluated.
+        </Link>
+        .
       </p>
 
       <div className="mt-8">

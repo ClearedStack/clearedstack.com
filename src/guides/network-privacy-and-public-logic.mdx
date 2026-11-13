@@ -1,0 +1,56 @@
+export const meta = {
+  title: "Network Privacy vs. Public Logic",
+  summary: "How ClearedStack keeps internal IPs, hostnames, and cluster layout private while making 100% of its code, deterministic rules, queues, and sanitized error codes public.",
+  group: "host",
+  order: 9,
+  revised: "2026-11",
+};
+
+ClearedStack is built around a simple split: **hide the network, show the logic**. Anyone can visit the Portal, inspect what is running, trace how decisions are made, read live queues, see errors, and propose edits without signing in. At the same time, the underlying servers, internal addresses, credentials, and cluster layout remain invisible from the internet.
+
+Transparency does not require exposing infrastructure. By separating what the system *does* from *where* it runs, ClearedStack stays open to public inspection without giving attackers a map of the cluster.
+
+## What stays hidden vs. what is public
+
+Every piece of data in the platform belongs to one of two sides. Infrastructure details and secrets stay inside the cluster, while behavior, code, and outcomes are published openly.
+
+| Hidden (Cluster-Private) | 100% Public (Portal and GitHub Mirror) |
+| --- | --- |
+| Internal cluster IPs, node names, and pod hostnames | All MIT-licensed source code (mirrored from `cs-git` to GitHub) |
+| Internal Kubernetes DNS names | All deterministic pipeline rules, rubric weights, and tie-breakers |
+| Namespace layout, network policy rules, and Ingress internals | Every deterministic sub-tool and golden test fixture |
+| Database passwords, ServiceAccount tokens, and signing keys | Live app and worker health, queue depths, and item trails |
+| GitHub push tokens and the daily salt used to hash visitor IPs | Sanitized error codes such as `E_TIMEOUT`, `E_PARSE`, and `E_NEEDS_SUBTOOL` |
+| Raw visitor IP addresses (never stored in raw form) | Anonymous edit proposals and their live status (`Proposed` to `Live`) |
+
+## One public door for the whole cluster
+
+The platform runs across two Kubernetes namespaces: `clearedstack` for the seven control-plane services and `cs-workers` for the ten deterministic workers (`cs-01` through `cs-10`). Out of all seventeen pods, only `clearedstack-web` (the Portal and App Store UI) has a public Ingress connected to the internet.
+
+Every other service—including `hub-queue-api`, Postgres, the internal Git server (`cs-git`), the internal container registry (`cs-registry`), the build runner (`cs-runner`), the reconciler (`cs-store`), and all ten workers—is reachable only inside the cluster through private addresses. Network policy rules restrict which pods can talk to each other, so a public visitor can never reach the database, Git server, or worker pods directly.
+
+## How `pub.*` database views enforce the boundary
+
+Inside Postgres, `hub-queue-api` reads and writes full operational records in internal `core.*` tables. The public Portal never touches those tables. Instead, it connects using a restricted, read-only database role (`pub_ro`) that can only query `pub.*` views.
+
+A database view acts like a one-way window: it exposes only the specific columns meant for public display—such as queue depths, item states, deterministic evaluation scores, and sanitized error codes—while leaving out internal host references, credentials, and private operational fields. Even if a visitor inspects every page and live stream on the Portal, the database layer itself prevents private fields from leaving Postgres.
+
+## How `cs-store` sanitizes health and errors
+
+`cs-store` is the platform's lightweight app-store reconciler. It reads `app.yaml` manifests from `cs-git`, deploys or updates workloads in Kubernetes, and watches Pod, Deployment, and Event health across both namespaces.
+
+When a worker fails or stalls, Kubernetes events often include sensitive infrastructure details such as node names, pod hostnames, internal IP addresses, or cluster paths. Before `cs-store` forwards any status update or error to `hub-queue-api` for display on the Portal, it strips all node, pod, and IP metadata and maps the failure to a deterministic, sanitized error code—such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL`. Visitors see *what* broke and *which stage* stalled, without ever seeing *which machine* or *which internal IP* ran it.
+
+## Open sandbox without exposing the host
+
+Because there is no login lock on the Portal, anyone can propose edits or inspect live failures. To keep an open sandbox from becoming a host-safety risk, anonymous submissions pass through a deterministic five-layer shield before they ever reach internal systems:
+
+| Guardrail Layer | What It Blocks | Privacy Benefit |
+| --- | --- | --- |
+| Browser Proof-of-Work | Automated spam bots | Runs a short puzzle in the browser instead of third-party CAPTCHAs |
+| Honeypot field | Blind form scrapers | Silently discards automated submissions |
+| Daily-salted IP hash rate limit | Floods from a single source | Caps submissions without ever storing raw visitor IPs |
+| Strict schema check (`ownership_map.json`) | Oversized or malformed payloads | Enforces a 4 KB limit and strips HTML and scripts |
+| Review gate (`cs-04-decide`) | Unreviewed cluster or code changes | Keeps proposals in `pending_approval` until approved |
+
+Together, these layers ensure that public transparency never leaks private infrastructure. The cluster stays quiet and isolated, while every rule, queue, error code, and line of code remains open for anyone to inspect.

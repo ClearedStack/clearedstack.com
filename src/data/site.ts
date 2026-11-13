@@ -1,9 +1,9 @@
 export const site = {
   name: "ClearedStack",
   url: "https://clearedstack.com",
-  tagline: "Free, open-source tools for government contracting",
+  tagline: "Open, deterministic platform & free tools for government contracting",
   description:
-    "Free, open-source, browser-based tools for government contracting and defense tech: pricing, proposals and cyber compliance. No accounts, no tracking, no cost.",
+    "Live Kubernetes-native command portal, app store, and 100% deterministic 10-worker pipeline producing free, offline-capable tools for government contracting. No login lock, no tracking, zero AI at runtime.",
   email: "contact@clearedstack.com",
   github: "https://github.com/ClearedStack",
   repo: "https://github.com/ClearedStack/clearedstack.com",

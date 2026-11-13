@@ -12,6 +12,8 @@
   --line: #d8d7ce;
   --accent: #17794a;
   --accent-ink: #ffffff;
+  --warn: #9a5b00;
+  --danger: #b3261e;
   color-scheme: light;
 }
 
@@ -24,6 +26,8 @@
     --line: #262e29;
     --accent: #4fd08c;
     --accent-ink: #06130c;
+    --warn: #e0a34b;
+    --danger: #f2746b;
     color-scheme: dark;
   }
 }
@@ -36,6 +40,8 @@
   --color-line: var(--line);
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }

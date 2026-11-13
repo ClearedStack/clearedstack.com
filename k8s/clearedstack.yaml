@@ -1,7 +1,7 @@
-# ClearedStack on Kubernetes: a namespace, a deployment and a service.
+# ClearedStack on Kubernetes (k3s + containerd, zero Docker):
+# control-plane namespace, deployment, and service.
 #
-# Before applying, replace the image below with the one you built and pushed
-# to a registry your cluster can pull from.
+# Built via rootless BuildKit (Containerfile) and stored in cs-registry.
 #
 #   kubectl apply -f k8s/clearedstack.yaml
 apiVersion: v1

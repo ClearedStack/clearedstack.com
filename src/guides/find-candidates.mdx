@@ -1,135 +1,70 @@
 export const meta = {
   title: "How candidates are found",
-  summary: "Search systematically across seven source kinds and five contract categories, resolve duplicates, and turn public ideas into prior-art records.",
-  group: "project",
+  summary: "How cs-01-intake discovers, normalizes, SHA-256 deduplicates, and assigns PA-XXXX records from public sweeps and anonymous no-login submissions.",
+  group: "contribute",
   order: 2,
-  draft: true,
   revised: "2026-11",
 };
 
-<Callout kind="warning" title="Draft">
-  This guide describes intent. The discovery process is not running, the `ClearedStack/prior-art` repository does not exist yet, and nothing has been collected.
-</Callout>
+Discovery in ClearedStack v3.1 is handled by `cs-01-intake`, the first of ten **100% deterministic** Go workers running in the `cs-workers` Kubernetes namespace. Zero AI models run during intake: given the same URL or submission, `cs-01-intake` produces the exact same output on any cluster, with zero token cost.
 
-Discovery is the first stage of the prior-art engine. It searches the federal contracting landscape to find software, spreadsheets, templates, and calculators that already help people do government-contracting paperwork.
+Its job is to collect public federal-contracting tools, spreadsheets, calculators, and community suggestions, clean their web addresses, check for duplicates, and assign a persistent `PA-XXXX` tracking identifier before handing the record to `cs-02-observe`.
 
-The goal is not to copy what others built. The goal is to see what problems people are already solving, find where free and private options do not exist, and schedule independent clean-room implementations built directly from the underlying public regulations.
+## Deterministic URL normalization
 
-To see the complete pipeline and evaluation criteria, visit [How we decide](/how-we-decide/).
+Websites often serve the same tool at slightly different addresses—with tracking tags, uppercase letters, or trailing slashes. Before saving anything, `cs-01-intake` runs every incoming link through fixed, repeatable normalization rules:
 
-## The discovery flow
+- **Scheme and host casing:** Converts the scheme (`https`) and domain name to lowercase.
+- **Tracking and session removal:** Strips marketing query parameters (`utm_*`, `ref`, `fbclid`, `gclid`), session identifiers, and URL `#` fragments.
+- **Path cleanup:** Removes redundant trailing slashes and default index filenames where appropriate so equivalent paths resolve to one canonical address.
+- **Public-only boundary check:** Rejects non-public schemes, internal network addresses, or links that require credentials or paywall bypass.
 
-A candidate is any public tool, workbook, or script that helps with federal paperwork. Discovery sweeps run across public repositories, agency websites, and open community suggestions.
+Because normalization is pure Go code with golden test fixtures, two people submitting the same tool with different referral links always produce the exact same canonical URL.
 
-<Flow
-  caption="How discovery identifies, filters, and records a candidate"
-  steps={[
-    { label: "Identify candidate", detail: "Locate a public calculator, spreadsheet, or tool from one of seven source kinds." },
-    { label: "Intake boundary check", detail: "Confirm the page is public, requires no login or trial, and contains no non-public data." },
-    { label: "Normalize URL", detail: "Strip tracking tokens, session identifiers, and query noise to find the canonical address." },
-    { label: "Resolve duplicates", detail: "Check against existing records to detect mirrors, forks, and white-label re-skins." },
-    { label: "Mint record", detail: "Assign a persistent PA-XXXX identifier and queue the item for public observation." },
-  ]}
-/>
+## SHA-256 deduplication and PA-XXXX assignment
 
-1. **Identify candidate**: The discovery engine or human maintainer identifies a tool that addresses a specific paperwork task, such as indirect cost calculations, solicitation shredding, or compliance crosswalks.
-2. **Intake boundary check**: Before any link is saved, it is checked against strict boundary rules. It must be accessible on the public web without credentials, payment, or anti-bot bypass.
-3. **Normalize URL**: URLs are cleaned to remove marketing tracking parameters (`utm_*`, `ref`), session IDs, and trailing slashes.
-4. **Resolve duplicates**: The engine checks whether the tool is already recorded, whether it is an upstream fork of an existing open-source project, or whether it is a white-label wrapper of an engine already indexed.
-5. **Mint record**: Once validated as unique or a distinct derivative, the tool receives an identifier (such as `PA-0001`) and moves to Stage 2 (Record) and Stage 3 (Observe).
+Once a URL is normalized, `cs-01-intake` computes its **SHA-256** cryptographic hash and checks it against `hub-queue-api` and Postgres (`core.*` tables) in the `clearedstack` control-plane namespace:
 
-## Seven source kinds
+1. **Duplicate hash found:** If the SHA-256 digest already matches an existing record or known alias, `cs-01-intake` does not create a duplicate. It logs the sighting against the existing `PA-XXXX` entry (or links it as a mirror) and stops.
+2. **New canonical URL:** If the hash is new, `cs-01-intake` mints a persistent `PA-XXXX` identifier (such as `PA-0001`), records the intake source, and queues the item for `cs-02-observe` via `hub-queue-api`.
 
-The discovery engine looks across seven distinct source kinds to ensure broad coverage of federal contracting paperwork:
+Every state change is immediately visible through read-only `pub.*` Postgres views on the `/pipeline` page of `clearedstack.com`.
 
-1. **Government sites**: Official calculators, interactive web forms, and portals hosted on `.gov` or `.mil` domains. These provide authoritative statutory baselines, but are often server-dependent or unavailable on disconnected networks.
-2. **Free vendor tools**: Ungated calculators and estimating utilities published by defense contractors, consulting firms, or software vendors as informational resources.
-3. **Commercial product public pages**: Public landing pages, documentation, and feature overviews of commercial software suites. Observers read public documentation only; they never sign up or request sales demos.
-4. **Open-source projects**: Public repositories hosted on platforms like GitHub or GitLab containing compliance scripts, document parsers, or command-line utilities.
-5. **Spreadsheets and templates**: Downloadable `.xlsx`, `.ods`, or hosted spreadsheet workbooks published by agencies, buying commands, or industry practitioners.
-6. **Assistance centers**: Public guides, worksheets, and bid templates published by APEX Accelerators (formerly PTACs), Small Business Development Centers (SBDCs), and university procurement institutes.
-7. **Community suggestions**: Specific tools and paperwork tasks submitted directly by contractors, developers, and agency staff through GitHub issues or email.
+## Four deterministic sub-tools
 
-## Duplicate handling
+Candidate links arrive from very different places—government portals, GitHub issues, scheduled web sweeps, and the Portal submission form. Instead of using an AI model to interpret unfamiliar formats, `cs-01-intake` routes each source through a dedicated sub-tool inside its own repository under `tools/<case>/` (registered in `tools/registry.yaml`, each with `match.yaml`, deterministic Go logic, and golden test fixtures).
 
-Many tools on the web share code, run under multiple brand names, or mirror upstream repositories. The discovery engine uses a decision branch to classify each candidate accurately:
+| Sub-tool (`tools/<case>/`) | Source | Deterministic job |
+| --- | --- | --- |
+| `sam-gov` | SAM.gov public notices | Extracts public tool links, agency calculators, and attachment URLs from SAM.gov feeds. |
+| `github-issues` | GitHub public mirror | Parses structured tool and paperwork suggestions opened on the public GitHub repository. |
+| `web-sweep` | Public `.gov`, `.mil`, APEX, and vendor sites | Runs scheduled, `robots.txt`-respecting sweeps across public contracting resources. |
+| `site-form` | `clearedstack.com` Portal | Validates and normalizes direct candidate submissions and `✎` intake proposals from visitors. |
 
-<Branch
-  caption="How duplicates, forks, and white-labels are handled"
-  question="What is the candidate’s relationship to existing records?"
-  options={[
-    { when: "Same tool at an alternate URL", then: "Alias as mirror", detail: "Attach the alternate URL to the existing PA record without creating a new identifier." },
-    { when: "Open-source fork with zero changes", then: "Alias to upstream", detail: "Link directly to the original parent repository and close the duplicate intake." },
-    { when: "Open-source fork with new features", then: "Record as derivative fork", detail: "Mint a new PA identifier, link lineage to the parent record, and evaluate independently." },
-    { when: "White-label re-skin of a known engine", then: "Alias to primary creator", detail: "Designate the underlying creator as canonical and note the brand as an alias." },
-    { when: "New independent candidate", then: "Mint new record", detail: "Assign a fresh PA-XXXX record and queue for public observation." },
-  ]}
-/>
+If `cs-01-intake` encounters a new source format that none of its sub-tools recognize, it **fails closed**: it pauses that item in `needs_subtool`, and `cs-10-notify` opens a task in the `cs-01-intake` repository. Once a new sub-tool and golden fixture are committed, `cs-runner` builds the updated worker with `ko` (no Docker), `cs-store` deploys it, and `hub-queue-api` automatically replays every paused item.
 
-- **Mirrors**: If an agency moves a calculator from an old URL to a new path, the new URL is recorded as an alias on the original record.
-- **Forks**: Open-source repositories that merely duplicate an existing project without changes are aliased to the upstream maintainer. If a fork introduces substantial independent calculations or updates an obsolete standard, it receives its own record linked to the parent.
-- **White-labels**: In government contracting, consulting firms frequently re-skin an identical underlying spreadsheet or calculation engine. The discovery engine identifies shared mathematical models and assets, designating the original developer as primary and aliasing re-branded variants.
+## Anonymous no-login submissions
 
-## The coverage grid
+ClearedStack has no login lock. Any visitor can submit a candidate tool or propose an intake edit (`✎`) on `clearedstack.com` without creating an account or signing in.
 
-Discovery operates across a two-dimensional grid crossing the catalog’s five contract categories (CLINs) with the seven source kinds.
+To keep the queue clean without CAPTCHAs or user accounts, `site-form` and Portal `✎` submissions pass through a five-layer deterministic shield:
 
-Because the prior-art engine has not started running and nothing has been collected, every cell in the grid is currently **not searched yet**.
+1. **Browser Proof-of-Work:** A roughly one-second SHA-256 puzzle solved in the visitor's browser on submit stops automated bot floods.
+2. **Honeypot field:** A hidden form field silently discards automated scraper submissions.
+3. **Daily-salted IP hash rate limit:** Limits repeated submissions per hashed IP without ever storing raw visitor IP addresses.
+4. **Strict schema validation:** Checks the submission against `ownership_map.json`, caps payload size at 4 KB, and strips all HTML and scripts.
+5. **Owner gate (`cs-04-decide`):** Community proposals sit in `core.edit_proposal` (`pending_approval`) and never touch `cs-git` or the cluster until the owner clicks **Approve** in `/decide`.
 
-| Category | Government sites | Free vendor tools | Commercial docs | Open-source repos | Spreadsheets & templates | Assistance centers | Community suggestions |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| **CLIN 0001: Pricing & Cost Accounting** | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet |
-| **CLIN 0002: Proposal & Capture** | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet |
-| **CLIN 0003: Cyber & Compliance** | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet |
-| **CLIN 0004: Market Research & Small Business** | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet |
-| **CLIN 0005: Tactical & DevSecOps** | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet | Not searched yet |
+Visitors see their submission's progress live on the Portal as a status pill: **Proposed -> Approved -> Building -> Live**.
 
-When discovery begins, each cell will track its status:
-- **Not searched**: No systematic search sweep has been performed for this category and source kind.
-- **Searched**: A sweep was completed, verified against public listings, and logged with a timestamp.
-- **Has candidates**: One or more tools or workbooks have been identified, recorded, and queued for observation.
+## What intake never does
 
-If enough approved ideas emerge that do not fit into the existing five categories, the project owner may establish a new category (such as CLIN 0006) once at least five distinct candidates share a distinct statutory baseline.
-
-## Community suggestions
-
-Community suggestions are a vital discovery vector. When a contractor or agency specialist finds a useful spreadsheet or struggles with a paperwork task, they can suggest it through a GitHub issue.
-
-Suggestions enter the exact same pipeline as automated sweeps. They do not skip screening, scoring, or owner review.
-
-<Flow
-  caption="How a community suggestion enters the prior-art pipeline"
-  steps={[
-    { label: "Submit issue", detail: "User opens an issue on GitHub describing the paperwork job, public URL, or citation." },
-    { label: "Sanitize intake", detail: "Maintainers verify the submission contains zero CUI, zero bids, and only public data." },
-    { label: "Check duplicates", detail: "The link is normalized and checked against existing PA records and aliases." },
-    { label: "Mint record", detail: "A persistent PA-XXXX record is created with intake vector marked as community." },
-    { label: "Enter pipeline", detail: "Candidate moves into Stage 3 (Observe), Stage 4 (Screen), and Stage 5 (Score)." },
-  ]}
-/>
-
-To submit a tool or task idea, visit [Request a tool or add your own](/guides/request-or-add-a-tool/).
-
-## What we never do
-
-Discovery is passive and public. To preserve project ethics and legal compliance, we never:
-
-- Create user accounts, fill out registration forms, or submit contact information to access tools.
-- Sign up for product trials, request sales demonstrations, or negotiate pilot agreements.
-- Circumvent paywalls, subscription requirements, access gates, or session limits.
-- Solve, bypass, or script around CAPTCHAs, Turnstiles, or anti-bot challenges.
-- Ignore or violate `robots.txt` directives or site terms of use regarding automated indexing.
-- Submit real company rates, actual proposal text, Controlled Unclassified Information (CUI), or proprietary bid figures into any online form.
-- Execute vulnerability scans, penetration testing, fuzzing, or high-volume crawling.
-
-If a tool cannot be inspected from its public pages and documentation without accepting restrictive terms or logging in, discovery records only the public claims and stops.
+Discovery and intake remain strictly passive and public. `cs-01-intake` never creates accounts on third-party sites, requests sales demos, bypasses paywalls or CAPTCHAs, ignores `robots.txt`, or accepts Controlled Unclassified Information (CUI) or proprietary bid figures.
 
 ## Further reading
 
-- [How the project chooses what to build](/guides/prior-art-engine/) (L.6.1)
-- [How an existing tool is observed](/guides/observe-a-tool/) (L.6.3)
-- [How an idea is scored and decided](/guides/score-and-decide/) (L.6.4)
-- [How ideas are credited](/guides/credit-and-clean-room/) (L.6.5)
-- [How AI is used to build this project](/guides/built-with-ai/) (L.6.6)
-- [What is not decided yet](/guides/open-questions/) (L.6.7)
-- [How we decide](/how-we-decide/)
+- [The 10-Worker Prior Art Engine](/guides/prior-art-engine/)
+- [100% Deterministic Workers & Sub-Tools](/guides/deterministic-sub-tools/)
+- [Anonymous Edits & Anti-Spam](/guides/anonymous-edits-and-anti-spam/)
+- [How an existing tool is observed](/guides/observe-a-tool/)
+- [How an idea is scored and decided](/guides/score-and-decide/)

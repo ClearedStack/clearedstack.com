@@ -34,7 +34,7 @@ const routes = [
   {
     title: "Running your own copy",
     body: "For a company intranet, a lab or a network that cannot reach the internet.",
-    slugs: ["host-with-docker", "host-on-kubernetes", "host-static-files", "closed-networks"],
+    slugs: ["one-command-quickstart", "host-on-kubernetes", "host-static-files", "closed-networks"],
   },
   {
     title: "Building or fixing something",

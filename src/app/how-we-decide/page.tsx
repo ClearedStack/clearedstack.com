@@ -119,85 +119,95 @@ export default function HowWeDecidePage() {
         their provenance.
       </p>
 
-      {/* Prominent Draft Notice */}
+      {/* Architecture Preview Notice */}
       <div className="mt-8 rounded-sm border border-line border-l-2 border-l-ink bg-surface p-5">
         <p className="font-mono text-xs uppercase tracking-wider text-accent font-semibold">
-          Draft · Pure intent
+          v3.1 Architecture · 100% deterministic at runtime
         </p>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          This page describes intent. The Prior Art engine is not running yet. No repository{" "}
-          <code className="text-ink">ClearedStack/prior-art</code> exists, and nothing has been collected. All 18
-          planned tools currently listed in the catalog were selected by the maintainer before this process was
-          formalized; their provenance is not yet recorded and will be back-filled through this exact pipeline.
+          ClearedStack v3.1 replaces the original static essay with ten separate, MIT-licensed, 100% deterministic Go
+          worker repositories (<code className="text-ink">cs-01-intake</code> through{" "}
+          <code className="text-ink">cs-10-notify</code>) running in <code className="text-ink">cs-workers</code>,
+          coordinated by <code className="text-ink">hub-queue-api</code> and Postgres. Explore the live{" "}
+          <Link href="/pipeline/" className="text-ink underline decoration-accent underline-offset-4">
+            Pipeline view
+          </Link>{" "}
+          and{" "}
+          <Link href="/decide/" className="text-ink underline decoration-accent underline-offset-4">
+            Decide inbox
+          </Link>
+          .
         </p>
       </div>
 
-      {/* The Ten Stages */}
+      {/* The Ten Workers */}
       <section className="mt-16 border-t border-line pt-12">
         <SectionLabel>Pipeline</SectionLabel>
         <h2 className="mt-4 text-3xl font-semibold tracking-[-0.015em] text-balance">
-          The ten stages of a candidate tool
+          The ten deterministic workers
         </h2>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-          Every tool idea progresses through ten deterministic stages. Each step produces a permanent public record,
-          ensuring full transparency from the moment an idea is noticed to when it ships or is retired.
+          Every tool idea progresses through ten 100% deterministic worker repositories with zero AI at runtime. Each
+          worker pulls leased work from <code className="text-ink">hub-queue-api</code>, handles edge cases with
+          deterministic <code className="text-ink">tools/&lt;case&gt;/</code> sub-tools, and fails closed into{" "}
+          <code className="text-ink">needs_subtool</code> if it encounters an unfamiliar layout.
         </p>
 
         <div className="mt-8">
           <Flow
-            caption="The ten stages of the Prior Art pipeline, from initial discovery through monthly revisit."
+            caption="The ten deterministic worker repositories (cs-01-intake through cs-10-notify) in the cs-workers namespace."
             direction="down"
-            loop="Revisit feeds back into Observe (for parked or linked records) or Build (for live tools needing changes)."
+            loop="cs-09-monitor feeds regulatory drift back to cs-06-build and cleared blockers back to cs-02-observe; cs-10-notify routes approved Portal edits and needs_subtool tasks into cs-git."
             steps={[
               {
-                tag: "Stage 1",
-                label: "Discover",
-                detail: "Find a candidate via automated agent sweeps, maintainer research, or community GitHub issues.",
+                tag: "cs-01-intake",
+                label: "Intake & Dedupe",
+                detail: "Normalizes URLs, deduplicates via SHA-256, and assigns a permanent PA-XXXX ID.",
               },
               {
-                tag: "Stage 2",
-                label: "Record",
-                detail: "Assign a permanent PA-XXXX identifier and deduplicate across URLs, forks, and white-labels.",
+                tag: "cs-02-observe",
+                label: "Observe & Seal",
+                detail: "Fetches public pages (~30 MiB Go HTTP pods + on-demand browser Jobs) and seals raw snapshots behind the clean-room wall.",
               },
               {
-                tag: "Stage 3",
-                label: "Observe",
-                detail: "Examine public pages only: document inputs, outputs, rules, licenses, and archived snapshots.",
+                tag: "cs-03-evaluate",
+                label: "Screen & Score",
+                detail: "Runs 5 binary knockout gates, the 100-point rubric, and 5 tie-breakers using deterministic YAML/Go rules.",
               },
               {
-                tag: "Stage 4",
-                label: "Screen",
-                detail: "Test against five binary knockout gates. Any failure routes immediately to Screened Out.",
+                tag: "cs-04-decide",
+                label: "Human Decide",
+                detail: "Powers the /decide inbox for tool outcomes (Approve, Link, Merge, Park, Reject) and anonymous public edit approvals.",
               },
               {
-                tag: "Stage 5",
-                label: "Score",
-                detail: "Evaluate across seven weighted factors on a 100-point rubric. Scores and rationale are public.",
+                tag: "cs-05-provenance",
+                label: "Credit & Spec",
+                detail: "Stamps Go-template provenance notes, enforces 48h/5d SLAs, and compiles sanitized JSON build specs.",
               },
               {
-                tag: "Stage 6",
-                label: "Decide",
-                detail: "Human owner selects one of five outcomes: Build, Link, Merge, Park, or Reject.",
+                tag: "cs-06-build",
+                label: "Clean-Room Build",
+                detail: "Generates an isolated MIT static tool repository from the clean-room spec and stack templates.",
               },
               {
-                tag: "Stage 7",
-                label: "Credit",
-                detail: "Draft the provenance note attributing the job to the inspiration without copying proprietary work.",
+                tag: "cs-07-verify",
+                label: "5-Condition QA",
+                detail: "Verifies offline execution, connect-src 'self', zero tracking, worked examples, and citations.",
               },
               {
-                tag: "Stage 8",
-                label: "Build",
-                detail: "Clean-room development in an independent repository from the public regulation. Status: planned → building.",
+                tag: "cs-08-catalog",
+                label: "Catalog Publish",
+                detail: "Publishes verified, linked, merged, or retired entries to the live /tools catalog.",
               },
               {
-                tag: "Stage 9",
-                label: "List",
-                detail: "Verify all five listing conditions. Catalog status moves to live with provenance displayed.",
+                tag: "cs-09-monitor",
+                label: "Scheduled Monitor",
+                detail: "Runs ETag, XML, and DOM diff checks on FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers.",
               },
               {
-                tag: "Stage 10",
-                label: "Revisit",
-                detail: "Monthly check: have regulations changed, observed tools moved, or listed tools aged out?",
+                tag: "cs-10-notify",
+                label: "Notify & Route",
+                detail: "Deduplicates errors by fingerprint, routes approved Portal edits into cs-git, and streams SSE updates.",
               },
             ]}
           />
@@ -235,11 +245,19 @@ export default function HowWeDecidePage() {
               {
                 id: "observed",
                 label: "Observed",
-                detail: "Public footprint and citations logged.",
+                detail: "Public footprint and citations logged (raw snapshot sealed).",
                 to: [
                   { id: "screened_out", when: "candidate fails any knockout gate" },
                   { id: "scored", when: "candidate clears all five knockout gates" },
+                  { id: "needs_subtool", when: "unknown page layout (fail closed)" },
                 ],
+              },
+              {
+                id: "needs_subtool",
+                tag: "Fail-closed pause",
+                label: "Needs sub-tool",
+                detail: "Paused until a deterministic tools/<case>/ sub-tool is deployed, then auto-replayed.",
+                to: [{ id: "observed", when: "new deterministic sub-tool deployed by cs-store" }],
               },
               {
                 id: "screened_out",

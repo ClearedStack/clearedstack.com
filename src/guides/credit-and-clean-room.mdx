@@ -1,25 +1,18 @@
 export const meta = {
   title: "How ideas are credited",
-  summary: "Our clean-room engineering rules, how we acknowledge prior art without taking code or design, and our opt-out policy.",
-  group: "project",
+  summary: "MIT licensing across all repos, the clean-room wall, deterministic Go-template provenance notes, 48-hour and 5-day SLAs, and sanitized JSON build specs in cs-05-provenance.",
+  group: "contribute",
   order: 5,
-  draft: true,
   revised: "2026-11",
 };
 
-<Callout kind="warning" title="Draft">
-This guide describes planned process and intent. The Prior Art engine is not running, no tools have been observed under it, and no provenance records have been published yet.
-</Callout>
+Federal procurement rules and public regulations belong to everyone, but software implementations belong to their authors. ClearedStack enforces that boundary in code through a strict clean-room architecture and the deterministic `cs-05-provenance` worker.
 
-Federal procurement rules and public regulations belong to everyone, but software implementations belong to their authors. ClearedStack honors that line through a strict clean-room doctrine: we observe what jobs need doing from public surfaces, but we never copy anyone else’s code, text, design, or data.
-
-When a tool is inspired by an existing product, we say so plainly. We credit the source, explain what we did differently, and give creators an easy, no-questions-asked way to opt out of nominative attribution.
+Every repository in the ClearedStack platform—`clearedstack.com`, all ten pipeline workers (`cs-01-intake` through `cs-10-notify`), and the cluster microservices (`cs-git`, `cs-registry`, `cs-runner`, `cs-store`)—is licensed under the **MIT License**. All Go and web code is written from scratch in a clean room, with zero copied upstream code and zero AI at runtime.
 
 ## Build, link, or skip?
 
-ClearedStack does not exist to replace good open-source work. If someone has already built a free, privacy-respecting tool that runs client-side and cites public sources, rebuilding it wastes effort.
-
-The project follows a firm “link over rebuild” preference:
+ClearedStack does not exist to duplicate good open-source work. If an existing free tool runs client-side, respects privacy, and cites official public sources, rebuilding it wastes effort.
 
 <Branch
   caption="Build, link, or skip: preferring existing free tools over duplicate work"
@@ -28,144 +21,154 @@ The project follows a firm “link over rebuild” preference:
     {
       when: "Yes, free and private",
       then: "Link",
-      detail: "Add to catalog or guides as an external reference; do not rebuild.",
+      detail: "Add to the catalog as an external reference via cs-08-catalog; do not rebuild.",
     },
     {
       when: "No, but high need and public source",
       then: "Build",
-      detail: "Build an independent, client-side tool from the official regulation.",
+      detail: "Compile a sanitized JSON build spec in cs-05-provenance from the official regulation.",
     },
     {
       when: "No, and fails gates or low need",
       then: "Skip",
-      detail: "Screen out, reject, or park in the backlog with the reason logged.",
+      detail: "Screen out in cs-03-evaluate or park in cs-04-decide with the reason logged.",
     },
   ]}
 />
 
-## What we take and what we never take
+## MIT licensing and the strict clean-room wall
 
-Every software product consists of functional ideas and copyrightable expression. We draw an absolute boundary between the two.
+Every software product separates into functional ideas and copyrightable expression. ClearedStack enforces an absolute technical wall between the two.
 
-We observe the job to be done: the public calculation, the statutory threshold, or the regulatory requirement that contractors must meet. We never take the expression that another developer or vendor created to do that job.
+When `cs-02-observe` inspects public pages, it extracts only structured facts and seals the raw observation snapshot behind the **clean-room wall**. Downstream build workers (`cs-06-build`) never have access to raw vendor HTML, screenshots, stylesheets, or marketing copy.
 
 <Layers
-  caption="The boundary between permissible ideas and strictly prohibited expression"
+  caption="The clean-room wall enforced between observation and build"
   layers={[
     {
-      tag: "What we take",
+      tag: "Crosses the wall",
       label: "The functional job to be done",
-      detail: "The statutory requirement, public accounting formula, and compliance mandate.",
+      detail: "The statutory requirement, public accounting formula, and compliance mandate anchored to official government text.",
     },
     {
-      tag: "Never taken",
+      tag: "Blocked at wall",
       label: "Source code and binary logic",
       detail: "No copying, decompiling, adapting, or reverse-engineering of third-party software.",
     },
     {
-      tag: "Never taken",
+      tag: "Blocked at wall",
       label: "Prose, copy, and UI text",
       detail: "No copying of help text, user interface labels, field descriptions, or guides.",
     },
     {
-      tag: "Never taken",
+      tag: "Blocked at wall",
       label: "Visual layout and design",
       detail: "No imitating custom color palettes, component hierarchy, icons, or trade dress.",
     },
     {
-      tag: "Never taken",
+      tag: "Blocked at wall",
       label: "Proprietary data and schemas",
       detail: "No scraping internal schemas, proprietary benchmark rates, or private tables.",
     },
     {
-      tag: "Never taken",
+      tag: "Blocked at wall",
       label: "Names, trademarks, and logos",
-      detail: "No brand logos or trademarked phrasing; third-party names appear only to identify.",
+      detail: "No brand logos or trademarked phrasing; third-party names appear only in nominative provenance records.",
     },
   ]}
 />
 
-When reusable open-source code with a permissive license (such as MIT, BSD, or Apache 2.0) is incorporated into a tool, we preserve all original copyright notices, include the upstream license file, and state the reuse openly in the repository. Strong copyleft code is not mixed into MIT-licensed repositories; compliant copyleft tools are linked externally instead.
+When reusable open-source libraries under permissive licenses (MIT, BSD, or Apache 2.0) are used inside a repo, all original copyright notices and upstream license files are preserved. Strong copyleft code is never mixed into ClearedStack’s MIT repositories; compliant copyleft tools are linked externally instead.
 
-## The clean-room build path
+## How cs-05-provenance works
 
-To prevent accidental intellectual property contamination, development follows an isolated clean-room procedure. Builders work directly from the governing public regulation and an abstract decision record, never by inspecting the competitor’s implementation.
-
-<Flow
-  caption="The three-phase clean-room development pipeline"
-  steps={[
-    {
-      tag: "Phase 1",
-      label: "Public observation",
-      detail: "Inspect public marketing pages and documentation; cite the governing regulation.",
-    },
-    {
-      tag: "Phase 2",
-      label: "Decision record",
-      detail: "Specify the mathematical formula, inputs, and edge cases from public statute.",
-    },
-    {
-      tag: "Phase 3",
-      label: "Independent coding",
-      detail: "Write fresh code using ClearedStack’s design system, testing against public vectors.",
-    },
-  ]}
-/>
-
-During observation, researchers observe strict ethical boundaries:
-- We read only publicly accessible web pages, product documentation, and public repositories.
-- We never register for accounts, start trials, sign non-disclosure agreements, or bypass paywalls.
-- We never bypass anti-bot protections, ignore robots.txt directives, or probe undocumented endpoints.
-- We never input non-public, proprietary, or Controlled Unclassified Information (CUI) into any external system.
-
-If a commercial tool produces an answer that conflicts with an official government publication, ClearedStack always follows the official publication. The government text is the sole source of truth.
-
-## The provenance note template
-
-Transparency means acknowledging where an idea came from without claiming endorsement or making disparaging comparisons. Every tool inspired by an existing product carries a standardized provenance note in its catalog entry and repository README:
-
-```text
-Idea seen in: Tool A (Vendor V), observed YYYY-MM from its public pages.
-What we took: the job — [one sentence describing the functional task].
-What we did differently: runs entirely in your browser, free, no account; built from [Regulation R].
-```
-
-Provenance statements are strictly factual:
-- They state that a workflow was observed on a public web page at a specific date.
-- They do not rate, criticize, or disparage the observed commercial product.
-- They do not imply partnership, sponsorship, or endorsement by the observed vendor.
-- Third-party product names are used solely in a nominative sense to identify prior art.
-
-## Handling correction and opt-out requests
-
-We respect creators and tool authors. If a vendor, maintainer, or author contacts ClearedStack regarding an entry, we handle requests through an open, predictable process:
+Once the owner approves a **Build** decision in `cs-04-decide`, the item moves to `cs-05-provenance` in the `cs-workers` namespace. Like every worker in the pipeline, `cs-05-provenance` is a 100% deterministic Go service—no language models, no prompt drift, and identical output on every run.
 
 <Flow
-  caption="Procedure for processing factual corrections and attribution opt-outs"
+  caption="The deterministic cs-05-provenance pipeline"
   steps={[
     {
       tag: "Step 1",
-      label: "Receive request",
-      detail: "Author contacts contact@clearedstack.com or opens a public GitHub issue.",
+      label: "Load approved record",
+      detail: "Read the cs-04-decide determination and official statutory citations from Postgres.",
     },
     {
       tag: "Step 2",
-      label: "Verify request",
-      detail: "Confirm identity of the copyright holder or product maintainer within 48 hours.",
+      label: "Render provenance note",
+      detail: "Stamp a factual attribution block using deterministic Go text/template files.",
     },
     {
       tag: "Step 3",
-      label: "Apply resolution",
-      detail: "Factual errors corrected promptly; nominative opt-outs honored within 5 days.",
+      label: "Select spec profile",
+      detail: "Match the item to a tools/spec-profiles/<tool-type> sub-tool, or fail closed into needs_subtool.",
     },
     {
       tag: "Step 4",
-      label: "Preserve public fact",
-      detail: "Vendor name replaced with generic descriptor; public statutory source kept intact.",
+      label: "Compile JSON build spec",
+      detail: "Emit a sanitized JSON spec with inputs, formulas, and public test vectors for cs-06-build.",
     },
   ]}
 />
 
-- **Factual corrections.** If an observation record misstates what a tool does, what public rule it implements, or its license terms, we correct the record upon verification.
-- **Nominative opt-outs.** If a product owner prefers not to have their product named on ClearedStack, we honor that preference. We replace the product and company name in the provenance note with a neutral phrase (such as “a commercial product”), while maintaining the factual record that an existing tool inspired the workflow.
-- **Public source integrity.** Citations to official government statutes, regulations, and standards are never removed, as they belong to the public domain.
+If an item requires a tool structure not yet covered by `tools/spec-profiles/`, `cs-05-provenance` fails closed, sets the state to `needs_subtool`, and opens a task via `cs-10-notify`. Once a new deterministic sub-tool and golden fixture are committed to `cs-git`, `hub-queue-api` replays the queued item automatically.
+
+## Go-template provenance notes
+
+Every tool inspired by an existing product carries a standardized provenance note stamped by `cs-05-provenance` using Go’s `text/template` engine. Because templates are deterministic, attribution phrasing never varies or editorializes.
+
+<Callout kind="info" title="Standardized Go-template provenance fields">
+Each rendered provenance note contains three factual lines: **Idea seen in** (`Tool Name (Vendor Name), observed YYYY-MM from its public pages`), **What we took** (`the job — one sentence describing the functional task`), and **What we did differently** (`runs entirely in your browser, free, no account; built from [Official Regulation]`).
+</Callout>
+
+Provenance notes follow four strict rules:
+- They record only that a workflow was observed on a public web page on a specific date.
+- They never rate, criticize, or disparage the observed product.
+- They never imply partnership, sponsorship, or endorsement by the observed vendor.
+- Third-party product names are used solely in a nominative sense to identify prior art.
+
+## Compiling sanitized JSON build specs
+
+Before `cs-06-build` can generate an isolated static tool repository, `cs-05-provenance` compiles a **sanitized JSON build spec**. This spec is the only artifact allowed to cross the clean-room wall into the build stage.
+
+| Spec Section | What `cs-05-provenance` Includes | What Is Stripped |
+|---|---|---|
+| `provenance` | Rendered Go-template note, observation date, opt-out status | Raw HTML snapshots, vendor marketing URLs inside build inputs |
+| `authority` | Official FAR, DFARS, NIST, or eCFR citations and effective dates | Vendor interpretations that conflict with government text |
+| `schema` | Typed inputs, outputs, units, validation bounds, and formula rules | Vendor field labels, proprietary database schemas, CSS classes |
+| `vectors` | Public worked examples and boundary-case assertions | Any scraped vendor test data or non-public inputs |
+
+If an observed commercial tool produces an answer that conflicts with an official government publication, `cs-05-provenance` always encodes the official government publication. The statute is the sole source of truth.
+
+## 48-hour and 5-day SLAs for corrections and opt-outs
+
+`cs-05-provenance` also tracks and enforces response deadlines for vendor corrections and nominative attribution opt-outs. Requests can be submitted by emailing `contact@clearedstack.com`, opening a public GitHub issue, or submitting an anonymous `✎` edit proposal on the Portal (which routes through `cs-04-decide` for owner verification).
+
+<Flow
+  caption="SLA enforcement for factual corrections and nominative opt-outs"
+  steps={[
+    {
+      tag: "Receive",
+      label: "Log request",
+      detail: "Record the correction or opt-out request against the catalog item’s provenance record.",
+    },
+    {
+      tag: "48h SLA",
+      label: "Verify identity",
+      detail: "Confirm the requester is the copyright holder or product maintainer within 48 hours.",
+    },
+    {
+      tag: "5-day SLA",
+      label: "Honor opt-out",
+      detail: "Replace product and vendor names with a neutral descriptor and re-render templates within 5 days.",
+    },
+    {
+      tag: "Permanent",
+      label: "Preserve public law",
+      detail: "Keep all official government statute, regulation, and standard citations intact.",
+    },
+  ]}
+/>
+
+- **48-hour verification SLA.** Every correction or opt-out request enters a tracked clock in `cs-05-provenance` so the maintainer’s identity is verified within 48 hours.
+- **5-day opt-out SLA.** When a product owner prefers not to be named, `cs-05-provenance` updates the provenance metadata to a neutral phrase (such as “a commercial product”), re-runs the Go template deterministically, and pushes the updated entry through `cs-08-catalog` within 5 days.
+- **Public source integrity.** Factual errors in rules or license terms are corrected promptly upon verification, while citations to public-domain statutes and standards are never removed.

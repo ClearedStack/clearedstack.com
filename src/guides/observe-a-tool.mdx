@@ -1,155 +1,52 @@
 export const meta = {
-  title: "How an existing tool is observed",
-  summary: "Inspect an existing tool using public pages only, audit whether data leaves the browser, and record verifiable findings.",
-  group: "project",
+  title: "How cs-02-observe inspects a tool",
+  summary: "How tiny 30 MiB Go HTTP pods, on-demand headless browser Jobs, and deterministic sub-tools inspect public tools, seal raw snapshots behind the clean-room wall, and fail closed into needs_subtool.",
+  group: "contribute",
   order: 3,
-  draft: true,
   revised: "2026-11",
 };
 
-<Callout kind="warning" title="Draft">
-  This guide describes intent. The observation process is not running, the `ClearedStack/prior-art` repository does not exist yet, and nothing has been collected.
-</Callout>
+In ClearedStack v3.1, observing an existing government-contracting tool is no longer a manual browser checklist—it is the job of `cs-02-observe`, a 100% deterministic, MIT-licensed Go worker running in the `cs-workers` Kubernetes namespace. Zero AI models run during observation. Given the same public URL or document, `cs-02-observe` produces the exact same structured observation record every time.
 
-Observation is Stage 3 of the prior-art engine. Once a tool or spreadsheet is identified and assigned a record ID, an observer audits its public interface to understand what problem it solves, what data it handles, and whether it could be rebuilt as an independent, client-side tool.
+## Tiny HTTP pods first, headless browsers only when needed
 
-The observation protocol is strictly passive and public. Observers read public documentation and examine network traffic during calculations. They never create accounts, start trials, or enter real contracting data.
+Most public pages, government portals, and agency PDFs do not need a full web browser to inspect. By default, `cs-02-observe` runs as a tiny Go HTTP pod using roughly **30 MiB of RAM**. It claims a time-limited work lease from `hub-queue-api`, fetches the public target over plain HTTP, and runs deterministic extractors directly against the response.
 
-To see how observation fits into the full evaluation process, visit [How we decide](/how-we-decide/).
+Some vendor tools, however, render their calculators or tables entirely in client-side JavaScript. Only when a target is flagged as JavaScript-heavy does `cs-02-observe` spawn an **on-demand headless browser `Job` pod** (a temporary container that renders the page, records network requests using synthetic test inputs, and exits immediately). Keeping browsers out of the always-on worker pool lets the entire 17-pod ClearedStack platform fit comfortably on a single 4 GiB `k3s` node.
 
-## The observation checklist
+| Execution Mode | Footprint | When `cs-02-observe` Uses It |
+| --- | --- | --- |
+| **Default Go HTTP pod** | ~30 MiB RAM (always-on) | Static HTML marketing pages, `.gov` portals, downloadable PDFs, and server-rendered forms |
+| **On-demand browser `Job` pod** | Ephemeral (created and deleted per job) | JavaScript-heavy single-page apps that require DOM rendering or client-side network inspection |
 
-When an observer inspects a candidate, they follow a standardized sequence of checks to collect objective evidence.
+## Passive public boundaries
 
-<Flow
-  caption="The observation checklist, from scope inspection to confidence grading"
-  steps={[
-    { label: "Check access", detail: "Verify that the tool is accessible on the open web without accounts or trials." },
-    { label: "Audit network traffic", detail: "Use browser Developer Tools to see whether calculations send data to a server." },
-    { label: "Run offline test", detail: "Disconnect from the network and verify whether the tool can run locally." },
-    { label: "Verify citations", detail: "Look up cited regulations on official government portals to confirm published rules." },
-    { label: "Archive snapshot", detail: "Submit the URL to an immutable web archive so findings remain permanent." },
-    { label: "Grade confidence", detail: "Classify findings into Seen, Stated, or Unknown based on verified evidence." },
-  ]}
-/>
+`cs-02-observe` is strictly passive and public. It only inspects pages accessible on the open web and never creates accounts, starts free trials, fills out lead-capture forms, enters real contracting data, or bypasses paywalls, `robots.txt` rules, or CAPTCHAs. If a tool sits behind a login or anti-bot challenge, observation stops at the public surface and records vendor claims as `Stated` rather than `Seen`.
 
-1. **Check access**: Determine whether the tool is freely usable on the public web or restricted behind gates.
-2. **Audit network traffic**: Monitor the browser’s Network tab during test calculations to determine whether user inputs remain local or are transmitted to remote endpoints.
-3. **Run offline test**: Load the page, sever network connectivity (such as by turning off Wi-Fi), and run calculations to test for server dependencies.
-4. **Verify citations**: Extract the legal authorities or standard clauses cited by the tool and cross-reference them against official government websites.
-5. **Archive snapshot**: Submit the public URL to a permanent web archive (such as the Wayback Machine) so the exact page observed can be reviewed at any time.
-6. **Grade confidence**: Record every observation field alongside an explicit confidence tier (Seen, Stated, or Unknown).
+## Deterministic sub-tools (`tools/<case>/`)
 
-## The access boundary
+Real-world websites and agency documents vary widely. Instead of asking an AI model to guess at an unfamiliar page layout, `cs-02-observe` routes each target through deterministic sub-tools stored inside its own repository under `tools/<case>/`. Every sub-tool pairs a matching rule (`match.yaml`), predictable Go extraction logic (`extract.go`), and golden test fixtures (`fixtures/`) so automated tests verify the extractor never breaks.
 
-The strictest rule of observation is that observers never bypass access controls or create credentials. If a tool requires an account, observation stops at the public surface.
+| Sub-Tool | What It Matches and Extracts |
+| --- | --- |
+| `saas-marketing` | Public vendor landing pages and feature tables; extracts stated inputs, outputs, pricing model, and login gates |
+| `gov-portal` | Federal `.gov` and `.mil` portals and calculators; captures cited FAR, DFARS, or NIST clauses and offline behavior |
+| `agency-pdf` | Downloadable procurement PDFs, worksheets, and instructions; extracts form fields, rules, and publication dates |
+| `<vendor-slug>` | Dedicated extractors for specific vendors whose page structure differs from standard layouts |
 
-<Branch
-  caption="How the observation boundary responds to logins, paywalls, and challenges"
-  question="Is the tool behind a login, paywall, or CAPTCHA?"
-  options={[
-    {
-      when: "Behind a login or paywall",
-      then: "Stop and record public claims only",
-      detail: "Document public feature pages and marketing claims as Stated. Do not sign up or start a trial.",
-    },
-    {
-      when: "Protected by CAPTCHA or anti-bot challenge",
-      then: "Stop observation immediately",
-      detail: "Do not solve, click through, or script around challenges. Mark the tool as gated.",
-    },
-    {
-      when: "Publicly accessible with no login required",
-      then: "Proceed with full observation checklist",
-      detail: "Run the passive network audit, offline test, and regulatory citation verification.",
-    },
-  ]}
-/>
+Each sub-tool outputs strict, schema-validated JSON covering the tool's core job, inputs, outputs, login requirement, tracking profile, license or copyright, price model, cited public rule, observation date, and confidence tier (`Seen`, `Stated`, or `Unknown`).
 
-If a tool requires a corporate sales demonstration, a paid license, or a personal email address to view results, the observer records the vendor’s public marketing claims and marks them as unverified. The project never initiates sales calls or accepts commercial terms of service to evaluate software.
+## Sealing raw snapshots behind the clean-room wall
 
-## What gets recorded
+While `cs-02-observe` fetches raw HTML, DOM captures, and PDFs to perform extraction, **those raw snapshots are sealed behind the clean-room wall**. Downstream build workers (`cs-06-build`) and specification compilers (`cs-05-provenance`) never see vendor markup, stylesheets, or client-side scripts. Only the sanitized, structured JSON facts and verified public regulations cross into the build pipeline—ensuring every published ClearedStack tool is an independent, clean-room MIT implementation.
 
-Every observed tool is documented in a structured record with verifiable evidence:
+## Failing closed into `needs_subtool`
 
-- **The job**: A single sentence starting with an active verb describing the core task (for example, “Calculate fringe and overhead rates from cost pools”).
-- **Inputs**: The specific parameters, file formats, and data fields accepted.
-- **Outputs**: The reports, numbers, tables, or export files generated.
-- **Login requirement**: Whether the tool requires an account, offers optional login, or requires zero authentication.
-- **Tracking profile**: Third-party telemetry scripts, analytics beacons, tracking cookies, and content security policy headers seen on the page.
-- **License or copyright**: The declared intellectual property terms, such as an open-source license, public domain notice, or proprietary copyright statement.
-- **Price model**: Free public utility, freemium, paid subscription, or custom enterprise quote.
-- **Public rule cited**: The official standard, regulation, or procurement clause cited, including section numbers and official links.
-- **Date observed**: The ISO date (`YYYY-MM`) when the observation was conducted. Observations older than twelve months are marked stale and re-checked before making build decisions.
-- **Archived snapshot link**: A permanent permalink to an immutable public archive capture.
+When `cs-02-observe` encounters a page layout, table structure, or document format that none of its registered sub-tools recognize, it **never guesses**. Instead, it fails closed:
 
-## Layers of confidence
+1. The worker pauses that item with the sanitized status `needs_subtool` (`E_NEEDS_SUBTOOL`) and continues processing the rest of the queue normally.
+2. `cs-10-notify` opens a task in the `cs-02-observe` repository inside `cs-git` (mirrored publicly to GitHub) describing the unmatched pattern.
+3. The paused item appears on the public `/pipeline` view so anyone can see why it stopped.
+4. Once a contributor or maintainer adds a new deterministic sub-tool under `tools/<case>/` along with a golden fixture, `cs-runner` tests and builds the updated worker image with `ko` (no Docker), `cs-store` deploys it, and `hub-queue-api` **automatically replays** every item paused in `needs_subtool` for that pattern.
 
-Not all information on the web is equally reliable. To ensure transparent reporting, every field in an observation record is graded using three distinct confidence layers:
-
-<Layers
-  caption="The three confidence layers for observed information"
-  layers={[
-    {
-      tag: "Seen",
-      label: "Directly verified by the observer",
-      detail: "Confirmed by running synthetic data through the tool, inspecting DevTools network traffic, or verifying official statutes.",
-    },
-    {
-      tag: "Stated",
-      label: "Claimed by the vendor or author",
-      detail: "Reported in public marketing copy, user guides, or brochures, but not verified directly due to access gates.",
-    },
-    {
-      tag: "Unknown",
-      label: "Undisclosed on public pages",
-      detail: "Information that cannot be determined without signing an agreement, creating an account, or contacting sales.",
-    },
-  ]}
-/>
-
-- **Seen**: High confidence. The observer loaded the tool, entered synthetic values, verified the offline behavior, and inspected network requests. If a tool claims to run in your browser and DevTools confirms zero outbound requests during calculation, browser confinement is marked as **Seen**.
-- **Stated**: Moderate confidence. The vendor’s public website states that a tool calculates specific clauses or supports particular file formats, but the feature is behind an account wall. The feature is documented as **Stated** by the vendor.
-- **Unknown**: Low confidence. Pricing, data retention policies, or backend architecture are not documented on public pages and would require contacting sales. These fields are marked as **Unknown**.
-
-## Re-check an observation yourself
-
-Every observation is published with the links and archived snapshots needed to reproduce the audit in about a minute. You do not need specialized software or programming experience to re-check our findings.
-
-<Flow
-  caption="How anyone can re-check an observation in sixty seconds"
-  steps={[
-    { label: "Open the tool", detail: "Navigate to the recorded tool URL or the permanent web archive snapshot." },
-    { label: "Open Developer Tools", detail: "Press F12 (or Command-Option-I on macOS) and select the Network tab." },
-    { label: "Filter dynamic traffic", detail: "Select Fetch/XHR to monitor dynamic requests and clear the log." },
-    { label: "Enter synthetic data", detail: "Input dummy test figures and trigger the calculate or parse action." },
-    { label: "Inspect the network", detail: "Look for outgoing requests. Zero requests confirms client-side execution." },
-    { label: "Test offline mode", detail: "Disconnect your network connection and calculate again to verify offline operation." },
-  ]}
-/>
-
-If your findings disagree with a published observation—for instance, if an updated tool now sends form data to a tracking server or moved behind a paywall—please report it. Open an issue on GitHub or email [contact@clearedstack.com](mailto:contact@clearedstack.com) so the record can be updated.
-
-## What we never do
-
-Observation is strictly non-intrusive. To protect user privacy, maintain legal compliance, and ensure clean-room integrity, we never:
-
-- Access or inspect non-public, classified, Controlled Unclassified Information (CUI), or export-controlled material.
-- Register user accounts, create passwords, provide company email addresses, or fill out lead capture forms.
-- Request sales demonstrations, start free trials, or accept commercial software evaluation agreements.
-- Circumvent paywalls, subscription gates, authentication forms, or IP rate limits.
-- Solve, click through, wait out, or bypass CAPTCHAs, Turnstiles, or anti-bot verification challenges using any manual or automated method.
-- Disregard `robots.txt` instructions or terms of service restrictions regarding crawling.
-- Enter real company data, actual proposal text, real overhead rates, employee names, or live contract bids into any tool. All tests use published, synthetic dummy numbers.
-- Decompile, reverse engineer, or copy source code, markup, CSS styles, or user interface designs from an observed tool.
-- Conduct security audits, penetration testing, fuzzing, or vulnerability probing against external infrastructure.
-
-## Further reading
-
-- [How the project chooses what to build](/guides/prior-art-engine/) (L.6.1)
-- [How candidates are found](/guides/find-candidates/) (L.6.2)
-- [How an idea is scored and decided](/guides/score-and-decide/) (L.6.4)
-- [How ideas are credited](/guides/credit-and-clean-room/) (L.6.5)
-- [How AI is used to build this project](/guides/built-with-ai/) (L.6.6)
-- [What is not decided yet](/guides/open-questions/) (L.6.7)
-- [How we decide](/how-we-decide/)
+Every new edge case becomes permanent, tested, deterministic code—and every solved pattern automatically unblocks past items without human re-entry.

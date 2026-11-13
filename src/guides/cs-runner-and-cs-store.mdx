@@ -1,0 +1,43 @@
+export const meta = {
+  title: "No-Docker Builds & the App-Store Reconciler",
+  summary: "How cs-runner builds and tests without Docker into cs-registry, and how cs-store replaces Argo CD and CasaOS with 1-click lifecycle actions and sanitized health reporting.",
+  group: "host",
+  order: 6,
+  revised: "2026-11",
+};
+
+ClearedStack builds, tests, and runs every component on a single lightweight `k3s` cluster using `containerd`, with zero Docker anywhere on the host. Two clean-room MIT Go microservices handle the entire journey from a code push to a live, monitored app: `cs-runner` (32 MiB RAM) and `cs-store` (48 MiB RAM).
+
+## Building and testing without Docker
+
+When `cs-git` receives a commit, it sends a push webhook to `cs-runner` in the `clearedstack` namespace. Instead of running a heavy Docker daemon inside the cluster, `cs-runner` spawns short-lived Kubernetes build Jobs tailored to each language:
+
+- **Go services and workers (`ko`):** All ten deterministic workers (`cs-01` through `cs-10`) and the platform microservices are written in Go. `ko` compiles the Go binary directly into a minimal container image without a Dockerfile or Docker daemon.
+- **Next.js web portal (rootless BuildKit):** For `clearedstack-web`, `cs-runner` runs a rootless BuildKit job that builds the web application in an unprivileged container.
+
+Before any image is published, `cs-runner` runs the repository's deterministic golden test suite. If tests pass, it signs the image with `cosign`, pushes it to the internal `cs-registry`, and commits the new immutable image digest back to `app.yaml` in `cs-git` with a `[skip-ci]` marker. `cs-registry` keeps the last five digests for each app and runs daily garbage collection to keep disk usage predictable.
+
+| Stage | Tool Used | What Happens |
+| --- | --- | --- |
+| Trigger | `cs-git` webhook | Notifies `cs-runner` when `main` or a tag changes |
+| Build (Go) | `ko` | Compiles Go services into OCI images with no Docker |
+| Build (Web) | Rootless BuildKit | Builds `clearedstack-web` without root privileges |
+| Verify & Sign | Golden tests + `cosign` | Runs deterministic fixtures and signs passing images |
+| Publish | `cs-registry` + `cs-git` | Stores signed image locally and records digest in `app.yaml` |
+
+## Replacing Argo CD and CasaOS with cs-store
+
+Once an image digest is recorded in `app.yaml`, `cs-store` takes over. Traditional GitOps controllers like Argo CD introduce custom resource definitions (CRDs) and complex sync controllers, while home-server dashboards like CasaOS expect Docker Compose. `cs-store` combines the best parts of both into a single 48 MiB Go binary that speaks native Kubernetes Server-Side Apply—no custom CRDs required.
+
+`cs-store` watches `app.yaml` files in `cs-git` alongside image digests in `cs-registry`, then manages deployments across the platform's two namespaces: `clearedstack` for the seven control-plane pods and `cs-workers` for the ten deterministic workers.
+
+Through the `/apps` App Store view on `clearedstack.com`, the owner gets four 1-click lifecycle controls backed by `cs-store`:
+
+- **Install:** Applies the app's manifests into the target namespace for the first time.
+- **Upgrade:** Rolls the Deployment forward to the latest signed digest built by `cs-runner`.
+- **Pause:** Scales the workload down cleanly without deleting its configuration or data.
+- **Rollback:** Switches `app.yaml` and the live Deployment back to one of the previous digests retained in `cs-registry`.
+
+## Live health and sanitized error reporting
+
+`cs-store` continuously watches Kubernetes Pods, Deployments, and Events so the `/apps` page reflects what is actually running. Before sending any status update to `hub-queue-api` for display on the public Portal, `cs-store` strips out internal cluster IP addresses, node names, and pod hostnames. Visitors see clear health states and standardized error codes—such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL`—while the cluster's internal network layout stays completely private.

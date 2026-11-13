@@ -84,47 +84,50 @@ export default function AboutPage() {
 
         <Block id="how" label="How it is organized">
           <p>
-            Each tool is a separate open-source project with its own repository. That keeps every tool small enough to
-            audit in one sitting, and lets anyone run a copy on their own network.
+            ClearedStack runs as a lightweight, two-namespace Kubernetes platform (<code className="text-ink">clearedstack</code>{" "}
+            and <code className="text-ink">cs-workers</code>) with zero Docker and zero AI at runtime. Each tool is a
+            separate MIT-licensed repository, and the pipeline itself is split into ten deterministic Go worker
+            repositories (<code className="text-ink">cs-01-intake</code> through <code className="text-ink">cs-10-notify</code>).
           </p>
           <p>
-            This site is the index. It lists what exists, what is being built and where the source lives. The{" "}
-            <Link href="/tools/">catalog</Link> is generated from a single file in{" "}
-            <a href={site.repo} rel="noopener">
-              this site’s repository
-            </a>
-            , so adding a tool to the list is a one-entry pull request.
+            This site is the open public Command Portal and App Store: anyone can inspect what is running on{" "}
+            <Link href="/">Command</Link>, <Link href="/apps/">Apps</Link>, and{" "}
+            <Link href="/pipeline/">Pipeline</Link>, and propose edits without signing in. Source code is stored in{" "}
+            <code className="text-ink">cs-git</code> and mirrored to{" "}
+            <a href={site.github} rel="noopener">
+              GitHub
+            </a>{" "}
+            (code only, zero container images).
           </p>
         </Block>
 
         <Block id="ideas" label="Where ideas come from">
           <p>
-            ClearedStack finds ideas through a process called Prior Art. We look at tools that already exist for
-            government-contracting paperwork, record what each one does from its public pages, screen and score the idea
-            in public, let the human owner make the call, and credit where every idea came from. Tools are then built
-            from the public regulation, never from the other tool’s code, text or design.
+            ClearedStack finds ideas through the 10-worker Prior Art engine. Workers observe public pages, score
+            candidates deterministically against five knockout gates and a 100-point rubric, surface decisions in{" "}
+            <Link href="/decide/">/decide</Link>, and compile clean-room specs from official public regulations—never
+            copying third-party code, text, or design.
           </p>
           <p className="font-mono text-xs text-muted">
-            Draft notice: This process describes intent. The engine is not running yet, no repository{" "}
-            <code className="text-ink">ClearedStack/prior-art</code> exists, and nothing has been collected. Read our{" "}
-            <Link href="/how-we-decide/">Section M evaluation factors</Link> and the{" "}
-            <Link href="/guides/prior-art-engine/">Prior Art engine guide</Link>.
+            Read our <Link href="/how-we-decide/">Section M evaluation factors</Link> and the{" "}
+            <Link href="/guides/prior-art-engine/">10-Worker Prior Art Engine guide</Link>.
           </p>
         </Block>
 
         <Block id="how-work-is-done" label="How the work is done">
           <p>
-            All work on ClearedStack is done with AI assistance (Claude Code and Antigravity) under one human owner who
-            sets direction, decides every outcome, reviews every change, merges, and is accountable.
+            All work on ClearedStack is drafted at authoring time with AI assistance (Claude Code and Antigravity)
+            under one human owner who sets direction, decides every outcome, reviews every change, merges, and is
+            accountable.
           </p>
           <p>
             Every regulatory statement and mathematical formula is checked by a person against the cited public source
-            before it ships. AI output is never the source of a rule. Furthermore, we never enter controlled
-            unclassified information (CUI), non-public material, real contract figures, or personal data into an AI tool.
+            before it ships. AI output is never the source of a rule, and we never enter CUI, non-public material, real
+            contract figures, or personal data into an AI tool.
           </p>
           <p>
-            Most importantly: <strong>the tools themselves contain no AI and make no network calls</strong>. AI is
-            used only while writing code and guides, never at runtime.
+            Most importantly: <strong>zero AI runs at runtime</strong>—not in any of the 10 pipeline workers, not in the
+            control plane, and not in any shipped browser tool. Every runtime step is 100% deterministic.
           </p>
 
           <div className="mt-6">

@@ -1,0 +1,49 @@
+export const meta = {
+  title: "Internal OCI Registry and No-Docker Builds",
+  summary: "How ClearedStack builds, signs, and stores container images inside the cluster using ko, rootless BuildKit, and cs-registry—with no Docker daemon and no images on GitHub.",
+  group: "host",
+  order: 7,
+  revised: "2026-11",
+};
+
+ClearedStack runs on `k3s` with `containerd` as its container runtime and does not use Docker anywhere—not on the host server, not inside build jobs, and not in production. Instead, an internal service called `cs-runner` builds and signs container images on demand, and an internal registry called `cs-registry` stores them inside the cluster.
+
+## Why No Docker Anywhere
+
+Traditional setups run a background Docker daemon with root-level privileges to build and manage containers. On a small cluster, that daemon consumes extra memory and creates a wider security surface.
+
+Because `k3s` already uses `containerd` to start and run pods, the cluster only needs standard **OCI images** (Open Container Initiative—the universal, vendor-neutral format for container images). Removing Docker keeps the entire 17-pod platform—7 control-plane pods in the `clearedstack` namespace and 10 worker pods in the `cs-workers` namespace—light enough to run on a single 4 GiB `k3s` node.
+
+## How No-Docker Builds Work
+
+When a change lands on `main` or a new tag is created in `cs-git`, `cs-git` sends a webhook to `cs-runner` (a lightweight Go service requesting 32 MiB of RAM). `cs-runner` launches a temporary Kubernetes `Job` pod to run tests, build the image, and sign it. It picks one of two daemonless builders depending on the repository:
+
+| Builder | Used For | How It Works Without Docker |
+| --- | --- | --- |
+| `ko` | All Go services (`cs-git`, `cs-registry`, `cs-runner`, `cs-store`, `hub-queue-api`) and all 10 workers (`cs-01-intake` through `cs-10-notify`) | Compiles Go source code directly into a minimal OCI image without a containerfile or container daemon. |
+| Rootless BuildKit | Web applications such as `clearedstack-web` (Next.js Portal and App Store UI) | Builds standard container layers inside an unprivileged, rootless pod—no root daemon or privileged flags required. |
+
+Before publishing an image, the build job runs the repository's golden tests so broken code never reaches the registry. Once tests pass, the job signs the image's **digest** (its unique cryptographic fingerprint) with `cosign`, pushes it to `cs-registry`, and commits the new digest to `app.yaml` in `cs-git` with a `[skip-ci]` marker so it does not trigger another build loop.
+
+## What cs-registry Does
+
+`cs-registry` is a clean-room Go microservice (requesting 64 MiB of RAM) built on standard OCI registry handler primitives. It implements the standard OCI v2 registry API and stores image layers on a PersistentVolumeClaim (PVC) inside the `clearedstack` namespace.
+
+| Capability | How It Works in ClearedStack |
+| --- | --- |
+| Cluster-private access | `cs-registry` has no public Ingress. Kubernetes network policy rules restrict access to internal cluster traffic only (`cs-runner` pushing, `cs-store` and `containerd` pulling). |
+| Zero images on GitHub | GitHub is a public source-code mirror pushed from `cs-git` on change. No container images are ever uploaded to or pulled from GitHub. |
+| Instant 5-version rollback | `cs-registry` retains the last 5 image digests per app so `cs-store` can roll back any service or worker in one click without rebuilding. |
+| Daily garbage collection | A scheduled cleanup pass removes unreferenced layers and manifests older than the retained 5 digests so disk usage stays predictable. |
+
+## End-to-End Build-to-Deploy Flow
+
+Every update follows the same deterministic path from source code to running pod:
+
+| Step | Component | Action |
+| --- | --- | --- |
+| 1 | `cs-git` | Receives a commit on `main` or a tag, mirrors the source code to GitHub, and notifies `cs-runner`. |
+| 2 | `cs-runner` | Spawns an ephemeral `ko` or rootless BuildKit `Job` pod in the `clearedstack` namespace. |
+| 3 | Build `Job` | Runs golden tests, builds the OCI image, signs the digest with `cosign`, and pushes it to `cs-registry`. |
+| 4 | `cs-runner` | Updates the pinned image digest in `app.yaml` inside `cs-git` using a `[skip-ci]` commit. |
+| 5 | `cs-store` | Reads `app.yaml`, applies the update using Kubernetes Server-Side Apply, and lets `containerd` pull the signed image from `cs-registry`. |

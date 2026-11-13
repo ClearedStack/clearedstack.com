@@ -1,23 +1,20 @@
 export const meta = {
-  title: "What is not decided yet",
-  summary: "Review open architectural, governance, and transparency questions, see the current draft defaults, and understand how decisions get made.",
+  title: "What is decided and what remains open",
+  summary: "Review the architectural and operational decisions locked in for ClearedStack v3.1 alongside the governance, licensing, and federation questions that remain open.",
   group: "project",
   order: 7,
-  draft: true,
   revised: "2026-11",
 };
 
-Publishing undecided questions is part of being transparent about the project’s direction. ClearedStack has not locked down every operational, legal, and architectural detail. Rather than hiding uncertainty behind vague statements, this guide lists the questions that remain open, the current draft default for each, and the process used to decide them.
+Publishing both settled decisions and undecided questions is part of being transparent about how ClearedStack is built and run. With the move to **ClearedStack v3.1**, the core runtime, repository layout, and public sandbox model are now locked in. At the same time, several legal, scaling, and stewardship questions remain open for public discussion before Phase 2.
 
-The Prior Art engine described here is pure intent and is not running yet. No separate repository exists, and no records have been collected. The defaults below reflect the working assumptions used in the draft site architecture.
-
-<Callout kind="note" title="Status of this guide">
-  This guide is part of Section L.6 (How this project is run). The questions below focus on site architecture, engine design, data boundaries, and governance. They do not decide which specific commercial tools to inspect or which compliance calculators to build next.
+<Callout kind="note" title="Status in ClearedStack v3.1">
+  This guide is part of Section L.6 (How this project is run). It separates what is now decided and running in the v3.1 architecture from the questions that remain open.
 </Callout>
 
 ## How questions get decided
 
-Every architectural or policy question follows a four-step lifecycle. Decisions are not made in private or buried in chat threads; they are discussed in public, decided by the human owner, and recorded in git history.
+Every architectural or policy question follows a four-step lifecycle. Decisions are discussed in public, resolved by the project owner, and recorded in git history.
 
 <Flow
   caption="How an architectural or governance question gets decided"
@@ -30,25 +27,25 @@ Every architectural or policy question follows a four-step lifecycle. Decisions 
     },
     {
       tag: "Step 2",
-      label: "Public GitHub discussion",
-      detail: "The question and trade-offs are posted in a public GitHub issue for open feedback.",
+      label: "Public discussion",
+      detail: "The question and trade-offs are posted publicly on the Portal or GitHub mirror for open feedback.",
     },
     {
       tag: "Step 3",
       label: "Owner decides",
-      detail: "The human project owner evaluates options and makes the final decision.",
+      detail: "The human project owner evaluates options and locks in the resolution.",
     },
     {
       tag: "Step 4",
       label: "Guide updated",
-      detail: "The open question guide is updated with the resolution and revision date.",
+      detail: "This guide is updated to move the item into the decided architecture with a new revision date.",
     },
   ]}
 />
 
 ## Question lifecycle states
 
-A question transitions between three states. Once decided, a question may still be reopened if statutory changes, vendor practices, or technical constraints make the previous decision unworkable.
+A question transitions between three states. Even after a decision is locked in, it may be reopened if statutory changes, licensing edge cases, or operational constraints require a revision.
 
 <States
   caption="Lifecycle states for architectural questions"
@@ -56,7 +53,7 @@ A question transitions between three states. Once decided, a question may still 
     {
       id: "open",
       label: "Open",
-      detail: "Under active consideration with a draft default.",
+      detail: "Under active consideration with a working default.",
       to: [
         { id: "decided", when: "the project owner chooses a resolution" },
       ],
@@ -64,9 +61,9 @@ A question transitions between three states. Once decided, a question may still 
     {
       id: "decided",
       label: "Decided",
-      detail: "Settled and documented in guides and architecture.",
+      detail: "Locked in for v3.1 and documented in the platform architecture.",
       to: [
-        { id: "revisited", when: "new evidence, laws, or constraints emerge" },
+        { id: "revisited", when: "new evidence, laws, or scaling constraints emerge" },
       ],
     },
     {
@@ -80,102 +77,64 @@ A question transitions between three states. Once decided, a question may still 
   ]}
 />
 
-## Scope and cadence
+## What is decided in v3.1
 
-These questions define the operational heartbeat and functional boundaries of the tools and engine.
+The following architectural, licensing, and operational decisions are final for ClearedStack v3.1.
 
-| Question | Options considered | Draft default | Why it matters |
+### 10 deterministic worker repositories
+
+Zero AI runs at runtime anywhere in the pipeline or in any shipped compliance tool. All pipeline work is executed by 10 deterministic Go worker repositories (`cs-01-intake` through `cs-10-notify`) that produce identical output on any cluster.
+
+| Worker repo | Deterministic responsibility | Edge-case handling |
+| --- | --- | --- |
+| `cs-01-intake` | Normalize URLs, SHA-256 deduplicate, assign `PA-XXXX`. | Sub-tools in `tools/<case>/` |
+| `cs-02-observe` | Fetch public pages and run DOM/PDF extractors into strict JSON behind a clean-room wall. | Tiny ~30 MiB HTTP Go pods; spawns on-demand headless browser `Job` pods only for JS-heavy sites |
+| `cs-03-evaluate` | Run YAML/Go rule engine for 5 knockout gates, 100-point rubric, and 5 tie-breakers. | Category rubric profiles in `tools/<case>/` |
+| `cs-04-decide` | Owner-only decision inbox on the Portal for item determinations and edit approvals. | Human gate only |
+| `cs-05-provenance` | Stamp provenance notes via Go templates, enforce 48h/5d SLAs, and compile clean-room JSON specs. | Spec profiles in `tools/<case>/` |
+| `cs-06-build` | Generate isolated static tool repos from clean-room specs and worked-example fixtures. | Deterministic stack templates |
+| `cs-07-verify` | Run 5-condition test suite (offline execution, `connect-src 'self'`, zero tracking, worked-example parity). | Deterministic pass/fail gate |
+| `cs-08-catalog` | Publish verified, linked, merged, or retired entries to the `clearedstack.com` catalog. | Deterministic catalog sync |
+| `cs-09-monitor` | Scheduled ETag, XML, and DOM diff checks on FAR/DFARS/NIST, live tools, and linked tools. | Source watchers in `tools/<case>/` |
+| `cs-10-notify` | Route approved Portal edits, `needs_subtool` tasks, and fingerprinted errors into `cs-git` and owner alerts. | Notification targets in `tools/<case>/` |
+
+When a worker encounters an unfamiliar page layout or format, it fails closed into `needs_subtool`, opens a task in the owning worker repository, and automatically replays queued items once a new deterministic sub-tool and golden fixture are merged.
+
+### MIT clean-room Go microservices (no Forgejo, Argo CD, CasaOS, or Docker)
+
+Rather than bundling heavy third-party platforms with mixed licenses or upstream operational overhead, ClearedStack v3.1 runs custom clean-room Go microservices licensed under **MIT** across all repositories (`clearedstack.com`, `cs-01` through `cs-10`, `cs-git`, `cs-registry`, `cs-runner`, and `cs-store`). Inspiration is drawn from Forgejo, Argo CD, and CasaOS workflows, with zero copied upstream code.
+
+| Replaced component | v3.1 clean-room replacement | Role in platform |
+| --- | --- | --- |
+| **Forgejo** | `cs-git` | Internal bare `.git` server on a PVC with Smart HTTP/SSH, webhooks, and outbound push-mirroring to GitHub on change. |
+| **GHCR / Harbor** | `cs-registry` | Internal-only OCI v2 registry on a PVC retaining the last 5 digests per app for instant rollback. |
+| **Forgejo Actions & Docker** | `cs-runner` | Ephemeral Kubernetes build Jobs using `ko` for Go and rootless BuildKit for Next.js—zero Docker anywhere, running on `k3s` and `containerd`. |
+| **Argo CD + CasaOS** | `cs-store` | App-store reconciler reading `app.yaml` from `cs-git` for 1-click Install, Upgrade, Pause, and Rollback via Kubernetes Server-Side Apply. |
+| **GitHub as primary host** | Public code mirror only | `cs-git` pushes code changes to GitHub for public visibility; zero container images are ever stored on GitHub. |
+
+### Two Kubernetes namespaces
+
+The entire 17-pod platform fits on a single 4 GiB `k3s` node and is isolated into **2 namespaces**:
+
+- **`clearedstack` (control plane):** Runs `clearedstack-web`, `hub-queue-api`, `postgres`, `cs-git`, `cs-registry`, `cs-runner`, and `cs-store`.
+- **`cs-workers` (pipeline workers):** Runs all 10 deterministic worker deployments (`cs-01-intake` through `cs-10-notify`) and on-demand browser Jobs.
+
+### Open no-login public sandbox
+
+Everything running and being developed is shown publicly and for free with **no login lock** on `clearedstack.com`. Any visitor can use the Portal, inspect live worker health and queues, read sanitized error codes (`E_TIMEOUT`, `E_PARSE`, `E_NEEDS_SUBTOOL`), and propose edits via `✎` buttons without creating an account.
+
+Openness is paired with deterministic guardrails so public access never exposes cluster internals or host safety:
+
+- **Network isolation:** Only `clearedstack-web` has a public Ingress; internal IPs, `.svc.cluster.local` DNS names, node names, `NetworkPolicy` rules, and credentials stay cluster-private, and the Portal reads only sanitized `pub.*` Postgres views.
+- **Five-layer edit shield:** Anonymous `✎` proposals pass a ~1-second browser Proof-of-Work puzzle, a honeypot field, a daily-salted IP hash rate limit, strict 4 KB schema validation against `ownership_map.json`, and a mandatory human approval gate in `cs-04-decide` before touching `cs-git`.
+- **Safe failure and rollback:** If a public interaction triggers an unexpected edge case or breaks a view, the sanitized error is logged visibly to help improve the system while `cs-store` preserves instant rollback across the last 5 signed OCI digests.
+
+## What remains open
+
+While the v3.1 runtime and sandbox architecture are settled, three areas remain open for further design and community input.
+
+| Open area | Core question | Current working default | Why it remains open |
 | --- | --- | --- | --- |
-| **Revisit cadence** | Monthly check; quarterly review cycle; event-driven review only | Monthly scheduled check (Stage 10 Revisit) | Prevents tools from drifting into regulatory obsolescence while maintaining a steady rhythm. |
-| **Data persistence** | Client-side export/import only; optional browser IndexedDB; self-hosted local SQLite | Pure static client-side execution with local JSON and CSV export | Guarantees zero-trust privacy by ensuring contract data never leaves the user’s device. |
-| **Phased thresholds** | Phased threshold (80 Phase 1, 75 Phase 2); rigid 75 across all phases; category-specific thresholds | Rigid 75 threshold for Build across all roadmap phases | Keeps selection criteria objective and predictable across development phases. |
-| **New categories** | Owner-determined at 5+ approved ideas; permanently locked at five CLINs; community RFC consensus | Owner-determined expansion when at least 5 approved ideas fail to fit CLINs 0001–0005 | Preserves alignment with Uniform Contract Format structure without arbitrary category sprawl. |
-
-## Discovery
-
-These questions govern how candidate compliance workflows and tools are found and cataloged.
-
-| Question | Options considered | Draft default | Why it matters |
-| --- | --- | --- | --- |
-| **Discovery execution** | Scripted quarterly sweeps; pure manual research logs; continuous automated CI web scrapers | Scripted quarterly assistant sweeps staged into a local review branch | Balances landscape coverage against maintainer review capacity. |
-| **Coverage tracking** | Categories $\times$ sources matrix; simple linear candidate backlog; detailed search query logs | Structured coverage matrix of categories $\times$ source kinds | Prevents overlooking valuable government worksheets or training center guides. |
-| **Template relevance** | Broad federal applicability only; major buying command templates; exhaustive local template index | Broad federal and DoD-wide applicability only | Focuses engineering effort on tools that serve the widest small-business audience. |
-| **Duplicate handling** | Canonical ID aliasing; separate records for every URL; exclude forks entirely | Stage 2 Record aliasing (canonical ID PA-0001 with alias list) | Eliminates duplicate evaluation work and skewed gap analysis. |
-
-## Observation
-
-These questions set the rules of engagement when examining existing compliance tools and websites.
-
-| Question | Options considered | Draft default | Why it matters |
-| --- | --- | --- | --- |
-| **Website boundaries** | Unauthenticated public pages only; accept crowdsourced gated notes; inspect-only trial accounts | Unauthenticated public pages only; no accounts, trials, or logins | Provides a strict legal safe harbor against CFAA and terms-of-service disputes. |
-| **Evidence grading** | Three-tier confidence (Seen, Stated, Unknown); binary verified/unverified; reject unverified claims | Three-tier confidence grading: Seen, Stated, or Unknown | Prevents vendor marketing claims from being recorded as verified architectural facts. |
-| **Observation shelf life** | 12-month limit; 6-month limit; indefinite until broken | 12-month shelf life; older observations marked stale | Ensures build and link decisions rely on current pricing and feature sets. |
-| **Snapshot archival** | Public web archive permalinks; raw HTML/MHTML committed to git; live outbound URLs only | Public web archive permalinks (Wayback Machine or Archive.today) | Preserves verifiable evidentiary audit trails without committing third-party page assets to git. |
-
-## Scoring and decisions
-
-These questions govern how observed ideas are evaluated and how final build outcomes are reached.
-
-| Question | Options considered | Draft default | Why it matters |
-| --- | --- | --- | --- |
-| **Division of authority** | AI drafts scores, human decides; automated score thresholding; human evaluates without AI | AI drafts scores and rationale; human owner decides outcome | Preserves sole human accountability while using AI speed for initial rubric drafting. |
-| **Link over rebuild** | Mandatory link if free tool exists; rebuild allowed for UX flaws; park candidate instead | Mandatory Link outcome whenever a free tool satisfies listing conditions (Gap = 1) | Prevents duplicating viable community tools and directs effort toward true market gaps. |
-| **Government calculators** | Build private client-side alternative; link government tool in all cases; build only if deprecated | Score Gap as 3; build an offline-first, client-side, privacy-respecting alternative | Provides defense contractors in secure air-gapped areas with tools they can run locally. |
-| **Tie-breaking rules** | Roadmap $\rightarrow$ Gap $\rightarrow$ Upkeep $\rightarrow$ Size $\rightarrow$ Community; community upvotes top; need score top | Roadmap phase fit $\rightarrow$ Gap severity $\rightarrow$ Low upkeep $\rightarrow$ Small size $\rightarrow$ Community requests | Maintains strategic delivery discipline over short-term popularity spikes. |
-
-## Credit and vendors
-
-These questions define how conceptual inspiration is acknowledged and how vendor relationships are handled.
-
-| Question | Options considered | Draft default | Why it matters |
-| --- | --- | --- | --- |
-| **Provenance phrasing** | Three-part factual template; minimal rule citation only; detailed comparative feature matrix | Standard three-part factual template (*Idea seen in*, *What we took*, *What we did differently*) | Credits inspiration truthfully without copying creative expression or making disparaging claims. |
-| **Vendor opt-out** | Honor request promptly with generic descriptor; refuse request under nominative fair use; delist tool | Replace vendor name with generic descriptor (“a commercial product”) while keeping the tool | Defuses trademark friction while preserving public access to clean-room implementations. |
-| **Dispute intake** | 48-hour safe-harbor intake and public log; formal legal process required; silent git purging | 48-hour safe-harbor intake with public logging in `TRANSPARENCY.md` | Resolves disputes quickly and openly without expensive legal confrontation. |
-| **Open-source reuse** | Permissive reuse (MIT/Apache) with attribution; 100% scratch code only; runtime CDN packages | Permissive open-source code permitted with attribution; no runtime CDNs | Avoids reinventing established algorithms while keeping zero-runtime network boundaries. |
-
-## AI transparency
-
-These questions establish how artificial intelligence tools are used and disclosed across the project.
-
-| Question | Options considered | Draft default | Why it matters |
-| --- | --- | --- | --- |
-| **Disclosure surface** | Multi-tier site disclosure; repository-only disclosure; top banner on every page | Multi-tier disclosure: About page + footer link + dedicated guide + decision logs | Establishes credibility through radical transparency about human-AI collaboration. |
-| **Commit attribution** | Dual trailers (AI-Assisted-By and Co-authored-by); human author only; dedicated AI bot committer | Dual git trailers: `AI-Assisted-By: [Tool]` and `Co-authored-by: [Tool] <noreply@...>` | Creates a machine-readable, permanent record of AI drafting in repository history. |
-| **Verification gates** | 100% parity with published government test vectors + human check; automated mock tests; beta launch | Mandatory dual-audit: deterministic tests matching worked government examples + human eCFR check | Prevents AI hallucinations from producing incorrect compliance arithmetic. |
-| **Errata handling** | Prompt code fix with regression test and credit; silent fix with date bump; formal ERRATA.md log | Code correction with regression test, commit attribution, and date bump | Encourages public review and upholds strict standards of regulatory accuracy. |
-
-## Data and repository
-
-These questions address how data is structured, licensed, and protected from malicious submissions.
-
-| Question | Options considered | Draft default | Why it matters |
-| --- | --- | --- | --- |
-| **Dataset location** | Standalone `ClearedStack/prior-art` repo; subfolder in website repo; GitHub Issues as database | Standalone repository `ClearedStack/prior-art` with static browser app | Keeps the main publishing site lean and fast while isolating research data. |
-| **Dataset licensing** | Dual CC0 for data and MIT for code; unified MIT license; CC-BY-SA copyleft | Dual license: CC0 1.0 Universal for dataset records; MIT License for code | Maximizes public domain reuse of regulatory data while protecting software tools. |
-| **File organization** | Granular flat JSON files; category subfolder tree; single monolithic JSON array | Granular flat files: `records/PA-XXXX.json` and `decisions/PA-XXXX-YYYY-MM-DD.json` | Avoids git merge conflicts during collaborative reviews and enables clean atomic history. |
-| **Submission security** | Schema validation and prompt sanitization; no AI processing of issues; raw unvalidated ingestion | Rigid schema validation, prompt-injection sanitization, and human pre-merge audit | Protects maintainer development environments from adversarial prompt injection. |
-
-## Governance and legal
-
-These questions define legal entity ownership, revenue policies, and project continuity.
-
-| Question | Options considered | Draft default | Why it matters |
-| --- | --- | --- | --- |
-| **Entity structure** | Unincorporated Phase 1, LLC/non-profit Phase 2; immediate foundation transfer; permanent individual | Unincorporated personal project for Phase 1, evaluating LLC or fiscal sponsorship for Phase 2 | Manages legal liability proportionally as project adoption grows. |
-| **Revenue policy** | Inviolable zero revenue; non-directed community micro-donations; corporate underwriting | Inviolable zero-revenue rule: no ads, sponsorships, donations, or paid tiers | Ensures complete editorial independence and uncompromised public trust. |
-| **Contributor ethics** | Mandatory attestation of off-duty personal work; ban defense employees; formal employer CCLAs | Mandatory contributor attestation confirming personal time, personal equipment, and public data | Protects contributors from federal ethics violations and keeps proprietary data out. |
-| **Project continuity** | Static architecture + backup org admin + git mirror; 10-year domain pre-pay; uncoordinated forks | Pure static files + backup organization co-admin + secondary git mirror | Ensures tools remain available and self-hostable even if the primary owner departs. |
-| **Liability disclaimers** | Persistent header banner + export watermarks; footer disclaimer only; mandatory click-wrap EULA | Persistent header banner on tools and watermarks on all exported calculation summaries | Clarifies that tools are computational aids rather than legal or accounting counsel. |
-
-## Site presentation
-
-These questions determine how governance, provenance, and mathematical formulas appear in the user interface.
-
-| Question | Options considered | Draft default | Why it matters |
-| --- | --- | --- | --- |
-| **Navigation placement** | 4th header nav link (`/how-we-decide/`); link from Home and footer only; subpage under About | New top-level page `/how-we-decide/` ("Section M · Evaluation factors") in header and home | Elevates evaluation transparency to the primary site navigation structure. |
-| **Guide categorization** | Dedicated Group L.6; fold into Group L.4 Contribute; distribute across L.1 and L.5 | Dedicated Guide Group L.6 "How this project is run" (`id: "project"`) | Provides a clear reading path for project governance without diluting practitioner guides. |
-| **Provenance visibility** | Subtle inline link on `/tools/`; interactive modal drawer; repository README only | Subtle inline text link beneath tool description on `/tools/` | Delivers ethical attribution without cluttering the catalog interface. |
-| **Formula transparency** | Collapsible inline drawer on tools; external link to guide; tooltip hover bubbles | Collapsible "Regulatory Math & Citation" drawer embedded directly in the tool UI | Enables compliance officers and auditors to verify math without leaving the page. |
+| **Dataset licensing edge cases** | How should MIT code licensing interact with CC0 1.0 public-domain records when third-party excerpts, worked-example government tables, or vendor-submitted errata are compiled into `clearedstack.com` and `cs-05-provenance` specs? | MIT across all code repositories; clean-room factual extraction for regulatory and vendor observations. | Edge cases around mixed-provenance JSON bundles, statutory tables with agency formatting, and user-proposed edit contributions need explicit legal clarity before external dataset mirrors proliferate. |
+| **Multi-node federation** | How should independent ClearedStack v3.1 instances synchronize `cs-git` repositories, `hub-queue-api` work items, or `cs-registry` digests if the project grows beyond a single `k3s` node or organizations self-host their own mirrors? | Single-node `k3s` deployment with outbound GitHub code mirroring from `cs-git`. | Federation introduces hard distributed-systems trade-offs around deterministic replay, conflicting `PA-XXXX` IDs, and trust boundaries between independent `cs-04-decide` owner queues. |
+| **Community stewardship** | When and how should the project transition from a single-owner Phase 1 operation to a durable multi-maintainer model (legal entity, backup owner-mode access, and shared `cs-04-decide` review)? | Single human owner with an inviolable zero-revenue policy and public git history. | Sustaining a zero-revenue public-interest compliance platform long-term requires clear succession rules, co-maintainer ethics attestations, and a governance structure that cannot be captured by commercial vendors. |

@@ -141,30 +141,13 @@ src/
   guides/         one .mdx file per guide
   lib/guides.ts   the guide sections, and the code that reads and orders the guides
 public/brand/     logo files (SVG, light and dark)
-Dockerfile        builds the site and serves it with nginx
-docker/           nginx configuration used by the image
+Containerfile   builds the site and serves it with nginx (rootless BuildKit, zero Docker)
 k8s/              Kubernetes manifests: deployment, service, example ingress
 ```
 
-### Hosting with Docker
+### Hosting on Kubernetes (No Docker)
 
-```bash
-docker build -t clearedstack .
-```
-
-```bash
-docker run -d --name clearedstack --restart unless-stopped -p 8080:8080 clearedstack
-```
-
-The site is then at http://localhost:8080. The image is roughly 100 MB, holds
-only nginx and the built pages, and runs as a non-root user. The
-[Docker guide](src/guides/host-with-docker.mdx) covers updates, custom
-domains and moving the image to a network with no internet.
-
-### Hosting on Kubernetes
-
-Push the image to a registry your cluster can reach, set that image name in
-[`k8s/clearedstack.yaml`](k8s/clearedstack.yaml), then:
+ClearedStack runs on `k3s` + `containerd` with **zero Docker**: Go services are built with `ko`, and the web portal is built from [`Containerfile`](Containerfile) using rootless BuildKit and stored in `cs-registry`.
 
 ```bash
 kubectl apply -f k8s/clearedstack.yaml
@@ -172,9 +155,7 @@ kubectl apply -f k8s/clearedstack.yaml
 
 The manifest creates a namespace, a two-replica deployment and a service.
 The pods run non-root with a read-only filesystem and no added privileges.
-The [Kubernetes guide](src/guides/host-on-kubernetes.mdx) has the full steps.
-There are also guides for [serving the plain files](src/guides/host-static-files.mdx)
-from any web server and for [running on a closed network](src/guides/closed-networks.mdx).
+See [One-Command Quickstart](src/guides/one-command-quickstart.mdx), [Host on Kubernetes (No Docker)](src/guides/host-on-kubernetes.mdx), [Host as plain files](src/guides/host-static-files.mdx), and [Run it on a closed network](src/guides/closed-networks.mdx).
 
 ### Listing a tool
 

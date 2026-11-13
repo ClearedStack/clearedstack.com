@@ -17,17 +17,32 @@ export function SiteFooter() {
             </Link>
           </p>
           <p className="mt-4 leading-relaxed">
-            Built with Claude Code and Antigravity, reviewed by a person. Read{" "}
+            100% deterministic at runtime · Zero AI in workers or tools. Authored with human review; read{" "}
             <Link href="/guides/built-with-ai/" className={footLink}>
-              how AI is used to build this project
+              how AI is used at authoring time
             </Link>
             .
           </p>
         </div>
         <ul className="flex flex-col gap-2.5 font-mono text-[13px] md:items-end">
           <li>
+            <Link href="/apps/" className={footLink}>
+              Apps &amp; Cluster
+            </Link>
+          </li>
+          <li>
+            <Link href="/pipeline/" className={footLink}>
+              10-Worker Pipeline
+            </Link>
+          </li>
+          <li>
+            <Link href="/decide/" className={footLink}>
+              Decide &amp; Edits
+            </Link>
+          </li>
+          <li>
             <Link href="/tools/" className={footLink}>
-              Tools
+              Tools Catalog
             </Link>
           </li>
           <li>
@@ -47,7 +62,7 @@ export function SiteFooter() {
           </li>
           <li>
             <a href={site.repo} className={footLink} rel="noopener">
-              Source code
+              Source code (GitHub mirror)
             </a>
           </li>
           <li>

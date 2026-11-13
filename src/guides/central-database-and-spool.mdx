@@ -1,0 +1,50 @@
+export const meta = {
+  title: "Shared Hub Database and Worker Local Spools",
+  summary: "Why one Postgres database in the clearedstack namespace owns all live state and queues, why workers talk through hub-queue-api without database passwords, and how worker local spools prevent lost work when the hub restarts.",
+  group: "host",
+  order: 8,
+  revised: "2026-11",
+};
+
+ClearedStack keeps all live platform state in one place while letting workers run independently. A single Postgres database inside the `clearedstack` control-plane namespace owns the current state and work queues, `hub-queue-api` acts as the only read-write gatekeeper in front of it, and each worker pod in `cs-workers` keeps a local spool volume so finished work survives hub restarts.
+
+## One Postgres database for state and queues
+
+Instead of giving each microservice its own separate database, ClearedStack runs one `postgres` instance (Postgres 17) backed by a Persistent Volume Claim (a durable slice of cluster disk that survives pod restarts). Keeping current state and queues in one database avoids sync bugs between services and keeps the entire control plane small enough to run on a single 4 GiB `k3s` node.
+
+Inside Postgres, data is split into two schemas with strict boundaries:
+
+| Component | Namespace | Database Access | Responsibility |
+| --- | --- | --- | --- |
+| `postgres` | `clearedstack` | Stores `core.*` and `pub.*` | Single source of truth for items, queue leases, edit proposals, and sanitized public views |
+| `hub-queue-api` | `clearedstack` | Read/write on `core.*` | Manages worker leases, `needs_subtool` pauses, replay, anonymous edit intake, and live SSE updates |
+| `clearedstack-web` | `clearedstack` | Read-only on `pub.*` (`pub_ro` role) | Serves the public Portal, App Store UI, and live pipeline status without touching internal tables or secrets |
+
+Putting queues and state in the same database means a state change and its next queue step happen together in one transaction. An item never ends up marked complete in one system while still sitting in a queue in another.
+
+## Why workers talk to hub-queue-api instead of Postgres
+
+All 10 deterministic workers (`cs-01-intake` through `cs-10-notify`) run in the `cs-workers` namespace. None of them ever connect directly to `postgres`, and none of them hold database passwords or connection strings.
+
+Instead, workers communicate with `hub-queue-api` over cluster-private HTTP using their Kubernetes ServiceAccount identity. Network policy rules block `cs-workers` from reaching `postgres` on the network at all.
+
+| Concern | Direct Database Access (Avoided) | Via `hub-queue-api` (ClearedStack) |
+| --- | --- | --- |
+| Credentials in worker pods | Every worker needs a DB password | Zero DB passwords; workers use Kubernetes ServiceAccount HTTP |
+| Schema changes | Updating a table forces all 10 workers to update | Only `hub-queue-api` knows `core.*` table layouts |
+| Queue coordination | Workers must implement locking and retries themselves | `hub-queue-api` issues leases, tracks heartbeats, and replays `needs_subtool` items |
+| Live Portal visibility | Database writes happen silently | `hub-queue-api` streams progress to `clearedstack-web` via Server-Sent Events (SSE) |
+
+This separation keeps the blast radius small. Even if a worker pod processes untrusted public web pages (such as `cs-02-observe` fetching an external site), it has no database credentials to leak and no direct path to alter `core.*` tables outside the rules enforced by `hub-queue-api`.
+
+## How worker local spools protect finished work
+
+Because `hub-queue-api` and `postgres` are single control-plane services, a rolling upgrade or brief restart can make the hub unreachable for a few seconds. Without local buffering, a worker that just finished a job during that window would either drop its output or fail the task and force a full re-run.
+
+To prevent lost work, each worker pod mounts a local spool volume—a small, dedicated storage directory attached to the worker pod. The handoff follows a simple three-step loop:
+
+1. **Stage locally first:** As soon as a worker finishes a deterministic step (such as extracting page data or running a verification suite), it writes the completed result to its local spool volume before trying to report back.
+2. **Acknowledge with the hub:** The worker sends the result to `hub-queue-api`. If the hub accepts and saves it to Postgres, the worker deletes the spooled file.
+3. **Retry after hub restarts:** If `hub-queue-api` is restarting or temporarily unreachable, the finished output stays safely in the worker's local spool. The worker retries delivery on a short backoff until the hub comes back online and confirms receipt.
+
+Because every worker is deterministic, combining central queue leases in `postgres` with local spools on the workers gives the platform clean recovery on both sides: unfinished work is re-leased if a worker restarts, and finished work is preserved in the local spool if the hub restarts.
