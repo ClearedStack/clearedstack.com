@@ -31,11 +31,11 @@ const rules = [
   },
   {
     title: "No data collection.",
-    body: "No analytics, cookies or accounts. This site makes no third-party requests, and its content security policy tells your browser to block any that slip in.",
+    body: "No analytics, cookies or accounts. This site makes no third-party requests, and its content security policy tells your browser to block any that slip in. As with any website, the company hosting it can see the IP address a page was requested from.",
   },
   {
     title: "Public sources only.",
-    body: "Tools are built from published regulations, standards and guidance. No classified, controlled or otherwise non-public government information goes into them.",
+    body: "Tools are built only from material the government has officially released to the public: regulations, standards and guidance. No classified, controlled or otherwise non-public information goes into them, and a leaked document does not count as public.",
   },
   {
     title: "Show the work.",
@@ -108,8 +108,9 @@ export default function AboutPage() {
           <p>
             <strong>ClearedStack is an independent personal project</strong>, built on personal time with personal
             equipment. It is not affiliated with, endorsed by, or sponsored by the U.S. Department of Defense, any
-            military service or any other government agency. Nothing on this site represents an official position of
-            the U.S. Government.
+            military service or any other government agency. The views expressed here are the maintainers’ own. They
+            do not represent the views of the Department of Defense or its components, or an official position of the
+            U.S. Government.
           </p>
           <p>
             <strong>The name is only a name.</strong> ClearedStack does not grant, verify or imply a security

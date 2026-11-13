@@ -10,4 +10,4 @@ export const site = {
 } as const;
 
 export const disclaimer =
-  "ClearedStack is an independent personal project. It is not affiliated with, endorsed by, or sponsored by the U.S. Department of Defense or any other government agency. Nothing here is legal, accounting or compliance advice.";
+  "ClearedStack is an independent personal project. It is not affiliated with, endorsed by, or sponsored by the U.S. Department of Defense or any other government agency. Views expressed are the maintainers’ own and do not represent the Department of Defense or its components. Nothing here is legal, accounting or compliance advice.";

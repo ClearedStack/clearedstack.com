@@ -36,8 +36,8 @@ listed when it meets all of these:
 - **Client-side.** It runs in the browser or on the user's machine. It does not
   send what the user enters to any server.
 - **No tracking.** No analytics, no third-party scripts, no accounts.
-- **Public sources only.** Built from published regulations, standards and
-  guidance, and it says which ones.
+- **Public sources only.** Built from regulations, standards and guidance the
+  government has officially released to the public, and it says which ones.
 - **Honest about limits.** It states what it does not cover and that its output
   is not legal, accounting or compliance advice.
 
@@ -46,6 +46,12 @@ listed when it meets all of these:
 - Never include classified information, controlled unclassified information
   (CUI), export-controlled data, or anything else that is not public. That
   covers code, test data, screenshots, issues and commit messages.
+- "Public" means officially released. A document that leaked, or that is
+  marked for limited distribution but can be found online anyway, is not
+  public for this project. If you are unsure, leave it out.
+- If you work for the government or hold a clearance, your own obligations
+  come first. Contribute only on your own time and equipment, and only what
+  you are free to share.
 - Do not include real contract data, real rates or anything identifying a
   real company's bid. Make up the examples.
 - By contributing you agree that your work is released under the

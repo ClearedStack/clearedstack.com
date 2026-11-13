@@ -43,7 +43,7 @@ the paperwork.
 | **Open source** | MIT licensed. Read the code, check the math, fork it, host it yourself. |
 | **Client-side** | Tools run in your browser. Your rates, proposal text and system details stay on your machine. |
 | **No tracking** | No analytics, cookies or accounts. The site makes no third-party requests and enforces that with a content security policy. |
-| **Public sources only** | Built from published regulations, standards and guidance. Nothing classified, controlled or non-public. |
+| **Public sources only** | Built only from material the government has officially released to the public. Nothing classified, controlled or non-public, and a leaked document does not count as public. |
 | **Independent** | A personal project with no government affiliation. See the [disclaimer](#disclaimer). |
 
 ## The catalog
@@ -129,8 +129,9 @@ Colors: ink `#121714`, paper `#F5F4EF`, green `#17794A` (on light) and
 ClearedStack is an independent personal project, built on personal time with
 personal equipment. It is not affiliated with, endorsed by, or sponsored by
 the U.S. Department of Defense, any military service or any other government
-agency, and nothing in it represents an official position of the U.S.
-Government.
+agency. The views expressed are the maintainers' own. They do not represent
+the views of the Department of Defense or its components, or an official
+position of the U.S. Government.
 
 The name does not grant, verify or imply a security clearance, an
 authorization to operate, or any certification.
