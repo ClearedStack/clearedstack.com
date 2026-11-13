@@ -1,33 +1,120 @@
 export const meta = {
   title: "Check a tool’s answer",
-  summary: "How to verify a result against the regulation behind it before it goes into a bid.",
+  summary: "How to verify a result against the regulation behind it before it goes into a bid, and what to keep as a record.",
+  group: "start",
   order: 3,
 };
 
-A tool gives you a worked answer quickly. You are still the one who signs the proposal, so treat every result as a draft until you have checked it.
+A tool gives you a worked answer quickly. You are still the one who signs the proposal, so treat every result as a draft until you have checked it. This guide is a method for doing that. It works for any tool, here or elsewhere, and it takes less time than explaining a wrong number later.
 
 ## Find the source
 
-Each listed tool has to say which regulation, standard or guide it is built on. Look for that reference in the tool or in its repository’s README.
+Each listed tool has to say which regulation, standard or guide it is built on. Look for that reference in three places:
 
-## Compare it with the current text
+- in the tool itself, next to the result or under a heading such as “Sources” or “How this is calculated”
+- in the README of the tool’s repository, which the **Source** link in the [catalog](/tools/) opens
+- in the code, where formulas and data tables should carry a comment naming where they came from
 
-Open the source and read the part the tool relies on. Pay attention to dates. Regulations are revised, and some figures change on a schedule. The Prompt Payment Act interest rate, for example, is reset every six months.
+A good reference is specific. “FAR Part 31” tells you which book to open. “FAR 31.205-6(a)” tells you which paragraph to read. If a tool gives a result and no reference at all, treat the result as unverified and report the gap.
 
-If the tool and the current text disagree, the text wins.
+## Open the current text
+
+Read the rule where the government publishes it, not in a summary. These are the places most tools will point to:
+
+| What | Where the current text lives |
+| --- | --- |
+| Federal Acquisition Regulation (FAR) and the defense supplement (DFARS) | [acquisition.gov](https://www.acquisition.gov) |
+| Any other federal regulation, cited as “CFR” | [ecfr.gov](https://www.ecfr.gov) |
+| NIST security publications, such as SP 800-171 | [csrc.nist.gov](https://csrc.nist.gov) |
+| CUI categories and marking rules | [archives.gov/cui](https://www.archives.gov/cui) |
+| Small business size standards | [sba.gov](https://www.sba.gov) |
+| Prompt Payment interest rates | [fiscal.treasury.gov](https://fiscal.treasury.gov/prompt-payment/) |
+
+[Where the rules live](/guides/public-sources/) has the full list, with notes on how each source is organized and how to cite it.
+
+## Compare the dates
+
+Regulations are revised, and a tool is a snapshot of the day it was written. Before you trust a figure, check that the tool and the current text agree on it. Some things change on a schedule:
+
+| What changes | How often |
+| --- | --- |
+| Prompt Payment Act interest rate | Every six months, on January 1 and July 1 |
+| Small business size standards | Reviewed on a rolling basis, and adjusted for inflation |
+| Acquisition dollar thresholds | Adjusted for inflation every five years, and by law in between |
+| NAICS industry codes | Revised every five years |
+| STIG content | Reissued several times a year |
+| NIST publications | Revised at irregular intervals; the revision number is part of the citation |
+
+Two habits help. First, read the “effective date” or “last amended” line on the source page. Second, check which revision of a standard your contract names. A contract can require an older revision than the newest one published, and the contract is what you are held to.
+
+<Callout kind="warning" title="When the tool and the text disagree">
+The text wins. Use the figure from the current regulation, and tell the project so the tool can be fixed.
+</Callout>
+
+## Work one example by hand
+
+Arithmetic tools can be tested the way an auditor would test them. Pick one simple case, work it out with a calculator, and compare.
+
+For example, to test a labor rate calculator, take an hourly wage of $50.00, a fringe rate of 30 percent, an overhead rate of 20 percent applied to wages plus fringe, a G&A rate of 10 percent and a fee of 8 percent:
+
+| Step | Calculation | Result |
+| --- | --- | ---: |
+| Wage | | $50.00 |
+| Add fringe | 50.00 × 1.30 | $65.00 |
+| Add overhead | 65.00 × 1.20 | $78.00 |
+| Add G&A | 78.00 × 1.10 | $85.80 |
+| Add fee | 85.80 × 1.08 | $92.66 |
+
+If the tool shows $92.66 for the same inputs, you know how it combines the rates. If it shows something else, you have found either a mistake or a different convention, such as overhead applied to wages alone. Both are worth knowing before you use the tool on real numbers. [Labor rates and wrap rates](/guides/labor-rates/) explains the conventions.
+
+Round numbers make good tests because a wrong result is obvious.
 
 ## Follow the solicitation
 
-A solicitation can set its own rules for format, page counts, pricing structure and more. When it says something different from a tool’s default, follow the solicitation and adjust the tool’s inputs to match.
+A solicitation can set its own rules for format, page counts, pricing structure, rounding and more. When it says something different from a tool’s default, follow the solicitation and change the tool’s inputs to match.
+
+Common places where a solicitation overrides a default:
+
+- **Rounding.** Some require rates rounded to the cent before they are multiplied by hours. Others want the extended price rounded. The totals differ.
+- **Labor categories.** The solicitation’s category names and descriptions are the ones to price, even if yours differ.
+- **Page and font limits.** These count differently from one solicitation to the next. Tables, covers and resumes may or may not be included.
+- **Templates.** If a pricing workbook or a compliance matrix is supplied, the deliverable is that file, filled in. Use a tool to work out the answer, then put it in the government’s format.
+
+If the solicitation is unclear, ask. Solicitations name a contracting officer or specialist and a deadline for questions. A written answer from them outranks any tool and any guide.
 
 ## Read the code
 
-Every tool is open source. The **Source** link next to a tool in the [catalog](/tools/) opens its repository, where the formulas and data are there to read.
+Every tool is open source. You do not have to be a programmer to get something from the repository:
+
+- The **README** says what the tool covers, what it leaves out and which sources it uses.
+- The **issue list** shows mistakes other people have reported and whether they were fixed.
+- The **commit history** shows when a figure or a formula last changed.
+
+If you do read code, look for the data tables and formulas first. They are usually short, and they are where an out-of-date figure would be.
+
+## Keep a record
+
+When a number from a tool goes into a proposal, write down enough to reproduce it later. A pricing reviewer, an auditor or your own future self may ask where it came from.
+
+- the tool’s name and its version or the date you used it
+- every input you entered
+- the result
+- the regulation or standard the result rests on, with the paragraph number
+- the date you checked that text
+
+A note in the proposal file is enough. The point is that the number can be rebuilt without the tool.
 
 ## Report a mistake
 
-If a tool gets something wrong, say so. Email [contact@clearedstack.com](mailto:contact@clearedstack.com) or open an issue in the tool’s repository, and include the section of the regulation that shows the correct answer. A wrong result is the most useful thing you can report.
+If a tool gets something wrong, say so. Email [contact@clearedstack.com](mailto:contact@clearedstack.com) or open an issue in the tool’s repository. A useful report has four parts:
+
+1. what you entered, using made-up values if the real ones are sensitive
+2. what the tool showed
+3. what the correct answer is
+4. the section of the regulation that shows it
+
+A wrong result is the most useful thing you can report. Do not include real contract data, real rates or controlled information in a report. Issues are public.
 
 ## What the tools are not
 
-They are not legal, accounting or compliance advice. For a decision that carries real risk, such as an indirect rate structure or a compliance attestation, talk to a qualified professional.
+They are not legal, accounting or compliance advice, and they do not know your contract. For a decision that carries real risk, such as an indirect rate structure, a certification you sign or a compliance score you submit to the government, talk to a qualified professional. A tool can make that conversation shorter. It does not replace it.

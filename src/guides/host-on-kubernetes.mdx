@@ -1,7 +1,8 @@
 export const meta = {
   title: "Host on Kubernetes",
-  summary: "Run your own copy of this site on a Kubernetes cluster, using the manifests in the repository.",
-  order: 6,
+  summary: "Run your own copy on a Kubernetes cluster with the manifests in the repository: deploy, expose, lock down, update and troubleshoot.",
+  group: "host",
+  order: 2,
 };
 
 If you already run a Kubernetes cluster, the site fits on it as a small deployment. The repository includes the manifests. If you only need one server, [Docker on its own](/guides/host-with-docker/) is simpler.
@@ -10,9 +11,21 @@ If you already run a Kubernetes cluster, the site fits on it as a small deployme
 
 - A Kubernetes cluster and `kubectl` set up to talk to it.
 - A container registry your cluster can pull from.
-- Docker, to build the image.
+- Docker or Podman, to build the image.
 
 There is no published image to pull. You build your own, so you know exactly what is in it.
+
+## What gets created
+
+The manifest in `k8s/clearedstack.yaml` creates three things:
+
+| Object | Name | What it is |
+| --- | --- | --- |
+| Namespace | `clearedstack` | A space of its own, so the site can be removed in one step |
+| Deployment | `clearedstack` | Two copies of the web server, each in its own pod |
+| Service | `clearedstack` | One stable address inside the cluster, on port 80, in front of the pods |
+
+There is no database, no persistent volume, no config map and no secret. The pods hold nothing that needs backing up.
 
 ## Build and push the image
 
@@ -25,6 +38,8 @@ docker build -t registry.example.com/clearedstack:1 .
 docker push registry.example.com/clearedstack:1
 ```
 
+Use a new tag for every build, such as `:1`, `:2` or the git commit. A tag that never changes its meaning is what lets you roll back.
+
 ## Point the manifest at your image
 
 Open `k8s/clearedstack.yaml` and change the `image:` line to the name you just pushed:
@@ -33,17 +48,32 @@ Open `k8s/clearedstack.yaml` and change the `image:` line to the name you just p
 image: registry.example.com/clearedstack:1
 ```
 
+If your registry needs a login, create a pull secret in the namespace and name it in the pod spec, next to `containers:`:
+
+```yaml
+imagePullSecrets:
+  - name: registry-login
+```
+
 ## Deploy
 
 ```bash
 kubectl apply -f k8s/clearedstack.yaml
 ```
 
-This creates a namespace named `clearedstack`, a deployment with two copies of the site, and a service in front of them. Wait for it to finish starting:
+Wait for it to finish starting:
 
 ```bash
 kubectl -n clearedstack rollout status deployment/clearedstack
 ```
+
+Then look at what is running:
+
+```bash
+kubectl -n clearedstack get pods,service
+```
+
+You should see two pods with a status of `Running` and `1/1` ready.
 
 ## Check that it works
 
@@ -63,13 +93,28 @@ How you expose a service depends on your cluster. If it has an ingress controlle
 cp k8s/ingress.example.yaml k8s/ingress.yaml
 ```
 
-Edit `k8s/ingress.yaml` to set your host name and the ingress class your cluster uses, then apply it:
+Edit `k8s/ingress.yaml` to set your host name and the ingress class your cluster uses. For HTTPS, add a `tls` section that names a secret holding your certificate:
+
+```yaml
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - clearedstack.example.com
+      secretName: clearedstack-tls
+  rules:
+    - host: clearedstack.example.com
+```
+
+Then apply it:
 
 ```bash
 kubectl apply -f k8s/ingress.yaml
 ```
 
-Your ingress controller handles HTTPS. If your copy lives at a different address than clearedstack.com, change `url` in `src/data/site.ts` before you build the image.
+If your cluster uses the Gateway API or a load balancer service instead of ingress, point it at the service named `clearedstack` on port 80.
+
+If your copy lives at a different address than clearedstack.com, change `url` in `src/data/site.ts` before you build the image.
 
 ## What the manifest locks down
 
@@ -78,10 +123,63 @@ The pods are set up to need as little trust as possible:
 - They run as an ordinary user, not root.
 - The container’s filesystem is read-only, apart from a small scratch folder.
 - All Linux capabilities are dropped and privilege escalation is off.
+- The default seccomp profile is applied.
 - They get no Kubernetes API credentials.
 - Each one asks for 16 MB of memory and is capped at 64 MB. In testing the site used about 5 MB.
 
-These settings are written to meet the “restricted” Pod Security Standard.
+These settings are written to meet the “restricted” Pod Security Standard. To have the cluster enforce that standard on the namespace, so nothing less strict can ever run there, add a label:
+
+```bash
+kubectl label namespace clearedstack pod-security.kubernetes.io/enforce=restricted
+```
+
+## Block outbound traffic
+
+The site never needs to open a connection to anything. If your cluster’s network plugin supports network policies, you can make that a rule. Save this as `k8s/networkpolicy.yaml` and apply it:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: clearedstack
+  namespace: clearedstack
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: clearedstack
+  policyTypes: ["Ingress", "Egress"]
+  ingress:
+    - ports:
+        - port: 8080
+  egress: []
+```
+
+The pods can then receive requests on port 8080 and send nothing. If you want to accept traffic only from your ingress controller, add a `from` rule that selects its namespace.
+
+## Keep it up during maintenance
+
+Two pods mean one can be replaced while the other serves. To stop a node drain from taking both down at once, add a pod disruption budget:
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: clearedstack
+  namespace: clearedstack
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: clearedstack
+```
+
+To change the number of copies:
+
+```bash
+kubectl -n clearedstack scale deployment/clearedstack --replicas=3
+```
+
+One pod is enough for a small team. The site is plain files and each request is cheap.
 
 ## Update it
 
@@ -94,7 +192,13 @@ docker push registry.example.com/clearedstack:2
 kubectl -n clearedstack set image deployment/clearedstack web=registry.example.com/clearedstack:2
 ```
 
-Kubernetes replaces the pods one at a time, so the site stays up during the change.
+Kubernetes replaces the pods one at a time, so the site stays up during the change. If the new version is wrong, go back:
+
+```bash
+kubectl -n clearedstack rollout undo deployment/clearedstack
+```
+
+If you keep your manifests in git, change the `image:` line there and apply the file instead of using `set image`, so the file and the cluster stay in step.
 
 ## Move it to a closed network
 
@@ -112,7 +216,23 @@ docker tag registry.example.com/clearedstack:1 registry.internal.example/cleared
 docker push registry.internal.example/clearedstack:1
 ```
 
-Then set that name in `k8s/clearedstack.yaml` and deploy as above.
+Then set that name in `k8s/clearedstack.yaml` and deploy as above. [Run it on a closed network](/guides/closed-networks/) covers checksums and verification.
+
+## When something goes wrong
+
+Start with these two commands. The events at the end of the first one usually name the problem.
+
+```bash
+kubectl -n clearedstack describe pod -l app.kubernetes.io/name=clearedstack
+kubectl -n clearedstack logs -l app.kubernetes.io/name=clearedstack
+```
+
+| Pod status | Likely cause | What to do |
+| --- | --- | --- |
+| `ImagePullBackOff` | The cluster cannot pull the image | Check the image name and tag, and add a pull secret if the registry needs a login |
+| `Pending` | No node has room, or a policy rejected the pod | Read the events in `describe pod` |
+| `CrashLoopBackOff` | nginx cannot write its temporary files | Keep the `tmp` volume and its mount in the manifest |
+| Running, but the ingress returns 404 or 503 | The ingress does not match the host name, or uses the wrong class | Compare `host` and `ingressClassName` with your controller’s settings |
 
 ## Remove it
 
@@ -120,4 +240,4 @@ Then set that name in `k8s/clearedstack.yaml` and deploy as above.
 kubectl delete namespace clearedstack
 ```
 
-This removes the deployment, the service and the ingress in one step.
+This removes the deployment, the service, the ingress and any policies in one step.

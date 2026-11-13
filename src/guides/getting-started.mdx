@@ -1,40 +1,106 @@
 export const meta = {
   title: "Getting started",
-  summary: "What ClearedStack is, how to find a tool and what the status labels mean.",
+  summary: "What ClearedStack is, who it is for, how to find a tool and what to expect when you open one.",
+  group: "start",
   order: 1,
 };
 
-ClearedStack is a catalog of small tools for government contracting. Each tool does one job, such as building a labor rate or marking a document, and runs in your browser. There is no account to create and nothing to install.
+ClearedStack is a catalog of small tools for government contracting. Each tool does one job, such as building a labor rate, pulling the requirements out of a solicitation or marking a document, and each one runs in your browser. There is no account to create, nothing to install and nothing to pay.
+
+This guide walks through the site from the top. It takes a few minutes and you will not need it twice.
+
+## Who it is for
+
+The tools are written for people who do the contracting paperwork themselves:
+
+- a solo developer or consultant pricing a first bid
+- a founder of a small company answering a first solicitation
+- an engineer who has been handed “the compliance part”
+- anyone at a larger company who is tired of rebuilding the same spreadsheet
+
+You do not need a background in contracting. The [field guides](/guides/#field) explain the ideas each group of tools is built on, and the [glossary](/guides/glossary/) covers the vocabulary.
+
+## What you need
+
+A current web browser: Firefox, Chrome, Edge or Safari. That is all.
+
+- **No account.** There is no sign-up, no sign-in and no email address to give.
+- **No install.** A tool is a web page. Nothing is added to your computer.
+- **No payment.** Not now and not later. The project takes in no revenue of any kind.
+
+If your company restricts which websites you can reach, or you work on a network with no internet connection, the whole site can be copied and run inside your own network. See [Host your own copy](/guides/#host).
 
 ## Find a tool
 
-Open the [Tools](/tools/) page. The tools are grouped into five areas:
+Open the [Tools](/tools/) page. The tools are grouped into five areas. Each area has a line-item number, in the style of a contract’s price schedule:
 
-- **Pricing & cost accounting**: labor rates, indirect rates and price tables.
-- **Proposal & capture**: taking a solicitation apart and checking your response against it.
-- **Cybersecurity & compliance**: NIST SP 800-171, CMMC and CUI handling.
-- **Market research & small business**: codes, set-asides and eligibility.
-- **Tactical & DevSecOps**: utilities for networks with no internet connection.
+| CLIN | Area | What the tools there do |
+| --- | --- | --- |
+| 0001 | Pricing & cost accounting | Build labor rates and indirect rates, lay out a price table, work out interest on a late payment |
+| 0002 | Proposal & capture | Take a solicitation apart into requirements and check that your response answers every one |
+| 0003 | Cybersecurity & compliance | Work through NIST SP 800-171 and CMMC, mark CUI, look up STIG rules, validate OSCAL files |
+| 0004 | Market research & small business | Find the right codes, set-asides and eligibility rules |
+| 0005 | Tactical & DevSecOps | Inspect manifests, certificates and file transfers on a network with no internet |
 
-Type in the filter box to narrow the list. It searches tool names, descriptions and areas, so “rate”, “CUI” or “proposal” all work.
+There are three ways to narrow the list:
+
+1. **Type in the filter box.** It searches tool names, descriptions and area names at once, so “rate”, “CUI” or “proposal” all work. Several words narrow the list further: “labor rate” finds tools that mention both.
+2. **Use the area buttons** under the filter box to jump to one area.
+3. **Follow a link from the home page.** Each line of the price table there opens the matching area.
 
 ## Read the status label
 
 Every tool carries one of three labels:
 
-- **Planned**: on the list, not started.
-- **In development**: being built, not usable yet.
-- **Live**: ready to use.
+| Label | What it means |
+| --- | --- |
+| Planned | On the list. Work has not started. |
+| In development | Being built. Not usable yet. |
+| Live | Ready to use. Its name is a link. |
 
-Right now every tool is marked Planned. The first ones are being built, and each will change to Live on the day it works.
+Right now every tool is marked Planned. The catalog is published first so that people can say which tools they need most, and each tool changes to Live on the day it works. Nothing is marked Live early.
+
+If a tool you need is still Planned, tell the project. Requests decide the build order. [Request a tool or add your own](/guides/request-or-add-a-tool/) explains how.
 
 ## Open a tool
 
-When a tool is live, its name in the catalog becomes a link. Each tool is its own small project, so the link opens the tool itself and a **Source** link beside it opens the code.
+When a tool is live, two links appear beside it in the catalog:
 
-## Before you rely on it
+- **Its name** opens the tool itself.
+- **Source** opens the repository that holds its code.
+
+Each tool is a separate small project with its own repository. That is deliberate. A tool that does one job is small enough for one person to read in a sitting, and it can be copied, changed or hosted without taking the rest of the catalog along.
+
+## What every listed tool has in common
+
+A tool is only added to the catalog if it meets five conditions. They are the same for tools the project builds and tools other people contribute.
+
+1. **Free and open source.** No paid tier, no ads, no “contact sales”.
+2. **Client-side.** What you enter is processed on your computer and is not sent to a server.
+3. **No tracking.** No analytics, no third-party scripts, no accounts.
+4. **Public sources only.** It is built from regulations, standards and guidance the government has officially released, and it says which ones.
+5. **Honest about limits.** It says what it does not cover, and that its output is not professional advice.
+
+Conditions 2 and 4 are the ones worth checking for yourself, and both can be checked. The next two guides show how.
+
+## What ClearedStack is not
+
+- **Not a government site.** It is an independent personal project with no affiliation to the Department of Defense or any agency.
+- **Not a clearance or a certification.** The name is only a name. Using a tool here does not make a company compliant with anything.
+- **Not advice.** A tool gives you a worked answer to check. It does not replace an accountant, a lawyer or a contracting officer’s answer to a question.
+- **Not a place for classified information.** No tool listed here is approved for it.
+
+The [About](/about/#disclaimer) page has the full disclaimer.
+
+## Keep up with changes
+
+There is no newsletter and no feed to subscribe to, because the site collects no addresses. To hear when a tool ships, watch the project on [GitHub](https://github.com/ClearedStack). Each tool’s repository has its own releases and its own issue list.
+
+## Where to go next
 
 Two short guides are worth reading before you put a number from any tool into a bid:
 
 - [What happens to what you type](/guides/your-data/) explains where your information goes, and how to confirm that for yourself.
 - [Check a tool’s answer](/guides/checking-results/) explains how to verify a result against the regulation behind it.
+
+If the subject itself is new to you, start the field guides with [Read a solicitation](/guides/read-a-solicitation/).

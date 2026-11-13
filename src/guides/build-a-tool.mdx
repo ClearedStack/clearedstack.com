@@ -1,0 +1,160 @@
+export const meta = {
+  title: "Build a tool that can be listed",
+  summary: "The five listing conditions in practical terms, with a way to meet each one and a checklist to run before you ask for a listing.",
+  group: "contribute",
+  order: 2,
+};
+
+If you have turned a regulation into a spreadsheet, a script or a checklist, you have most of a tool already. This guide is about the rest: shaping it so that a stranger can use it, trust it and check it. Nothing here requires a particular language or framework.
+
+## Start from one job
+
+The tools in the catalog each do a single thing. That is the main design rule, and it does most of the work for you.
+
+- **One input, one output.** Rates in, a burdened rate out. A solicitation in, a list of requirements out.
+- **Small enough to read.** Someone should be able to read the part of your code that holds the rules in one sitting.
+- **Useful to one person on their own.** No team features, no sharing, no workflow.
+
+A good test: can you describe the tool in one sentence that starts with a verb? The catalog entries are written that way. “Work out the interest owed on a late government invoice” is a tool. “A platform for contract finance” is not.
+
+## Pick the public source first
+
+Before writing code, write down what the tool is built on:
+
+- the regulation, standard or guide, by name
+- the exact part you are implementing, down to the paragraph
+- the revision or the date of the text you read
+- where it is officially published
+
+If you cannot point to an officially released source for a rule, the rule does not belong in the tool. Experience, convention and “how everyone does it” are worth mentioning in your documentation as such, clearly separated from what the regulation says.
+
+[Where the rules live](/guides/public-sources/) lists the official places to read and cite.
+
+## Keep everything on the user’s machine
+
+This is the condition people check first, and the one that takes a tool off the list if it fails.
+
+- **No backend.** The tool is static files: HTML, CSS, JavaScript and data. All processing happens in the page.
+- **No calls out.** No analytics, no error-reporting service, no remote logging, no “anonymous usage statistics”.
+- **Nothing loaded from other servers.** Bundle your scripts. Host your own fonts. Do not link to a CDN, a font service or an icon service.
+- **Files are read locally.** If the tool opens a document, read it in the browser. Do not upload it.
+- **Reference data ships with the tool.** A lookup table is a file in your repository, not a request to an API.
+
+Any build setup that produces static files works. So does a single HTML file with no build step at all.
+
+A tool that runs on the command line can also be listed, if it works with no network connection and sends nothing anywhere.
+
+## Make the promise enforceable
+
+Add a content security policy to every page. It tells the browser to block anything that tries to load or send outside your own address, which turns your promise into something a visitor can verify. This is close to the policy this site uses:
+
+```html
+<meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+/>
+```
+
+Then run the two checks a reviewer will run:
+
+1. Open the tool with the browser’s **Network** tab showing. Use every feature. Nothing should be requested after the page has loaded.
+2. Load the tool, disconnect from the network and use every feature again. Everything should still work.
+
+## Leave out accounts and tracking
+
+No sign-in, no email capture, no cookies, no fingerprinting, no visitor counter. If you want to know whether people use the tool, the honest signals are issues, stars and messages.
+
+If the tool remembers work between visits, keep it in the browser’s own storage, say so on the page, and give the user a button that clears it.
+
+## Show the work
+
+A result nobody can check is a result nobody should use. For every answer the tool gives:
+
+- **Show the steps**, not only the total. A rate build-up shows each layer. A date calculation shows the days counted.
+- **Cite the source next to the result**: the regulation and paragraph the step rests on.
+- **Date your data.** Any table of rates, thresholds or codes carries the date it was taken from the source and the source’s own effective date.
+- **Say which revision** of a standard you implemented.
+
+In the code, put the same citation in a comment beside each formula and each table. That is where a maintainer will look when the rule changes.
+
+## Say what it does not do
+
+Every tool has edges. Put them where the user will see them, not only in the README:
+
+- the cases the tool does not cover
+- the assumptions it makes, such as which base a rate is applied to
+- the date its data was last checked
+- a plain statement that the output is an aid for the user’s own work and not legal, accounting or compliance advice
+
+Do not suggest that using the tool makes anyone compliant, certified or approved. It does not, and saying so is the fastest way to lose a reader’s trust.
+
+## Use made-up examples
+
+Sample inputs, screenshots, test data and documentation must not contain anything real or controlled.
+
+- Invent the company, the rates, the contract number and the labor categories.
+- Do not paste text from a solicitation that is not publicly posted.
+- Never include classified information, CUI or export-controlled data, anywhere, including commit messages.
+
+Round numbers make better examples anyway. A reader can check them in their head.
+
+## Test against worked examples
+
+Tests are how you keep a rule right after the tenth change.
+
+- Work several cases by hand, write down the answers, and make them tests.
+- Where the source itself gives a worked example, use it and cite it.
+- Test the edges: zero, a very large value, an empty file, a date that crosses a rate change, a leap year.
+- When someone reports a wrong result, add their case as a test before you fix it.
+
+## Make it usable by everyone
+
+- It works with a keyboard alone.
+- Inputs have labels. Errors say what is wrong and how to fix it.
+- Text has enough contrast in both light and dark settings.
+- It is readable on a small screen.
+- Results can be copied as text, and tables can be exported in an open format such as CSV.
+
+Government work has accessibility expectations of its own. A tool for this audience should not be the thing that fails them.
+
+## Write the README
+
+The README is what a reviewer and a cautious user read first. It should answer, in this order:
+
+1. What does the tool do, in one sentence?
+2. Which public sources is it built on, with links and revision dates?
+3. What does it not cover?
+4. Does anything leave my computer? (No. Say how to verify it.)
+5. How do I run it locally and host it myself?
+6. How do I report a wrong result?
+7. What is the license?
+
+## Choose a license
+
+Use a license approved by the Open Source Initiative. This project uses MIT. Put the full text in a file named `LICENSE` at the top of the repository.
+
+Check the licenses of what you bundle as well. A data file or a library with a restrictive license can make the whole tool unusable for the people it is meant for.
+
+## Checklist before you ask for a listing
+
+- [ ] The tool does one job, described in one sentence.
+- [ ] The repository is public and has a `LICENSE` file with an OSI-approved license.
+- [ ] There is no backend, and nothing is loaded from another server.
+- [ ] The Network tab stays quiet while every feature is used.
+- [ ] Every feature works with the network disconnected.
+- [ ] There are no analytics, accounts, cookies or third-party scripts.
+- [ ] Each result names the regulation and paragraph behind it.
+- [ ] Data tables carry the date they were taken from the source.
+- [ ] The tool states what it does not cover, and that it is not professional advice.
+- [ ] All examples and test data are made up.
+- [ ] The README answers the seven questions above.
+
+Then add your entry to the catalog. [Request a tool or add your own](/guides/request-or-add-a-tool/) shows the entry format and how the listing is reviewed.
+
+## Keep it current
+
+A listed tool is a small commitment. Regulations change, and a tool that quietly goes out of date is worse than no tool.
+
+- Watch the sources you cite for new revisions.
+- When a figure changes, update the data, its date and a test.
+- If you can no longer maintain the tool, say so in the README. Its listing can be marked or removed, and someone else may pick it up. The license makes that possible.

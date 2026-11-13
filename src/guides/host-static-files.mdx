@@ -1,0 +1,190 @@
+export const meta = {
+  title: "Host as plain files",
+  summary: "Build the site into a folder of ordinary files and serve it from any web server, with no containers involved.",
+  group: "host",
+  order: 3,
+};
+
+The site is a static export. Building it produces a folder of HTML, CSS, JavaScript, fonts and images, and any program that can serve files can host it. This is the simplest way to run a copy if you already have a web server.
+
+## What you need
+
+- [Node.js](https://nodejs.org) 20 or newer, and git, on the machine that builds the site.
+- A web server of any kind to put the result on. It does not need Node.js.
+
+## Build the site
+
+```bash
+git clone https://github.com/ClearedStack/clearedstack.com.git
+cd clearedstack.com
+npm ci
+npm run build
+```
+
+`npm ci` installs exactly the dependency versions recorded in the repository. The build takes under a minute and writes the site to a folder named `out`.
+
+If your copy will live at a different address than clearedstack.com, change `url` in `src/data/site.ts` before you build.
+
+## What is in the folder
+
+```text
+out/
+  index.html            the home page
+  404.html              the page shown for an address that does not exist
+  tools/index.html      one folder per page, each with an index.html
+  guides/index.html
+  guides/<name>/index.html
+  about/index.html
+  _next/static/         scripts, styles and fonts, with a hash in each file name
+  brand/                the logo files
+  sitemap.xml, robots.txt
+```
+
+Every page is a folder that holds an `index.html`. That is why addresses on the site end in a slash, and it is the one thing a web server has to understand.
+
+You will also see small `.txt` files beside the pages. The site’s own scripts fetch them to move between pages without a full reload. They are part of the site, so copy them along with everything else.
+
+## Try it on your own machine
+
+To look at the build before you move it anywhere:
+
+```bash
+cd out
+python3 -m http.server 8080
+```
+
+Open `http://localhost:8080`. This is a test server only. Do not use it to serve other people.
+
+Opening `out/index.html` directly from the disk does not work. The pages ask for their styles and scripts at addresses that begin with `/`, which only mean something when a web server is answering.
+
+## What the web server has to do
+
+Three things, all of which most servers do by default or with one line:
+
+1. **Serve `index.html` for a folder.** A request for `/guides/` should return `guides/index.html`.
+2. **Return `404.html` with a 404 status** for an address that does not exist.
+3. **Serve the site from the root of a host name**, such as `https://clearedstack.example.com/`, not from a sub-folder such as `https://example.com/clearedstack/`.
+
+Copy the contents of `out` to the folder your server reads from:
+
+```bash
+rsync -a --delete out/ /var/www/clearedstack/
+```
+
+## nginx
+
+This is the configuration the project’s own container uses, adjusted for a normal install:
+
+```nginx
+server {
+    listen 80;
+    server_name clearedstack.example.com;
+    root /var/www/clearedstack;
+    index index.html;
+    server_tokens off;
+
+    error_page 404 /404.html;
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /_next/static/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        add_header X-Content-Type-Options "nosniff" always;
+    }
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "no-referrer" always;
+}
+```
+
+Add your certificate and a `listen 443 ssl;` line to serve it over HTTPS.
+
+## Apache
+
+Apache serves `index.html` for a folder by default. Point a virtual host at the folder and name the 404 page:
+
+```apache
+<VirtualHost *:80>
+    ServerName clearedstack.example.com
+    DocumentRoot /var/www/clearedstack
+    ErrorDocument 404 /404.html
+
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "no-referrer"
+    <LocationMatch "^/_next/static/">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </LocationMatch>
+</VirtualHost>
+```
+
+The `Header` lines need the `mod_headers` module to be enabled.
+
+## Caddy
+
+```text
+clearedstack.example.com {
+    root * /var/www/clearedstack
+    file_server
+
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "no-referrer"
+    }
+    header /_next/static/* Cache-Control "public, max-age=31536000, immutable"
+
+    handle_errors {
+        rewrite * /404.html
+        file_server
+    }
+}
+```
+
+Caddy obtains an HTTPS certificate for the host name by itself when the server can be reached from the internet.
+
+## Static hosting services and file shares
+
+Any service that hosts a folder of files will do, as long as it meets the three requirements above. When you set one up:
+
+- set the **index document** to `index.html`
+- set the **error document** to `404.html`
+- upload the contents of `out`, not the folder itself
+
+An ordinary file share is not enough. A browser opening pages from a shared drive is the same as opening them from the disk, and the pages will load without their styles.
+
+## The headers, and why they are there
+
+The web server configurations above add four response headers. The site works without them. They are there to make the browser stricter.
+
+| Header | What it does |
+| --- | --- |
+| `X-Content-Type-Options: nosniff` | Stops the browser from guessing a file’s type |
+| `X-Frame-Options: DENY` | Stops another site from showing these pages inside a frame |
+| `Referrer-Policy: no-referrer` | Stops the browser from telling other sites which page a link was clicked on |
+| `Cache-Control: ... immutable` on `/_next/static/` | Lets browsers keep those files, which never change under the same name |
+
+The content security policy is not a server header here. It is written into every page at build time, so it travels with the files wherever you host them.
+
+## Update it
+
+```bash
+git pull
+npm ci
+npm run build
+rsync -a --delete out/ /var/www/clearedstack/
+```
+
+The `--delete` option removes files that are no longer part of the site. Because script and style files carry a hash in their names, a visitor in the middle of reading a page is not affected by the swap.
+
+## Move it to a closed network
+
+The `out` folder is all there is. Pack it on a connected machine:
+
+```bash
+tar -czf clearedstack-site.tar.gz -C out .
+```
+
+Carry the archive across, unpack it into the folder your internal web server reads from, and it runs. [Run it on a closed network](/guides/closed-networks/) covers checksums and verification.

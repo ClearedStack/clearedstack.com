@@ -1,33 +1,129 @@
 export const meta = {
   title: "Request a tool or add your own",
-  summary: "How to ask for a tool that does not exist yet, and how to get one you built listed.",
-  order: 4,
+  summary: "How to ask for a tool or a guide, report a mistake, and get a tool you built listed in the catalog.",
+  group: "contribute",
+  order: 1,
 };
 
-The catalog grows in two ways: someone asks for a tool, or someone builds one.
+The catalog grows in two ways: someone asks for a tool, or someone builds one. Both are welcome, and neither needs permission to start.
+
+## Where to send things
+
+| You want to | Do this |
+| --- | --- |
+| Ask for a new tool | Open an issue on [this site’s repository](https://github.com/ClearedStack/clearedstack.com/issues), or email |
+| Say a planned tool matters to you | The same. It moves the tool up the list |
+| Report a wrong result | Open an issue in **that tool’s** repository, or email |
+| Report a mistake in a guide or on the site | Open an issue on this site’s repository, or send a pull request |
+| List a tool you built | Send a pull request to this site’s repository |
+
+The email address is [contact@clearedstack.com](mailto:contact@clearedstack.com). Use it if you would rather not post in public or do not have a GitHub account.
+
+Issues on GitHub are public and permanent. Read [What never goes in](#what-never-goes-in) before you write one.
 
 ## Request a tool
 
-Email [contact@clearedstack.com](mailto:contact@clearedstack.com) or [open an issue on GitHub](https://github.com/ClearedStack/clearedstack.com/issues). A useful request covers three things:
+A useful request covers three things:
 
-- **The job**: what you need to produce, and what you do by hand today.
-- **Who needs it**: for example, a solo developer pricing a first bid.
-- **The public source**: the regulation, standard or guide the tool would be based on, with a link if you have one.
+- **The job.** What you need to produce, and what you do by hand today. “I rebuild a spreadsheet that turns our pools into rates for every proposal” is a job. “A pricing tool” is not.
+- **Who needs it.** For example, a solo developer pricing a first bid, or a small company preparing for a first assessment.
+- **The public source.** The regulation, standard or guide the tool would be based on, with a link if you have one.
 
-Asking for a tool that is already on the list as Planned helps too. It shows which ones to build first.
+You can copy this outline into an issue or an email:
+
+```text
+The job:
+What I do by hand today:
+Who else would use it:
+Public source (regulation, standard or guide), with a link:
+Anything the tool must NOT do or ask for:
+```
+
+The last line matters more than it looks. If a tool would be useless to you the moment it asked for a company name, say so.
+
+## Ask for one that is already planned
+
+Every tool in the [catalog](/tools/) starts out as Planned. Saying which of them you are waiting for helps decide what gets built first. A one-line message is enough: the name of the tool and what you would use it for.
+
+## Report a mistake
+
+A wrong result is the most useful thing you can report. Include:
+
+1. what you entered, with made-up values in place of anything real
+2. what the tool showed
+3. what the correct answer is
+4. the section of the regulation that shows it
+
+[Check a tool’s answer](/guides/checking-results/) explains how to find that section.
+
+The same goes for the guides. If one is unclear, out of date or wrong, say which sentence and what it should say.
+
+## Ask for a guide
+
+If you looked for an explanation here and did not find it, ask. The guides are text files in the repository, and a request for one is handled the same way as a request for a tool.
 
 ## Add a tool you built
 
-Tools live in their own repositories. To be listed here, a tool has to be:
+Tools live in their own repositories, under your own name or organization. ClearedStack lists them. It does not take them over. To be listed, a tool has to be:
 
-1. **Free and open source**, with no paid tier and no ads.
-2. **Client-side**. It does not send what the user enters to any server.
-3. **Free of tracking**: no analytics, third-party scripts or accounts.
+1. **Free and open source**, under an OSI-approved license, with no paid tier and no ads.
+2. **Client-side.** It runs in the browser or on the user’s own machine, and does not send what the user enters to any server.
+3. **Free of tracking**: no analytics, no third-party scripts, no accounts.
 4. **Built from public sources**, and clear about which ones.
 5. **Honest about its limits**, including that its output is not professional advice.
 
-To list it, add one entry to the catalog file in this site’s repository and open a pull request. The [contributing guide](https://github.com/ClearedStack/clearedstack.com/blob/main/CONTRIBUTING.md) shows the entry format.
+To list it:
+
+1. Fork [this site’s repository](https://github.com/ClearedStack/clearedstack.com).
+2. Add one entry to `src/data/catalog.ts`.
+3. Open a pull request that links to your tool and its repository.
+
+The entry looks like this:
+
+```ts
+{
+  slug: "wrap-rate-calculator",
+  name: "Wrap Rate Calculator",
+  summary: "Build a fully burdened labor rate from base pay, fringe, overhead, G&A and fee.",
+  category: "pricing",
+  status: "live",
+  url: "https://example.com/wrap-rate/",
+  repo: "https://github.com/your-name/wrap-rate-calculator",
+},
+```
+
+The home page, the catalog and their counts are generated from that file, so the one entry is the whole change. [Build a tool that can be listed](/guides/build-a-tool/) goes through each condition in detail, with a checklist to run before you open the pull request.
+
+## How a listing is reviewed
+
+A person reads the pull request and uses the tool. The review checks the five conditions and nothing else:
+
+- the license file is there
+- the Network tab stays quiet while the tool is used, and the tool still works with the network disconnected
+- the page loads nothing from other companies’ servers
+- the README names the sources and says what the tool does not cover
+- the examples and test data are made up
+
+The review does not certify that every result is correct. That is why each tool has to name its sources: so that anyone can check.
+
+A tool that later breaks a condition is taken off the list until it is fixed.
 
 ## What never goes in
 
-Do not put classified information, CUI, export-controlled data or real contract data in a request, an issue, a tool or its test data. “Public” means officially released. A document that leaked is not public for this project.
+Do not put any of these in a request, an issue, an email, a pull request, a tool or its test data:
+
+- classified information
+- controlled unclassified information (CUI)
+- export-controlled technical data
+- real contract data, real rates, or anything that identifies a real company’s bid
+- text copied from a solicitation that is not publicly posted
+
+“Public” means officially released. A document that leaked, or that is marked for limited distribution but can be found online anyway, is not public for this project. If you are unsure, leave it out and describe the problem in your own words with made-up numbers.
+
+## If you work for the government or hold a clearance
+
+Your own obligations come first. Contribute only on your own time and your own equipment, and only what you are free to share. If you are not sure whether something you know from work is public, treat it as not public.
+
+## What you agree to
+
+By contributing to this site’s repository you agree that your work is released under the [MIT License](https://github.com/ClearedStack/clearedstack.com/blob/main/LICENSE). A tool in your own repository stays yours, under the open-source license you chose for it.

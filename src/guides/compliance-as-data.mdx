@@ -1,0 +1,151 @@
+export const meta = {
+  title: "STIGs, OSCAL and SBOMs",
+  summary: "Three machine-readable formats that security compliance work runs on: what each one is, what is inside the file and how to check one.",
+  group: "field",
+  order: 6,
+  reviewed: "2026-11",
+};
+
+A good deal of security compliance is now exchanged as structured files instead of documents. Three kinds come up again and again: STIGs, which say how to configure a product securely, OSCAL, which describes controls and how a system meets them, and SBOMs, which list what software is made of. This guide explains each one at the level you need to open the file and understand what you are looking at.
+
+## How they fit together
+
+| Format | Answers the question | Published by | File types |
+| --- | --- | --- | --- |
+| STIG | How must this product be configured? | Defense Information Systems Agency (DISA) | XML |
+| OSCAL | Which controls apply, and how does this system meet them? | National Institute of Standards and Technology (NIST) | XML, JSON, YAML |
+| SBOM | What components is this software built from? | Whoever builds the software | JSON, XML and others |
+
+They work at different levels. An SBOM describes one piece of software. A STIG describes the secure settings for one product. OSCAL describes a whole system and the controls around it, and can point to the other two as evidence.
+
+## What a STIG is
+
+A Security Technical Implementation Guide is a list of configuration rules for a specific product and version: an operating system, a database, a web server, a network device. Each rule says what to check and how to fix it. Systems on Department of Defense networks are expected to be configured to the STIGs that apply to them.
+
+Related terms:
+
+- A **Security Requirements Guide (SRG)** is the general version for a class of technology. A STIG applies an SRG to one product.
+- A **benchmark** is a STIG in a form that scanning tools can run automatically.
+- A **checklist** is a filled-in copy of a STIG for one machine, recording the result of every rule.
+
+STIGs are public. They are downloaded from DISA’s cyber site at [cyber.mil](https://www.cyber.mil/stigs/), and they are reissued several times a year. Always note the version and release you worked from.
+
+## Inside a STIG rule
+
+A STIG is an XML file in a format called XCCDF. Each rule carries the same fields:
+
+| Field | What it holds | Example of the form |
+| --- | --- | --- |
+| Group ID | The identifier for the vulnerability | `V-` followed by digits |
+| Rule ID | The identifier for this version of the rule | `SV-` followed by digits and a revision |
+| STIG ID | The product-specific identifier | A product code and a number |
+| Severity | How serious a failure is | Category I, II or III |
+| Title | One line stating the requirement | |
+| Discussion | Why it matters | |
+| Check text | How to tell whether the system complies | |
+| Fix text | What to change if it does not | |
+| CCI | A link to the underlying security control | `CCI-` followed by digits |
+
+Severity has three categories:
+
+| Category | Label in the file | Meaning |
+| --- | --- | --- |
+| I | high | A failure that can directly lead to loss of confidentiality, availability or integrity |
+| II | medium | A failure that could lead to such a loss |
+| III | low | A failure that weakens the protections against one |
+
+When a rule is reviewed on a real system, its status is one of four: **open** (the system fails it), **not a finding** (it passes), **not applicable**, or **not reviewed**.
+
+## Working with STIGs
+
+- **Find the right ones.** A single server usually needs several: the operating system, each major application on it, sometimes the container platform underneath.
+- **Search by any identifier.** People cite rules by Group ID, Rule ID or STIG ID interchangeably. A lookup needs to handle all three.
+- **Read the check text before the fix text.** Many rules are already satisfied by default settings.
+- **Record a reason for every exception.** “Not applicable” and accepted “open” findings need a written justification that someone else can read later.
+- **Recheck after each release.** Rule IDs gain a new revision when the text changes, so a rule you closed can come back altered.
+
+## What OSCAL is
+
+The Open Security Controls Assessment Language is a set of formats from NIST for writing security controls, system descriptions and assessment results in a form software can process. The aim is to replace the long word-processor documents and spreadsheets that compliance has traditionally run on.
+
+The same content can be written as XML, JSON or YAML, and converted between them without loss.
+
+## The OSCAL models
+
+OSCAL is several related formats, called models, grouped in three layers.
+
+| Layer | Model | What it describes |
+| --- | --- | --- |
+| Controls | Catalog | A set of controls, such as a NIST publication’s full list |
+| Controls | Profile | A selection from one or more catalogs, with adjustments: a baseline |
+| Implementation | Component definition | How one product or service can satisfy particular controls |
+| Implementation | System security plan | One system, its boundary and how it implements each control in its baseline |
+| Assessment | Assessment plan | What will be tested, how and by whom |
+| Assessment | Assessment results | What was found |
+| Assessment | Plan of action and milestones | Open findings and the plan to close them |
+
+Each file refers to the ones above it. A system security plan points to a profile, and the profile points to a catalog. To read a plan fully you need the files it refers to.
+
+## Checking an OSCAL file
+
+There are three levels of “valid”, and they are worth keeping apart.
+
+1. **Well-formed.** The file is correct JSON, XML or YAML. A missing bracket fails here.
+2. **Schema-valid.** The file has the structure the OSCAL model requires: the right fields, in the right places, with values of the right type. NIST publishes the schemas for each version.
+3. **Meaningful.** The identifiers resolve, the references point to things that exist, and the content says something true about the system.
+
+A validator checks the first two, and some of the third. No validator can tell you whether the plan describes your system accurately. A file can pass every check and still be wrong.
+
+Note the OSCAL version in the file’s metadata and validate against the schema for that version. An older file checked against a newer schema can fail for reasons that have nothing to do with its content.
+
+## What an SBOM is
+
+A software bill of materials is a list of the components a piece of software is built from: the libraries, their versions and how they relate. It is the software equivalent of an ingredients label.
+
+It matters for two reasons. When a vulnerability is announced in a library, an SBOM tells you in minutes whether you ship that library. And on a network with no internet connection, it tells the people who approve software exactly what they are being asked to bring in.
+
+Two formats dominate:
+
+| Format | Maintained by | Common file types |
+| --- | --- | --- |
+| SPDX | The Linux Foundation. Also an ISO standard | JSON, tag-value text, others |
+| CycloneDX | OWASP. Also an Ecma standard | JSON, XML |
+
+Both can describe the same things. Tools usually read and write both.
+
+## What a useful SBOM contains
+
+Guidance published by the U.S. government in 2021 set out the minimum fields. For each component:
+
+- the supplier’s name
+- the component’s name
+- its version
+- other unique identifiers, such as a package URL
+- its relationship to the other components, such as “depends on”
+- who produced the SBOM data
+- when it was produced
+
+When you are handed an SBOM, a few questions tell you how far to trust it:
+
+- **How deep does it go?** Only the direct dependencies, or the dependencies of those as well?
+- **How was it made?** From the build itself, from a lockfile, or by scanning the finished product? Each sees slightly different things.
+- **Does it match the artifact?** A good SBOM includes a checksum of what it describes. Compare it with the file you actually have.
+- **How old is it?** An SBOM describes one build. A new version of the software needs a new one.
+
+## Before you load a file into a tool
+
+These files can describe a real system in detail: host names, addresses, open findings, software versions. A filled-in checklist or a system security plan may itself be controlled information.
+
+- Use made-up or public sample files to learn how a tool behaves.
+- Handle real ones only on a system approved for what they contain.
+- A tool that runs in the browser does not send the file anywhere, but it also does not change the rules for the computer it runs on. See [What happens to what you type](/guides/your-data/).
+
+The blank STIGs, the OSCAL schemas and NIST’s published catalogs are public and safe to use anywhere.
+
+## Sources
+
+- DISA, Security Technical Implementation Guides and Security Requirements Guides, at [cyber.mil](https://www.cyber.mil/stigs/).
+- NIST, [OSCAL](https://pages.nist.gov/OSCAL/): the models, schemas and reference documentation.
+- NIST, the Security Content Automation Protocol and XCCDF specifications, at [csrc.nist.gov](https://csrc.nist.gov).
+- National Telecommunications and Information Administration, “The Minimum Elements For a Software Bill of Materials (SBOM)”, 2021.
+- The [SPDX](https://spdx.dev) and [CycloneDX](https://cyclonedx.org) specifications.

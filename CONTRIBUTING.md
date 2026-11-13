@@ -13,6 +13,10 @@ source is the most useful thing you can include.
 Small fixes can go straight to a pull request. For anything larger, open an
 issue first so the work is not wasted.
 
+The guides are text files in [`src/guides/`](src/guides), so correcting one is
+an ordinary pull request. [Work on this site](src/guides/work-on-this-site.mdx)
+shows where everything is and how a guide is written.
+
 ```bash
 npm install
 npm run dev

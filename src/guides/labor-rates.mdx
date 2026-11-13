@@ -1,0 +1,186 @@
+export const meta = {
+  title: "Labor rates and wrap rates",
+  summary: "How a wage becomes a billing rate: direct and indirect costs, fringe, overhead, G&A and fee, with a worked example you can check by hand.",
+  group: "field",
+  order: 3,
+  reviewed: "2026-11",
+};
+
+When the government buys labor, the hourly price has to cover far more than the wage. It carries a share of payroll taxes, benefits, rent, software, accounting and every other cost of running the company, plus profit. This guide explains how that price is built, using one made-up company from start to finish. Every number in it is invented.
+
+## Direct and indirect costs
+
+Every cost a company has falls on one side of a line.
+
+- A **direct cost** is spent for one specific contract. The hours an engineer works on that contract, a server bought for it, a trip taken for it.
+- An **indirect cost** supports the business as a whole or more than one contract. Rent, the accounting system, the time spent writing proposals, health insurance.
+
+Direct costs are charged to the contract they belong to. Indirect costs are gathered into groups called **pools**, and each pool is shared out across contracts in proportion to some measure of activity, called a **base**.
+
+The rule that matters is consistency. The same kind of cost, in the same circumstances, has to be treated the same way every time. A cost cannot be direct on one contract and indirect on another because that is convenient.
+
+## The three usual pools
+
+A small company commonly has three pools. The names are standard. What goes in each, and what each is divided by, is a choice the company makes and then sticks to.
+
+| Pool | What is usually in it | A common base |
+| --- | --- | --- |
+| Fringe | Payroll taxes, health insurance, retirement contributions, paid leave | Total labor dollars |
+| Overhead | Costs of supporting the people who do contract work: their supervisors’ time, tools, training, office space | Direct labor dollars, with or without fringe |
+| General and administrative (G&A) | Costs of running the company as a whole: executives, accounting, legal, insurance, proposal writing | All other costs |
+
+Larger companies split these further, for example into separate overhead pools for work done at their own offices and at government sites. A very small company may have only fringe and G&A.
+
+## Turn pools into rates
+
+A rate is a pool divided by its base, over the company’s fiscal year.
+
+Take a made-up company with these annual figures:
+
+| Item | Amount |
+| --- | ---: |
+| Direct labor: wages for hours worked on contracts | $600,000 |
+| Indirect labor: wages for everything else | $100,000 |
+| Fringe pool | $210,000 |
+| Overhead pool | $156,000 |
+| G&A pool | $112,320 |
+
+**Fringe rate.** The fringe pool is divided by all labor, direct and indirect:
+
+```text
+210,000 / (600,000 + 100,000) = 30%
+```
+
+**Overhead rate.** This company applies overhead to direct labor plus the fringe on it:
+
+```text
+direct labor with fringe = 600,000 x 1.30 = 780,000
+156,000 / 780,000 = 20%
+```
+
+**G&A rate.** This company applies G&A to everything beneath it:
+
+```text
+direct labor       600,000
+fringe on it       180,000
+overhead           156,000
+base               936,000
+
+112,320 / 936,000 = 12%
+```
+
+The rates only mean something together with their bases. “Our overhead is 20 percent” is not comparable with another company’s 20 percent unless both are divided by the same thing.
+
+## Build the rate for one hour
+
+Now price one hour of an engineer paid $60.00 an hour. Each layer is applied to the running total beneath it.
+
+| Step | Rate | Adds | Running total |
+| --- | ---: | ---: | ---: |
+| Hourly wage | | | $60.00 |
+| Fringe | 30% | $18.00 | $78.00 |
+| Overhead | 20% | $15.60 | $93.60 |
+| G&A | 12% | $11.23 | $104.83 |
+| Fee | 8% | $8.39 | $113.22 |
+
+The fully burdened rate is $113.22 an hour.
+
+## The wrap rate
+
+The **wrap rate** is the single multiplier that takes you from the wage to the burdened rate. It is the layers multiplied together:
+
+```text
+1.30 x 1.20 x 1.12          = 1.7472   wrap rate on cost
+1.30 x 1.20 x 1.12 x 1.08   = 1.8870   wrap rate with fee
+```
+
+So every dollar of wage costs this company about $1.75 to deliver, and is priced at about $1.89. Check: $60.00 × 1.8870 = $113.22.
+
+People quote wrap rates both with and without fee. When you compare yours with someone else’s, ask which.
+
+## Conventions that change the answer
+
+Two companies with identical costs can show different rates, because they made different structural choices. None of these is wrong. Each has to be applied consistently.
+
+- **What overhead is applied to.** Direct labor alone, or direct labor plus fringe. Applying 20 percent to $60.00 gives a different result from applying it to $78.00.
+- **What G&A is applied to.** All costs beneath it, known as total cost input, or all costs except subcontracts and materials, known as a value-added base. The second gives a higher rate on a smaller base.
+- **Where paid leave goes.** In the fringe pool, or left in the labor base.
+- **Whether fee is applied to everything.** Some solicitations limit or forbid fee on travel, materials or subcontracts.
+
+Before you trust any calculator, including one listed here, find out which conventions it uses. [Check a tool’s answer](/guides/checking-results/) shows how to test that with one round-number example.
+
+## From a salary to an hourly wage
+
+Rates are applied to an hourly wage, so a salary has to be converted. A full-time year is 2,080 hours: 52 weeks of 40 hours.
+
+```text
+124,800 / 2,080 = $60.00 an hour
+```
+
+Nobody works all 2,080 hours on contracts. Holidays, leave and sick time come out. How you handle that is tied to the leave convention above:
+
+- If paid leave is **in the fringe pool**, divide the salary by 2,080 and let the fringe rate pay for the time off.
+- If paid leave is **not in fringe**, divide the salary by the hours actually worked, often somewhere around 1,880 to 1,920, which gives a higher hourly wage and a lower fringe rate.
+
+Doing both at once counts leave twice. Doing neither leaves it out.
+
+## Costs the government will not pay
+
+On contracts priced or reimbursed on the basis of cost, a cost has to be **allowable** to be included. The cost principles are in FAR Part 31. A cost is allowable when it is reasonable, can properly be assigned to the contract, follows accepted accounting practice and the contract’s terms, and is not ruled out by a specific cost principle.
+
+Some costs are ruled out whatever the circumstances. They include:
+
+| Cost | Cost principle |
+| --- | --- |
+| Most advertising and public relations | FAR 31.205-1 |
+| Bad debts | FAR 31.205-3 |
+| Contributions and donations | FAR 31.205-8 |
+| Entertainment | FAR 31.205-14 |
+| Fines and penalties | FAR 31.205-15 |
+| Interest on borrowing | FAR 31.205-20 |
+| Lobbying | FAR 31.205-22 |
+| Alcoholic beverages | FAR 31.205-51 |
+
+Unallowable costs still exist and still have to be paid. They come out of profit instead of going into the rates. Your accounting system needs to keep them in separate accounts so they can be left out of every pool.
+
+## When these rules apply to you
+
+How much of this the government looks at depends on the kind of contract.
+
+| Contract type | How the price is set | How closely costs are examined |
+| --- | --- | --- |
+| Fixed price, commercial or competed | You offer a price. The government compares offers | Usually not at all. Your rates are your own business |
+| Time and materials, labor hour | Fixed hourly rates by labor category, times hours worked | The rates are set at award. The hours are checked |
+| Cost reimbursement | The government pays your allowable costs plus a fee | Closely. Rates are billed provisionally, then settled each year against actual costs |
+
+Even on a fixed-price bid, building your rates properly tells you whether the price you are offering covers your costs.
+
+For cost-reimbursement work, a few more things follow. You bill during the year at provisional rates agreed in advance. After the year ends you submit your actual indirect costs, and the difference is settled. Your accounting system has to be able to produce those figures. The Defense Contract Audit Agency publishes a plain-language manual for small contractors on what that takes.
+
+The Cost Accounting Standards, a further set of rules for large contracts, do not apply to contracts with small businesses.
+
+## Lay out the price table
+
+Section B of a solicitation lists what is being bought as numbered line items. For labor, a line usually multiplies a rate by a quantity of hours:
+
+| Line item | Description | Quantity | Unit | Unit price | Amount |
+| --- | --- | ---: | --- | ---: | ---: |
+| 0001 | Senior engineer, base year | 1,880 | Hour | $113.22 | $212,853.60 |
+| 0002 | Travel, not to exceed | 1 | Lot | | $10,000.00 |
+| 1001 | Senior engineer, option year 1 | 1,880 | Hour | $116.62 | $219,245.60 |
+
+Things to settle before you fill one in:
+
+- **Use the solicitation’s line items, labor categories and hours**, not your own. If a pricing workbook is attached, that file is the deliverable.
+- **Rounding.** Round the hourly rate to the cent first and then multiply, unless told otherwise. Multiplying an unrounded rate gives a different total.
+- **Option years.** Wages rise. The example applies 3 percent to the base-year rate for the option year. State the escalation you used, and apply it the way the solicitation asks.
+- **Wage floors.** Some service contracts set minimum wages and benefits for certain job classes through a wage determination attached to the solicitation. Your base wage cannot be lower.
+- **What carries fee.** Check whether travel and other direct costs may include fee or G&A.
+
+## Sources
+
+- Federal Acquisition Regulation, Part 31, “Contract Cost Principles and Procedures”, especially 31.201-2 on allowability, 31.202 and 31.203 on direct and indirect costs, and 31.205 on specific costs. Read it at [acquisition.gov](https://www.acquisition.gov/browse/index/far).
+- FAR Part 16, “Types of Contracts”.
+- FAR Subpart 42.7, “Indirect Cost Rates”, and clause 52.216-7, “Allowable Cost and Payment”, for billing rates and the annual settlement.
+- Cost Accounting Standards, 48 CFR Chapter 99, including the small business exemption at 9903.201-1.
+- Defense Contract Audit Agency, “Information for Contractors” (DCAA Manual 7641.90), at [dcaa.mil](https://www.dcaa.mil).

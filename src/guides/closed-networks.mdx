@@ -1,0 +1,169 @@
+export const meta = {
+  title: "Run it on a closed network",
+  summary: "Move a copy onto a network with no internet connection: what to carry, how to prove it arrived intact and how to keep it current.",
+  group: "host",
+  order: 4,
+};
+
+The site was built to work where nothing can reach the internet. It loads its fonts, scripts and styles from itself, it has no database, and it makes no outside request while running. Getting it onto a closed network is a matter of building it outside, carrying one file across and proving that file is the one you built.
+
+This guide describes the mechanics. It does not replace your organization’s transfer rules. Whatever process your network requires for bringing software in, that process comes first.
+
+## Choose what to carry
+
+There are three things you could move. Pick the one that matches what is already running on the inside.
+
+| Carry this | When | What the inside needs |
+| --- | --- | --- |
+| The container image, as one file | You run Docker, Podman or Kubernetes inside | A container runtime, and for Kubernetes a registry |
+| The built site, as one archive | You have a web server inside | Any web server |
+| The source code and its dependencies | You are required to build from source inside | Node.js, an internal package mirror and base images |
+
+The first two are a single file with nothing to install on arrival. The third is much more work, and is only worth it when policy demands it.
+
+## Build on a connected machine
+
+For the container image:
+
+```bash
+git clone https://github.com/ClearedStack/clearedstack.com.git
+cd clearedstack.com
+docker build -t clearedstack:$(git rev-parse --short HEAD) .
+docker save clearedstack:$(git rev-parse --short HEAD) | gzip > clearedstack.tar.gz
+```
+
+For the built site:
+
+```bash
+git clone https://github.com/ClearedStack/clearedstack.com.git
+cd clearedstack.com
+npm ci
+npm run build
+tar -czf clearedstack-site.tar.gz -C out .
+```
+
+Tagging the image with the git commit, as above, records exactly which version of the source it came from. Write that commit down. It is how you will tell later whether your copy is behind.
+
+## Review it before it moves
+
+You are about to bring software into a protected network, so look at it first. The repository is small enough to review.
+
+- **Read the Dockerfile.** It is a dozen lines: install dependencies, build, copy the result into an nginx image.
+- **Check the dependencies.** `package.json` lists them, and `package-lock.json` pins the exact version and checksum of every package the build downloads.
+- **List what is in the archive.** For the built site, `tar -tzf clearedstack-site.tar.gz` prints every file. It should hold only HTML, CSS, JavaScript, fonts, images and a few text files.
+- **Run it and watch the network.** Start the copy on the connected machine, open it with the browser’s Network tab showing, and click through the pages. Every request should go to your own address.
+
+If your organization scans incoming software, the archive and the image file are what to hand to that process.
+
+## Record a checksum
+
+A checksum is a short fingerprint of a file. If one byte changes in transit, the fingerprint changes. Make it on the connected side:
+
+```bash
+sha256sum clearedstack.tar.gz > clearedstack.tar.gz.sha256
+```
+
+The `.sha256` file holds one line: the fingerprint and the file name. Carry it with the archive, or better, by a different path, such as reading it out or printing it.
+
+## Carry it across
+
+Use the transfer process your network requires. That might be approved removable media, a one-way transfer device or a transfer service run by your security office. This guide cannot tell you which, and no tool here is a substitute for it.
+
+What you are moving is small: about 27 MB for the image and under 2 MB for the built site.
+
+## Check it on the other side
+
+On Linux:
+
+```bash
+sha256sum -c clearedstack.tar.gz.sha256
+```
+
+It prints `clearedstack.tar.gz: OK` if the file is unchanged. On other systems, compute the fingerprint and compare it by eye with the one you recorded:
+
+| System | Command |
+| --- | --- |
+| Linux | `sha256sum clearedstack.tar.gz` |
+| macOS | `shasum -a 256 clearedstack.tar.gz` |
+| Windows PowerShell | `Get-FileHash clearedstack.tar.gz -Algorithm SHA256` |
+
+If the fingerprints differ, do not use the file. Transfer it again.
+
+## Load it and run it
+
+For a single server with Docker:
+
+```bash
+docker load < clearedstack.tar.gz
+docker images clearedstack
+docker run -d --name clearedstack --restart unless-stopped -p 8080:8080 clearedstack:<tag>
+```
+
+`docker images` shows the tag that was loaded. Use it in place of `<tag>`.
+
+For Kubernetes, load the image, rename it for the registry inside the network and push it there:
+
+```bash
+docker load < clearedstack.tar.gz
+docker tag clearedstack:<tag> registry.internal.example/clearedstack:<tag>
+docker push registry.internal.example/clearedstack:<tag>
+```
+
+Then set that name in `k8s/clearedstack.yaml` and apply it, as in [Host on Kubernetes](/guides/host-on-kubernetes/). You will need the `k8s` folder from the repository on the inside as well. It is two small text files.
+
+For a web server, unpack the archive into the folder it serves:
+
+```bash
+mkdir -p /var/www/clearedstack
+tar -xzf clearedstack-site.tar.gz -C /var/www/clearedstack
+```
+
+[Host as plain files](/guides/host-static-files/) has the web server configuration.
+
+## Confirm it is self-contained
+
+Open the site from a workstation on the closed network, with the browser’s developer tools on the **Network** tab, and visit each page. Every line in the list should be a request to your own server. Nothing should fail, and nothing should be waiting on an outside address.
+
+## What will not work inside
+
+A few links on the site point at the public internet. On a closed network they lead nowhere:
+
+- links to GitHub: the **Source** links, the repository links and the contributing guide
+- links to public sources, such as acquisition.gov or ecfr.gov, in the guides
+- links to a tool that is hosted outside
+- email links, if the workstation has no mail client set up for an outside address
+
+The pages themselves, the catalog, the filter boxes and the guides all work.
+
+To use a tool on a closed network, bring the tool across the same way. Each one has its own repository and its own build instructions, and each has to pass the same checks before it is carried in.
+
+## Keep it current
+
+A copy on a closed network does not update itself. Decide how often you will refresh it, then repeat the process:
+
+1. On the connected side, `git pull` and compare the newest commit with the one you recorded.
+2. Read what changed: `git log --oneline <old-commit>..HEAD`.
+3. Build, checksum, transfer and verify as before.
+4. Replace the running copy.
+
+Keep the previous archive until the new one is running, so you can go back.
+
+<Callout kind="warning" title="Regulations move even when your copy does not">
+A tool or a guide carried in last year still shows last year’s figures. Before you rely on a number from a copy that cannot update, check the date the copy was built against the date of the rule. [Check a tool’s answer](/guides/checking-results/) lists the figures that change on a schedule.
+</Callout>
+
+## If you must build inside
+
+Building from source on a closed network needs three things carried in or mirrored first:
+
+- **The two base images** named in the Dockerfile: a Node.js image for the build stage and an unprivileged nginx image for the final stage.
+- **Every npm package** in `package-lock.json`, served from an internal registry or a package mirror.
+- **The source code**, as a git bundle or an archive.
+
+Point npm at the internal registry before the build:
+
+```bash
+npm config set registry https://npm.internal.example/
+```
+
+Then change the `FROM` lines in the Dockerfile to the names of the mirrored images and build as usual. This path has many more moving parts than carrying one finished file. Use it when you are required to, not by default.
