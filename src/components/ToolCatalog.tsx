@@ -21,6 +21,7 @@ const platformTools: (Tool & { detailNote?: string })[] = [...controlPlaneApps, 
   summary: app.role,
   category: "devsecops", // unused for grouping here
   status: app.health === "healthy" ? "building" : "planned",
+  url: `/guides/spec-${app.id}/`,
   repo: `${site.github}/${app.ownerRepo}`,
   detailNote: [
     `ns: ${app.namespace}`,

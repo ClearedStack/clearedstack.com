@@ -198,6 +198,7 @@ const groupCodeMap = {
   contribute: "L.4",
   reference: "L.5",
   project: "L.6",
+  specs: "L.7",
 };
 
 const files = fs.readdirSync(guidesDir).filter((f) => f.endsWith(".mdx"));

@@ -53,6 +53,12 @@ export const guideGroups = [
     blurb:
       "The 10-worker deterministic Prior Art engine, 14-state lifecycle, MIT clean-room architecture, and zero-AI-at-runtime rules.",
   },
+  {
+    id: "specs",
+    code: "L.7",
+    name: "Platform & factory specs",
+    blurb: "Individual technical specifications for every control-plane service and deterministic worker (CLIN 0006).",
+  },
 ] as const;
 
 export type GuideGroup = (typeof guideGroups)[number];

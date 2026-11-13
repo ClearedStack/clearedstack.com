@@ -1,0 +1,71 @@
+export const meta = {
+  title: "cs-10-notify Specification",
+  summary: "Cross-cutting routing and notification worker that deduplicates errors by fingerprint, commits approved Portal edits and needs_subtool tasks to cs-git, and drives owner alerts and live SSE updates.",
+  group: "specs",
+  order: 17,
+  revised: "2026-11",
+  draft: true,
+};
+
+## Overview & Role
+
+`cs-10-notify` is the cross-cutting notification and routing worker in the `cs-workers` namespace (`ownerRepo: cs-10-notify`, version `v0.1.0-draft`). Added in ClearedStack v3.1 to close the edit-to-repo and auto-issue loops, it routes owner-approved Portal edits, `needs_subtool` tasks, and fingerprinted errors into `cs-git`, coordinates outbound GitHub mirroring, dispatches owner webhook alerts, and drives live Server-Sent Events (SSE) updates on `clearedstack-web`.
+
+Like all ten workers, `cs-10-notify` is a 100% deterministic Go service with zero AI at runtime.
+
+## Runtime & Resource Budget
+
+| Property | Value |
+| --- | --- |
+| **Service / Repo** | `cs-10-notify` |
+| **Namespace** | `cs-workers` |
+| **Kind** | `worker` (100% deterministic Go, zero runtime AI) |
+| **Version** | `v0.1.0-draft` |
+| **RAM Budget** | `30 MiB` |
+| **Sub-Tools** | `internal-git`, `github-mirror`, `webhook-alert`, `portal-sse` |
+| **Local Spool** | `/var/spool/cs` (buffers outbound notifications and acks during `hub-queue-api` restarts) |
+| **Contract Version** | `CONTRACT_VERSION=v1` (owned by `clearedstack.com`) |
+
+`cs-10-notify` runs under the Standard Kubernetes priority class at `30 MiB` RAM, yielding before High-priority control-plane pods on a single 4 GiB `k3s` node.
+
+## Interfaces & State Transitions
+
+`cs-10-notify` pulls leased notification and routing jobs from `hub-queue-api` over cluster-private HTTP using its Kubernetes ServiceAccount identity (`lease`, `heartbeat`, `complete`, `fail`, `needs_subtool`), always draining `urgent` before `normal` and `normal` before `backfill`. It never connects directly to `postgres`.
+
+Rather than transitioning `PA-XXXX` items through pipeline stages itself, `cs-10-notify` reacts to pipeline events and `cs-04-decide` approvals:
+
+- **Deterministic issue deduplication:** Computes a repeatable fingerprint from the worker name, sanitized error code (`E_TIMEOUT`, `E_PARSE`, `E_NEEDS_SUBTOOL`), and failure pattern. If an open issue with that fingerprint already exists in `cs-git`, `cs-10-notify` increments its occurrence count instead of creating duplicate tickets.
+- **Edit-to-repo loop (`ownership_map.json`):** Routes owner-approved anonymous `✎ Edit` proposals (`DATA`, `CONFIG`, `ISSUE` from `cs-04-decide`)—committing `CONFIG` branches/PRs or `ISSUE` tickets to `cs-git` so `cs-runner` can build/test and `cs-store` can deploy.
+- **Live Portal SSE:** Streams sanitized status updates so an anonymous visitor watches their edit pill move live from `Proposed` → `Approved` → `Building` → `Live`.
+
+## Sub-Tools & Failure Modes
+
+`cs-10-notify` separates delivery targets into four deterministic sub-tools under `tools/<case>/`:
+
+| Sub-Tool | Responsibility | Target |
+| --- | --- | --- |
+| `internal-git` | Commits owner-approved Portal edits (`DATA`, `CONFIG`, `ISSUE`), `needs_subtool` tasks, and fingerprinted error issues. | Cluster-private `cs-git` repositories. |
+| `github-mirror` | Coordinates outbound code mirroring on change so public contributors can inspect commits and issues. | Public GitHub mirror (source code only; zero container images). |
+| `webhook-alert` | Dispatches concise owner alerts for genuinely new fingerprinted errors, `P0` crashes/dead-letters, or `urgent` regulatory drift. | Configured external webhook endpoint. |
+| `portal-sse` | Pushes sanitized real-time Server-Sent Events through `hub-queue-api` to `clearedstack-web`. | Public Portal UI (`/guides/live-command-portal/`, `/guides/workflow-state-machine/`, `/tools/#apps`, and live `✎` pills). |
+
+| Error Code | Trigger | Pipeline Behavior |
+| --- | --- | --- |
+| `E_TIMEOUT` | External webhook endpoint or `cs-git` mirror target times out | Result remains staged in `/var/spool/cs` and retries with backoff until delivered. |
+| `E_PARSE` | Malformed edit proposal payload or unexpected webhook/Git API response | Refuses to guess; logs sanitized error without corrupting target repo. |
+| `E_NEEDS_SUBTOOL` | Unknown edit class or unsupported notification target | Fails closed, pauses task in `needs_subtool`, and surfaces in `P1` attention tier until resolved. |
+
+## Security & Clean-Room Boundaries
+
+- **No raw cluster topology:** `cs-10-notify` only emits sanitized error codes and fingerprints; `cs-store` strips internal node names, pod hostnames, and cluster IPs before status reaches `pub.*` or `portal-sse`.
+- **No database credentials:** Network policies block direct access to `postgres`; all queue reads and state acknowledgements pass through `hub-queue-api`.
+- **Source-only mirroring:** `github-mirror` mirrors MIT-licensed source code and issues only—zero container images, secrets, or raw `cs-02-observe` captures are ever pushed to GitHub.
+- **Unprivileged pod posture:** Non-root user, dropped Linux capabilities, no privilege escalation, and read-only root filesystem outside `/var/spool/cs`.
+
+## Related Guides
+
+- [Workers 09 & 10: Continuous Monitoring & Notifications](/guides/worker-09-monitor-and-10-notify/)
+- [Ownership Map & the Edit-to-Repo Loop](/guides/ownership-map-and-edit-loop/)
+- [The Redesigned 10-Worker Workflow & Lifecycle](/guides/workflow-state-machine/)
+- [When a Worker Turns Red: Troubleshooting Big Picture](/guides/when-a-worker-is-red/)
+- [Two-Namespace Kubernetes Topology](/guides/two-namespace-topology/)

@@ -1,0 +1,77 @@
+export const meta = {
+  title: "cs-06-build Specification",
+  summary: "Technical specification for the deterministic cs-06-build worker that generates isolated MIT static tool repositories from clean-room JSON specs and stack templates.",
+  group: "specs",
+  order: 13,
+  revised: "2026-11",
+  draft: true,
+};
+
+## Overview & Role
+
+`cs-06-build` (`v0.1.0-draft`) is the deterministic clean-room build worker in ClearedStack v3.1, replacing the original Stage 8 (Build). Implemented in the `cs-06-build` repository under the MIT License, it reads sanitized JSON build specs and worked-example fixtures compiled by `cs-05-provenance` and generates isolated, MIT-licensed static tool repositories inside `cs-git`.
+
+Zero observation artifacts ever enter `cs-06-build`, and zero AI models run during code generation. Every generated tool is pure static HTML, CSS, JavaScript, and bundled JSON reference tables that run entirely in browser memory with no backend server and no external CDN dependencies.
+
+## Runtime & Resource Budget
+
+`cs-06-build` runs in the `cs-workers` Kubernetes namespace under the **Standard (Workers)** priority class.
+
+| Attribute | Value |
+| --- | --- |
+| **Worker ID / Repo** | `cs-06-build` |
+| **Namespace** | `cs-workers` |
+| **Kind / Version** | `worker` · `v0.1.0-draft` |
+| **RAM Budget** | `30 MiB` (always-on Go pod) |
+| **Runtime AI Calls** | `0` (100% deterministic `stack-templates/` code generation) |
+| **Local Spool** | `/var/spool/cs` (buffers generated repo metadata if `hub-queue-api` restarts) |
+| **Build & Deploy** | Built with `ko` (no Docker) by `cs-runner`, signed with `cosign` in `cs-registry`, deployed by `cs-store` via Server-Side Apply |
+
+## Interfaces & State Transitions
+
+`cs-06-build` leases work from `hub-queue-api` in the `clearedstack` namespace over ServiceAccount-authenticated HTTP (`CONTRACT_VERSION=v1`), draining `urgent` → `normal` → `backfill` priority lanes.
+
+- **Inbound state:** `building` (clean-room JSON build spec + worked-example fixtures emitted by `cs-05-provenance`, or regulatory drift re-builds routed back from `cs-09-monitor`).
+- **Build handoff:**
+  1. Validates the clean-room JSON spec against `CONTRACT_VERSION=v1`.
+  2. Selects the matching deterministic stack template under `stack-templates/`.
+  3. Generates the isolated static tool repository (including `LICENSE` under MIT, bundled lookup tables, strict CSP headers `default-src 'self'; connect-src 'self'; form-action 'none'`, regulatory citations, scope limits, and worked-example tests) and routes it to `cs-git` (mirrored to GitHub on change, with zero container images pushed to GitHub).
+  4. Hands off for `cs-runner` rootless BuildKit packaging and `cs-07-verify` 5-condition automated QA.
+- **Outbound transitions:**
+  - Remains in `building` until `cs-07-verify` passes all five listing conditions and advances to `live` via `cs-08-catalog`.
+  - `parked` — Moved to parked if blocked by unresolved regulatory ambiguity.
+  - `needs_subtool` — Fail-closed pause (`E_NEEDS_SUBTOOL`) when the spec requires an interaction pattern not supported by existing `stack-templates/`.
+
+## Sub-Tools & Failure Modes
+
+Code-generation patterns live inside `cs-06-build` as deterministic stack templates under `stack-templates/`:
+
+| Sub-Tool (Stack Template) | Best For | Generated Inputs & Outputs |
+| --- | --- | --- |
+| `calculator` | Rate build-ups, interest math, statutory thresholds | Numeric rates or dates in; step-by-step math and cited totals out. |
+| `checklist` | Solicitation reviews, compliance preparation | Structured yes/no items with regulatory citations and optional local browser state. |
+| `validator` | Checking codes, tables, or local files | User-supplied text or local files parsed in browser memory against bundled rules. |
+| `decision-tree` | Eligibility, clause applicability, routing | Guided branching questions leading to a deterministic, cited outcome. |
+
+### Sanitized Failure Modes
+
+| Error Code | Trigger | Platform Behavior |
+| --- | --- | --- |
+| `E_NEEDS_SUBTOOL` | Clean-room spec requires an interaction pattern unsupported by `calculator`, `checklist`, `validator`, or `decision-tree`. | Fails closed to `needs_subtool`. `cs-10-notify` opens a deduplicated task in `cs-06-build` on `cs-git`; once a new template and fixture deploy, `hub-queue-api` auto-replays paused items. |
+| `E_PARSE` | Clean-room spec fails contract validation or contains forbidden raw observation fields. | Rejected at `hub-queue-api` / `cs-06-build` before generation starts; fingerprinted error sent via `cs-10-notify`. |
+| `E_TIMEOUT` | Transient timeout reporting build completion to `hub-queue-api`. | Buffered in `/var/spool/cs` and retried until acknowledged. |
+
+## Security & Clean-Room Boundaries
+
+- **Absolute clean-room isolation:** `hub-queue-api` enforces the shared contract boundary by rejecting any payload containing raw `cs-02-observe` HTML, screenshots, or snapshots before `cs-06-build` can lease it. `cs-06-build` never accesses vendor sites or observation archives.
+- **Synthetic fixtures only:** Worked-example test fixtures must use hand-calculated official examples, boundary cases, and synthetic data. Real CUI, proprietary contractor rates, and non-public solicitation text are strictly forbidden.
+- **Generated tool security:** Every generated static tool enforces `connect-src 'self'`, `default-src 'self'`, `form-action 'none'`, zero tracking/analytics, and offline execution.
+- **Pod hardening & network policy:** Runs non-root with dropped capabilities, read-only root filesystem (except `/var/spool/cs`), zero database credentials, and default-deny `NetworkPolicy` permitting only ServiceAccount HTTP to `hub-queue-api` (no direct access to `postgres`, `cs-git`, or `cs-registry`).
+
+## Related Guides
+
+- [Build and verify a tool (cs-06 to cs-08)](/guides/build-a-tool/)
+- [How ideas are credited](/guides/credit-and-clean-room/)
+- [The Redesigned 10-Worker Workflow & Lifecycle](/guides/workflow-state-machine/)
+- [100% Deterministic Workers & Sub-Tools](/guides/deterministic-sub-tools/)
+- [Shared Contracts Without an 11th Repo](/guides/shared-contracts-and-sdk/)

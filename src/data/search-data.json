@@ -3445,6 +3445,1196 @@
     "content": "The 6 screen states How Software Decides What Appears on Screen Every component on screen is always in one of six explicit visual states. Idle components are never painted red, and missing data is never disguised as healthy. | Screen State | Visual Treatment | When It Appears | | --- | --- | --- | | healthy | Green indicator | The app or worker is running normally, health checks pass, and updates are arriving on time. | | idle | Muted grey (never red) | The worker is healthy and ready, with zero queued items and zero errors; collapsed into a quiet summary row. | | erroring | Crimson ( --danger ) + icon + code | An active failure, crash, or dead-lettered item exists; shows a sanitized code such as E TIMEOUT or E PARSE (never raw stack traces or internal IPs). | | recovering | Amber ( --warn ) | A component is retrying after an error, waiting on a needs subtool fix, or inside its hysteresis cooldown window. | | stale | Dashed grey border | The live stream has been silent for more than 15 seconds, warning that the view is paused rather than live. | | empty | Muted placeholder | Initial clean state ( \"Nothing has been collected yet\" ) before any items have entered the pipeline. |"
   },
   {
+    "id": "guide-spec-clearedstack-web",
+    "type": "guide",
+    "title": "clearedstack-web Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Unified Command Portal, App Store UI, and anonymous edit intake serving as the sole public Ingress in the clearedstack namespace.",
+    "url": "/guides/spec-clearedstack-web/",
+    "badge": "DRAFT",
+    "content": "clearedstack-web Specification Unified Command Portal, App Store UI, and anonymous edit intake serving as the sole public Ingress in the clearedstack namespace. specs L.7 draft intent clearedstack-web ( v0.2.0-draft , owned by clearedstack.com ) is the public-facing web application in the clearedstack control-plane namespace. It serves the contractor-first tool catalog, operational Command Portal, App Store UI, and anonymous ✎ Edit intake without requiring user accounts or logins. Overview & Role clearedstack-web is the only pod in the entire 17-pod cluster exposed to the public internet via the Kubernetes Ingress. Its responsibilities are strictly presentation, read-only public data rendering, and client-side intake framing: - Command Portal & Catalog: Serves the unified t"
+  },
+  {
+    "id": "section-spec-clearedstack-web-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "clearedstack-web Specification",
+    "summary": "clearedstack-web is the only pod in the entire 17-pod cluster exposed to the public internet via the Kubernetes Ingress. Its responsibilities are strictly prese...",
+    "url": "/guides/spec-clearedstack-web/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role clearedstack-web Specification clearedstack-web is the only pod in the entire 17-pod cluster exposed to the public internet via the Kubernetes Ingress. Its responsibilities are strictly presentation, read-only public data rendering, and client-side intake framing: - Command Portal & Catalog: Serves the unified tool catalog ( /tools/ ), operational guides ( /guides/ ), live P0–P2 attention feed, and App Store UI. - Zero Login Lock: All browsing, queue inspection, sanitized error viewing, and edit proposals work anonymously without accounts, passwords, or OAuth redirects. - Sanitized Read-Only Queries: Reads exclusively from sanitized pub. views in postgres —never touching core. internal tables or cluster secrets. - Anonymous Edit Intake UI: Uses ownership map.json to map any editable element on the page to its owning repository ( clearedstack.com or cs-01 .. cs-10 ) and change class ( DATA , CONFIG , or ISSUE ), then forwards proposals to hub-queue-api ."
+  },
+  {
+    "id": "section-spec-clearedstack-web-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "clearedstack-web Specification",
+    "summary": "| Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.2.0-draft | | Owning Repo | clearedstac...",
+    "url": "/guides/spec-clearedstack-web/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget clearedstack-web Specification | Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.2.0-draft | | Owning Repo | clearedstack.com | | RAM Request | 128 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Storage | Stateless (no Persistent Volume Claim) | | Network Exposure | Public Ingress ( HTTP/HTTPS ); cluster-private egress to postgres ( pub. ) and hub-queue-api | Because clearedstack-web holds no local persistent state, Kubernetes can restart or replace the pod at any time without data loss."
+  },
+  {
+    "id": "section-spec-clearedstack-web-interfaces-data-contracts",
+    "type": "section",
+    "title": "Interfaces & Data Contracts",
+    "subtitle": "clearedstack-web Specification",
+    "summary": "clearedstack-web sits at the edge of the clearedstack namespace and communicates with two internal control-plane services: | Peer Service | Direction | Protocol...",
+    "url": "/guides/spec-clearedstack-web/#interfaces-data-contracts",
+    "badge": "Section",
+    "content": "Interfaces & Data Contracts clearedstack-web Specification clearedstack-web sits at the edge of the clearedstack namespace and communicates with two internal control-plane services: | Peer Service | Direction | Protocol / Role | Data Contract | | --- | --- | --- | --- | | Cluster Ingress | Inbound | HTTPS (Public) | Serves static/SSR Portal pages, /tools/ , /guides/ , and anonymous ✎ Edit forms | | postgres | Outbound | SQL ( pub ro role) | Read-only SELECT access to sanitized pub. views only; zero access to core. | | hub-queue-api | Bidirectional | Cluster-private HTTP + SSE | Subscribes to Server-Sent Events (SSE) for live queue/status updates; submits ✎ Edit payloads (with ~1s browser Proof-of-Work token and honeypot field) | Live Edit Status Tracking After a visitor submits an anonymous edit, clearedstack-web turns the element's ✎ Edit button into a live status pill backed by hub-queue-api SSE events: 1. Proposed: Passed 5-layer anti-spam and ownership map.json schema checks; waiting in cs-04-decide . 2. Approved: Approved by the owner and routed via cs-10-notify to cs-git . 3. Building: cs-runner is running deterministic tests and packaging the updated image. 4. Live: cs-store reconciled the new digest and the updated content is live."
+  },
+  {
+    "id": "section-spec-clearedstack-web-failure-modes-recovery",
+    "type": "section",
+    "title": "Failure Modes & Recovery",
+    "subtitle": "clearedstack-web Specification",
+    "summary": "- Pod Crash or OOMKill: Because clearedstack-web is stateless with no PVC, k3s restarts the pod automatically. High Priority Class protects it from preemption d...",
+    "url": "/guides/spec-clearedstack-web/#failure-modes-recovery",
+    "badge": "Section",
+    "content": "Failure Modes & Recovery clearedstack-web Specification - Pod Crash or OOMKill: Because clearedstack-web is stateless with no PVC, k3s restarts the pod automatically. High Priority Class protects it from preemption during cs-runner builds or cs-02-observe headless browser Jobs. - hub-queue-api Unavailable / SSE Drop: If hub-queue-api restarts during a rolling upgrade, the SSE stream drops and the UI surfaces a stale-feed indicator (P1 attention triggers if the live feed is stale for more than 15 seconds) while pub. views remain readable from postgres . - postgres Unavailable: Public pages that depend on pub. views degrade gracefully until postgres recovers; no write state is lost because clearedstack-web never writes to the database."
+  },
+  {
+    "id": "section-spec-clearedstack-web-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "clearedstack-web Specification",
+    "summary": "- Only Public Door: Default-deny NetworkPolicy blocks Ingress traffic to every other pod in clearedstack and cs-workers . - Database Isolation: Connects to post...",
+    "url": "/guides/spec-clearedstack-web/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries clearedstack-web Specification - Only Public Door: Default-deny NetworkPolicy blocks Ingress traffic to every other pod in clearedstack and cs-workers . - Database Isolation: Connects to postgres solely with the pub ro role, which has zero privileges on core. tables, credentials, or internal operational state. - No Topology Leakage: Never receives raw node names, pod hostnames, or internal cluster IPs; cs-store strips those fields before status reaches hub-queue-api and pub. . - Unprivileged Execution: Runs as a non-root user with dropped Linux capabilities, no privilege escalation, and a read-only root filesystem where state does not need to be written. - Anti-Spam Framing: Enforces client-side Proof-of-Work (~1s cryptographic puzzle) and a hidden honeypot field before forwarding anonymous edit proposals to hub-queue-api ."
+  },
+  {
+    "id": "section-spec-clearedstack-web-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "clearedstack-web Specification",
+    "summary": "- Two-Namespace Kubernetes Topology - The Live Command Portal & Platform Tools - Propose Edits Without Signing In - Shared Hub Database and Worker Local Spools",
+    "url": "/guides/spec-clearedstack-web/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides clearedstack-web Specification - Two-Namespace Kubernetes Topology - The Live Command Portal & Platform Tools - Propose Edits Without Signing In - Shared Hub Database and Worker Local Spools"
+  },
+  {
+    "id": "guide-spec-cs-01-intake",
+    "type": "guide",
+    "title": "cs-01-intake Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "First deterministic worker in cs-workers that discovers public candidates, normalizes URLs, deduplicates via SHA-256, and assigns persistent PA-XXXX IDs with zero runtime AI.",
+    "url": "/guides/spec-cs-01-intake/",
+    "badge": "DRAFT",
+    "content": "cs-01-intake Specification First deterministic worker in cs-workers that discovers public candidates, normalizes URLs, deduplicates via SHA-256, and assigns persistent PA-XXXX IDs with zero runtime AI. specs L.7 draft intent Overview & Role cs-01-intake ( v0.1.0-draft , owned by the cs-01-intake repository) is the first of ten 100% deterministic Go workers in the cs-workers namespace. It replaces the conceptual Stages 1 and 2 (Discover + Record) from earlier ClearedStack designs. With zero AI at runtime , cs-01-intake ingests candidate URLs from public government feeds, GitHub issues, scheduled web sweeps, and anonymous Portal submissions; normalizes every address through repeatable Go rules; deduplicates against existing records using SHA-256 ; and mints persistent PA-XXXX tracking identifiers before handing item"
+  },
+  {
+    "id": "section-spec-cs-01-intake-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-01-intake Specification",
+    "summary": "cs-01-intake ( v0.1.0-draft , owned by the cs-01-intake repository) is the first of ten 100% deterministic Go workers in the cs-workers namespace. It replaces t...",
+    "url": "/guides/spec-cs-01-intake/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-01-intake Specification cs-01-intake ( v0.1.0-draft , owned by the cs-01-intake repository) is the first of ten 100% deterministic Go workers in the cs-workers namespace. It replaces the conceptual Stages 1 and 2 (Discover + Record) from earlier ClearedStack designs. With zero AI at runtime , cs-01-intake ingests candidate URLs from public government feeds, GitHub issues, scheduled web sweeps, and anonymous Portal submissions; normalizes every address through repeatable Go rules; deduplicates against existing records using SHA-256 ; and mints persistent PA-XXXX tracking identifiers before handing items to cs-02-observe ."
+  },
+  {
+    "id": "section-spec-cs-01-intake-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-01-intake Specification",
+    "summary": "| Property | Value | | --- | --- | | Worker / Repo | cs-01-intake | | Namespace | cs-workers ( worker ) | | Version | v0.1.0-draft | | RAM Budget (Requested) | ...",
+    "url": "/guides/spec-cs-01-intake/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-01-intake Specification | Property | Value | | --- | --- | | Worker / Repo | cs-01-intake | | Namespace | cs-workers ( worker ) | | Version | v0.1.0-draft | | RAM Budget (Requested) | 30 MiB | | Priority Class | Standard (Workers) | | Local Spool | /var/spool/cs (survives hub-queue-api restarts) | | Sub-Tools | sam-gov , github-issues , web-sweep , site-form |"
+  },
+  {
+    "id": "section-spec-cs-01-intake-interfaces-data-contracts",
+    "type": "section",
+    "title": "Interfaces & Data Contracts",
+    "subtitle": "cs-01-intake Specification",
+    "summary": "- Queue Lease Contract ( hub-queue-api , CONTRACT VERSION=v1 ): Pulls work via lease , maintains progress with heartbeat , and reports outcomes via complete , f...",
+    "url": "/guides/spec-cs-01-intake/#interfaces-data-contracts",
+    "badge": "Section",
+    "content": "Interfaces & Data Contracts cs-01-intake Specification - Queue Lease Contract ( hub-queue-api , CONTRACT VERSION=v1 ): Pulls work via lease , maintains progress with heartbeat , and reports outcomes via complete , fail , or needs subtool over cluster-private HTTP using its Kubernetes ServiceAccount identity. Workers always drain priority lanes in order: urgent -> normal -> backfill . - Deterministic URL Normalization: - Lowercases scheme ( https ) and hostname. - Strips tracking and session query parameters ( utm , ref , fbclid , gclid , session IDs) and fragments. - Removes redundant trailing slashes and default index filenames. - Enforces public-only scheme and host validation. - SHA-256 Deduplication & State Transitions: Computes the SHA-256 digest of the canonical URL and checks core. state via hub-queue-api : - Existing hash: Logs the sighting or mirror link against the existing PA-XXXX record without creating a duplicate. - New hash: Mints a persistent PA-XXXX ID (transitioning discovered -> recorded ) and queues the item for cs-02-observe . - Local Spool ( /var/spool/cs ): Stages completed intake payloads locally before acknowledging to hub-queue-api ; if the hub is restarting, spooled results are flushed in order on recovery."
+  },
+  {
+    "id": "section-spec-cs-01-intake-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-01-intake Specification",
+    "summary": "Each source adapter lives under tools// in the cs-01-intake repository (registered in tools/registry.yaml with match.yaml , deterministic Go logic, and golden t...",
+    "url": "/guides/spec-cs-01-intake/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-01-intake Specification Each source adapter lives under tools// in the cs-01-intake repository (registered in tools/registry.yaml with match.yaml , deterministic Go logic, and golden test fixtures): | Sub-Tool ( tools// ) | Source | Deterministic Responsibility | | --- | --- | --- | | sam-gov | SAM.gov public notices | Extracts public tool links, agency calculators, and attachment URLs from SAM.gov feeds. | | github-issues | GitHub public mirror | Parses structured tool and paperwork suggestions opened on the public repository. | | web-sweep | Public .gov , .mil , APEX, and vendor sites | Runs scheduled, robots.txt -respecting sweeps across public contracting resources. | | site-form | clearedstack.com Portal | Validates and normalizes direct candidate submissions and ✎ intake proposals. | | Failure Mode | Trigger | System Behavior & Recovery | | --- | --- | --- | | Unknown source format ( E NEEDS SUBTOOL ) | Input matches none of the registered tools// rules | Fails closed: pauses the item in needs subtool ; cs-10-notify opens a deduplicated task in cs-01-intake . Once a sub-tool + golden fixture ship via cs-runner and cs-store , hub-queue-api replays all paused items. | | Upstream timeout ( E TIMEOUT ) | External .gov feed or target URL times out | Item remains safe in the queue for deterministic retry without losing state. | | Malformed payload ( E PARSE ) | Corrupted feed entry or invalid submission schema | Worker halts that specific item cleanly and emits a sanitized E PARSE fingerprint. | | Hub unavailable | hub-queue-api restarts mid-batch | Completed intake outputs are preserved in /var/spool/cs and flushed automatically when connectivity returns. |"
+  },
+  {
+    "id": "section-spec-cs-01-intake-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-01-intake Specification",
+    "summary": "- Zero direct database access: cs-01-intake holds no Postgres credentials and cannot reach postgres , cs-git , or cs-registry under default-deny NetworkPolicy r...",
+    "url": "/guides/spec-cs-01-intake/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-01-intake Specification - Zero direct database access: cs-01-intake holds no Postgres credentials and cannot reach postgres , cs-git , or cs-registry under default-deny NetworkPolicy rules; all state mutations pass through hub-queue-api . - 5-layer anonymous submission shield ( site-form & Portal ✎ ): Enforces ~1s browser SHA-256 Proof-of-Work, honeypot field, daily-salted IP hash rate limiting (never storing raw IPs), strict 4 KB schema validation against ownership map.json with HTML/script stripping, and owner approval in cs-04-decide before any edit touches cs-git . - Passive, public-only boundary: Never creates third-party accounts, requests sales demos, bypasses paywalls or CAPTCHAs, ignores robots.txt , or accepts Controlled Unclassified Information (CUI) or proprietary bid figures. - Unprivileged pod: Runs as non-root with dropped Linux capabilities and a read-only root filesystem (writable only at /var/spool/cs )."
+  },
+  {
+    "id": "section-spec-cs-01-intake-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-01-intake Specification",
+    "summary": "- How candidates are found - 100% Deterministic Workers & Sub-Tools - Shared Contracts Without an 11th Repo - Shared Hub Database and Worker Local Spools - Anon...",
+    "url": "/guides/spec-cs-01-intake/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-01-intake Specification - How candidates are found - 100% Deterministic Workers & Sub-Tools - Shared Contracts Without an 11th Repo - Shared Hub Database and Worker Local Spools - Anonymous Edits & Anti-Spam"
+  },
+  {
+    "id": "guide-spec-cs-02-observe",
+    "type": "guide",
+    "title": "cs-02-observe Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Technical specification for the deterministic cs-02-observe worker that inspects public pages, spawns on-demand browser Jobs, and seals raw captures behind the clean-room wall.",
+    "url": "/guides/spec-cs-02-observe/",
+    "badge": "DRAFT",
+    "content": "cs-02-observe Specification Technical specification for the deterministic cs-02-observe worker that inspects public pages, spawns on-demand browser Jobs, and seals raw captures behind the clean-room wall. specs L.7 draft intent Overview & Role cs-02-observe ( v0.1.0-draft ) is the deterministic observation worker in the ClearedStack v3.1 pipeline, replacing the original Stage 3 (Observe). Implemented as a Go service in the cs-02-observe repository under the MIT License, it inspects public web pages, .gov portals, and agency PDFs using repeatable extractors and zero runtime AI. Its core responsibilities are: - Public-only inspection: Fetch open-web vendor marketing pages, government portals, and procurement PDFs without logging in, bypassing paywalls, or submitting forms. - Deterministic fact extraction: Produce stric"
+  },
+  {
+    "id": "section-spec-cs-02-observe-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-02-observe Specification",
+    "summary": "cs-02-observe ( v0.1.0-draft ) is the deterministic observation worker in the ClearedStack v3.1 pipeline, replacing the original Stage 3 (Observe). Implemented ...",
+    "url": "/guides/spec-cs-02-observe/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-02-observe Specification cs-02-observe ( v0.1.0-draft ) is the deterministic observation worker in the ClearedStack v3.1 pipeline, replacing the original Stage 3 (Observe). Implemented as a Go service in the cs-02-observe repository under the MIT License, it inspects public web pages, .gov portals, and agency PDFs using repeatable extractors and zero runtime AI. Its core responsibilities are: - Public-only inspection: Fetch open-web vendor marketing pages, government portals, and procurement PDFs without logging in, bypassing paywalls, or submitting forms. - Deterministic fact extraction: Produce strict, schema-validated JSON capturing a candidate tool's core job, inputs, outputs, login requirement, tracking profile, license or copyright, price model, cited public rule, observation date, and confidence tier ( Seen , Stated , or Unknown ). - Clean-room sealing: Seal all raw HTML, DOM snapshots, screenshots, and downloaded PDFs behind the clean-room wall so downstream specification and build workers ( cs-05-provenance and cs-06-build ) never see vendor markup, stylesheets, or client-side scripts."
+  },
+  {
+    "id": "section-spec-cs-02-observe-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-02-observe Specification",
+    "summary": "cs-02-observe runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class, with ephemeral headless browser Job pods scheduled under ...",
+    "url": "/guides/spec-cs-02-observe/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-02-observe Specification cs-02-observe runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class, with ephemeral headless browser Job pods scheduled under Low (Ephemeral Jobs) . | Attribute | Value | | --- | --- | | Worker ID / Repo | cs-02-observe | | Namespace | cs-workers | | Kind / Version | worker · v0.1.0-draft | | Baseline RAM Budget | 30 MiB (always-on Go HTTP pod) | | Ephemeral Footprint | On-demand headless browser Job pods (created and deleted per JS-heavy target) | | Runtime AI Calls | 0 (100% deterministic Go + YAML rules) | | Local Spool | /var/spool/cs (persists completed extraction payloads across hub-queue-api restarts) | | Build & Deploy | Built with ko (no Docker) by cs-runner , signed with cosign in cs-registry , deployed by cs-store via Server-Side Apply | Keeping headless browsers out of the always-on worker pool preserves the ~300 MiB baseline worker footprint so the full 17-pod ClearedStack platform fits on a single 4 GiB k3s node."
+  },
+  {
+    "id": "section-spec-cs-02-observe-interfaces-state-transitions",
+    "type": "section",
+    "title": "Interfaces & State Transitions",
+    "subtitle": "cs-02-observe Specification",
+    "summary": "cs-02-observe communicates exclusively with hub-queue-api in the clearedstack namespace over cluster-private HTTP authenticated via its Kubernetes ServiceAccoun...",
+    "url": "/guides/spec-cs-02-observe/#interfaces-state-transitions",
+    "badge": "Section",
+    "content": "Interfaces & State Transitions cs-02-observe Specification cs-02-observe communicates exclusively with hub-queue-api in the clearedstack namespace over cluster-private HTTP authenticated via its Kubernetes ServiceAccount ( CONTRACT VERSION=v1 ). It never connects directly to postgres , cs-git , or cs-registry . - Queue consumption: Polls hub-queue-api using lease , heartbeat , complete , fail , and needs subtool , draining priority lanes in strict order: urgent → normal → backfill . - Inbound states: - recorded — Newly deduplicated PA-XXXX candidates from cs-01-intake . - observed (re-queued) — Items returned from needs subtool replay after a sub-tool fix ships, parked items whose blocker cleared in cs-09-monitor , or linked items flagged for drift. - Outbound transitions: - observed — Extraction succeeded; sanitized structured JSON facts are stored in core. and raw captures remain sealed behind the clean-room wall. - needs subtool — Fail-closed pause ( E NEEDS SUBTOOL ) when no registered sub-tool matches the target layout. - Spool durability: Extracted payloads are written to /var/spool/cs before acknowledging complete to hub-queue-api , preventing lost work during control-plane restarts."
+  },
+  {
+    "id": "section-spec-cs-02-observe-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-02-observe Specification",
+    "summary": "Per-site and per-format variations live inside the cs-02-observe repository under tools// , where each sub-tool pairs a match.yaml rule, deterministic extract.g...",
+    "url": "/guides/spec-cs-02-observe/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-02-observe Specification Per-site and per-format variations live inside the cs-02-observe repository under tools// , where each sub-tool pairs a match.yaml rule, deterministic extract.go logic, and golden fixtures/ . | Sub-Tool | Target Pattern & Behavior | | --- | --- | | saas-marketing | Public vendor landing pages and feature tables; extracts stated inputs, outputs, pricing model, and login gates. | | gov-portal | Federal .gov and .mil portals and calculators; captures cited FAR, DFARS, or NIST clauses and offline behavior. | | agency-pdf | Downloadable procurement PDFs, worksheets, and instructions; extracts form fields, rules, and publication dates. | | on-demand-browser-job | Ephemeral headless browser Job spawned only for JavaScript-heavy single-page apps to render the DOM and inspect client-side network calls using synthetic test inputs. | | | Dedicated extractors for specific vendors whose public page structure differs from standard layouts. | Sanitized Failure Modes cs-02-observe never guesses when an extraction fails or encounters an unknown layout: | Error Code | Trigger | Platform Behavior | | --- | --- | --- | | E NEEDS SUBTOOL | Page layout, table, or PDF format matches no registered tools// sub-tool. | Fails closed to needs subtool . cs-10-notify opens a deduplicated task in cs-02-observe on cs-git ; once a new sub-tool and fixture deploy, hub-queue-api auto-replays paused items. | | E TIMEOUT | Upstream public page, PDF download, or ephemeral browser Job exceeds deadline. | Item remains safely queued for bounded retry; cs-store strips cluster internals before surfacing status. | | E PARSE | Malformed HTML, corrupted PDF, or schema validation failure on extracted JSON. | Halts item cleanly and reports fingerprinted error via cs-10-notify without emitting partial data. |"
+  },
+  {
+    "id": "section-spec-cs-02-observe-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-02-observe Specification",
+    "summary": "- Passive public boundaries: cs-02-observe never creates accounts, starts free trials, submits lead-capture forms, enters real contracting data, or circumvents ...",
+    "url": "/guides/spec-cs-02-observe/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-02-observe Specification - Passive public boundaries: cs-02-observe never creates accounts, starts free trials, submits lead-capture forms, enters real contracting data, or circumvents paywalls, robots.txt , or CAPTCHAs. If a tool sits behind a login or anti-bot gate, observation stops at the public surface and records vendor claims as Stated rather than Seen . - Strict clean-room wall: Raw HTML, DOM trees, stylesheets, client-side scripts, and binary PDFs are sealed at cs-02-observe and never cross into cs-05-provenance or cs-06-build . hub-queue-api enforces this contract boundary by rejecting any build payload containing raw observation artifacts. - Pod hardening & network policy: Runs as an unprivileged non-root user with dropped Linux capabilities, no privilege escalation, and a read-only root filesystem (writable only at /var/spool/cs ). Default-deny Kubernetes NetworkPolicy allows outbound HTTP/HTTPS for public fetches and cluster-private HTTP to hub-queue-api , while blocking direct access to postgres , cs-git , and cs-registry ."
+  },
+  {
+    "id": "section-spec-cs-02-observe-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-02-observe Specification",
+    "summary": "- How cs-02-observe inspects a tool - How ideas are credited - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - Two-Name...",
+    "url": "/guides/spec-cs-02-observe/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-02-observe Specification - How cs-02-observe inspects a tool - How ideas are credited - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - Two-Namespace Kubernetes Topology"
+  },
+  {
+    "id": "guide-spec-cs-03-evaluate",
+    "type": "guide",
+    "title": "cs-03-evaluate Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Technical specification for the deterministic cs-03-evaluate worker that executes five binary knockout gates, the 100-point rubric, and five tie-breakers using YAML/Go rules.",
+    "url": "/guides/spec-cs-03-evaluate/",
+    "badge": "DRAFT",
+    "content": "cs-03-evaluate Specification Technical specification for the deterministic cs-03-evaluate worker that executes five binary knockout gates, the 100-point rubric, and five tie-breakers using YAML/Go rules. specs L.7 draft intent Overview & Role cs-03-evaluate ( v0.1.0-draft ) is the deterministic screening and scoring worker in ClearedStack v3.1, replacing the original Stages 4 (Screen) and 5 (Score). Implemented as an MIT-licensed Go service in the cs-03-evaluate repository, it evaluates observed candidates using a pure YAML/Go rule engine with zero AI models and zero token costs. Given identical observed facts, cs-03-evaluate produces the exact same gate outcome, 100-point rubric score, preliminary recommendation, and tie-breaker ordering on any cluster. Runtime & Resource Budget cs-03-evaluate runs in the cs-worker"
+  },
+  {
+    "id": "section-spec-cs-03-evaluate-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-03-evaluate Specification",
+    "summary": "cs-03-evaluate ( v0.1.0-draft ) is the deterministic screening and scoring worker in ClearedStack v3.1, replacing the original Stages 4 (Screen) and 5 (Score). ...",
+    "url": "/guides/spec-cs-03-evaluate/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-03-evaluate Specification cs-03-evaluate ( v0.1.0-draft ) is the deterministic screening and scoring worker in ClearedStack v3.1, replacing the original Stages 4 (Screen) and 5 (Score). Implemented as an MIT-licensed Go service in the cs-03-evaluate repository, it evaluates observed candidates using a pure YAML/Go rule engine with zero AI models and zero token costs. Given identical observed facts, cs-03-evaluate produces the exact same gate outcome, 100-point rubric score, preliminary recommendation, and tie-breaker ordering on any cluster."
+  },
+  {
+    "id": "section-spec-cs-03-evaluate-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-03-evaluate Specification",
+    "summary": "cs-03-evaluate runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class. | Attribute | Value | | --- | --- | | Worker ID / Repo |...",
+    "url": "/guides/spec-cs-03-evaluate/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-03-evaluate Specification cs-03-evaluate runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class. | Attribute | Value | | --- | --- | | Worker ID / Repo | cs-03-evaluate | | Namespace | cs-workers | | Kind / Version | worker · v0.1.0-draft | | RAM Budget | 30 MiB (always-on Go pod) | | Runtime AI Calls | 0 (100% deterministic YAML/Go rule engine) | | Local Spool | /var/spool/cs (buffers completed scoring payloads if hub-queue-api restarts) | | Build & Deploy | Built with ko (no Docker) by cs-runner , signed with cosign in cs-registry , deployed by cs-store via Server-Side Apply |"
+  },
+  {
+    "id": "section-spec-cs-03-evaluate-interfaces-state-transitions",
+    "type": "section",
+    "title": "Interfaces & State Transitions",
+    "subtitle": "cs-03-evaluate Specification",
+    "summary": "cs-03-evaluate polls hub-queue-api in the clearedstack namespace over ServiceAccount-authenticated cluster-private HTTP ( CONTRACT VERSION=v1 ), draining urgent...",
+    "url": "/guides/spec-cs-03-evaluate/#interfaces-state-transitions",
+    "badge": "Section",
+    "content": "Interfaces & State Transitions cs-03-evaluate Specification cs-03-evaluate polls hub-queue-api in the clearedstack namespace over ServiceAccount-authenticated cluster-private HTTP ( CONTRACT VERSION=v1 ), draining urgent → normal → backfill lanes. - Inbound state: observed (structured JSON facts produced by cs-02-observe ). - Evaluation stages: 1. Five binary knockout gates: - Public source — Rules, formulas, and thresholds must come from officially released public materials (statutes, FAR, DFARS, NIST SPs). - Runs in the browser — Must execute entirely client-side (HTML/CSS/JS/WASM) with no backend server or remote API. - Private by design — Must work offline, require no accounts, emit zero tracking, and enforce connect-src 'self' . - One job — Must perform a single focused task describable in one active verb-first sentence. - Arithmetic, not advice — Must compute numbers, structure data, or look up citations—never render legal advice. 2. 100-point rubric: Candidates clearing all five gates are rated 1 – 5 across seven weighted factors (composite 20 – 100 ): Need for small businesses ( ×4 , 20 pts), Gap ( ×4 , 20 pts), Strength of public source ( ×3 , 15 pts), Fits in a browser ( ×3 , 15 pts), Small enough to read ( ×2 , 10 pts), Can be checked ( ×2 , 10 pts), and Low upkeep of reference data ( ×2 , 10 pts). 3. Preliminary recommendation & split/merge flag: Assigns Build (Score ≥ 75 and Gap > 1), Link (Score ≥ 75 and Gap = 1), Park (Score 55–74), or Reject (Score < 55). Flags split/merge review when Need is 4 – 5 and Small enough to read is 1 – 2 . 4. Five deterministic tie-breakers: Roadmap phase fit → Gap severity → Low upkeep → Small code footprint → Community demand. - Outbound transitions: - screened-out — Candidate failed one or more knockout gates (failure reason logged publicly). - scored — Candidate cleared all five gates and received its rubric breakdown and recommendation. - needs subtool — Fail-closed pause ( E NEEDS SUBTOOL ) when an item's category lacks a matching rubric profile."
+  },
+  {
+    "id": "section-spec-cs-03-evaluate-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-03-evaluate Specification",
+    "summary": "Domain-specific scoring thresholds and fixtures live in cs-03-evaluate under tools/rubric-profiles// (such as pricing , proposal , cyber , market , and devsecop...",
+    "url": "/guides/spec-cs-03-evaluate/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-03-evaluate Specification Domain-specific scoring thresholds and fixtures live in cs-03-evaluate under tools/rubric-profiles// (such as pricing , proposal , cyber , market , and devsecops ). | Sub-Tool | Responsibility | | --- | --- | | rubric-profiles | Category-specific YAML/Go rule sets and golden test fixtures defining deterministic gate checks and rubric factor mappings. | Sanitized Failure Modes cs-03-evaluate fails closed on unknown fields or unsupported categories rather than falling back to defaults or heuristics: | Error Code | Trigger | Platform Behavior | | --- | --- | --- | | E NEEDS SUBTOOL | Observed item carries a contracting category or unknown field not covered by tools/rubric-profiles// . | Pauses item in needs subtool . cs-10-notify opens a deduplicated task in cs-03-evaluate on cs-git ; once a new profile and fixture deploy, hub-queue-api replays paused items automatically. | | E PARSE | Observed JSON payload fails contract schema validation or contains invalid types. | Halts item cleanly and reports a fingerprinted error via cs-10-notify . | | E TIMEOUT | Hub lease or completion call times out. | Completed score is retained in /var/spool/cs and retried on backoff. |"
+  },
+  {
+    "id": "section-spec-cs-03-evaluate-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-03-evaluate Specification",
+    "summary": "- Zero raw observation access: cs-03-evaluate operates strictly on sanitized structured JSON facts from observed records; it never reads raw vendor HTML, screen...",
+    "url": "/guides/spec-cs-03-evaluate/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-03-evaluate Specification - Zero raw observation access: cs-03-evaluate operates strictly on sanitized structured JSON facts from observed records; it never reads raw vendor HTML, screenshots, or binary PDFs. - Public transparency: All knockout gate outcomes, rubric weights, factor scores, and tie-breaker results are written through hub-queue-api to core. and exposed read-only via pub. views on clearedstack.com with no login wall. - Pod hardening & network policy: Runs as an unprivileged non-root container with dropped capabilities, read-only root filesystem (writable only at /var/spool/cs ), zero database credentials, and default-deny NetworkPolicy permitting only ServiceAccount HTTP to hub-queue-api ."
+  },
+  {
+    "id": "section-spec-cs-03-evaluate-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-03-evaluate Specification",
+    "summary": "- How Ideas Are Scored and Decided - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - Shared Contracts Without an 11th R...",
+    "url": "/guides/spec-cs-03-evaluate/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-03-evaluate Specification - How Ideas Are Scored and Decided - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - Shared Contracts Without an 11th Repo - When a Worker Turns Red: Troubleshooting Big Picture"
+  },
+  {
+    "id": "guide-spec-cs-04-decide",
+    "type": "guide",
+    "title": "cs-04-decide Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Technical specification for cs-04-decide, the human-accountability queue worker powering tool determinations and anonymous edit approvals on /guides/#decide.",
+    "url": "/guides/spec-cs-04-decide/",
+    "badge": "DRAFT",
+    "content": "cs-04-decide Specification Technical specification for cs-04-decide, the human-accountability queue worker powering tool determinations and anonymous edit approvals on /guides/#decide. specs L.7 draft intent Overview & Role cs-04-decide ( v0.1.0-draft ) powers the human owner's decision and anonymous edit-approval inbox surfaced on /guides/ decide and /guides/ownership-map-and-edit-loop/ , replacing the original Stage 6 (Decide). Implemented in the cs-04-decide repository under the MIT License, it records authoritative human determinations for evaluated candidates and gates visitor-submitted ✎ edit proposals before any code or configuration touches cs-git . Unlike upstream automated workers, cs-04-decide never makes autonomous judgment calls: final accountability for building, linking, merging, pa"
+  },
+  {
+    "id": "section-spec-cs-04-decide-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-04-decide Specification",
+    "summary": "cs-04-decide ( v0.1.0-draft ) powers the human owner's decision and anonymous edit-approval inbox surfaced on /guides/ decide and /guides/ownership-map-and-edit...",
+    "url": "/guides/spec-cs-04-decide/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-04-decide Specification cs-04-decide ( v0.1.0-draft ) powers the human owner's decision and anonymous edit-approval inbox surfaced on /guides/ decide and /guides/ownership-map-and-edit-loop/ , replacing the original Stage 6 (Decide). Implemented in the cs-04-decide repository under the MIT License, it records authoritative human determinations for evaluated candidates and gates visitor-submitted ✎ edit proposals before any code or configuration touches cs-git . Unlike upstream automated workers, cs-04-decide never makes autonomous judgment calls: final accountability for building, linking, merging, parking, rejecting, overriding, or accepting public edits belongs strictly to the human project owner."
+  },
+  {
+    "id": "section-spec-cs-04-decide-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-04-decide Specification",
+    "summary": "cs-04-decide runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class. | Attribute | Value | | --- | --- | | Worker ID / Repo | c...",
+    "url": "/guides/spec-cs-04-decide/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-04-decide Specification cs-04-decide runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class. | Attribute | Value | | --- | --- | | Worker ID / Repo | cs-04-decide | | Namespace | cs-workers | | Kind / Version | worker · v0.1.0-draft | | RAM Budget | 30 MiB (always-on Go pod) | | Runtime AI Calls | 0 (human-in-the-loop gate + deterministic state routing) | | Local Spool | /var/spool/cs (buffers pending decision acknowledgments across hub-queue-api restarts) | | Build & Deploy | Built with ko (no Docker) by cs-runner , signed with cosign in cs-registry , deployed by cs-store via Server-Side Apply |"
+  },
+  {
+    "id": "section-spec-cs-04-decide-interfaces-state-transitions",
+    "type": "section",
+    "title": "Interfaces & State Transitions",
+    "subtitle": "cs-04-decide Specification",
+    "summary": "cs-04-decide interacts with hub-queue-api in the clearedstack namespace over ServiceAccount-authenticated HTTP ( CONTRACT VERSION=v1 ) and surfaces two transpar...",
+    "url": "/guides/spec-cs-04-decide/#interfaces-state-transitions",
+    "badge": "Section",
+    "content": "Interfaces & State Transitions cs-04-decide Specification cs-04-decide interacts with hub-queue-api in the clearedstack namespace over ServiceAccount-authenticated HTTP ( CONTRACT VERSION=v1 ) and surfaces two transparent queues via pub. read-only views on clearedstack.com : 1. Tool Determinations Queue ( scored and screened-out overrides): - Approve (Build) → approved : Advances the candidate to cs-05-provenance for provenance stamping and clean-room spec compilation. - Link → linked : Records an existing free, private external tool in the catalog ( cs-08-catalog ) without rebuilding. - Merge → merged : Folds scope into an existing or planned parent tool repository. - Park → parked : Defers a viable idea with a named blocker for scheduled cs-09-monitor revisit. - Reject → rejected : Permanently archives the candidate with its rubric score and rationale. - Override → observed : Returns a screened-out item to observed only when accompanied by an explicit written reason logged publicly. 2. Anonymous Public Edit Proposals ( core.edit proposal , pending approval ): - Receives DATA , CONFIG , and ISSUE proposals (≤ 4 KB) submitted via any ✎ button after they clear hub-queue-api 's 5-layer anti-spam shield. - On owner Approve , dispatches cs-10-notify on the urgent lane ( Proposed → Approved → Building → Live ). Declined proposals are logged without altering cs-git or core. data."
+  },
+  {
+    "id": "section-spec-cs-04-decide-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-04-decide Specification",
+    "summary": "cs-04-decide intentionally has zero sub-tools ( subTools: [] ), because final product determinations and edit approvals are human decisions rather than automate...",
+    "url": "/guides/spec-cs-04-decide/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-04-decide Specification cs-04-decide intentionally has zero sub-tools ( subTools: [] ), because final product determinations and edit approvals are human decisions rather than automated pattern rules. Sanitized Failure Modes | Error Code | Trigger | Platform Behavior | | --- | --- | --- | | E PARSE | Malformed determination payload, missing written rationale on an override, or invalid ownership map.json target on an edit proposal. | Rejected cleanly by hub-queue-api ; item remains in its current queue state with a fingerprinted error logged. | | E TIMEOUT | Transient timeout reaching hub-queue-api during decision commit. | Buffered in /var/spool/cs and retried in order until acknowledged. | Because cs-04-decide has no tools// sub-tools, it never enters needs subtool ( E NEEDS SUBTOOL )."
+  },
+  {
+    "id": "section-spec-cs-04-decide-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-04-decide Specification",
+    "summary": "- 5-layer anti-spam gate before cs-04-decide : Anonymous ✎ edit proposals must pass browser Proof-of-Work, a hidden honeypot field, daily-salted IP hash rate li...",
+    "url": "/guides/spec-cs-04-decide/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-04-decide Specification - 5-layer anti-spam gate before cs-04-decide : Anonymous ✎ edit proposals must pass browser Proof-of-Work, a hidden honeypot field, daily-salted IP hash rate limiting (zero raw IPs stored), and strict 4 KB schema validation against ownership map.json (with HTML/scripts stripped) before entering pending approval . - Zero unreviewed cluster mutations: No anonymous edit or external submission can touch cs-git , core. state, or running pods until explicitly approved in cs-04-decide . - Public accountability & pod hardening: All decisions, overrides, and edit outcomes are visible in read-only pub. views without login. The pod runs non-root with dropped capabilities, a read-only root filesystem (except /var/spool/cs ), zero database credentials, and default-deny NetworkPolicy ."
+  },
+  {
+    "id": "section-spec-cs-04-decide-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-04-decide Specification",
+    "summary": "- How Ideas Are Scored and Decided - Ownership Map & the Edit-to-Repo Loop - Propose Edits Without Signing In - The Redesigned 10-Worker Workflow & Lifecycle - ...",
+    "url": "/guides/spec-cs-04-decide/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-04-decide Specification - How Ideas Are Scored and Decided - Ownership Map & the Edit-to-Repo Loop - Propose Edits Without Signing In - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools"
+  },
+  {
+    "id": "guide-spec-cs-05-provenance",
+    "type": "guide",
+    "title": "cs-05-provenance Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Technical specification for the deterministic cs-05-provenance worker that stamps Go-template provenance notes, enforces 48h/5d SLAs, and compiles sanitized JSON build specs.",
+    "url": "/guides/spec-cs-05-provenance/",
+    "badge": "DRAFT",
+    "content": "cs-05-provenance Specification Technical specification for the deterministic cs-05-provenance worker that stamps Go-template provenance notes, enforces 48h/5d SLAs, and compiles sanitized JSON build specs. specs L.7 draft intent Overview & Role cs-05-provenance ( v0.1.0-draft ) is the deterministic attribution, SLA-enforcement, and clean-room specification compiler in ClearedStack v3.1, replacing the original Stage 7 (Credit). Implemented in the cs-05-provenance repository under the MIT License, it runs with zero AI models so provenance phrasing and build specifications are 100% repeatable. Its core responsibilities are: - Deterministic provenance stamping: Render standardized attribution blocks using Go text/template files with three factual lines ( Idea seen in , What we took , What we did differently ). - 48-hour a"
+  },
+  {
+    "id": "section-spec-cs-05-provenance-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-05-provenance Specification",
+    "summary": "cs-05-provenance ( v0.1.0-draft ) is the deterministic attribution, SLA-enforcement, and clean-room specification compiler in ClearedStack v3.1, replacing the o...",
+    "url": "/guides/spec-cs-05-provenance/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-05-provenance Specification cs-05-provenance ( v0.1.0-draft ) is the deterministic attribution, SLA-enforcement, and clean-room specification compiler in ClearedStack v3.1, replacing the original Stage 7 (Credit). Implemented in the cs-05-provenance repository under the MIT License, it runs with zero AI models so provenance phrasing and build specifications are 100% repeatable. Its core responsibilities are: - Deterministic provenance stamping: Render standardized attribution blocks using Go text/template files with three factual lines ( Idea seen in , What we took , What we did differently ). - 48-hour and 5-day SLA enforcement: Track identity verification within 48 hours and honor nominative attribution opt-outs within 5 days by replacing product/vendor names with neutral descriptors while keeping public-domain law citations intact. - Clean-room build spec compilation: Compile a sanitized JSON build spec ( provenance , authority , schema , vectors )—the sole artifact permitted to cross the clean-room wall into cs-06-build ."
+  },
+  {
+    "id": "section-spec-cs-05-provenance-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-05-provenance Specification",
+    "summary": "cs-05-provenance runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class. | Attribute | Value | | --- | --- | | Worker ID / Repo...",
+    "url": "/guides/spec-cs-05-provenance/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-05-provenance Specification cs-05-provenance runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class. | Attribute | Value | | --- | --- | | Worker ID / Repo | cs-05-provenance | | Namespace | cs-workers | | Kind / Version | worker · v0.1.0-draft | | RAM Budget | 30 MiB (always-on Go pod) | | Runtime AI Calls | 0 (100% deterministic Go text/template + spec compilers) | | Local Spool | /var/spool/cs (persists compiled JSON specs across hub-queue-api restarts) | | Build & Deploy | Built with ko (no Docker) by cs-runner , signed with cosign in cs-registry , deployed by cs-store via Server-Side Apply |"
+  },
+  {
+    "id": "section-spec-cs-05-provenance-interfaces-state-transitions",
+    "type": "section",
+    "title": "Interfaces & State Transitions",
+    "subtitle": "cs-05-provenance Specification",
+    "summary": "cs-05-provenance leases work from hub-queue-api in the clearedstack namespace over ServiceAccount-authenticated HTTP ( CONTRACT VERSION=v1 ), draining urgent → ...",
+    "url": "/guides/spec-cs-05-provenance/#interfaces-state-transitions",
+    "badge": "Section",
+    "content": "Interfaces & State Transitions cs-05-provenance Specification cs-05-provenance leases work from hub-queue-api in the clearedstack namespace over ServiceAccount-authenticated HTTP ( CONTRACT VERSION=v1 ), draining urgent → normal → backfill priority lanes. - Inbound state: approved (items approved for Build by the owner in cs-04-decide , plus opt-out or factual correction requests routed through cs-04-decide ). - Processing steps: 1. Load the cs-04-decide determination and official statutory citations (FAR, DFARS, NIST, eCFR). 2. Render the Go-template provenance block (or apply neutral phrasing if an opt-out is active). 3. Match the item to a tools/spec-profiles// sub-tool. 4. Compile the sanitized JSON build spec ( provenance , authority , schema , vectors ), resolving any conflict between vendor behavior and official government publications strictly in favor of the government text. - Outbound transitions: - building — Sanitized JSON build spec compiled and validated; item is ready for cs-06-build . - needs subtool — Fail-closed pause ( E NEEDS SUBTOOL ) when no spec-profiles sub-tool matches the required tool structure. - Opt-out / correction updates on live tools trigger cs-08-catalog republishing within the 5-day SLA."
+  },
+  {
+    "id": "section-spec-cs-05-provenance-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-05-provenance Specification",
+    "summary": "Tool-type specification compilers live inside cs-05-provenance under tools/spec-profiles// , each with matching rules, deterministic Go spec-builder logic, and ...",
+    "url": "/guides/spec-cs-05-provenance/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-05-provenance Specification Tool-type specification compilers live inside cs-05-provenance under tools/spec-profiles// , each with matching rules, deterministic Go spec-builder logic, and golden test fixtures. | Sub-Tool | Responsibility | | --- | --- | | spec-profiles | Tool-type compilers that translate approved regulatory citations, typed inputs/outputs, units, validation bounds, formulas, and public worked examples into sanitized JSON build specs. | Sanitized Failure Modes | Error Code | Trigger | Platform Behavior | | --- | --- | --- | | E NEEDS SUBTOOL | Approved item requires a tool structure not covered by tools/spec-profiles// . | Fails closed to needs subtool . cs-10-notify opens a deduplicated task in cs-05-provenance on cs-git ; once the new profile and golden fixture deploy, hub-queue-api auto-replays paused items. | | E PARSE | Missing statutory authority, malformed worked-example vectors, or invalid spec schema. | Halts compilation cleanly and emits a fingerprinted error via cs-10-notify . | | E TIMEOUT | Transient timeout communicating with hub-queue-api . | Compiled spec is held in /var/spool/cs and retried until acknowledged. |"
+  },
+  {
+    "id": "section-spec-cs-05-provenance-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-05-provenance Specification",
+    "summary": "- Enforces the clean-room wall before cs-06-build : cs-05-provenance strips all raw HTML snapshots, vendor marketing URLs inside build inputs, vendor field labe...",
+    "url": "/guides/spec-cs-05-provenance/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-05-provenance Specification - Enforces the clean-room wall before cs-06-build : cs-05-provenance strips all raw HTML snapshots, vendor marketing URLs inside build inputs, vendor field labels, CSS classes, proprietary schemas, and scraped vendor test data. Only functional specifications anchored to official government publications and public worked examples cross into cs-06-build . - Nominative attribution rules: Provenance notes never rate, criticize, or disparage observed products, and never imply vendor partnership, sponsorship, or endorsement. - Pod hardening & network policy: Runs non-root with dropped capabilities, read-only root filesystem (writable only at /var/spool/cs ), zero database credentials, and default-deny NetworkPolicy allowing only ServiceAccount HTTP to hub-queue-api ."
+  },
+  {
+    "id": "section-spec-cs-05-provenance-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-05-provenance Specification",
+    "summary": "- How ideas are credited - Build and verify a tool (cs-06 to cs-08) - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - S...",
+    "url": "/guides/spec-cs-05-provenance/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-05-provenance Specification - How ideas are credited - Build and verify a tool (cs-06 to cs-08) - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - Shared Contracts Without an 11th Repo"
+  },
+  {
+    "id": "guide-spec-cs-06-build",
+    "type": "guide",
+    "title": "cs-06-build Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Technical specification for the deterministic cs-06-build worker that generates isolated MIT static tool repositories from clean-room JSON specs and stack templates.",
+    "url": "/guides/spec-cs-06-build/",
+    "badge": "DRAFT",
+    "content": "cs-06-build Specification Technical specification for the deterministic cs-06-build worker that generates isolated MIT static tool repositories from clean-room JSON specs and stack templates. specs L.7 draft intent Overview & Role cs-06-build ( v0.1.0-draft ) is the deterministic clean-room build worker in ClearedStack v3.1, replacing the original Stage 8 (Build). Implemented in the cs-06-build repository under the MIT License, it reads sanitized JSON build specs and worked-example fixtures compiled by cs-05-provenance and generates isolated, MIT-licensed static tool repositories inside cs-git . Zero observation artifacts ever enter cs-06-build , and zero AI models run during code generation. Every generated tool is pure static HTML, CSS, JavaScript, and bundled JSON reference tables that run entirely in"
+  },
+  {
+    "id": "section-spec-cs-06-build-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-06-build Specification",
+    "summary": "cs-06-build ( v0.1.0-draft ) is the deterministic clean-room build worker in ClearedStack v3.1, replacing the original Stage 8 (Build). Implemented in the cs-06...",
+    "url": "/guides/spec-cs-06-build/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-06-build Specification cs-06-build ( v0.1.0-draft ) is the deterministic clean-room build worker in ClearedStack v3.1, replacing the original Stage 8 (Build). Implemented in the cs-06-build repository under the MIT License, it reads sanitized JSON build specs and worked-example fixtures compiled by cs-05-provenance and generates isolated, MIT-licensed static tool repositories inside cs-git . Zero observation artifacts ever enter cs-06-build , and zero AI models run during code generation. Every generated tool is pure static HTML, CSS, JavaScript, and bundled JSON reference tables that run entirely in browser memory with no backend server and no external CDN dependencies."
+  },
+  {
+    "id": "section-spec-cs-06-build-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-06-build Specification",
+    "summary": "cs-06-build runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class. | Attribute | Value | | --- | --- | | Worker ID / Repo | cs...",
+    "url": "/guides/spec-cs-06-build/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-06-build Specification cs-06-build runs in the cs-workers Kubernetes namespace under the Standard (Workers) priority class. | Attribute | Value | | --- | --- | | Worker ID / Repo | cs-06-build | | Namespace | cs-workers | | Kind / Version | worker · v0.1.0-draft | | RAM Budget | 30 MiB (always-on Go pod) | | Runtime AI Calls | 0 (100% deterministic stack-templates/ code generation) | | Local Spool | /var/spool/cs (buffers generated repo metadata if hub-queue-api restarts) | | Build & Deploy | Built with ko (no Docker) by cs-runner , signed with cosign in cs-registry , deployed by cs-store via Server-Side Apply |"
+  },
+  {
+    "id": "section-spec-cs-06-build-interfaces-state-transitions",
+    "type": "section",
+    "title": "Interfaces & State Transitions",
+    "subtitle": "cs-06-build Specification",
+    "summary": "cs-06-build leases work from hub-queue-api in the clearedstack namespace over ServiceAccount-authenticated HTTP ( CONTRACT VERSION=v1 ), draining urgent → norma...",
+    "url": "/guides/spec-cs-06-build/#interfaces-state-transitions",
+    "badge": "Section",
+    "content": "Interfaces & State Transitions cs-06-build Specification cs-06-build leases work from hub-queue-api in the clearedstack namespace over ServiceAccount-authenticated HTTP ( CONTRACT VERSION=v1 ), draining urgent → normal → backfill priority lanes. - Inbound state: building (clean-room JSON build spec + worked-example fixtures emitted by cs-05-provenance , or regulatory drift re-builds routed back from cs-09-monitor ). - Build handoff: 1. Validates the clean-room JSON spec against CONTRACT VERSION=v1 . 2. Selects the matching deterministic stack template under stack-templates/ . 3. Generates the isolated static tool repository (including LICENSE under MIT, bundled lookup tables, strict CSP headers default-src 'self'; connect-src 'self'; form-action 'none' , regulatory citations, scope limits, and worked-example tests) and routes it to cs-git (mirrored to GitHub on change, with zero container images pushed to GitHub). 4. Hands off for cs-runner rootless BuildKit packaging and cs-07-verify 5-condition automated QA. - Outbound transitions: - Remains in building until cs-07-verify passes all five listing conditions and advances to live via cs-08-catalog . - parked — Moved to parked if blocked by unresolved regulatory ambiguity. - needs subtool — Fail-closed pause ( E NEEDS SUBTOOL ) when the spec requires an interaction pattern not supported by existing stack-templates/ ."
+  },
+  {
+    "id": "section-spec-cs-06-build-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-06-build Specification",
+    "summary": "Code-generation patterns live inside cs-06-build as deterministic stack templates under stack-templates/ : | Sub-Tool (Stack Template) | Best For | Generated In...",
+    "url": "/guides/spec-cs-06-build/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-06-build Specification Code-generation patterns live inside cs-06-build as deterministic stack templates under stack-templates/ : | Sub-Tool (Stack Template) | Best For | Generated Inputs & Outputs | | --- | --- | --- | | calculator | Rate build-ups, interest math, statutory thresholds | Numeric rates or dates in; step-by-step math and cited totals out. | | checklist | Solicitation reviews, compliance preparation | Structured yes/no items with regulatory citations and optional local browser state. | | validator | Checking codes, tables, or local files | User-supplied text or local files parsed in browser memory against bundled rules. | | decision-tree | Eligibility, clause applicability, routing | Guided branching questions leading to a deterministic, cited outcome. | Sanitized Failure Modes | Error Code | Trigger | Platform Behavior | | --- | --- | --- | | E NEEDS SUBTOOL | Clean-room spec requires an interaction pattern unsupported by calculator , checklist , validator , or decision-tree . | Fails closed to needs subtool . cs-10-notify opens a deduplicated task in cs-06-build on cs-git ; once a new template and fixture deploy, hub-queue-api auto-replays paused items. | | E PARSE | Clean-room spec fails contract validation or contains forbidden raw observation fields. | Rejected at hub-queue-api / cs-06-build before generation starts; fingerprinted error sent via cs-10-notify . | | E TIMEOUT | Transient timeout reporting build completion to hub-queue-api . | Buffered in /var/spool/cs and retried until acknowledged. |"
+  },
+  {
+    "id": "section-spec-cs-06-build-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-06-build Specification",
+    "summary": "- Absolute clean-room isolation: hub-queue-api enforces the shared contract boundary by rejecting any payload containing raw cs-02-observe HTML, screenshots, or...",
+    "url": "/guides/spec-cs-06-build/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-06-build Specification - Absolute clean-room isolation: hub-queue-api enforces the shared contract boundary by rejecting any payload containing raw cs-02-observe HTML, screenshots, or snapshots before cs-06-build can lease it. cs-06-build never accesses vendor sites or observation archives. - Synthetic fixtures only: Worked-example test fixtures must use hand-calculated official examples, boundary cases, and synthetic data. Real CUI, proprietary contractor rates, and non-public solicitation text are strictly forbidden. - Generated tool security: Every generated static tool enforces connect-src 'self' , default-src 'self' , form-action 'none' , zero tracking/analytics, and offline execution. - Pod hardening & network policy: Runs non-root with dropped capabilities, read-only root filesystem (except /var/spool/cs ), zero database credentials, and default-deny NetworkPolicy permitting only ServiceAccount HTTP to hub-queue-api (no direct access to postgres , cs-git , or cs-registry )."
+  },
+  {
+    "id": "section-spec-cs-06-build-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-06-build Specification",
+    "summary": "- Build and verify a tool (cs-06 to cs-08) - How ideas are credited - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - S...",
+    "url": "/guides/spec-cs-06-build/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-06-build Specification - Build and verify a tool (cs-06 to cs-08) - How ideas are credited - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - Shared Contracts Without an 11th Repo"
+  },
+  {
+    "id": "guide-spec-cs-07-verify",
+    "type": "guide",
+    "title": "cs-07-verify Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Automated 5-condition verification worker that tests built static tools for offline execution, strict CSP, zero tracking, worked examples, and public citations before catalog publication.",
+    "url": "/guides/spec-cs-07-verify/",
+    "badge": "DRAFT",
+    "content": "cs-07-verify Specification Automated 5-condition verification worker that tests built static tools for offline execution, strict CSP, zero tracking, worked examples, and public citations before catalog publication. specs L.7 draft intent Overview & Role cs-07-verify is the automated quality-assurance worker in the cs-workers namespace ( ownerRepo: cs-07-verify , version v0.1.0-draft ). Split out of the original Stage 9 (List) design, its sole responsibility is to run the deterministic 5-condition verification suite against every static tool bundle built by cs-runner from a cs-06-build repository. Like every worker in the pipeline, cs-07-verify is a 100% deterministic Go service with zero AI at runtime. A tool cannot enter the live catalog unless every check in the suite passes. Runtime & Resource Budget | Property | Value | | "
+  },
+  {
+    "id": "section-spec-cs-07-verify-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-07-verify Specification",
+    "summary": "cs-07-verify is the automated quality-assurance worker in the cs-workers namespace ( ownerRepo: cs-07-verify , version v0.1.0-draft ). Split out of the original...",
+    "url": "/guides/spec-cs-07-verify/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-07-verify Specification cs-07-verify is the automated quality-assurance worker in the cs-workers namespace ( ownerRepo: cs-07-verify , version v0.1.0-draft ). Split out of the original Stage 9 (List) design, its sole responsibility is to run the deterministic 5-condition verification suite against every static tool bundle built by cs-runner from a cs-06-build repository. Like every worker in the pipeline, cs-07-verify is a 100% deterministic Go service with zero AI at runtime. A tool cannot enter the live catalog unless every check in the suite passes."
+  },
+  {
+    "id": "section-spec-cs-07-verify-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-07-verify Specification",
+    "summary": "| Property | Value | | --- | --- | | Service / Repo | cs-07-verify | | Namespace | cs-workers | | Kind | worker (100% deterministic Go, zero runtime AI) | | Ver...",
+    "url": "/guides/spec-cs-07-verify/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-07-verify Specification | Property | Value | | --- | --- | | Service / Repo | cs-07-verify | | Namespace | cs-workers | | Kind | worker (100% deterministic Go, zero runtime AI) | | Version | v0.1.0-draft | | RAM Budget | 30 MiB | | Sub-Tools | None ( [] — universal 5-condition checks) | | Local Spool | /var/spool/cs (persists completed results across hub-queue-api restarts) | | Contract Version | CONTRACT VERSION=v1 (owned by clearedstack.com ) | cs-07-verify runs under the Standard Kubernetes priority class so it yields cleanly if High-priority control-plane pods ( postgres , hub-queue-api , clearedstack-web , cs-git , cs-registry , cs-store ) need memory on a 4 GiB k3s node."
+  },
+  {
+    "id": "section-spec-cs-07-verify-interfaces-state-transitions",
+    "type": "section",
+    "title": "Interfaces & State Transitions",
+    "subtitle": "cs-07-verify Specification",
+    "summary": "cs-07-verify never connects directly to postgres or holds database credentials. It polls hub-queue-api over cluster-private HTTP using its Kubernetes ServiceAcc...",
+    "url": "/guides/spec-cs-07-verify/#interfaces-state-transitions",
+    "badge": "Section",
+    "content": "Interfaces & State Transitions cs-07-verify Specification cs-07-verify never connects directly to postgres or holds database credentials. It polls hub-queue-api over cluster-private HTTP using its Kubernetes ServiceAccount identity ( lease , heartbeat , complete , fail , needs subtool ), always draining urgent before normal and normal before backfill . 1. Input state ( building ): Picks up items whose static bundle has been generated by cs-06-build and compiled without Docker by cs-runner (using rootless BuildKit). 2. 5-condition verification suite: - Offline execution: Confirms the tool loads once and operates with the network disconnected, with all lookup tables, rates, and regulatory dates bundled inside the repository. - Strict Content Security Policy: Verifies connect-src 'self' , default-src 'self' , and form-action 'none' so the browser blocks any outbound data transfer or remote asset fetch. - Zero tracking or accounts: Confirms zero sign-in walls, analytics scripts, cookies, visitor counters, or third-party beacons, and verifies any local browser storage usage is disclosed with a clear-data control. - Worked-example assertions: Executes hand-calculated worked examples, boundary edge cases (zero values, empty inputs, date boundaries), and synthetic test fixtures. - Citations, scope limits, and MIT license: Checks that every calculation cites its official source (regulation, paragraph, revision date), states scope exclusions and a non-advice disclaimer, and includes an MIT LICENSE file. 3. Output transition: Stages the signed verification result in /var/spool/cs and reports completion to hub-queue-api , hand-off ready for cs-08-catalog to transition building → live . If regulatory ambiguity blocks verification, the item moves to parked ."
+  },
+  {
+    "id": "section-spec-cs-07-verify-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-07-verify Specification",
+    "summary": "cs-07-verify defines no per-case sub-tools ( subTools: [] ) because the 5-condition verification suite is universal across all stack templates ( calculator , ch...",
+    "url": "/guides/spec-cs-07-verify/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-07-verify Specification cs-07-verify defines no per-case sub-tools ( subTools: [] ) because the 5-condition verification suite is universal across all stack templates ( calculator , checklist , validator , decision-tree ). | Error Code | Trigger | Pipeline Behavior | | --- | --- | --- | | E PARSE | Missing LICENSE , invalid CSP policy, failed worked-example assertion, or malformed bundle | Refuses to guess; logs sanitized failure to hub-queue-api and halts item before catalog publication. | | E TIMEOUT | Static verification harness or fixture runner exceeds deadline | Item remains leased/retryable in hub-queue-api ; cs-10-notify deduplicates repeated timeouts by fingerprint. | | E NEEDS SUBTOOL | Unrecognized bundle or assertion format introduced by a new template | Fails closed, pauses item in needs subtool , and triggers cs-10-notify to open a task; auto-replays once cs-store deploys the fix. |"
+  },
+  {
+    "id": "section-spec-cs-07-verify-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-07-verify Specification",
+    "summary": "- Network isolation: Default-deny network policies block cs-07-verify from reaching postgres , cs-git , or cs-registry directly. - Unprivileged execution: Runs ...",
+    "url": "/guides/spec-cs-07-verify/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-07-verify Specification - Network isolation: Default-deny network policies block cs-07-verify from reaching postgres , cs-git , or cs-registry directly. - Unprivileged execution: Runs as non-root with dropped Linux capabilities, no privilege escalation, and a read-only root filesystem (apart from /var/spool/cs ). - Clean-room & data hygiene: Verification fixtures must use synthetic or public data only; real CUI, proprietary contractor rates, and non-public solicitation text are strictly rejected. No raw cs-02-observe observation artifacts ever cross into cs-07-verify . - Sanitized reporting: cs-store strips internal IPs, node names, and pod hostnames before any failure status reaches pub. or /tools/ apps ."
+  },
+  {
+    "id": "section-spec-cs-07-verify-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-07-verify Specification",
+    "summary": "- Build and verify a tool (cs-06 to cs-08) - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - When a Worker Turns Red: T...",
+    "url": "/guides/spec-cs-07-verify/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-07-verify Specification - Build and verify a tool (cs-06 to cs-08) - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - When a Worker Turns Red: Troubleshooting Big Picture - Two-Namespace Kubernetes Topology"
+  },
+  {
+    "id": "guide-spec-cs-08-catalog",
+    "type": "guide",
+    "title": "cs-08-catalog Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Catalog publication worker that publishes verified, linked, merged, and retired entries with provenance links to the clearedstack.com catalog.",
+    "url": "/guides/spec-cs-08-catalog/",
+    "badge": "DRAFT",
+    "content": "cs-08-catalog Specification Catalog publication worker that publishes verified, linked, merged, and retired entries with provenance links to the clearedstack.com catalog. specs L.7 draft intent Overview & Role cs-08-catalog is the catalog publication worker in the cs-workers namespace ( ownerRepo: cs-08-catalog , version v0.1.0-draft ). Split out of the original Stage 9 (List) alongside cs-07-verify , its job is to publish verified, linked, merged, and retired entries—complete with provenance links—to the clearedstack.com catalog ( /tools ). cs-08-catalog is a 100% deterministic Go service with zero AI at runtime. It never builds code or runs verification checks itself; it only publishes outcomes that have already passed cs-07-verify or been determined in cs-04-decide . Runtime & Res"
+  },
+  {
+    "id": "section-spec-cs-08-catalog-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-08-catalog Specification",
+    "summary": "cs-08-catalog is the catalog publication worker in the cs-workers namespace ( ownerRepo: cs-08-catalog , version v0.1.0-draft ). Split out of the original Stage...",
+    "url": "/guides/spec-cs-08-catalog/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-08-catalog Specification cs-08-catalog is the catalog publication worker in the cs-workers namespace ( ownerRepo: cs-08-catalog , version v0.1.0-draft ). Split out of the original Stage 9 (List) alongside cs-07-verify , its job is to publish verified, linked, merged, and retired entries—complete with provenance links—to the clearedstack.com catalog ( /tools ). cs-08-catalog is a 100% deterministic Go service with zero AI at runtime. It never builds code or runs verification checks itself; it only publishes outcomes that have already passed cs-07-verify or been determined in cs-04-decide ."
+  },
+  {
+    "id": "section-spec-cs-08-catalog-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-08-catalog Specification",
+    "summary": "| Property | Value | | --- | --- | | Service / Repo | cs-08-catalog | | Namespace | cs-workers | | Kind | worker (100% deterministic Go, zero runtime AI) | | Ve...",
+    "url": "/guides/spec-cs-08-catalog/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-08-catalog Specification | Property | Value | | --- | --- | | Service / Repo | cs-08-catalog | | Namespace | cs-workers | | Kind | worker (100% deterministic Go, zero runtime AI) | | Version | v0.1.0-draft | | RAM Budget | 30 MiB | | Sub-Tools | None ( [] — uniform catalog publication logic) | | Local Spool | /var/spool/cs (buffers publication acknowledgements if hub-queue-api restarts) | | Contract Version | CONTRACT VERSION=v1 (owned by clearedstack.com ) | cs-08-catalog runs under the Standard Kubernetes priority class, keeping baseline memory around 30 MiB and yielding before High-priority control-plane pods on a single 4 GiB k3s node."
+  },
+  {
+    "id": "section-spec-cs-08-catalog-interfaces-state-transitions",
+    "type": "section",
+    "title": "Interfaces & State Transitions",
+    "subtitle": "cs-08-catalog Specification",
+    "summary": "cs-08-catalog communicates exclusively with hub-queue-api over cluster-private HTTP using its Kubernetes ServiceAccount identity ( lease , heartbeat , complete ...",
+    "url": "/guides/spec-cs-08-catalog/#interfaces-state-transitions",
+    "badge": "Section",
+    "content": "Interfaces & State Transitions cs-08-catalog Specification cs-08-catalog communicates exclusively with hub-queue-api over cluster-private HTTP using its Kubernetes ServiceAccount identity ( lease , heartbeat , complete , fail , needs subtool ), processing urgent items before normal and normal before backfill . It has zero direct access to postgres . | Source State | Target State | Trigger & Catalog Action | | --- | --- | --- | | building | live | cs-07-verify passed all 5 conditions; publishes active tool entry and provenance links to /tools . | | scored | linked | Owner in cs-04-decide chose Link ; publishes external reference to an existing free, private tool (avoiding duplicate rebuild). | | scored | merged | Owner in cs-04-decide chose Merge ; publishes catalog note folding scope into the parent tool repository. | | live | retired | Governing regulation repealed or superseded (detected by cs-09-monitor ); archives active listing while retaining historical note. | Completed publication payloads are staged in /var/spool/cs before hub-queue-api commits the state transition to core. and refreshes pub. views for clearedstack-web . Public tool source repositories in cs-git are mirrored to GitHub on change (with zero container images pushed to GitHub)."
+  },
+  {
+    "id": "section-spec-cs-08-catalog-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-08-catalog Specification",
+    "summary": "cs-08-catalog defines no per-case sub-tools ( subTools: [] ) because catalog entry generation follows a single deterministic schema enforced by hub-queue-api . ...",
+    "url": "/guides/spec-cs-08-catalog/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-08-catalog Specification cs-08-catalog defines no per-case sub-tools ( subTools: [] ) because catalog entry generation follows a single deterministic schema enforced by hub-queue-api . | Error Code | Trigger | Pipeline Behavior | | --- | --- | --- | | E PARSE | Missing provenance block, missing cs-07-verify pass attestation, or invalid catalog metadata | Fails cleanly without publishing; reports sanitized error to hub-queue-api for deduplication by cs-10-notify . | | E TIMEOUT | hub-queue-api or catalog sync endpoint times out | Result stays safely staged in /var/spool/cs and retries with backoff until acknowledged. | | E NEEDS SUBTOOL | Unsupported catalog entry type or schema version mismatch | Fails closed, pauses item in needs subtool , and awaits a deterministic update deployed via cs-store . |"
+  },
+  {
+    "id": "section-spec-cs-08-catalog-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-08-catalog Specification",
+    "summary": "- Zero direct database access: Network policies block cs-08-catalog from postgres , cs-git , and cs-registry ; all state writes flow through hub-queue-api trans...",
+    "url": "/guides/spec-cs-08-catalog/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-08-catalog Specification - Zero direct database access: Network policies block cs-08-catalog from postgres , cs-git , and cs-registry ; all state writes flow through hub-queue-api transactions. - Unprivileged pod posture: Non-root user, dropped Linux capabilities, no privilege escalation, and read-only root filesystem outside /var/spool/cs . - Provenance & attribution: Every published live or linked entry preserves the deterministic Go-template provenance note stamped by cs-05-provenance and carries no raw cs-02-observe snapshots. - Sanitized observability: Cluster internals are stripped by cs-store before any worker health or error state appears on clearedstack-web ."
+  },
+  {
+    "id": "section-spec-cs-08-catalog-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-08-catalog Specification",
+    "summary": "- Build and verify a tool (cs-06 to cs-08) - How ideas are credited - The Redesigned 10-Worker Workflow & Lifecycle - Shared Hub Database and Worker Local Spool...",
+    "url": "/guides/spec-cs-08-catalog/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-08-catalog Specification - Build and verify a tool (cs-06 to cs-08) - How ideas are credited - The Redesigned 10-Worker Workflow & Lifecycle - Shared Hub Database and Worker Local Spools - When a Worker Turns Red: Troubleshooting Big Picture"
+  },
+  {
+    "id": "guide-spec-cs-09-monitor",
+    "type": "guide",
+    "title": "cs-09-monitor Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Scheduled monitoring worker that watches FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers for deterministic drift and reopens affected items.",
+    "url": "/guides/spec-cs-09-monitor/",
+    "badge": "DRAFT",
+    "content": "cs-09-monitor Specification Scheduled monitoring worker that watches FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers for deterministic drift and reopens affected items. specs L.7 draft intent Overview & Role cs-09-monitor is the continuous monitoring worker in the cs-workers namespace ( ownerRepo: cs-09-monitor , version v0.1.0-draft ). Replacing the original Stage 10 (Revisit), it watches federal regulatory feeds, live ClearedStack tools, external linked tools, and parked blockers for drift. cs-09-monitor is a 100% deterministic Go service with zero AI at runtime. Rather than scraping pages blindly or patching tools directly, it uses lightweight HTTP ETags, structured XML/API feeds, and deterministic DOM diffs—and reopens affected PA-XXXX items in hub-queue-api so the main pipelin"
+  },
+  {
+    "id": "section-spec-cs-09-monitor-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-09-monitor Specification",
+    "summary": "cs-09-monitor is the continuous monitoring worker in the cs-workers namespace ( ownerRepo: cs-09-monitor , version v0.1.0-draft ). Replacing the original Stage ...",
+    "url": "/guides/spec-cs-09-monitor/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-09-monitor Specification cs-09-monitor is the continuous monitoring worker in the cs-workers namespace ( ownerRepo: cs-09-monitor , version v0.1.0-draft ). Replacing the original Stage 10 (Revisit), it watches federal regulatory feeds, live ClearedStack tools, external linked tools, and parked blockers for drift. cs-09-monitor is a 100% deterministic Go service with zero AI at runtime. Rather than scraping pages blindly or patching tools directly, it uses lightweight HTTP ETags, structured XML/API feeds, and deterministic DOM diffs—and reopens affected PA-XXXX items in hub-queue-api so the main pipeline handles updates cleanly."
+  },
+  {
+    "id": "section-spec-cs-09-monitor-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-09-monitor Specification",
+    "summary": "| Property | Value | | --- | --- | | Service / Repo | cs-09-monitor | | Namespace | cs-workers | | Kind | worker (100% deterministic Go, zero runtime AI) | | Ve...",
+    "url": "/guides/spec-cs-09-monitor/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-09-monitor Specification | Property | Value | | --- | --- | | Service / Repo | cs-09-monitor | | Namespace | cs-workers | | Kind | worker (100% deterministic Go, zero runtime AI) | | Version | v0.1.0-draft | | RAM Budget | 30 MiB | | Sub-Tools | federal-register , ecfr , nist-csrc , linked-tool-watch , live-catalog | | Local Spool | /var/spool/cs (buffers detected drift events if hub-queue-api is restarting) | | Contract Version | CONTRACT VERSION=v1 (owned by clearedstack.com ) | cs-09-monitor runs under the Standard Kubernetes priority class with a 30 MiB memory footprint, yielding before High-priority control-plane pods on a single 4 GiB k3s node."
+  },
+  {
+    "id": "section-spec-cs-09-monitor-interfaces-state-transitions",
+    "type": "section",
+    "title": "Interfaces & State Transitions",
+    "subtitle": "cs-09-monitor Specification",
+    "summary": "cs-09-monitor pulls scheduled watch tasks from hub-queue-api over cluster-private HTTP using its Kubernetes ServiceAccount identity ( lease , heartbeat , comple...",
+    "url": "/guides/spec-cs-09-monitor/#interfaces-state-transitions",
+    "badge": "Section",
+    "content": "Interfaces & State Transitions cs-09-monitor Specification cs-09-monitor pulls scheduled watch tasks from hub-queue-api over cluster-private HTTP using its Kubernetes ServiceAccount identity ( lease , heartbeat , complete , fail , needs subtool ). It never touches postgres directly. When a deterministic diff confirms a meaningful change, cs-09-monitor stages the finding in /var/spool/cs and requests a state transition through hub-queue-api : | Current State | Reopened Target State | Priority Lane | Condition | | --- | --- | --- | --- | | live | building | urgent | Governing regulation shifted or live tool rule version drifted; preempts normal/backfill work for an updated release. | | live | retired | urgent | Underlying statutory rule or clause was repealed or superseded. | | parked | observed | normal | Previously named blocker (e.g., pending rule or missing public data) cleared on scheduled revisit. | | linked | observed | normal | External free tool went offline, added a paywall, or introduced tracking scripts; returned for clean-room build decision. |"
+  },
+  {
+    "id": "section-spec-cs-09-monitor-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-09-monitor Specification",
+    "summary": "Each source type is implemented as a deterministic sub-tool under tools// inside the cs-09-monitor repository, paired with golden test fixtures: | Sub-Tool | Ta...",
+    "url": "/guides/spec-cs-09-monitor/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-09-monitor Specification Each source type is implemented as a deterministic sub-tool under tools// inside the cs-09-monitor repository, paired with golden test fixtures: | Sub-Tool | Target Monitored | Detection Method | | --- | --- | --- | | federal-register | Federal Register notices and rulemakings | Scheduled XML and API diffs for FAR, DFARS, and small-business rule updates. | | ecfr | Electronic Code of Federal Regulations | HTTP ETag and XML diffs tracking modified clauses, thresholds, and effective dates. | | nist-csrc | NIST Computer Security Resource Center | Scheduled feed and DOM diffs for cybersecurity standards such as SP 800-171. | | linked-tool-watch | External tools marked linked in the catalog | Periodic HTTP and DOM checks for dead links, new paywalls, or added tracking scripts. | | live-catalog | ClearedStack tools published as live | Scheduled health and rule-version checks against active catalog entries. | | Error Code | Trigger | Pipeline Behavior | | --- | --- | --- | | E TIMEOUT | Upstream government feed or external linked site fails to respond in time | Item stays safe in queue for retry; repeated timeouts are deduplicated by cs-10-notify . | | E PARSE | Corrupt XML/JSON feed or broken HTTP response | Refuses to guess; logs sanitized failure and halts that check cleanly. | | E NEEDS SUBTOOL | Upstream feed or DOM layout changes to an unrecognized structure | Fails closed, pauses item in needs subtool , and triggers cs-10-notify to open a task; auto-replays after cs-store deploys the new watcher. |"
+  },
+  {
+    "id": "section-spec-cs-09-monitor-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-09-monitor Specification",
+    "summary": "- Restricted network egress: Default-deny network policies permit cs-09-monitor to call hub-queue-api and approved public regulatory/catalog targets only; postg...",
+    "url": "/guides/spec-cs-09-monitor/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-09-monitor Specification - Restricted network egress: Default-deny network policies permit cs-09-monitor to call hub-queue-api and approved public regulatory/catalog targets only; postgres , cs-git , and cs-registry are unreachable. - Unprivileged pod posture: Runs as non-root with dropped Linux capabilities, no privilege escalation, and a read-only root filesystem (apart from /var/spool/cs ). - Clean-room separation: cs-09-monitor only inspects public regulatory feeds and catalog metadata; it never injects raw external HTML into cs-06-build payloads ( hub-queue-api rejects any such attempt). - Sanitized status: Internal cluster details are stripped by cs-store before any E TIMEOUT , E PARSE , or E NEEDS SUBTOOL alert is surfaced publicly."
+  },
+  {
+    "id": "section-spec-cs-09-monitor-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-09-monitor Specification",
+    "summary": "- Workers 09 & 10: Continuous Monitoring & Notifications - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - When a Worke...",
+    "url": "/guides/spec-cs-09-monitor/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-09-monitor Specification - Workers 09 & 10: Continuous Monitoring & Notifications - The Redesigned 10-Worker Workflow & Lifecycle - 100% Deterministic Workers & Sub-Tools - When a Worker Turns Red: Troubleshooting Big Picture - Two-Namespace Kubernetes Topology"
+  },
+  {
+    "id": "guide-spec-cs-10-notify",
+    "type": "guide",
+    "title": "cs-10-notify Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Cross-cutting routing and notification worker that deduplicates errors by fingerprint, commits approved Portal edits and needs_subtool tasks to cs-git, and drives owner alerts and live SSE updates.",
+    "url": "/guides/spec-cs-10-notify/",
+    "badge": "DRAFT",
+    "content": "cs-10-notify Specification Cross-cutting routing and notification worker that deduplicates errors by fingerprint, commits approved Portal edits and needs_subtool tasks to cs-git, and drives owner alerts and live SSE updates. specs L.7 draft intent Overview & Role cs-10-notify is the cross-cutting notification and routing worker in the cs-workers namespace ( ownerRepo: cs-10-notify , version v0.1.0-draft ). Added in ClearedStack v3.1 to close the edit-to-repo and auto-issue loops, it routes owner-approved Portal edits, needs subtool tasks, and fingerprinted errors into cs-git , coordinates outbound GitHub mirroring, dispatches owner webhook alerts, and drives live Server-Sent Events (SSE) updates on clearedstack-web . Like all ten workers, cs-10-notify is a 100% deterministic Go service with zero AI at runtime. Runtime & Resource Budget "
+  },
+  {
+    "id": "section-spec-cs-10-notify-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-10-notify Specification",
+    "summary": "cs-10-notify is the cross-cutting notification and routing worker in the cs-workers namespace ( ownerRepo: cs-10-notify , version v0.1.0-draft ). Added in Clear...",
+    "url": "/guides/spec-cs-10-notify/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-10-notify Specification cs-10-notify is the cross-cutting notification and routing worker in the cs-workers namespace ( ownerRepo: cs-10-notify , version v0.1.0-draft ). Added in ClearedStack v3.1 to close the edit-to-repo and auto-issue loops, it routes owner-approved Portal edits, needs subtool tasks, and fingerprinted errors into cs-git , coordinates outbound GitHub mirroring, dispatches owner webhook alerts, and drives live Server-Sent Events (SSE) updates on clearedstack-web . Like all ten workers, cs-10-notify is a 100% deterministic Go service with zero AI at runtime."
+  },
+  {
+    "id": "section-spec-cs-10-notify-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-10-notify Specification",
+    "summary": "| Property | Value | | --- | --- | | Service / Repo | cs-10-notify | | Namespace | cs-workers | | Kind | worker (100% deterministic Go, zero runtime AI) | | Ver...",
+    "url": "/guides/spec-cs-10-notify/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-10-notify Specification | Property | Value | | --- | --- | | Service / Repo | cs-10-notify | | Namespace | cs-workers | | Kind | worker (100% deterministic Go, zero runtime AI) | | Version | v0.1.0-draft | | RAM Budget | 30 MiB | | Sub-Tools | internal-git , github-mirror , webhook-alert , portal-sse | | Local Spool | /var/spool/cs (buffers outbound notifications and acks during hub-queue-api restarts) | | Contract Version | CONTRACT VERSION=v1 (owned by clearedstack.com ) | cs-10-notify runs under the Standard Kubernetes priority class at 30 MiB RAM, yielding before High-priority control-plane pods on a single 4 GiB k3s node."
+  },
+  {
+    "id": "section-spec-cs-10-notify-interfaces-state-transitions",
+    "type": "section",
+    "title": "Interfaces & State Transitions",
+    "subtitle": "cs-10-notify Specification",
+    "summary": "cs-10-notify pulls leased notification and routing jobs from hub-queue-api over cluster-private HTTP using its Kubernetes ServiceAccount identity ( lease , hear...",
+    "url": "/guides/spec-cs-10-notify/#interfaces-state-transitions",
+    "badge": "Section",
+    "content": "Interfaces & State Transitions cs-10-notify Specification cs-10-notify pulls leased notification and routing jobs from hub-queue-api over cluster-private HTTP using its Kubernetes ServiceAccount identity ( lease , heartbeat , complete , fail , needs subtool ), always draining urgent before normal and normal before backfill . It never connects directly to postgres . Rather than transitioning PA-XXXX items through pipeline stages itself, cs-10-notify reacts to pipeline events and cs-04-decide approvals: - Deterministic issue deduplication: Computes a repeatable fingerprint from the worker name, sanitized error code ( E TIMEOUT , E PARSE , E NEEDS SUBTOOL ), and failure pattern. If an open issue with that fingerprint already exists in cs-git , cs-10-notify increments its occurrence count instead of creating duplicate tickets. - Edit-to-repo loop ( ownership map.json ): Routes owner-approved anonymous ✎ Edit proposals ( DATA , CONFIG , ISSUE from cs-04-decide )—committing CONFIG branches/PRs or ISSUE tickets to cs-git so cs-runner can build/test and cs-store can deploy. - Live Portal SSE: Streams sanitized status updates so an anonymous visitor watches their edit pill move live from Proposed → Approved → Building → Live ."
+  },
+  {
+    "id": "section-spec-cs-10-notify-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-10-notify Specification",
+    "summary": "cs-10-notify separates delivery targets into four deterministic sub-tools under tools// : | Sub-Tool | Responsibility | Target | | --- | --- | --- | | internal-...",
+    "url": "/guides/spec-cs-10-notify/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-10-notify Specification cs-10-notify separates delivery targets into four deterministic sub-tools under tools// : | Sub-Tool | Responsibility | Target | | --- | --- | --- | | internal-git | Commits owner-approved Portal edits ( DATA , CONFIG , ISSUE ), needs subtool tasks, and fingerprinted error issues. | Cluster-private cs-git repositories. | | github-mirror | Coordinates outbound code mirroring on change so public contributors can inspect commits and issues. | Public GitHub mirror (source code only; zero container images). | | webhook-alert | Dispatches concise owner alerts for genuinely new fingerprinted errors, P0 crashes/dead-letters, or urgent regulatory drift. | Configured external webhook endpoint. | | portal-sse | Pushes sanitized real-time Server-Sent Events through hub-queue-api to clearedstack-web . | Public Portal UI ( /guides/live-command-portal/ , /guides/workflow-state-machine/ , /tools/ apps , and live ✎ pills). | | Error Code | Trigger | Pipeline Behavior | | --- | --- | --- | | E TIMEOUT | External webhook endpoint or cs-git mirror target times out | Result remains staged in /var/spool/cs and retries with backoff until delivered. | | E PARSE | Malformed edit proposal payload or unexpected webhook/Git API response | Refuses to guess; logs sanitized error without corrupting target repo. | | E NEEDS SUBTOOL | Unknown edit class or unsupported notification target | Fails closed, pauses task in needs subtool , and surfaces in P1 attention tier until resolved. |"
+  },
+  {
+    "id": "section-spec-cs-10-notify-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-10-notify Specification",
+    "summary": "- No raw cluster topology: cs-10-notify only emits sanitized error codes and fingerprints; cs-store strips internal node names, pod hostnames, and cluster IPs b...",
+    "url": "/guides/spec-cs-10-notify/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-10-notify Specification - No raw cluster topology: cs-10-notify only emits sanitized error codes and fingerprints; cs-store strips internal node names, pod hostnames, and cluster IPs before status reaches pub. or portal-sse . - No database credentials: Network policies block direct access to postgres ; all queue reads and state acknowledgements pass through hub-queue-api . - Source-only mirroring: github-mirror mirrors MIT-licensed source code and issues only—zero container images, secrets, or raw cs-02-observe captures are ever pushed to GitHub. - Unprivileged pod posture: Non-root user, dropped Linux capabilities, no privilege escalation, and read-only root filesystem outside /var/spool/cs ."
+  },
+  {
+    "id": "section-spec-cs-10-notify-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-10-notify Specification",
+    "summary": "- Workers 09 & 10: Continuous Monitoring & Notifications - Ownership Map & the Edit-to-Repo Loop - The Redesigned 10-Worker Workflow & Lifecycle - When a Worker...",
+    "url": "/guides/spec-cs-10-notify/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-10-notify Specification - Workers 09 & 10: Continuous Monitoring & Notifications - Ownership Map & the Edit-to-Repo Loop - The Redesigned 10-Worker Workflow & Lifecycle - When a Worker Turns Red: Troubleshooting Big Picture - Two-Namespace Kubernetes Topology"
+  },
+  {
+    "id": "guide-spec-cs-git",
+    "type": "guide",
+    "title": "cs-git Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Lightweight MIT-licensed Go Git server in the clearedstack namespace acting as cluster-primary source of truth with push-mirroring to GitHub.",
+    "url": "/guides/spec-cs-git/",
+    "badge": "DRAFT",
+    "content": "cs-git Specification Lightweight MIT-licensed Go Git server in the clearedstack namespace acting as cluster-primary source of truth with push-mirroring to GitHub. specs L.7 draft intent cs-git ( v0.1.0-draft , owned by cs-git ) is a clean-room, MIT-licensed Go Git server running in the clearedstack control-plane namespace. It replaces heavy third-party forges such as Forgejo—eliminating 40+ database tables and hundreds of megabytes of RAM—while serving as the cluster's primary source of truth for code and configuration. Overview & Role ClearedStack treats the cluster as primary and GitHub as the public mirror: - Headless Primary Git Server: Hosts bare .git repositories for clearedstack.com , all 10 deterministic workers ( cs-01 .. cs-10 ), sub-tools, and app.yaml deployment m"
+  },
+  {
+    "id": "section-spec-cs-git-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-git Specification",
+    "summary": "ClearedStack treats the cluster as primary and GitHub as the public mirror: - Headless Primary Git Server: Hosts bare .git repositories for clearedstack.com , a...",
+    "url": "/guides/spec-cs-git/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-git Specification ClearedStack treats the cluster as primary and GitHub as the public mirror: - Headless Primary Git Server: Hosts bare .git repositories for clearedstack.com , all 10 deterministic workers ( cs-01 .. cs-10 ), sub-tools, and app.yaml deployment manifests. - Webhook & Mirror Trigger: Whenever a commit lands on main or a new tag is created, cs-git fires a push webhook to cs-runner and push-mirrors source commits and tags to GitHub. - Zero Web UI / Account Overhead: Public browsing, status inspection, and anonymous ✎ Edit proposals happen in clearedstack-web , so cs-git needs no user accounts, issue UI, or PR web frontend."
+  },
+  {
+    "id": "section-spec-cs-git-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-git Specification",
+    "summary": "| Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | cs-git | | ...",
+    "url": "/guides/spec-cs-git/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-git Specification | Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | cs-git | | RAM Request | 64 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Storage | Persistent Volume Claim (bare .git repositories; 1 of 3 cluster PVCs) | | Network Exposure | Cluster-private ( ClusterIP only); outbound HTTPS push-mirror to GitHub |"
+  },
+  {
+    "id": "section-spec-cs-git-interfaces-data-contracts",
+    "type": "section",
+    "title": "Interfaces & Data Contracts",
+    "subtitle": "cs-git Specification",
+    "summary": "| Peer / Target | Direction | Protocol / Mechanism | Data Contract | | --- | --- | --- | --- | | cs-10-notify | Inbound | Cluster-private Git / Patch API | Comm...",
+    "url": "/guides/spec-cs-git/#interfaces-data-contracts",
+    "badge": "Section",
+    "content": "Interfaces & Data Contracts cs-git Specification | Peer / Target | Direction | Protocol / Mechanism | Data Contract | | --- | --- | --- | --- | | cs-10-notify | Inbound | Cluster-private Git / Patch API | Commits approved public edits (from cs-04-decide ) and opens fingerprinted needs subtool tasks in owning repos | | cs-runner | Outbound / Inbound | Push webhook + Git commit | Receives push webhooks on main /tag updates to start builds; commits updated app.yaml image digests tagged [skip-ci] | | cs-store | Inbound | Cluster-private Git read | Watches app.yaml manifests in cs-git to reconcile deployments via Server-Side Apply | | GitHub | Outbound | HTTPS Git push-mirror | Mirrors source commits and tags on change; zero container images are ever pushed to GitHub |"
+  },
+  {
+    "id": "section-spec-cs-git-failure-modes-recovery",
+    "type": "section",
+    "title": "Failure Modes & Recovery",
+    "subtitle": "cs-git Specification",
+    "summary": "- GitHub Unreachable / Rate-Limited: Because cs-git is primary, internal commits, cs-runner builds, and cs-store deployments continue operating normally even if...",
+    "url": "/guides/spec-cs-git/#failure-modes-recovery",
+    "badge": "Section",
+    "content": "Failure Modes & Recovery cs-git Specification - GitHub Unreachable / Rate-Limited: Because cs-git is primary, internal commits, cs-runner builds, and cs-store deployments continue operating normally even if outbound mirroring to GitHub is temporarily unreachable. - Build Loop Prevention: Digest updates written back by cs-runner to app.yaml are tagged [skip-ci] so cs-git does not re-trigger an infinite build loop. - Volume Loss / Corruption: cs-git holds one of the cluster's three Persistent Volume Claims. Nightly backups archive the bare repositories, encrypt them client-side with age , and transfer them off-node. The automated monthly restore drill mounts the restored bare repositories in an isolated scratch area and runs Git consistency checks to prove recoverability. - Pod Restart: High Priority Class protects cs-git from eviction; on restart, k3s reattaches the PVC with all bare repositories intact."
+  },
+  {
+    "id": "section-spec-cs-git-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-git Specification",
+    "summary": "- ClusterIP Only: cs-git has zero public Ingress and is unreachable from the open internet. Default-deny NetworkPolicy restricts cluster-internal access to auth...",
+    "url": "/guides/spec-cs-git/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-git Specification - ClusterIP Only: cs-git has zero public Ingress and is unreachable from the open internet. Default-deny NetworkPolicy restricts cluster-internal access to authorized control-plane peers. - No Unapproved Public Commits: Anonymous ✎ Edit proposals cannot reach cs-git directly; they must pass the 5-layer anti-spam shield in hub-queue-api and explicit human approval in cs-04-decide before cs-10-notify writes a commit. - Source-Only Public Mirror: Only source code commits and tags mirror to GitHub; signed OCI container images remain strictly internal inside cs-registry . - Clean-Room MIT Licensing: Written from scratch in Go under the MIT license, with no upstream forge license or dependency baggage. - Unprivileged Execution: Runs as non-root with dropped Linux capabilities and no privilege escalation."
+  },
+  {
+    "id": "section-spec-cs-git-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-git Specification",
+    "summary": "- Internal Git Server & GitHub Mirror - Two-Namespace Kubernetes Topology - Backups and Monthly Restore Drills - Propose Edits Without Signing In",
+    "url": "/guides/spec-cs-git/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-git Specification - Internal Git Server & GitHub Mirror - Two-Namespace Kubernetes Topology - Backups and Monthly Restore Drills - Propose Edits Without Signing In"
+  },
+  {
+    "id": "guide-spec-cs-registry",
+    "type": "guide",
+    "title": "cs-registry Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Internal-only OCI v2 image store in the clearedstack namespace retaining the last 5 cosign-signed digests per app for instant rollback without Docker or GitHub image hosting.",
+    "url": "/guides/spec-cs-registry/",
+    "badge": "DRAFT",
+    "content": "cs-registry Specification Internal-only OCI v2 image store in the clearedstack namespace retaining the last 5 cosign-signed digests per app for instant rollback without Docker or GitHub image hosting. specs L.7 draft intent Overview & Role cs-registry ( v0.1.0-draft , owned by the cs-registry repository) is a clean-room MIT Go microservice running in the clearedstack control-plane namespace. It serves as the cluster's private OCI v2 container image registry , storing signed container images built by cs-runner and serving them to containerd on k3s nodes and cs-store during reconciliations and rollbacks. By running a purpose-built internal OCI store instead of Harbor or Docker Hub, ClearedStack keeps all container artifacts inside the cluster: zero container images are ever pushed to or pulled from GitHub . Runtime"
+  },
+  {
+    "id": "section-spec-cs-registry-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-registry Specification",
+    "summary": "cs-registry ( v0.1.0-draft , owned by the cs-registry repository) is a clean-room MIT Go microservice running in the clearedstack control-plane namespace. It se...",
+    "url": "/guides/spec-cs-registry/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-registry Specification cs-registry ( v0.1.0-draft , owned by the cs-registry repository) is a clean-room MIT Go microservice running in the clearedstack control-plane namespace. It serves as the cluster's private OCI v2 container image registry , storing signed container images built by cs-runner and serving them to containerd on k3s nodes and cs-store during reconciliations and rollbacks. By running a purpose-built internal OCI store instead of Harbor or Docker Hub, ClearedStack keeps all container artifacts inside the cluster: zero container images are ever pushed to or pulled from GitHub ."
+  },
+  {
+    "id": "section-spec-cs-registry-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-registry Specification",
+    "summary": "| Property | Value | | --- | --- | | Service / Repo | cs-registry | | Namespace | clearedstack ( control-plane ) | | Version | v0.1.0-draft | | RAM Budget (Requ...",
+    "url": "/guides/spec-cs-registry/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-registry Specification | Property | Value | | --- | --- | | Service / Repo | cs-registry | | Namespace | clearedstack ( control-plane ) | | Version | v0.1.0-draft | | RAM Budget (Requested) | 64 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Persistence | Dedicated PersistentVolumeClaim (PVC) for OCI blobs & manifests | | Sub-Tools | None ( [] ) |"
+  },
+  {
+    "id": "section-spec-cs-registry-interfaces-data-contracts",
+    "type": "section",
+    "title": "Interfaces & Data Contracts",
+    "subtitle": "cs-registry Specification",
+    "summary": "cs-registry exposes a cluster-private HTTP interface ( ClusterIP only, no public Ingress) implementing standard OCI Distribution Specification ( /v2/ ) endpoint...",
+    "url": "/guides/spec-cs-registry/#interfaces-data-contracts",
+    "badge": "Section",
+    "content": "Interfaces & Data Contracts cs-registry Specification cs-registry exposes a cluster-private HTTP interface ( ClusterIP only, no public Ingress) implementing standard OCI Distribution Specification ( /v2/ ) endpoints: - Image Push ( cs-runner build jobs): Accepts OCI image manifests, config blobs, and layers from ephemeral ko and rootless BuildKit Job pods, along with cosign signature artifacts. - Image Pull ( containerd / k3s ): Serves signed image manifests and layers by immutable sha256 digest when cs-store deploys or rolls back workloads. - Retention & Digest Index ( cs-store ): Retains the last 5 signed digests per app so cs-store can execute 1-click rollbacks from /tools/ apps without triggering a rebuild. - Daily Garbage Collection: Runs a scheduled cleanup pass to remove unreferenced layers and manifests older than the 5 retained digests per app, keeping PVC disk usage predictable on a single-node cluster."
+  },
+  {
+    "id": "section-spec-cs-registry-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-registry Specification",
+    "summary": "cs-registry is a control-plane infrastructure service and does not host tools// deterministic sub-tools ( subTools: [] ). | Failure Mode | Trigger | System Beha...",
+    "url": "/guides/spec-cs-registry/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-registry Specification cs-registry is a control-plane infrastructure service and does not host tools// deterministic sub-tools ( subTools: [] ). | Failure Mode | Trigger | System Behavior & Recovery | | --- | --- | --- | | PVC disk pressure | Rapidly accumulating image layers | Daily garbage collection prunes unreferenced blobs beyond the 5-digest retention window per app. | | Unsigned or mismatched digest | Attempted pull or deploy of an unverified artifact | cs-store and cosign verification reject unsigned digests before rollout; cs-runner must produce a valid signed build. | | Push / pull timeout ( E TIMEOUT ) | Transient network or storage stall during Job push | Build Job fails cleanly; cs-runner can re-run the deterministic build without leaving partial manifests active. | | Pod crash or restart | Node pressure or OOM | High PriorityClass protects cs-registry from eviction; PVC preserves all committed digests across restarts. |"
+  },
+  {
+    "id": "section-spec-cs-registry-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-registry Specification",
+    "summary": "- Cluster-private network boundary: cs-registry has no public Ingress. Default-deny Kubernetes NetworkPolicy rules restrict access to internal cluster traffic o...",
+    "url": "/guides/spec-cs-registry/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-registry Specification - Cluster-private network boundary: cs-registry has no public Ingress. Default-deny Kubernetes NetworkPolicy rules restrict access to internal cluster traffic only ( cs-runner pushing, cs-store inspecting digests, and containerd pulling). - Zero external image leakage: Source code is mirrored to GitHub via cs-git , but built OCI binaries and layers remain strictly inside the clearedstack namespace. - Unprivileged execution: Runs as a non-root user with dropped Linux capabilities, no privilege escalation, and a read-only root filesystem (writable only on the mounted OCI storage PVC). - Immutable digest addressing: Workloads are pinned in app.yaml by sha256 digest rather than mutable :latest tags."
+  },
+  {
+    "id": "section-spec-cs-registry-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-registry Specification",
+    "summary": "- Internal OCI Registry and No-Docker Builds - No-Docker Builds & the App-Store Reconciler - Two-Namespace Kubernetes Topology",
+    "url": "/guides/spec-cs-registry/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-registry Specification - Internal OCI Registry and No-Docker Builds - No-Docker Builds & the App-Store Reconciler - Two-Namespace Kubernetes Topology"
+  },
+  {
+    "id": "guide-spec-cs-runner",
+    "type": "guide",
+    "title": "cs-runner Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "No-Docker build controller in the clearedstack namespace that spawns ephemeral ko and rootless BuildKit Jobs on push, runs golden tests, signs digests with cosign, and updates app.yaml.",
+    "url": "/guides/spec-cs-runner/",
+    "badge": "DRAFT",
+    "content": "cs-runner Specification No-Docker build controller in the clearedstack namespace that spawns ephemeral ko and rootless BuildKit Jobs on push, runs golden tests, signs digests with cosign, and updates app.yaml. specs L.7 draft intent Overview & Role cs-runner ( v0.1.0-draft , owned by the cs-runner repository) is a lightweight MIT Go control-plane service running in the clearedstack namespace. It replaces traditional Docker-based CI runners with an event-driven, daemonless build controller. When cs-git receives a commit on main or a new tag, cs-runner spawns an ephemeral Kubernetes Job pod to run the repository's deterministic golden fixture tests, compile an OCI image using ko (for Go services and workers) or rootless BuildKit (for web apps like clearedstack-web ), sign the resulting digest with cosign , push it to cs-reg"
+  },
+  {
+    "id": "section-spec-cs-runner-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-runner Specification",
+    "summary": "cs-runner ( v0.1.0-draft , owned by the cs-runner repository) is a lightweight MIT Go control-plane service running in the clearedstack namespace. It replaces t...",
+    "url": "/guides/spec-cs-runner/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-runner Specification cs-runner ( v0.1.0-draft , owned by the cs-runner repository) is a lightweight MIT Go control-plane service running in the clearedstack namespace. It replaces traditional Docker-based CI runners with an event-driven, daemonless build controller. When cs-git receives a commit on main or a new tag, cs-runner spawns an ephemeral Kubernetes Job pod to run the repository's deterministic golden fixture tests, compile an OCI image using ko (for Go services and workers) or rootless BuildKit (for web apps like clearedstack-web ), sign the resulting digest with cosign , push it to cs-registry , and commit the new immutable digest back to app.yaml in cs-git ."
+  },
+  {
+    "id": "section-spec-cs-runner-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-runner Specification",
+    "summary": "| Property | Value | | --- | --- | | Service / Repo | cs-runner | | Namespace | clearedstack ( control-plane ) | | Version | v0.1.0-draft | | RAM Budget (Reques...",
+    "url": "/guides/spec-cs-runner/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-runner Specification | Property | Value | | --- | --- | | Service / Repo | cs-runner | | Namespace | clearedstack ( control-plane ) | | Version | v0.1.0-draft | | RAM Budget (Requested) | 32 MiB (controller pod; build Job pods run ephemerally) | | Priority Class | Standard / Low for ephemeral build Job pods (preempted before control-plane services under memory pressure) | | Builders | ko (Go services & workers) and rootless BuildKit ( clearedstack-web ) | | Sub-Tools | None ( [] ) |"
+  },
+  {
+    "id": "section-spec-cs-runner-interfaces-data-contracts",
+    "type": "section",
+    "title": "Interfaces & Data Contracts",
+    "subtitle": "cs-runner Specification",
+    "summary": "cs-runner coordinates four internal control-plane interfaces: 1. Webhook Intake ( cs-git -> cs-runner ): Receives cluster-private push and tag webhooks from cs-...",
+    "url": "/guides/spec-cs-runner/#interfaces-data-contracts",
+    "badge": "Section",
+    "content": "Interfaces & Data Contracts cs-runner Specification cs-runner coordinates four internal control-plane interfaces: 1. Webhook Intake ( cs-git -> cs-runner ): Receives cluster-private push and tag webhooks from cs-git . Commits containing [skip-ci] in the commit message are ignored to prevent recursive build loops. 2. Ephemeral Job Orchestration (Kubernetes API): Spawns short-lived Job pods in clearedstack with the appropriate builder: - ko : Compiles Go binaries ( cs-git , cs-registry , cs-runner , cs-store , hub-queue-api , and cs-01-intake through cs-10-notify ) directly into minimal OCI images with zero Dockerfile or Docker daemon. - Rootless BuildKit: Builds multi-layer container images for Next.js web workloads ( clearedstack-web ) inside an unprivileged, rootless pod. 3. Test, Sign & Push ( Job -> cs-registry ): Executes golden fixture tests before building. Passing builds are signed with cosign and pushed by sha256 digest to cs-registry . 4. Manifest Pinning ( cs-runner -> cs-git ): Updates the pinned image digest in app.yaml inside cs-git with a [skip-ci] commit so cs-store can reconcile the new release."
+  },
+  {
+    "id": "section-spec-cs-runner-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-runner Specification",
+    "summary": "cs-runner is a control-plane build controller and does not host tools// deterministic sub-tools ( subTools: [] ). | Failure Mode | Trigger | System Behavior & R...",
+    "url": "/guides/spec-cs-runner/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-runner Specification cs-runner is a control-plane build controller and does not host tools// deterministic sub-tools ( subTools: [] ). | Failure Mode | Trigger | System Behavior & Recovery | | --- | --- | --- | | Golden test failure | A commit breaks a deterministic fixture or unit test | The build Job aborts before packaging or pushing; broken images never enter cs-registry . | | Build or push timeout ( E TIMEOUT ) | Slow dependency fetch or registry stall | The Job terminates cleanly and reports E TIMEOUT ; no partial digest is written to app.yaml . | | cosign signing failure | Missing or invalid signing key material | Image push is blocked or left unsigned; cs-store refuses to roll out unsigned digests. | | Memory preemption | Node memory tightens during a build Job | Low PriorityClass allows k3s to preempt ephemeral build Job s first while protecting postgres , hub-queue-api , and cs-store ; deterministic builds can be safely retried. | | Recursive CI loop | cs-runner committing app.yaml back to cs-git | Prevented deterministically by tagging app.yaml commits with [skip-ci] . |"
+  },
+  {
+    "id": "section-spec-cs-runner-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-runner Specification",
+    "summary": "- Zero Docker daemon: No Docker socket ( /var/run/docker.sock ), privileged containers, or root-level build daemons exist anywhere on the host or inside build J...",
+    "url": "/guides/spec-cs-runner/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-runner Specification - Zero Docker daemon: No Docker socket ( /var/run/docker.sock ), privileged containers, or root-level build daemons exist anywhere on the host or inside build Job pods. - Rootless & unprivileged: Both the cs-runner controller and its spawned ko / rootless BuildKit Job s run as non-root users with dropped Linux capabilities and no privilege escalation. - Cluster-private only: cs-runner has no public Ingress and accepts webhooks exclusively from cs-git under default-deny NetworkPolicy rules. - Supply-chain integrity: Every published image is tested against golden fixtures and cryptographically signed with cosign before app.yaml is updated."
+  },
+  {
+    "id": "section-spec-cs-runner-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-runner Specification",
+    "summary": "- No-Docker Builds & the App-Store Reconciler - Internal OCI Registry and No-Docker Builds - 100% Deterministic Workers & Sub-Tools - Two-Namespace Kubernetes T...",
+    "url": "/guides/spec-cs-runner/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-runner Specification - No-Docker Builds & the App-Store Reconciler - Internal OCI Registry and No-Docker Builds - 100% Deterministic Workers & Sub-Tools - Two-Namespace Kubernetes Topology"
+  },
+  {
+    "id": "guide-spec-cs-store",
+    "type": "guide",
+    "title": "cs-store Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "App-Store reconciler and live pod/error sanitizer in the clearedstack namespace that replaces Argo CD and CasaOS using native Kubernetes Server-Side Apply with zero custom CRDs.",
+    "url": "/guides/spec-cs-store/",
+    "badge": "DRAFT",
+    "content": "cs-store Specification App-Store reconciler and live pod/error sanitizer in the clearedstack namespace that replaces Argo CD and CasaOS using native Kubernetes Server-Side Apply with zero custom CRDs. specs L.7 draft intent Overview & Role cs-store ( v0.1.0-draft , owned by the cs-store repository) is a clean-room MIT Go microservice running in the clearedstack control-plane namespace. It combines GitOps deployment reconciliation with an App Store lifecycle controller—replacing both Argo CD and CasaOS with a single binary that speaks native Kubernetes Server-Side Apply and introduces zero custom CRDs . cs-store watches app.yaml manifests in cs-git and signed digests in cs-registry , reconciles all 17 platform workloads across clearedstack (7 control-plane pods) and cs-workers (10 deterministic worker pods), and s"
+  },
+  {
+    "id": "section-spec-cs-store-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "cs-store Specification",
+    "summary": "cs-store ( v0.1.0-draft , owned by the cs-store repository) is a clean-room MIT Go microservice running in the clearedstack control-plane namespace. It combines...",
+    "url": "/guides/spec-cs-store/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role cs-store Specification cs-store ( v0.1.0-draft , owned by the cs-store repository) is a clean-room MIT Go microservice running in the clearedstack control-plane namespace. It combines GitOps deployment reconciliation with an App Store lifecycle controller—replacing both Argo CD and CasaOS with a single binary that speaks native Kubernetes Server-Side Apply and introduces zero custom CRDs . cs-store watches app.yaml manifests in cs-git and signed digests in cs-registry , reconciles all 17 platform workloads across clearedstack (7 control-plane pods) and cs-workers (10 deterministic worker pods), and streams sanitized pod health and error codes to hub-queue-api for display on /tools/ apps and /guides/live-command-portal/ ."
+  },
+  {
+    "id": "section-spec-cs-store-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "cs-store Specification",
+    "summary": "| Property | Value | | --- | --- | | Service / Repo | cs-store | | Namespace | clearedstack ( control-plane ) | | Version | v0.1.0-draft | | RAM Budget (Request...",
+    "url": "/guides/spec-cs-store/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget cs-store Specification | Property | Value | | --- | --- | | Service / Repo | cs-store | | Namespace | clearedstack ( control-plane ) | | Version | v0.1.0-draft | | RAM Budget (Requested) | 48 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Reconciliation Mechanism | Native Kubernetes Server-Side Apply (zero custom CRDs) | | Sub-Tools | None ( [] ) |"
+  },
+  {
+    "id": "section-spec-cs-store-interfaces-data-contracts",
+    "type": "section",
+    "title": "Interfaces & Data Contracts",
+    "subtitle": "cs-store Specification",
+    "summary": "cs-store bridges Git state, OCI digests, Kubernetes workloads, and public Portal telemetry: - Desired State ( cs-git + cs-registry ): Reads app.yaml definitions...",
+    "url": "/guides/spec-cs-store/#interfaces-data-contracts",
+    "badge": "Section",
+    "content": "Interfaces & Data Contracts cs-store Specification cs-store bridges Git state, OCI digests, Kubernetes workloads, and public Portal telemetry: - Desired State ( cs-git + cs-registry ): Reads app.yaml definitions from cs-git and verifies corresponding sha256 digests in cs-registry (up to 5 retained versions per app). - Cluster Reconciliation (Kubernetes API): Applies Deployment , Service , and NetworkPolicy manifests via Server-Side Apply across clearedstack and cs-workers . - 1-Click App Store Actions ( /tools/ apps via hub-queue-api ): - Install: Applies an app's manifests into its target namespace for the first time. - Upgrade: Rolls the Deployment forward to the latest signed digest built by cs-runner . - Pause: Scales the workload down cleanly without deleting its configuration, PVC, or queue state. - Rollback: Switches app.yaml and the live Deployment back to one of the previous 5 signed digests retained in cs-registry . - Sanitized Telemetry ( cs-store -> hub-queue-api ): Watches Kubernetes Pod , Deployment , and Event objects, strips internal metadata, and emits normalized health states ( healthy , idle , degraded , paused ) and standardized error codes ( E TIMEOUT , E PARSE , E NEEDS SUBTOOL )."
+  },
+  {
+    "id": "section-spec-cs-store-sub-tools-failure-modes",
+    "type": "section",
+    "title": "Sub-Tools & Failure Modes",
+    "subtitle": "cs-store Specification",
+    "summary": "cs-store is a control-plane reconciler and does not host tools// deterministic sub-tools ( subTools: [] ). | Failure Mode | Trigger | System Behavior & Recovery...",
+    "url": "/guides/spec-cs-store/#sub-tools-failure-modes",
+    "badge": "Section",
+    "content": "Sub-Tools & Failure Modes cs-store Specification cs-store is a control-plane reconciler and does not host tools// deterministic sub-tools ( subTools: [] ). | Failure Mode | Trigger | System Behavior & Recovery | | --- | --- | --- | | Pod crash or failed health check | New rollout fails readiness or exits non-zero | Surfaces as P0 · Critical ( --danger ) on Command and /tools/ apps with 1-click Rollback to a prior cs-registry digest. | | Server-Side Apply conflict | Manual out-of-band edit collides with cs-store field ownership | Reconciliation logs the conflict cleanly without silently overwriting unrelated cluster state. | | Missing or unsigned digest | app.yaml references a digest absent from cs-registry | Deployment rollout is blocked; cs-store preserves the currently running healthy replica set. | | Hub API unreachable | hub-queue-api restarts during a status update | cs-store continues reconciling Kubernetes workloads independently and retries telemetry delivery once hub-queue-api recovers. |"
+  },
+  {
+    "id": "section-spec-cs-store-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "cs-store Specification",
+    "summary": "- Strict topology sanitization: Before forwarding any pod status or Kubernetes event to hub-queue-api (and ultimately pub. views), cs-store strips all internal ...",
+    "url": "/guides/spec-cs-store/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries cs-store Specification - Strict topology sanitization: Before forwarding any pod status or Kubernetes event to hub-queue-api (and ultimately pub. views), cs-store strips all internal cluster IP addresses, node names, pod hostnames, and internal cluster DNS names. Public visitors see only sanitized health states and standardized error codes. - No public Ingress: cs-store is strictly cluster-private; owner lifecycle actions are authenticated and routed through hub-queue-api . - Least-privilege RBAC & non-root: Runs as an unprivileged non-root user with dropped Linux capabilities and scoped Kubernetes RBAC limited to managing platform workloads in clearedstack and cs-workers ."
+  },
+  {
+    "id": "section-spec-cs-store-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "cs-store Specification",
+    "summary": "- No-Docker Builds & the App-Store Reconciler - When a Worker Turns Red: Troubleshooting Big Picture - Two-Namespace Kubernetes Topology - Live Command Portal",
+    "url": "/guides/spec-cs-store/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides cs-store Specification - No-Docker Builds & the App-Store Reconciler - When a Worker Turns Red: Troubleshooting Big Picture - Two-Namespace Kubernetes Topology - Live Command Portal"
+  },
+  {
+    "id": "guide-spec-hub-queue-api",
+    "type": "guide",
+    "title": "hub-queue-api Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Central queue lease manager, state-transition gatekeeper, SSE live feed publisher, and 5-layer anti-spam edit intake in the clearedstack namespace.",
+    "url": "/guides/spec-hub-queue-api/",
+    "badge": "DRAFT",
+    "content": "hub-queue-api Specification Central queue lease manager, state-transition gatekeeper, SSE live feed publisher, and 5-layer anti-spam edit intake in the clearedstack namespace. specs L.7 draft intent hub-queue-api ( v0.1.0-draft , owned by clearedstack.com ) is the sole read-write gatekeeper in front of postgres . It coordinates all 10 deterministic workers in cs-workers , streams live status to clearedstack-web over Server-Sent Events (SSE), and protects anonymous edit intake with a 5-layer anti-spam shield. Overview & Role Rather than letting 10 worker pods hold database passwords or implement their own locking, hub-queue-api centralizes all state transitions and queue coordination: - Sole core. Writer: Besides postgres itself, hub-queue-api is the only service in the cluster with read/w"
+  },
+  {
+    "id": "section-spec-hub-queue-api-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "hub-queue-api Specification",
+    "summary": "Rather than letting 10 worker pods hold database passwords or implement their own locking, hub-queue-api centralizes all state transitions and queue coordinatio...",
+    "url": "/guides/spec-hub-queue-api/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role hub-queue-api Specification Rather than letting 10 worker pods hold database passwords or implement their own locking, hub-queue-api centralizes all state transitions and queue coordination: - Sole core. Writer: Besides postgres itself, hub-queue-api is the only service in the cluster with read/write access to core. tables. - Lease & Heartbeat Coordinator: Issues work leases in priority order ( urgent -> normal -> backfill ), tracks worker heartbeats, and commits state changes alongside the next queue step in a single Postgres transaction. - needs subtool Pause & Replay: Places items encountering unknown layouts into needs subtool and automatically replays them once cs-store deploys the updated worker digest. - SSE Live Feed: Publishes real-time queue depths, worker health, and edit status transitions to clearedstack-web . - 5-Layer Anti-Spam Edit Intake: Screens anonymous ✎ Edit submissions before they enter cs-04-decide as pending approval ."
+  },
+  {
+    "id": "section-spec-hub-queue-api-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "hub-queue-api Specification",
+    "summary": "| Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | clearedstac...",
+    "url": "/guides/spec-hub-queue-api/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget hub-queue-api Specification | Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | clearedstack.com | | RAM Request | 48 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Storage | Stateless (all durable state lives in postgres ) | | Network Exposure | Cluster-private ( ClusterIP only); reachable by clearedstack-web , cs-store , and cs-workers |"
+  },
+  {
+    "id": "section-spec-hub-queue-api-interfaces-data-contracts",
+    "type": "section",
+    "title": "Interfaces & Data Contracts",
+    "subtitle": "hub-queue-api Specification",
+    "summary": "| Peer Service | Direction | Protocol / Auth | Data Contract | | --- | --- | --- | --- | | postgres | Outbound | SQL (read/write on core. ) | Atomic transaction...",
+    "url": "/guides/spec-hub-queue-api/#interfaces-data-contracts",
+    "badge": "Section",
+    "content": "Interfaces & Data Contracts hub-queue-api Specification | Peer Service | Direction | Protocol / Auth | Data Contract | | --- | --- | --- | --- | | postgres | Outbound | SQL (read/write on core. ) | Atomic transactions for item state, queue leases, edit proposals, and append-only ledger | | cs-workers ( cs-01 .. cs-10 ) | Inbound | Cluster-private HTTP (Kubernetes ServiceAccount) | Lease acquisition ( urgent / normal / backfill ), heartbeats, result submission, and E NEEDS SUBTOOL reporting | | clearedstack-web | Outbound / Inbound | Cluster-private HTTP + SSE | Streams live SSE progress; receives anonymous ✎ Edit proposals | | cs-store | Inbound | Cluster-private HTTP | Receives sanitized pod health and stripped error events (zero node names or internal IPs) | 5-Layer Anti-Spam Edit Intake Every anonymous ✎ Edit submission must pass all five layers before reaching cs-04-decide : 1. Browser Proof-of-Work: Validates the ~1-second client-side cryptographic puzzle token. 2. Honeypot Field: Silently discards requests where the hidden form field is populated. 3. Daily-Salted IP Rate Limit: Hashes the client IP with a daily-rotating secret salt and caps submissions per hash without ever storing raw IP addresses. 4. Strict Schema Check: Verifies the target exists in ownership map.json , enforces a 4 KB payload limit, and strips all HTML and scripts. 5. Review Gate: Holds every valid proposal in pending approval inside cs-04-decide until explicitly approved by the human owner."
+  },
+  {
+    "id": "section-spec-hub-queue-api-failure-modes-recovery",
+    "type": "section",
+    "title": "Failure Modes & Recovery",
+    "subtitle": "hub-queue-api Specification",
+    "summary": "- Hub Restart During Worker Execution: Because hub-queue-api is a single control-plane pod, a rolling upgrade or restart makes it briefly unreachable. Workers s...",
+    "url": "/guides/spec-hub-queue-api/#failure-modes-recovery",
+    "badge": "Section",
+    "content": "Failure Modes & Recovery hub-queue-api Specification - Hub Restart During Worker Execution: Because hub-queue-api is a single control-plane pod, a rolling upgrade or restart makes it briefly unreachable. Workers stage completed outputs in their local spool volume first, then retry delivery to hub-queue-api on a short backoff until acknowledged, deleting the spooled file only after Postgres confirms receipt. - Worker Crash Mid-Lease: If a worker pod dies before acknowledging a task, its lease expires in postgres and hub-queue-api re-leases the unfinished item to a healthy worker. - SSE Disconnect or Stale Feed: If the SSE stream to clearedstack-web stalls for more than 15 seconds, deterministic attention rules surface a P1 warning on the Command Portal. - High-Load Contention: High Priority Class keeps hub-queue-api scheduled ahead of workers and ephemeral Jobs when node memory tightens."
+  },
+  {
+    "id": "section-spec-hub-queue-api-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "hub-queue-api Specification",
+    "summary": "- Zero DB Credentials in Workers: Workers in cs-workers authenticate via Kubernetes ServiceAccount HTTP; they never hold Postgres passwords and have no knowledg...",
+    "url": "/guides/spec-hub-queue-api/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries hub-queue-api Specification - Zero DB Credentials in Workers: Workers in cs-workers authenticate via Kubernetes ServiceAccount HTTP; they never hold Postgres passwords and have no knowledge of core. table layouts. - No Public Ingress: Blocked from direct internet access by default-deny NetworkPolicy ; only clearedstack-web forwards sanitized intake requests. - No Automatic Cluster Writes from Public Edits: Anonymous proposals cannot touch cs-git or running pods; they remain isolated in pending approval until owner approval. - Unprivileged Execution: Runs as non-root with dropped Linux capabilities and no privilege escalation."
+  },
+  {
+    "id": "section-spec-hub-queue-api-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "hub-queue-api Specification",
+    "summary": "- Shared Hub Database and Worker Local Spools - Propose Edits Without Signing In - Two-Namespace Kubernetes Topology - The Live Command Portal & Platform Tools",
+    "url": "/guides/spec-hub-queue-api/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides hub-queue-api Specification - Shared Hub Database and Worker Local Spools - Propose Edits Without Signing In - Two-Namespace Kubernetes Topology - The Live Command Portal & Platform Tools"
+  },
+  {
+    "id": "guide-spec-postgres",
+    "type": "guide",
+    "title": "postgres Specification",
+    "subtitle": "Guide · Section L.7",
+    "summary": "Single shared PostgreSQL 17 database in the clearedstack namespace owning core.* state, pub.* views, and the append-only ledger.",
+    "url": "/guides/spec-postgres/",
+    "badge": "DRAFT",
+    "content": "postgres Specification Single shared PostgreSQL 17 database in the clearedstack namespace owning core.* state, pub.* views, and the append-only ledger. specs L.7 draft intent postgres ( 17-alpine , owned by clearedstack.com ) is the single shared PostgreSQL 17 database for the entire ClearedStack platform. Running one consolidated database on a Persistent Volume Claim (PVC) eliminates multi-database sync bugs and keeps control-plane memory compact enough for a single 4 GiB k3s node. Overview & Role postgres is the durable system of record for live operational state, work queues, and sanitized public views: - Single Source of Truth: Stores PA-XXXX item records, evaluation outcomes, decision trails, queue leases, anonymous edit proposals, and an append-only ledger. -"
+  },
+  {
+    "id": "section-spec-postgres-overview-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "postgres Specification",
+    "summary": "postgres is the durable system of record for live operational state, work queues, and sanitized public views: - Single Source of Truth: Stores PA-XXXX item reco...",
+    "url": "/guides/spec-postgres/#overview-role",
+    "badge": "Section",
+    "content": "Overview & Role postgres Specification postgres is the durable system of record for live operational state, work queues, and sanitized public views: - Single Source of Truth: Stores PA-XXXX item records, evaluation outcomes, decision trails, queue leases, anonymous edit proposals, and an append-only ledger. - Atomic State + Queue Transitions: Because live state and work queues live in the same database, hub-queue-api commits an item's state change and its next queue step in a single ACID transaction. - Strict Schema Separation: Splits internal operational data ( core. ) from sanitized, public-safe projections ( pub. )."
+  },
+  {
+    "id": "section-spec-postgres-runtime-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "postgres Specification",
+    "summary": "| Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | 17-alpine | | Owning Repo | clearedstack.c...",
+    "url": "/guides/spec-postgres/#runtime-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget postgres Specification | Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | 17-alpine | | Owning Repo | clearedstack.com | | RAM Request | 256 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Storage | Persistent Volume Claim (1 of 3 cluster PVCs) | | Network Exposure | Cluster-private ( ClusterIP only); unreachable from cs-workers and public internet |"
+  },
+  {
+    "id": "section-spec-postgres-interfaces-data-contracts",
+    "type": "section",
+    "title": "Interfaces & Data Contracts",
+    "subtitle": "postgres Specification",
+    "summary": "Only two services in the entire cluster are permitted to connect to postgres : | Service | Schema Access | Role / Privileges | Responsibility | | --- | --- | --...",
+    "url": "/guides/spec-postgres/#interfaces-data-contracts",
+    "badge": "Section",
+    "content": "Interfaces & Data Contracts postgres Specification Only two services in the entire cluster are permitted to connect to postgres : | Service | Schema Access | Role / Privileges | Responsibility | | --- | --- | --- | --- | | hub-queue-api | core. | Read / Write | Manages worker queue leases, needs subtool pauses, replay, edit proposals, and append-only ledger entries | | clearedstack-web | pub. | Read-Only ( pub ro ) | Reads sanitized public views for the Portal, App Store UI, and monthly restore drill status | | cs-workers ( cs-01 .. cs-10 ) | None | Blocked | Zero network access ( NetworkPolicy ) and zero database credentials |"
+  },
+  {
+    "id": "section-spec-postgres-failure-modes-recovery",
+    "type": "section",
+    "title": "Failure Modes & Recovery",
+    "subtitle": "postgres Specification",
+    "summary": "Because postgres holds one of the cluster's three non-recreatable Persistent Volume Claims, durability and recovery are verified continuously rather than assume...",
+    "url": "/guides/spec-postgres/#failure-modes-recovery",
+    "badge": "Section",
+    "content": "Failure Modes & Recovery postgres Specification Because postgres holds one of the cluster's three non-recreatable Persistent Volume Claims, durability and recovery are verified continuously rather than assumed: - Consistent Nightly Backups: A scheduled backup job takes a consistent database dump (never a raw file copy while writes are active), encrypts the dump client-side with age , transfers it to off-node storage, and prunes old snapshots on a fixed retention schedule. - Automated Monthly Restore Drill: Once a month, the cluster provisions an isolated scratch area, downloads the latest age -encrypted backup, decrypts it with the current key, restores postgres from scratch, and runs deterministic integrity checks on core. tables and pub. views before tearing down the scratch environment. - Live Drill Visibility: The timestamp and pass/fail outcome of the four monthly verification checks are published directly to the live Portal so backup drift surfaces immediately. - Pod Restart / Node Reboot: Because data resides on the PVC and postgres runs under the High Priority Class, k3s reattaches the volume and recovers cleanly via PostgreSQL crash recovery."
+  },
+  {
+    "id": "section-spec-postgres-security-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "postgres Specification",
+    "summary": "- Default-Deny Network Isolation: NetworkPolicy blocks all pods in cs-workers and all external Ingress traffic from reaching postgres on the network. - Least-Pr...",
+    "url": "/guides/spec-postgres/#security-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries postgres Specification - Default-Deny Network Isolation: NetworkPolicy blocks all pods in cs-workers and all external Ingress traffic from reaching postgres on the network. - Least-Privilege Roles: clearedstack-web is restricted to pub ro on pub. views, ensuring no public query can ever read core. tables, internal tokens, or unapproved edit payloads. - Encrypted Off-Node Backups: Backup archives are encrypted with age before leaving the host node, with the decryption key stored separately from the off-node backup target. - Unprivileged Execution: Runs as non-root with dropped capabilities and no privilege escalation."
+  },
+  {
+    "id": "section-spec-postgres-related-guides",
+    "type": "section",
+    "title": "Related Guides",
+    "subtitle": "postgres Specification",
+    "summary": "- Shared Hub Database and Worker Local Spools - Backups and Monthly Restore Drills - Two-Namespace Kubernetes Topology",
+    "url": "/guides/spec-postgres/#related-guides",
+    "badge": "Section",
+    "content": "Related Guides postgres Specification - Shared Hub Database and Worker Local Spools - Backups and Monthly Restore Drills - Two-Namespace Kubernetes Topology"
+  },
+  {
     "id": "guide-two-namespace-topology",
     "type": "guide",
     "title": "Two-Namespace Kubernetes Topology",
