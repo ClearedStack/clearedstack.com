@@ -334,16 +334,22 @@ export function movedGuideTarget(slug: string): string | undefined {
 }
 
 /**
- * Platform pages named after a component's old identifier, such as
- * /platform/cs-git/. They send the reader to the page under its new name.
+ * Platform pages named after a component's old identifier or an earlier name,
+ * such as /platform/cs-registry/ or /platform/stow/. They send the reader to
+ * the page under its current name.
  */
 export function movedPlatformSlugs(): string[] {
-  return components.map((component) => component.formerly);
+  return components.flatMap(oldPlatformSlugs);
 }
 
 export function movedPlatformTarget(slug: string): string | undefined {
-  const component = components.find((item) => item.formerly === slug);
+  const component = components.find((item) => oldPlatformSlugs(item).includes(slug));
   return component ? `/platform/${component.slug}/` : undefined;
+}
+
+/** A component's old identifier and the lowercase form of any earlier name. */
+function oldPlatformSlugs(component: (typeof components)[number]): string[] {
+  return [component.formerly, ...(component.earlierNames ?? []).map((name) => name.toLowerCase())];
 }
 
 /** "2026-11" becomes "November 2026". */

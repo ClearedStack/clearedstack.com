@@ -13,7 +13,7 @@
       "filePath": "src/app/guides/page.tsx"
     },
     "command.attention.p0": {
-      "ownerRepo": "bosun",
+      "ownerRepo": "shipkeeper",
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
@@ -23,7 +23,7 @@
       "filePath": "deploy/muster/app.yaml"
     },
     "command.attention.p2": {
-      "ownerRepo": "gavel",
+      "ownerRepo": "countersign",
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
@@ -52,18 +52,18 @@
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "app.stow.manifest": {
-      "ownerRepo": "stow",
+    "app.lazarette.manifest": {
+      "ownerRepo": "lazarette",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "app.slipway.manifest": {
-      "ownerRepo": "slipway",
+    "app.keelworks.manifest": {
+      "ownerRepo": "keelworks",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "app.bosun.manifest": {
-      "ownerRepo": "bosun",
+    "app.shipkeeper.manifest": {
+      "ownerRepo": "shipkeeper",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
@@ -72,8 +72,8 @@
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.spyglass.manifest": {
-      "ownerRepo": "spyglass",
+    "worker.sextant.manifest": {
+      "ownerRepo": "sextant",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
@@ -82,8 +82,8 @@
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.gavel.manifest": {
-      "ownerRepo": "gavel",
+    "worker.countersign.manifest": {
+      "ownerRepo": "countersign",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
@@ -92,8 +92,8 @@
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.jig.manifest": {
-      "ownerRepo": "jig",
+    "worker.moldloft.manifest": {
+      "ownerRepo": "moldloft",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
@@ -102,18 +102,18 @@
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.gazette.manifest": {
-      "ownerRepo": "gazette",
+    "worker.chartroom.manifest": {
+      "ownerRepo": "chartroom",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.dogwatch.manifest": {
-      "ownerRepo": "dogwatch",
+    "worker.tidegauge.manifest": {
+      "ownerRepo": "tidegauge",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.foghorn.manifest": {
-      "ownerRepo": "foghorn",
+    "worker.bellbuoy.manifest": {
+      "ownerRepo": "bellbuoy",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
@@ -122,8 +122,8 @@
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.spyglass.role": {
-      "ownerRepo": "spyglass",
+    "worker.sextant.role": {
+      "ownerRepo": "sextant",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
@@ -132,8 +132,8 @@
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.gavel.role": {
-      "ownerRepo": "gavel",
+    "worker.countersign.role": {
+      "ownerRepo": "countersign",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
@@ -142,8 +142,8 @@
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.jig.role": {
-      "ownerRepo": "jig",
+    "worker.moldloft.role": {
+      "ownerRepo": "moldloft",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
@@ -152,18 +152,18 @@
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.gazette.role": {
-      "ownerRepo": "gazette",
+    "worker.chartroom.role": {
+      "ownerRepo": "chartroom",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.dogwatch.role": {
-      "ownerRepo": "dogwatch",
+    "worker.tidegauge.role": {
+      "ownerRepo": "tidegauge",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
-    "worker.foghorn.role": {
-      "ownerRepo": "foghorn",
+    "worker.bellbuoy.role": {
+      "ownerRepo": "bellbuoy",
       "editClass": "CONFIG",
       "filePath": "app.yaml"
     },
@@ -172,8 +172,8 @@
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
-    "pipeline.spyglass": {
-      "ownerRepo": "spyglass",
+    "pipeline.sextant": {
+      "ownerRepo": "sextant",
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
@@ -182,8 +182,8 @@
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
-    "pipeline.gavel": {
-      "ownerRepo": "gavel",
+    "pipeline.countersign": {
+      "ownerRepo": "countersign",
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
@@ -192,8 +192,8 @@
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
-    "pipeline.jig": {
-      "ownerRepo": "jig",
+    "pipeline.moldloft": {
+      "ownerRepo": "moldloft",
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
@@ -202,18 +202,18 @@
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
-    "pipeline.gazette": {
-      "ownerRepo": "gazette",
+    "pipeline.chartroom": {
+      "ownerRepo": "chartroom",
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
-    "pipeline.dogwatch": {
-      "ownerRepo": "dogwatch",
+    "pipeline.tidegauge": {
+      "ownerRepo": "tidegauge",
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     },
-    "pipeline.foghorn": {
-      "ownerRepo": "foghorn",
+    "pipeline.bellbuoy": {
+      "ownerRepo": "bellbuoy",
       "editClass": "ISSUE",
       "filePath": "app.yaml"
     }

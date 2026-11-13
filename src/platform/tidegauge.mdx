@@ -1,5 +1,5 @@
 export const meta = {
-  title: "Dogwatch specification",
+  title: "Tidegauge specification",
   summary: "Scheduled monitoring worker that watches FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers for deterministic drift and reopens affected items.",
   group: "components",
   order: 16,
@@ -9,15 +9,15 @@ export const meta = {
 
 ## Overview & Role
 
-Dogwatch is the continuous monitoring worker in the `cs-workers` namespace (`ownerRepo: Dogwatch`, version `v0.1.0-draft`). Replacing the original Stage 10 (Revisit), it watches federal regulatory feeds, `live` ClearedStack tools, external `linked` tools, and `parked` blockers for drift.
+Tidegauge is the continuous monitoring worker in the `cs-workers` namespace (`ownerRepo: Tidegauge`, version `v0.1.0-draft`). Replacing the original Stage 10 (Revisit), it watches federal regulatory feeds, `live` ClearedStack tools, external `linked` tools, and `parked` blockers for drift.
 
-Dogwatch is a 100% deterministic Go service with zero AI at runtime. Rather than scraping pages blindly or patching tools directly, it uses lightweight HTTP ETags, structured XML/API feeds, and deterministic DOM diffs—and reopens affected `PA-XXXX` items in Muster so the main pipeline handles updates cleanly.
+Tidegauge is a 100% deterministic Go service with zero AI at runtime. Rather than scraping pages blindly or patching tools directly, it uses lightweight HTTP ETags, structured XML/API feeds, and deterministic DOM diffs—and reopens affected `PA-XXXX` items in Muster so the main pipeline handles updates cleanly.
 
 ## Runtime & Resource Budget
 
 | Property | Value |
 | --- | --- |
-| **Service / Repo** | Dogwatch (`dogwatch`) |
+| **Service / Repo** | Tidegauge (`tidegauge`) |
 | **Namespace** | `cs-workers` |
 | **Kind** | `worker` (100% deterministic Go, zero runtime AI) |
 | **Version** | `v0.1.0-draft` |
@@ -26,13 +26,13 @@ Dogwatch is a 100% deterministic Go service with zero AI at runtime. Rather than
 | **Local Spool** | `/var/spool/cs` (buffers detected drift events if Muster is restarting) |
 | **Contract Version** | `CONTRACT_VERSION=v1` (owned by `clearedstack.com`) |
 
-Dogwatch runs under the Standard Kubernetes priority class with a `30 MiB` memory footprint, yielding before High-priority control-plane pods on a single 4 GiB `k3s` node.
+Tidegauge runs under the Standard Kubernetes priority class with a `30 MiB` memory footprint, yielding before High-priority control-plane pods on a single 4 GiB `k3s` node.
 
 ## Interfaces & State Transitions
 
-Dogwatch pulls scheduled watch tasks from Muster over cluster-private HTTP using its Kubernetes ServiceAccount identity (`lease`, `heartbeat`, `complete`, `fail`, `needs_subtool`). It never touches Logbook directly.
+Tidegauge pulls scheduled watch tasks from Muster over cluster-private HTTP using its Kubernetes ServiceAccount identity (`lease`, `heartbeat`, `complete`, `fail`, `needs_subtool`). It never touches Logbook directly.
 
-When a deterministic diff confirms a meaningful change, Dogwatch stages the finding in `/var/spool/cs` and requests a state transition through Muster:
+When a deterministic diff confirms a meaningful change, Tidegauge stages the finding in `/var/spool/cs` and requests a state transition through Muster:
 
 | Current State | Reopened Target State | Priority Lane | Condition |
 | --- | --- | --- | --- |
@@ -43,7 +43,7 @@ When a deterministic diff confirms a meaningful change, Dogwatch stages the find
 
 ## Sub-Tools & Failure Modes
 
-Each source type is implemented as a deterministic sub-tool under `tools/<case>/` inside the Dogwatch repository, paired with golden test fixtures:
+Each source type is implemented as a deterministic sub-tool under `tools/<case>/` inside the Tidegauge repository, paired with golden test fixtures:
 
 | Sub-Tool | Target Monitored | Detection Method |
 | --- | --- | --- |
@@ -55,16 +55,16 @@ Each source type is implemented as a deterministic sub-tool under `tools/<case>/
 
 | Error Code | Trigger | Pipeline Behavior |
 | --- | --- | --- |
-| `E_TIMEOUT` | Upstream government feed or external linked site fails to respond in time | Item stays safe in queue for retry; repeated timeouts are deduplicated by Foghorn. |
+| `E_TIMEOUT` | Upstream government feed or external linked site fails to respond in time | Item stays safe in queue for retry; repeated timeouts are deduplicated by Bellbuoy. |
 | `E_PARSE` | Corrupt XML/JSON feed or broken HTTP response | Refuses to guess; logs sanitized failure and halts that check cleanly. |
-| `E_NEEDS_SUBTOOL` | Upstream feed or DOM layout changes to an unrecognized structure | Fails closed, pauses item in `needs_subtool`, and triggers Foghorn to open a task; auto-replays after Bosun deploys the new watcher. |
+| `E_NEEDS_SUBTOOL` | Upstream feed or DOM layout changes to an unrecognized structure | Fails closed, pauses item in `needs_subtool`, and triggers Bellbuoy to open a task; auto-replays after Shipkeeper deploys the new watcher. |
 
 ## Security & Clean-Room Boundaries
 
-- **Restricted network egress:** Default-deny network policies permit Dogwatch to call Muster and approved public regulatory/catalog targets only; Logbook, Plainforge, and Stow are unreachable.
+- **Restricted network egress:** Default-deny network policies permit Tidegauge to call Muster and approved public regulatory/catalog targets only; Logbook, Plainforge, and Lazarette are unreachable.
 - **Unprivileged pod posture:** Runs as non-root with dropped Linux capabilities, no privilege escalation, and a read-only root filesystem (apart from `/var/spool/cs`).
-- **Clean-room separation:** Dogwatch only inspects public regulatory feeds and catalog metadata; it never injects raw external HTML into Jig payloads (Muster rejects any such attempt).
-- **Sanitized status:** Internal cluster details are stripped by Bosun before any `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL` alert is surfaced publicly.
+- **Clean-room separation:** Tidegauge only inspects public regulatory feeds and catalog metadata; it never injects raw external HTML into Moldloft payloads (Muster rejects any such attempt).
+- **Sanitized status:** Internal cluster details are stripped by Shipkeeper before any `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL` alert is surfaced publicly.
 
 ## Related pages
 

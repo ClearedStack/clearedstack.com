@@ -71,7 +71,12 @@ export default async function PlatformPage({ params }: PageProps<"/platform/[slu
             <dl className="mt-4 grid gap-x-8 gap-y-3 border-t border-line pt-4 text-sm sm:grid-cols-2">
               <div className="min-w-0">
                 <dt className={term}>Formerly</dt>
-                <dd className="mt-0.5 font-mono text-[13px]">{component.formerly}</dd>
+                <dd className="mt-0.5 font-mono text-[13px]">
+                  {component.formerly}
+                  {component.earlierNames?.length ? (
+                    <span className="font-sans text-muted">, then {component.earlierNames.join(", ")}</span>
+                  ) : null}
+                </dd>
               </div>
               <div className="min-w-0">
                 <dt className={term}>Namespace</dt>

@@ -139,7 +139,7 @@ registry.components.forEach((component) => {
     summary: component.responsibility,
     url: "/platform/#registry",
     badge: "Platform",
-    content: `${component.name} ${component.formerly} ${component.namespace} ${component.responsibility} ${component.interfaces.join(" ")} ${component.subTools.join(" ")}`
+    content: `${component.name} ${component.formerly} ${(component.earlierNames || []).join(" ")} ${component.namespace} ${component.responsibility} ${component.interfaces.join(" ")} ${component.subTools.join(" ")}`
   });
 });
 
@@ -205,7 +205,7 @@ for (const collection of collections) {
       badge: meta.status ? meta.status.toUpperCase() : code,
       content: `${meta.title} ${meta.summary || ""} ${meta.group || ""} ${code} ${meta.status || ""} ${
         collection.folder === "platform" && formerNames.has(slug)
-          ? `formerly ${formerNames.get(slug).formerly} ${formerNames.get(slug).responsibility}`
+          ? `formerly ${formerNames.get(slug).formerly} ${(formerNames.get(slug).earlierNames || []).join(" ")} ${formerNames.get(slug).responsibility}`
           : ""
       } ${cleanBody.slice(0, 600)}`
     });

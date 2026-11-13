@@ -1,9 +1,9 @@
 {
   "version": 1,
   "revised": "2026-11",
-  "about": "The naming registry for the ClearedStack platform. One entry per component: its canonical name, the identifier it replaced, what it is responsible for, its boundaries, its repository, its container image and what it depends on. Manifests, pipelines and documentation should take names from this file.",
+  "about": "The naming registry for the ClearedStack platform. One entry per component: its canonical name, the identifier it replaced, any earlier names, what it is responsible for, its boundaries, its repository, its container image and what it depends on. Manifests, pipelines and documentation should take names from this file.",
   "organization": "https://github.com/ClearedStack",
-  "imageRegistry": "stow.clearedstack.svc.cluster.local:5000",
+  "imageRegistry": "lazarette.clearedstack.svc.cluster.local:5000",
   "components": [
     {
       "slug": "conn",
@@ -38,7 +38,7 @@
         "Worker calls over cluster-private HTTP: lease, heartbeat, complete, fail, needs_subtool",
         "Reads and writes Logbook's working records; the only service that does",
         "Live update stream and edit-proposal intake for Conn",
-        "Receives health reports from Bosun"
+        "Receives health reports from Shipkeeper"
       ],
       "repository": "clearedstack.com",
       "image": "muster",
@@ -76,9 +76,9 @@
       "responsibility": "Holds the primary copy of every repository, announces each change and mirrors code outward.",
       "interfaces": [
         "Git over HTTP and SSH, inside the cluster only",
-        "Push notifications to Slipway",
+        "Push notifications to Keelworks",
         "Outbound mirror of code to GitHub",
-        "Commits from Foghorn, Slipway and Jig; reads by Bosun"
+        "Commits from Bellbuoy, Keelworks and Moldloft; reads by Shipkeeper"
       ],
       "repository": "plainforge",
       "image": "plainforge",
@@ -88,63 +88,72 @@
       "subTools": []
     },
     {
-      "slug": "stow",
-      "name": "Stow",
+      "slug": "lazarette",
+      "name": "Lazarette",
       "formerly": "cs-registry",
+      "earlierNames": [
+        "Stow"
+      ],
       "kind": "control-plane",
       "namespace": "clearedstack",
       "responsibility": "Keeps built images inside the cluster, with recent versions ready for rollback.",
       "interfaces": [
         "Standard OCI registry API, inside the cluster only",
-        "Pushes from Slipway's build jobs",
-        "Pulls by the cluster's container runtime when Bosun deploys"
+        "Pushes from Keelworks's build jobs",
+        "Pulls by the cluster's container runtime when Shipkeeper deploys"
       ],
-      "repository": "stow",
-      "image": "stow",
+      "repository": "lazarette",
+      "image": "lazarette",
       "dependsOn": [],
       "memory": "64 MiB",
       "version": "v0.1.0-draft",
       "subTools": []
     },
     {
-      "slug": "slipway",
-      "name": "Slipway",
+      "slug": "keelworks",
+      "name": "Keelworks",
       "formerly": "cs-runner",
+      "earlierNames": [
+        "Slipway"
+      ],
       "kind": "control-plane",
       "namespace": "clearedstack",
       "responsibility": "Tests, builds and signs an image for every change.",
       "interfaces": [
         "Receives push notifications from Plainforge",
-        "Pushes signed images to Stow",
+        "Pushes signed images to Lazarette",
         "Writes the new image digest back to Plainforge"
       ],
-      "repository": "slipway",
-      "image": "slipway",
+      "repository": "keelworks",
+      "image": "keelworks",
       "dependsOn": [
         "plainforge",
-        "stow"
+        "lazarette"
       ],
       "memory": "32 MiB",
       "version": "v0.1.0-draft",
       "subTools": []
     },
     {
-      "slug": "bosun",
-      "name": "Bosun",
+      "slug": "shipkeeper",
+      "name": "Shipkeeper",
       "formerly": "cs-store",
+      "earlierNames": [
+        "Bosun"
+      ],
       "kind": "control-plane",
       "namespace": "clearedstack",
       "responsibility": "Deploys what was built, keeps it in its intended state and reports its health with cluster details removed.",
       "interfaces": [
         "Kubernetes API, using server-side apply",
-        "Reads manifests from Plainforge and image digests from Stow",
+        "Reads manifests from Plainforge and image digests from Lazarette",
         "Sends cleaned health reports to Muster"
       ],
-      "repository": "bosun",
-      "image": "bosun",
+      "repository": "shipkeeper",
+      "image": "shipkeeper",
       "dependsOn": [
         "plainforge",
-        "stow",
+        "lazarette",
         "muster"
       ],
       "memory": "48 MiB",
@@ -178,9 +187,12 @@
       ]
     },
     {
-      "slug": "spyglass",
-      "name": "Spyglass",
+      "slug": "sextant",
+      "name": "Sextant",
       "formerly": "cs-02-observe",
+      "earlierNames": [
+        "Spyglass"
+      ],
       "kind": "worker",
       "stage": 2,
       "namespace": "cs-workers",
@@ -189,8 +201,8 @@
         "Leases work from Muster over cluster-private HTTP",
         "Fetches public pages over HTTPS, and starts a temporary browser job when a page needs one"
       ],
-      "repository": "spyglass",
-      "image": "spyglass",
+      "repository": "sextant",
+      "image": "sextant",
       "dependsOn": [
         "muster"
       ],
@@ -227,9 +239,12 @@
       ]
     },
     {
-      "slug": "gavel",
-      "name": "Gavel",
+      "slug": "countersign",
+      "name": "Countersign",
       "formerly": "cs-04-decide",
+      "earlierNames": [
+        "Gavel"
+      ],
       "kind": "worker",
       "stage": 4,
       "namespace": "cs-workers",
@@ -238,8 +253,8 @@
         "Leases scored candidates and pending proposals from Muster",
         "Presents them to the owner and records the decision, with a reason for any override"
       ],
-      "repository": "gavel",
-      "image": "gavel",
+      "repository": "countersign",
+      "image": "countersign",
       "dependsOn": [
         "muster"
       ],
@@ -271,9 +286,12 @@
       ]
     },
     {
-      "slug": "jig",
-      "name": "Jig",
+      "slug": "moldloft",
+      "name": "Moldloft",
       "formerly": "cs-06-build",
+      "earlierNames": [
+        "Jig"
+      ],
       "kind": "worker",
       "stage": 6,
       "namespace": "cs-workers",
@@ -282,8 +300,8 @@
         "Leases build specifications from Muster",
         "Commits the generated repository to Plainforge"
       ],
-      "repository": "jig",
-      "image": "jig",
+      "repository": "moldloft",
+      "image": "moldloft",
       "dependsOn": [
         "muster",
         "plainforge"
@@ -319,9 +337,12 @@
       "subTools": []
     },
     {
-      "slug": "gazette",
-      "name": "Gazette",
+      "slug": "chartroom",
+      "name": "Chartroom",
       "formerly": "cs-08-catalog",
+      "earlierNames": [
+        "Gazette"
+      ],
       "kind": "worker",
       "stage": 8,
       "namespace": "cs-workers",
@@ -330,8 +351,8 @@
         "Leases verified, linked, merged and retired items from Muster",
         "Writes catalog entries to the hub repository in Plainforge"
       ],
-      "repository": "gazette",
-      "image": "gazette",
+      "repository": "chartroom",
+      "image": "chartroom",
       "dependsOn": [
         "muster",
         "plainforge"
@@ -341,9 +362,12 @@
       "subTools": []
     },
     {
-      "slug": "dogwatch",
-      "name": "Dogwatch",
+      "slug": "tidegauge",
+      "name": "Tidegauge",
       "formerly": "cs-09-monitor",
+      "earlierNames": [
+        "Dogwatch"
+      ],
       "kind": "worker",
       "stage": 9,
       "namespace": "cs-workers",
@@ -352,8 +376,8 @@
         "Leases scheduled checks from Muster",
         "Fetches the Federal Register, the eCFR and NIST's publications, and checks linked and live tools"
       ],
-      "repository": "dogwatch",
-      "image": "dogwatch",
+      "repository": "tidegauge",
+      "image": "tidegauge",
       "dependsOn": [
         "muster"
       ],
@@ -368,9 +392,12 @@
       ]
     },
     {
-      "slug": "foghorn",
-      "name": "Foghorn",
+      "slug": "bellbuoy",
+      "name": "Bellbuoy",
       "formerly": "cs-10-notify",
+      "earlierNames": [
+        "Foghorn"
+      ],
       "kind": "worker",
       "stage": 10,
       "namespace": "cs-workers",
@@ -381,8 +408,8 @@
         "Sends owner alerts to a configured webhook",
         "Feeds the live update stream through Muster"
       ],
-      "repository": "foghorn",
-      "image": "foghorn",
+      "repository": "bellbuoy",
+      "image": "bellbuoy",
       "dependsOn": [
         "muster",
         "plainforge"

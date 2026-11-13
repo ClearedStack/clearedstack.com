@@ -39,14 +39,14 @@ An item does not always go straight from found to live. It can leave early, wait
 | --- | --- | --- | --- |
 | `discovered` | Trawl has seen a candidate | `recorded` | `rejected` if the address is dead or a duplicate |
 | `recorded` | It has an identifier | `observed` | `needs_subtool` if the source is in a form intake has no rule for |
-| `observed` | Spyglass has read its public pages | `scored` or `screened-out` | `needs_subtool` if the page layout is unfamiliar |
+| `observed` | Sextant has read its public pages | `scored` or `screened-out` | `needs_subtool` if the page layout is unfamiliar |
 | `screened-out` | Assay found it fails a gate | Stays there | The owner can send it back to `observed` |
 | `scored` | Assay has rated it | `approved` | The owner can choose `parked`, `linked`, `merged` or `rejected` |
 | `approved` | The owner chose to build, and Waybill wrote the specification | `building` | `needs_subtool` if there is no profile for that kind of tool |
-| `building` | Jig generated it and Shakedown is checking it | `live` | `parked` if the rule turns out to be unclear |
-| `live` | Gazette published it | Watched by Dogwatch | Back to `building` when the rule changes, or `retired` when it is repealed |
-| `parked` | A good idea that is blocked | Stays there | Back to `observed` when Dogwatch sees the blocker clear |
-| `linked` | The catalog points at an existing tool | Watched by Dogwatch | Back to `observed` if that tool breaks or starts tracking users |
+| `building` | Moldloft generated it and Shakedown is checking it | `live` | `parked` if the rule turns out to be unclear |
+| `live` | Chartroom published it | Watched by Tidegauge | Back to `building` when the rule changes, or `retired` when it is repealed |
+| `parked` | A good idea that is blocked | Stays there | Back to `observed` when Tidegauge sees the blocker clear |
+| `linked` | The catalog points at an existing tool | Watched by Tidegauge | Back to `observed` if that tool breaks or starts tracking users |
 | `merged` | Folded into another tool | Stays there | Back to `observed` only if the other tool is retired |
 | `rejected` | Declined, with the reason public | Stays there | None, unless it is sent in again as a new candidate |
 | `retired` | Removed from use, with a note | Stays there | None |

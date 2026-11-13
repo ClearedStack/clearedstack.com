@@ -16,7 +16,7 @@ Conn is the **only pod in the entire 17-pod cluster exposed to the public intern
 - **Command Portal & Catalog:** Serves the unified tool catalog (`/tools/`), operational guides (`/guides/`), live P0–P2 attention feed, and App Store UI.
 - **Zero Login Lock:** All browsing, queue inspection, sanitized error viewing, and edit proposals work anonymously without accounts, passwords, or OAuth redirects.
 - **Sanitized Read-Only Queries:** Reads exclusively from sanitized `pub.*` views in Logbook—never touching `core.*` internal tables or cluster secrets.
-- **Anonymous Edit Intake UI:** Uses `ownership_map.json` to map any editable element on the page to its owning repository (`clearedstack.com` or Trawl through Foghorn) and change class (`DATA`, `CONFIG`, or `ISSUE`), then forwards proposals to Muster.
+- **Anonymous Edit Intake UI:** Uses `ownership_map.json` to map any editable element on the page to its owning repository (`clearedstack.com` or Trawl through Bellbuoy) and change class (`DATA`, `CONFIG`, or `ISSUE`), then forwards proposals to Muster.
 
 ## Runtime & Resource Budget
 
@@ -47,14 +47,14 @@ Conn sits at the edge of the `clearedstack` namespace and communicates with two 
 
 After a visitor submits an anonymous edit, Conn turns the element's `✎ Edit` button into a live status pill backed by Muster SSE events:
 
-1. **Proposed:** Passed 5-layer anti-spam and `ownership_map.json` schema checks; waiting in Gavel.
-2. **Approved:** Approved by the owner and routed via Foghorn to Plainforge.
-3. **Building:** Slipway is running deterministic tests and packaging the updated image.
-4. **Live:** Bosun reconciled the new digest and the updated content is live.
+1. **Proposed:** Passed 5-layer anti-spam and `ownership_map.json` schema checks; waiting in Countersign.
+2. **Approved:** Approved by the owner and routed via Bellbuoy to Plainforge.
+3. **Building:** Keelworks is running deterministic tests and packaging the updated image.
+4. **Live:** Shipkeeper reconciled the new digest and the updated content is live.
 
 ## Failure Modes & Recovery
 
-- **Pod Crash or OOMKill:** Because Conn is stateless with no PVC, `k3s` restarts the pod automatically. High Priority Class protects it from preemption during Slipway builds or Spyglass headless browser Jobs.
+- **Pod Crash or OOMKill:** Because Conn is stateless with no PVC, `k3s` restarts the pod automatically. High Priority Class protects it from preemption during Keelworks builds or Sextant headless browser Jobs.
 - **Muster Unavailable / SSE Drop:** If Muster restarts during a rolling upgrade, the SSE stream drops and the UI surfaces a stale-feed indicator (P1 attention triggers if the live feed is stale for more than 15 seconds) while `pub.*` views remain readable from Logbook.
 - **Logbook Unavailable:** Public pages that depend on `pub.*` views degrade gracefully until Logbook recovers; no write state is lost because Conn never writes to the database.
 
@@ -62,7 +62,7 @@ After a visitor submits an anonymous edit, Conn turns the element's `✎ Edit` b
 
 - **Only Public Door:** Default-deny `NetworkPolicy` blocks Ingress traffic to every other pod in `clearedstack` and `cs-workers`.
 - **Database Isolation:** Connects to Logbook solely with the `pub_ro` role, which has zero privileges on `core.*` tables, credentials, or internal operational state.
-- **No Topology Leakage:** Never receives raw node names, pod hostnames, or internal cluster IPs; Bosun strips those fields before status reaches Muster and `pub.*`.
+- **No Topology Leakage:** Never receives raw node names, pod hostnames, or internal cluster IPs; Shipkeeper strips those fields before status reaches Muster and `pub.*`.
 - **Unprivileged Execution:** Runs as a non-root user with dropped Linux capabilities, no privilege escalation, and a read-only root filesystem where state does not need to be written.
 - **Anti-Spam Framing:** Enforces client-side Proof-of-Work (~1s cryptographic puzzle) and a hidden honeypot field before forwarding anonymous edit proposals to Muster.
 

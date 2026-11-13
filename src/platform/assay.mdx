@@ -25,13 +25,13 @@ Assay runs in the `cs-workers` Kubernetes namespace under the **Standard (Worker
 | **RAM Budget** | `30 MiB` (always-on Go pod) |
 | **Runtime AI Calls** | `0` (100% deterministic YAML/Go rule engine) |
 | **Local Spool** | `/var/spool/cs` (buffers completed scoring payloads if Muster restarts) |
-| **Build & Deploy** | Built with `ko` (no Docker) by Slipway, signed with `cosign` in Stow, deployed by Bosun via Server-Side Apply |
+| **Build & Deploy** | Built with `ko` (no Docker) by Keelworks, signed with `cosign` in Lazarette, deployed by Shipkeeper via Server-Side Apply |
 
 ## Interfaces & State Transitions
 
 Assay polls Muster in the `clearedstack` namespace over ServiceAccount-authenticated cluster-private HTTP (`CONTRACT_VERSION=v1`), draining `urgent` → `normal` → `backfill` lanes.
 
-- **Inbound state:** `observed` (structured JSON facts produced by Spyglass).
+- **Inbound state:** `observed` (structured JSON facts produced by Sextant).
 - **Evaluation stages:**
   1. **Five binary knockout gates:**
      - *Public source* — Rules, formulas, and thresholds must come from officially released public materials (statutes, FAR, DFARS, NIST SPs).
@@ -61,8 +61,8 @@ Assay fails closed on unknown fields or unsupported categories rather than falli
 
 | Error Code | Trigger | Platform Behavior |
 | --- | --- | --- |
-| `E_NEEDS_SUBTOOL` | Observed item carries a contracting category or unknown field not covered by `tools/rubric-profiles/<category>/`. | Pauses item in `needs_subtool`. Foghorn opens a deduplicated task in Assay on Plainforge; once a new profile and fixture deploy, Muster replays paused items automatically. |
-| `E_PARSE` | Observed JSON payload fails contract schema validation or contains invalid types. | Halts item cleanly and reports a fingerprinted error via Foghorn. |
+| `E_NEEDS_SUBTOOL` | Observed item carries a contracting category or unknown field not covered by `tools/rubric-profiles/<category>/`. | Pauses item in `needs_subtool`. Bellbuoy opens a deduplicated task in Assay on Plainforge; once a new profile and fixture deploy, Muster replays paused items automatically. |
+| `E_PARSE` | Observed JSON payload fails contract schema validation or contains invalid types. | Halts item cleanly and reports a fingerprinted error via Bellbuoy. |
 | `E_TIMEOUT` | Hub lease or completion call times out. | Completed score is retained in `/var/spool/cs` and retried on backoff. |
 
 ## Security & Clean-Room Boundaries
