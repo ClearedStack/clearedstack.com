@@ -3465,7 +3465,7 @@
     "summary": "The platform’s one record of state: the working records, the public views of them and the append-only ledger, kept today in a single PostgreSQL 17 database.",
     "url": "/platform/logbook/",
     "badge": "DESIGN",
-    "content": "Logbook specification The platform’s one record of state: the working records, the public views of them and the append-only ledger, kept today in a single PostgreSQL 17 database. components J.4 design formerly postgres  Keeps the record of every item, decision and proposal, and the public views of that record. Logbook is the name for the platform’s record of state, not for the database engine. If PostgreSQL were ever replaced, Logbook would still be Logbook. Today it is a single shared PostgreSQL 17 database (image postgres:17-alpine , with its schema owned by clearedstack.com ). Running one consolidated database on a Persistent Volume Claim (PVC) eliminates multi-database sync bugs and keeps control-plane memory compact enough for a single 4 GiB k3s node. Overview & Role Logbook is the durable system of record for live operational state, work queues, and sanitized public views: - Single Source of T"
+    "content": "Logbook specification The platform’s one record of state: the working records, the public views of them and the append-only ledger, kept today in a single PostgreSQL 17 database. components J.4 design formerly postgres  Keeps the record of every item, decision and proposal, and the public views of that record. Logbook is the name for the platform’s record of state, not for the database engine. If PostgreSQL were ever replaced, Logbook would still be Logbook. Today it is a single shared PostgreSQL 17 database (image postgres:17-alpine , with its schema kept in the logbook repository). Running one consolidated database on a Persistent Volume Claim (PVC) eliminates multi-database sync bugs and keeps control-plane memory compact enough for a single 4 GiB k3s node. Overview & Role Logbook is the durable system of record for live operational state, work queues, and sanitized public views: - Single Source "
   },
   {
     "id": "section-platform-logbook-overview-and-role",
@@ -3482,10 +3482,10 @@
     "type": "section",
     "title": "Runtime & Resource Budget",
     "subtitle": "Logbook specification",
-    "summary": "| Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | 17-alpine | | Owning Repo | clearedstack.c...",
+    "summary": "| Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | 17-alpine | | Owning Repo | logbook | | RA...",
     "url": "/platform/logbook/#runtime-and-resource-budget",
     "badge": "Section",
-    "content": "Runtime & Resource Budget Logbook specification | Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | 17-alpine | | Owning Repo | clearedstack.com | | RAM Request | 256 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Storage | Persistent Volume Claim (1 of 3 cluster PVCs) | | Network Exposure | Cluster-private ( ClusterIP only); unreachable from cs-workers and public internet |"
+    "content": "Runtime & Resource Budget Logbook specification | Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | 17-alpine | | Owning Repo | logbook | | RAM Request | 256 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Storage | Persistent Volume Claim (1 of 3 cluster PVCs) | | Network Exposure | Cluster-private ( ClusterIP only); unreachable from cs-workers and public internet |"
   },
   {
     "id": "section-platform-logbook-interfaces-and-data-contracts",
@@ -3585,7 +3585,7 @@
     "summary": "Central queue lease manager, state-transition gatekeeper, SSE live feed publisher, and 5-layer anti-spam edit intake in the clearedstack namespace.",
     "url": "/platform/muster/",
     "badge": "DESIGN",
-    "content": "Muster specification Central queue lease manager, state-transition gatekeeper, SSE live feed publisher, and 5-layer anti-spam edit intake in the clearedstack namespace. components J.4 design formerly hub-queue-api  Hands out work to the workers, records every result and change of state, and receives edit proposals. Muster ( v0.1.0-draft , owned by clearedstack.com ) is the sole read-write gatekeeper in front of Logbook. It coordinates all 10 deterministic workers in cs-workers , streams live status to Conn over Server-Sent Events (SSE), and protects anonymous edit intake with a 5-layer anti-spam shield. Overview & Role Rather than letting 10 worker pods hold database passwords or implement their own locking, Muster centralizes all state transitions and queue coordination: - Sole core. Writer: Besides Logbook itself, Muster is the only service in the cluster with read/write access to core. tables. - Lease"
+    "content": "Muster specification Central queue lease manager, state-transition gatekeeper, SSE live feed publisher, and 5-layer anti-spam edit intake in the clearedstack namespace. components J.4 design formerly hub-queue-api  Hands out work to the workers, records every result and change of state, and receives edit proposals. Muster ( v0.1.0-draft , in the muster repository) is the sole read-write gatekeeper in front of Logbook. It coordinates all 10 deterministic workers in cs-workers , streams live status to Conn over Server-Sent Events (SSE), and protects anonymous edit intake with a 5-layer anti-spam shield. Overview & Role Rather than letting 10 worker pods hold database passwords or implement their own locking, Muster centralizes all state transitions and queue coordination: - Sole core. Writer: Besides Logbook itself, Muster is the only service in the cluster with read/write access to core. tables. - Lease &"
   },
   {
     "id": "section-platform-muster-overview-and-role",
@@ -3602,10 +3602,10 @@
     "type": "section",
     "title": "Runtime & Resource Budget",
     "subtitle": "Muster specification",
-    "summary": "| Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | clearedstac...",
+    "summary": "| Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | muster | | ...",
     "url": "/platform/muster/#runtime-and-resource-budget",
     "badge": "Section",
-    "content": "Runtime & Resource Budget Muster specification | Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | clearedstack.com | | RAM Request | 48 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Storage | Stateless (all durable state lives in Logbook) | | Network Exposure | Cluster-private ( ClusterIP only); reachable by Conn, Shipkeeper, and cs-workers |"
+    "content": "Runtime & Resource Budget Muster specification | Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | muster | | RAM Request | 48 MiB | | Priority Class | High (Control Plane — protected from eviction) | | Storage | Stateless (all durable state lives in Logbook) | | Network Exposure | Cluster-private ( ClusterIP only); reachable by Conn, Shipkeeper, and cs-workers |"
   },
   {
     "id": "section-platform-muster-interfaces-and-data-contracts",
