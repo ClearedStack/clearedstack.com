@@ -163,7 +163,7 @@ export const workerApps: PlatformApp[] = [
     id: "cs-04-decide",
     name: "cs-04-decide",
     namespace: "cs-workers",
-    role: "Decision & anonymous edit-approval queue surfaced on /guides/#decide.",
+    role: "Decision and edit-approval queue for the human owner.",
     ramBudget: "30 MiB",
     kind: "worker",
     version: "v0.1.0-draft",

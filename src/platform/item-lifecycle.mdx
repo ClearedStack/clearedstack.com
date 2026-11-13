@@ -1,0 +1,69 @@
+export const meta = {
+  title: "An item’s life: fourteen states and three lanes",
+  summary: "Every state an idea for a tool can be in, the moves between them that are not a straight line, and the three priority lanes that decide what is worked on first.",
+  group: "factory",
+  order: 3,
+  revised: "2026-11",
+  status: "design",
+};
+
+Every idea for a tool is an item with an identifier of the form `PA-0001` and exactly one state. This page lists the fourteen states, shows which worker moves an item from one to the next, and explains the order in which waiting items are taken.
+
+## The fourteen states
+
+An item does not always go straight from found to live. It can leave early, wait for something outside the project, or come back after it was finished.
+
+<States
+  caption="The states of an item, from first sighting to the catalog or the archive"
+  states={[
+    { id: "discovered", tag: "Start", label: "Discovered", detail: "A candidate address or a request has been captured.", to: [{ id: "recorded", when: "it is given an identifier and is not a duplicate" }] },
+    { id: "recorded", label: "Recorded", detail: "On the list, waiting to be looked at.", to: [{ id: "observed", when: "its public pages have been read" }] },
+    { id: "observed", label: "Observed", detail: "What it does, and the rule it cites, are written down.", to: [{ id: "screened_out", when: "it fails any knockout gate" }, { id: "scored", when: "it passes all five gates" }, { id: "needs_subtool", when: "a worker has no rule for what it found" }] },
+    { id: "needs_subtool", tag: "Paused", label: "Needs a sub-tool", detail: "Waiting for a rule to be written for this case.", to: [{ id: "observed", when: "the rule ships and the item is run again" }] },
+    { id: "screened_out", tag: "Can be reopened", label: "Screened out", detail: "Failed a gate. The reason is recorded.", to: [{ id: "observed", when: "the owner overrides, or the idea is reshaped" }] },
+    { id: "scored", label: "Scored", detail: "Rated on the 100-point rubric, with a recommendation.", to: [{ id: "approved", when: "the owner chooses to build" }, { id: "linked", when: "a free, private tool already does the job" }, { id: "merged", when: "it belongs inside another tool" }, { id: "parked", when: "it is worth doing but blocked" }, { id: "rejected", when: "it falls below the threshold" }] },
+    { id: "parked", tag: "Waiting", label: "Parked", detail: "Held, with the thing blocking it named.", to: [{ id: "observed", when: "the blocker clears" }] },
+    { id: "approved", tag: "Catalog: planned", label: "Approved", detail: "To be built. The credit note and the specification are written.", to: [{ id: "building", when: "its repository is generated" }] },
+    { id: "building", tag: "Catalog: in development", label: "Building", detail: "Being built and checked.", to: [{ id: "live", when: "it passes all five listing conditions" }] },
+    { id: "live", tag: "Catalog: live", label: "Live", detail: "In the catalog and being watched.", to: [{ id: "building", when: "the rule it rests on changes" }, { id: "retired", when: "the rule is repealed or replaced" }] },
+    { id: "rejected", tag: "End", label: "Rejected", detail: "Declined. The reason and the score are kept." },
+    { id: "linked", tag: "End", label: "Linked", detail: "The catalog points to the existing tool instead of rebuilding it." },
+    { id: "merged", tag: "End", label: "Merged", detail: "Folded into another tool as a feature." },
+    { id: "retired", tag: "End", label: "Retired", detail: "Taken out of use, with a note of why." },
+  ]}
+/>
+
+## Which worker makes each move
+
+| State | What it means | Usually goes to | Other moves |
+| --- | --- | --- | --- |
+| `discovered` | `cs-01-intake` has seen a candidate | `recorded` | `rejected` if the address is dead or a duplicate |
+| `recorded` | It has an identifier | `observed` | `needs_subtool` if the source is in a form intake has no rule for |
+| `observed` | `cs-02-observe` has read its public pages | `scored` or `screened-out` | `needs_subtool` if the page layout is unfamiliar |
+| `screened-out` | `cs-03-evaluate` found it fails a gate | Stays there | The owner can send it back to `observed` |
+| `scored` | `cs-03-evaluate` has rated it | `approved` | The owner can choose `parked`, `linked`, `merged` or `rejected` |
+| `approved` | The owner chose to build, and `cs-05-provenance` wrote the specification | `building` | `needs_subtool` if there is no profile for that kind of tool |
+| `building` | `cs-06-build` generated it and `cs-07-verify` is checking it | `live` | `parked` if the rule turns out to be unclear |
+| `live` | `cs-08-catalog` published it | Watched by `cs-09-monitor` | Back to `building` when the rule changes, or `retired` when it is repealed |
+| `parked` | A good idea that is blocked | Stays there | Back to `observed` when `cs-09-monitor` sees the blocker clear |
+| `linked` | The catalog points at an existing tool | Watched by `cs-09-monitor` | Back to `observed` if that tool breaks or starts tracking users |
+| `merged` | Folded into another tool | Stays there | Back to `observed` only if the other tool is retired |
+| `rejected` | Declined, with the reason public | Stays there | None, unless it is sent in again as a new candidate |
+| `retired` | Removed from use, with a note | Stays there | None |
+| `needs_subtool` | A worker stopped instead of guessing | Back to the worker that paused it | Runs again automatically once the missing rule ships |
+
+The three catalog labels a reader sees come from these states: `approved` shows as Planned, `building` as In development and `live` as Live.
+
+## Three priority lanes
+
+Every waiting item is in one of three lanes. Each worker empties the urgent lane before it touches the normal one, and the normal one before backfill. That keeps a small machine responsive while a large sweep is running.
+
+| Lane | What goes in it | How it is handled |
+| --- | --- | --- |
+| `urgent` | A change in a regulation that affects a live tool, an edit the owner has approved, and items being run again after a missing rule shipped | Taken first at every worker, so fixes to live tools finish before anything else |
+| `normal` | Single candidates from requests or the owner’s own research, and routine scheduled checks | Taken in the order they arrived, once the urgent lane is empty |
+| `backfill` | Bulk finds from automated sweeps, and old records | Taken only when both other lanes are empty |
+
+## What does not get lost
+
+Two things protect work in progress. An item a worker has claimed goes back in the queue if that worker stops, because its lease runs out. And a result a worker has finished is kept on the worker’s own disk until the queue service confirms it has it, so a restart in the middle loses nothing. [Cluster architecture](/platform/cluster-architecture/#one-database-and-one-gatekeeper) describes both.

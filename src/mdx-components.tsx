@@ -7,7 +7,7 @@ import { Branch, Flow, Lanes, Layers, States } from "@/components/Diagram";
 import { EditTrigger } from "@/components/EditTrigger";
 import { MetricCell } from "@/components/MetricCell";
 import { PulseStrip } from "@/components/PulseStrip";
-import { DraftChip, HealthChip } from "@/components/StatusChip";
+import { HealthChip } from "@/components/StatusChip";
 import { TrailRow } from "@/components/TrailRow";
 import { WhyDrawer } from "@/components/WhyDrawer";
 
@@ -82,7 +82,6 @@ const components: MDXComponents = {
   AttentionCard,
   Branch,
   Callout,
-  DraftChip,
   EditTrigger,
   Flow,
   HealthChip,

@@ -17,19 +17,15 @@ export function SiteFooter() {
             </Link>
           </p>
           <p className="mt-4 leading-relaxed">
-            100% deterministic at runtime · Zero AI in workers or tools. Authored with human review; read{" "}
-            <Link href="/guides/built-with-ai/" className={footLink}>
-              how AI is used at authoring time
+            No AI runs in any tool. The site and the tools are drafted with AI assistance and reviewed by a person.
+            Read{" "}
+            <Link href="/platform/built-with-ai/" className={footLink}>
+              how AI is used
             </Link>
             .
           </p>
         </div>
         <ul className="flex flex-col gap-2.5 font-mono text-[13px] md:items-end">
-          <li>
-            <Link href="/" className={footLink}>
-              Home
-            </Link>
-          </li>
           <li>
             <Link href="/tools/" className={footLink}>
               Tools
@@ -38,6 +34,11 @@ export function SiteFooter() {
           <li>
             <Link href="/guides/" className={footLink}>
               Guides
+            </Link>
+          </li>
+          <li>
+            <Link href="/platform/" className={footLink}>
+              Platform
             </Link>
           </li>
           <li>

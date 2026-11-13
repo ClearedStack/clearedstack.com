@@ -1,0 +1,80 @@
+export const meta = {
+  title: "DISA STIG Reference Lookup Specification",
+  summary: "Browser-only lookup and local XCCDF parser for searching DISA STIG rules by Group ID, Rule ID, STIG ID, CCI, severity, or keyword.",
+  revised: "2026-11",
+};
+
+## Overview & Role
+
+The **DISA STIG Reference Lookup** (`slug: stig-reference-lookup`, CLIN `0003` — Cybersecurity & compliance, template family `lookup`) is a static, browser-only tool for inspecting Security Technical Implementation Guide (STIG) rules. Engineers and assessors often receive findings citing a Group ID (`V-` number), Rule ID (`SV-` number), product STIG ID, or Control Correlation Identifier (`CCI-` number) interchangeably. This tool normalizes and searches all four identifiers offline, either against a bundled public sample benchmark or against a local DISA XCCDF `.xml` file opened in the browser.
+
+**Scope boundaries:**
+- Reference lookup and rule inspection only.
+- Does not execute automated SCAP scans, modify host configurations, or edit/sign `.ckl` checklist files.
+- Does not include proprietary or classified STIGs; users load public DISA benchmarks from their own workstation.
+
+## Governing Regulations & Sources
+
+- **DISA Security Technical Implementation Guides (STIGs)** and **Security Requirements Guides (SRGs)** published at [cyber.mil/stigs](https://www.cyber.mil/stigs/).
+- **NIST SCAP / XCCDF 1.1 & 1.2 Specifications** (Extensible Configuration Checklist Description Format) at [csrc.nist.gov](https://csrc.nist.gov): Defines the XML schema for `<Benchmark>`, `<Group>`, `<Rule>`, `<check-content>`, `<fixtext>`, and `<ident>` elements.
+- **Control Correlation Identifiers (CCIs)**: Links individual STIG rules to underlying NIST SP 800-53 and NIST SP 800-171 security controls.
+
+## Inputs, Processing Logic & Outputs
+
+### Inputs
+- **Benchmark source:** Bundled public sample XCCDF benchmark, or a user-selected local `.xml` XCCDF file read client-side via `FileReader`.
+- **Search query:** Free-text string matching Group ID (`V-...`), Rule ID (`SV-...`), STIG ID (e.g., `RHEL-08-010010`), CCI (`CCI-...`), title, discussion, check text, or fix text.
+- **Severity filter:** `All`, `CAT I (high)`, `CAT II (medium)`, or `CAT III (low)`.
+
+### Deterministic Processing Logic
+1. **Safe client-side XML parsing:**
+   - Parses XCCDF XML using the browser's built-in `DOMParser` (`application/xml`), which does not fetch external DTDs or resolve external XML entities.
+   - Extracts benchmark metadata (`id`, `version`, `release-info`, `title`) so the user always sees the exact STIG version and release date.
+2. **Rule normalization:**
+   - Iterates every `<Group>` and child `<Rule>` element, extracting:
+     - `groupId` (`<Group id="...">`)
+     - `ruleId` (`<Rule id="...">`)
+     - `stigId` (`<version>` element)
+     - `severity` mapped deterministically: `high` → `CAT I`, `medium` → `CAT II`, `low` → `CAT III`
+     - `title`, `discussion` (extracted from `<VulnDiscussion>` inside `<description>`), `checkText` (`<check-content>`), `fixText` (`<fixtext>`), and `ccis` (all `<ident>` elements referencing `cyber.mil/cci`).
+3. **Deterministic search & sort:**
+   - Case-insensitive matching across all identifier fields (`groupId`, `ruleId`, `stigId`, `ccis`) and full-text fields (`title`, `discussion`, `checkText`, `fixText`).
+   - Exact or prefix identifier matches rank ahead of body-text matches; ties sort by severity (`CAT I` → `CAT II` → `CAT III`) and then `groupId` ascending.
+4. **Checklist status reference:** Displays the four standard review states (`Open`, `Not a Finding`, `Not Applicable`, `Not Reviewed`) with a reminder that `Not Applicable` and accepted `Open` findings require written justification.
+
+### Outputs
+- **Benchmark header** displaying title, version, release info, and total rule counts by category (`CAT I / II / III`).
+- **Filterable rule table** with Group ID, Rule ID, STIG ID, Severity badge, Title, and CCI tags.
+- **Rule detail drawer** showing Discussion, Check Text, Fix Text, and a copyable plain-text/Markdown rule summary.
+
+## Clean-Room & 5-Condition QA Requirements
+
+- **Browser-only execution:** XML parsing and search indexing happen entirely in browser memory; uploaded XCCDF files never leave the machine.
+- **Strict Content Security Policy:** Enforces `default-src 'self'`, `connect-src 'self'`, and `form-action 'none'`.
+- **Zero tracking or accounts:** Zero analytics, zero cookies, zero external requests.
+- **Offline operation:** Works completely disconnected using the bundled public sample XCCDF benchmark or any local `.xml` file on disk.
+- **Clean-room & data hygiene:** Bundled sample data uses public/synthetic XCCDF rules only. Includes a warning that filled-in checklists describing real systems may be CUI and should only be handled on approved workstations (linking to [What happens to what you type](/guides/your-data/)), plus MIT `LICENSE` and official DISA/NIST citations.
+
+## Worked Example & Verification
+
+**Worked Example (Synthetic XCCDF Benchmark Fixture):**
+- Fixture contains 3 rules:
+  1. `V-230221` / `SV-230221r627750_rule` / `RHEL-08-010010` / `severity="high"` (`CAT I`) / `CCI-000366`
+  2. `V-230222` / `SV-230222r627753_rule` / `RHEL-08-010020` / `severity="medium"` (`CAT II`) / `CCI-000366`
+  3. `V-230223` / `SV-230223r627756_rule` / `RHEL-08-010030` / `severity="low"` (`CAT III`) / `CCI-000185`
+- **Assertions:**
+  - Query `V-230221` → returns `1` rule (`RHEL-08-010010`, `CAT I`).
+  - Query `RHEL-08-010020` → returns `1` rule (`V-230222`, `CAT II`).
+  - Query `CCI-000366` with filter `All` → returns `2` rules (`V-230221` first, `V-230222` second).
+  - Filter `CAT I (high)` with empty query → returns `1` rule (`V-230221`).
+
+**Boundary & Edge-Case Assertions:**
+- Malformed XML input → displays a clean parse error without crashing the UI.
+- Empty search query → returns all rules in the active benchmark sorted by severity (`CAT I` → `CAT II` → `CAT III`).
+
+## Related pages
+
+- [STIGs, OSCAL and SBOMs](/guides/compliance-as-data/)
+- [What happens to what you type](/guides/your-data/)
+- [The pipeline and its ten workers](/platform/pipeline/#building-verifying-and-listing)
+- [cs-07-verify specification](/platform/cs-07-verify/)

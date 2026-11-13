@@ -1,113 +1,198 @@
 export const meta = {
   title: "Common questions",
-  summary: "Short answers about ClearedStack v3.1: the live Command Portal, App Store, 10 deterministic workers, zero AI at runtime, no Docker, no login lock, MIT licensing, and the GitHub code-only mirror.",
+  summary: "Short answers about cost, privacy, trust, using the tools at work and what to do when something does not behave.",
   group: "start",
-  order: 5,
+  order: 4,
   revised: "2026-11",
 };
 
-Short answers for ClearedStack v3.1, each pointing to the guide with the full details.
+Short answers, each with a link to the guide that has the long one.
 
 <Flow
-  caption="ClearedStack v3.1 quick guide finder"
+  caption="Common questions guide finder"
   direction="down"
   steps={[
-    { tag: "Portal & App Store", label: "Live Command Portal", detail: "How /guides/live-command-portal/, /tools/#apps, /guides/workflow-state-machine/, and /guides/ownership-map-and-edit-loop/ work with no login lock." },
-    { tag: "10 Workers", label: "Zero AI at runtime", detail: "100% deterministic Go workers and tools/<case>/ sub-tools." },
-    { tag: "No Docker", label: "ko, BuildKit, and cs-registry", detail: "How images are built and stored inside k3s + containerd." },
-    { tag: "MIT & GitHub", label: "Clean-room code-only mirror", detail: "MIT across all repos; cs-git mirrors code to GitHub with zero images." },
+    { tag: "About the project", label: "Free and independent", detail: "Why it costs nothing, who runs it and why no tool is live yet." },
+    { tag: "Privacy and security", label: "Stays on your machine", detail: "What leaves your computer, and the rules for CUI." },
+    { tag: "Using the tools", label: "Trust, but check", detail: "How far to rely on a number, and what wins in a disagreement." },
+    { tag: "Hosting and contributing", label: "Run it, fix it, add to it", detail: "Hosting a copy, asking for a tool and reporting a mistake." },
   ]}
 />
 
-## About ClearedStack v3.1
+## About the project
 
 ### Is it really free?
 
-Yes. There is no paid tier, no trial, no ads, no sponsorship, and no donation button. The project takes in no revenue. Shipped tools run in your browser, and the entire 17-pod v3.1 platform (7 control-plane pods plus 10 deterministic workers) fits on a single 4 GiB `k3s` node.
+Yes. There is no paid tier, no trial, no ads, no sponsorship and no donation button. The project takes in no revenue. It can stay that way because the tools run on your computer, so there are no servers doing work that someone has to pay for.
 
 ### Who runs it?
 
-It is an independent personal project, built on personal time with personal equipment. It is not affiliated with, endorsed by, or sponsored by the Department of Defense or any other government agency. See the [About](/about/) page for the full statement.
+It is an independent personal project, built on personal time with personal equipment. It is not affiliated with, endorsed by or sponsored by the Department of Defense or any other government agency. The [About](/about/) page has the full statement.
 
-### What are the live Command Portal and App Store?
+### How do I find my way around the site?
 
-In v3.1, `clearedstack.com` pairs its contractor-first catalog (`/tools/`) with live operational factory views under `/guides/`. The **Command Portal** (`/guides/live-command-portal/`) uses deterministic priority rules to float `P0` errors, `P1` stalled queues, and `P2` pending decisions or edits to the top while collapsing quiet idle workers to one line. The **App Store** (`/tools/#apps`) displays CasaOS-style cards for every running app and worker with live version, health, and sanitized errors, plus owner-only 1-click **Install / Upgrade / Pause / Rollback** controls. See [Live Command Portal](/guides/live-command-portal/) and [Software decides the UI](/guides/software-decides-ui/).
+There are four sections: [Tools](/tools/), [Guides](/guides/), [Platform](/platform/) and [About](/about/). The search box in the header covers all of them, and opens with `/` or Ctrl-K. [How to navigate this site](/guides/navigating-this-site/) explains the contract-style labels you will see, such as CLIN 0001 and L.2.3.
 
-### Why is there no login lock?
+### How do I search the catalog or the guides?
 
-ClearedStack v3.1 is an open public sandbox. Anyone can browse the Command Portal, inspect running workers, read sanitized error codes, and propose edits using the `✎` button without signing in. To prevent abuse without requiring accounts or CAPTCHAs, public edits pass through a 5-layer shield: a ~1-second browser Proof-of-Work puzzle, a hidden honeypot field, a daily-salted IP hash rate limit, strict `ownership_map.json` schema validation (4 KB max, scripts stripped), and a human approval gate in `cs-04-decide`. See [Open public sandbox](/guides/open-public-sandbox/) and [Anonymous edits and anti-spam](/guides/anonymous-edits-and-anti-spam/).
-
-### What license does ClearedStack use?
-
-Every repository in ClearedStack v3.1—`clearedstack.com`, `cs-01` through `cs-10`, `cs-git`, `cs-registry`, `cs-runner`, and `cs-store`—is released under the **MIT License**. All Go and web code is written clean-room from scratch; while inspired by ideas from Forgejo, Argo CD, and CasaOS, zero upstream code is copied. See [MIT clean-room architecture](/guides/mit-clean-room-architecture/).
+The [Tools](/tools/) and [Guides](/guides/) pages each have a filter box. Type one or more words and the list narrows as you type. Nothing you type there is sent anywhere.
 
 ### Does the name mean I am “cleared” for something?
 
-No. The name is only a name. ClearedStack does not grant, verify, or imply a security clearance, a facility clearance, an authorization to operate, or a certification such as CMMC or FedRAMP.
+No. The name is only a name. ClearedStack does not grant, verify or imply a security clearance, a facility clearance, an authorization to operate or a certification such as CMMC or FedRAMP.
 
-## 10 deterministic workers and zero AI at runtime
+### Why is no tool live yet?
 
-### Is AI used when the tools or workers run?
+The catalog was published before the tools on purpose. It lets people say which tools they need first, and it lets anyone see the standard a tool has to meet before one exists. Each tool is marked Live on the day it works and not before. [Getting started](/guides/getting-started/) explains the status labels.
 
-No. ClearedStack v3.1 has **zero AI at runtime** across all 10 pipeline workers (`cs-01-intake` through `cs-10-notify`) and all shipped tools. There are no LLMs, no API calls to AI providers, and no token costs at runtime, so the same input produces the exact same output on any cluster. AI may be used as an authoring aid under human review, never inside running workers or tools. See [How AI is used to build this project](/guides/built-with-ai/).
+### How do I find out when a tool ships?
 
-### How do the 10 workers handle unusual cases without AI?
+Watch the project on [GitHub](https://github.com/ClearedStack). There is no mailing list, because the site collects no addresses.
 
-Each worker repo supports deterministic sub-tools under `tools/<case>/` listed in `tools/registry.yaml`. When a worker encounters an unfamiliar page or layout, it fails closed, pauses the item in `needs_subtool`, and `cs-10-notify` opens a fingerprinted task in the owning repo. Once a deterministic sub-tool and golden test fixture are added and built, `hub-queue-api` automatically replays all queued items for that pattern. See [Deterministic sub-tools](/guides/deterministic-sub-tools/).
+### Can I use the tools and the code commercially?
 
-### How does `cs-02-observe` handle JavaScript-heavy sites?
+Yes. This site is released under the MIT License, which allows use, copying, changes and commercial use, as long as the license notice stays with the code. Each tool carries its own open-source license in its repository. Read it before you reuse the tool’s code.
 
-`cs-02-observe` runs as a lightweight Go HTTP pod (~30 MiB RAM) for standard public pages and spawns on-demand headless browser `Job` pods only when a target site requires JavaScript rendering.
+## Privacy and security
 
-## Infrastructure, no Docker, and GitHub mirror
+### Does anything I type get sent anywhere?
 
-### Why is there no Docker?
+No. A tool is only listed if the work happens in your browser. You can confirm it with your browser’s Network tab, or by disconnecting from the network and seeing that the tool still works. [What happens to what you type](/guides/your-data/) has the steps.
 
-ClearedStack v3.1 uses **zero Docker anywhere**. `cs-runner` listens to `cs-git` push webhooks and spawns ephemeral Kubernetes build Jobs inside `k3s` + `containerd`: `ko` builds Go workers directly into OCI images, and rootless BuildKit builds the Next.js Portal. Images are signed with `cosign` and stored in the internal `cs-registry` OCI store, which keeps the last 5 digests per app for instant rollback. See [cs-registry and no Docker](/guides/cs-registry-and-no-docker/) and [cs-runner and cs-store](/guides/cs-runner-and-cs-store/).
+### Does the site use cookies or analytics?
 
-### What is GitHub used for?
+No cookies, no analytics, no visitor counting and nothing loaded from other companies. The site’s content security policy tells your browser to block any such request.
 
-GitHub is a **public code-only mirror**. The internal `cs-git` service is the source of truth for all repositories and automatically pushes commits on `main` and tags to GitHub when changes are detected. **Zero container images are ever pushed to or stored on GitHub.** See [cs-git and the GitHub mirror](/guides/cs-git-and-github-mirror/).
+### What can the site see about me?
 
-### How are cluster internals protected if the Portal is public?
+What every web server sees: the IP address a page was requested from, which page and when. Nothing you enter into a tool is part of that.
 
-The cluster uses a **2-namespace topology**: `clearedstack` holds the 7 control-plane pods (`clearedstack-web`, `hub-queue-api`, `postgres`, `cs-git`, `cs-registry`, `cs-runner`, `cs-store`) and `cs-workers` holds all 10 workers (`cs-01` through `cs-10`). Only `clearedstack-web` has a public Ingress. `NetworkPolicy` rules isolate internal traffic, `cs-store` strips node names, pod hostnames, and internal IPs before reporting health, and the public Portal reads only from sanitized `pub.*` Postgres views. See [Two-namespace topology](/guides/two-namespace-topology/) and [Network privacy and public logic](/guides/network-privacy-and-public-logic/).
+### Can I enter CUI?
 
-<Branch
-  caption="What stays cluster-private vs. what is 100% public in v3.1"
-  question="Where does each piece of information live?"
-  options={[
-    { when: "Cluster-private (hidden)", then: "Never exposed", detail: "Internal IPs, node names, pod hostnames, NetworkPolicy rules, DB passwords, signing keys, and daily IP salts." },
-    { when: "Public (Portal + GitHub)", then: "Open to everyone", detail: "All MIT source code, deterministic rules, rubric weights, queue depths, item trails, and sanitized error codes." },
-  ]}
-/>
+Running in a browser does not change the rules for the computer the browser is on. Handle CUI only on a system your contract and your company’s policy allow. If that system cannot reach the internet, host a copy of the tool on it. See [Run it on a closed network](/guides/closed-networks/).
 
-## Privacy, CUI, and using the tools
+### Can I enter classified information?
 
-### Does anything I enter into a shipped tool leave my computer?
+No. Never. No tool listed here is approved for it.
 
-No. Shipped tools run in your browser with zero tracking, zero cookies, zero analytics, and a Content Security Policy (`connect-src 'self'`) that blocks outside requests. You can verify this in your browser's Network tab or by disconnecting from the internet after loading a tool. See [What happens to what you type](/guides/your-data/).
+### Is it safe to use on a work computer?
 
-### Can I enter CUI or classified information?
+The site adds nothing to the computer and sends nothing from it. Whether you are allowed to use an outside website for work is your employer’s decision. If outside sites are restricted, your IT team can [host a copy](/guides/#host) inside the company network in a few minutes.
 
-Never enter classified information into any tool or Portal form. For Controlled Unclassified Information (CUI), running in a browser does not change the rules for the machine you are using—handle CUI only on systems your contract and company policy allow, or host a private copy on your own closed network. See [Run it on a closed network](/guides/closed-networks/).
+### Can my security team review it?
 
-### Can I trust the numbers, and what if a tool disagrees with a solicitation?
+Yes, and they are welcome to. All of the code is public. This site is small enough to read in an afternoon, and [Host on Kubernetes](/guides/host-on-kubernetes/) describes exactly what the container image contains and what privileges it runs with.
 
-Treat tool outputs the way you treat a colleague's spreadsheet: helpful for saving time, not a substitute for verification. If a tool and a solicitation disagree, always follow the solicitation. If a tool disagrees with a published regulation, follow the regulation and propose an `✎` edit or report the citation. See [Check a tool's answer](/guides/checking-results/).
+## Using the tools
+
+### Do I need to install anything?
+
+No. A tool is a web page. You need a current browser and nothing else.
+
+### Will it work on a phone?
+
+The site and the guides are readable on a small screen. Tools that involve large tables or documents are easier to use on a larger one.
+
+### Will it work with no internet connection?
+
+A copy hosted inside your own network works with no outside connection at all. The public site needs a connection to load a page, and nothing after that.
+
+### Can I trust the numbers?
+
+Trust them the way you would trust a colleague’s spreadsheet: enough to save time, not enough to skip checking. Every tool has to name the regulation behind its results. [Check a tool’s answer](/guides/checking-results/) is a method for verifying one.
+
+### The tool and the solicitation disagree. Which do I follow?
+
+The solicitation. It can set its own rules for format, rounding, page counts and pricing structure. Adjust the tool’s inputs to match, and ask the contracting officer in writing if the solicitation is unclear.
+
+### The tool and the regulation disagree. Which do I follow?
+
+The regulation, as currently published. Then please report it, with the paragraph that shows the right answer.
+
+### Does using a tool make my company compliant?
+
+No. A checklist tool helps you see where you stand. Compliance is what you have actually implemented, and for some requirements it is what an assessor confirms. No tool can attest to that for you.
+
+### Is this legal or accounting advice?
+
+No. The tools and guides are aids for your own work. For a decision with real risk, such as an indirect rate structure or a compliance affirmation you sign, talk to a qualified professional.
 
 ## Hosting and offline use
 
-### Can I run my own copy of the v3.1 platform or static tools?
+### Can I run my own copy?
 
-Yes. You can deploy the full 17-pod v3.1 platform on a single `k3s` node with one command, or host the static site and shipped tools on any web server or closed network. See [One-command quickstart](/guides/one-command-quickstart/), [Host on Kubernetes](/guides/host-on-kubernetes/), and [Host as plain files](/guides/host-static-files/).
+Yes. There are two ways, both documented: [as plain files](/guides/host-static-files/) on any web server, or as a container [on Kubernetes](/guides/host-on-kubernetes/).
+
+### Is there a container image I can pull?
+
+No. You build the image from the source yourself, so you know exactly what is in it. The build is one command.
+
+### What does a copy need to run?
+
+A web server and nothing else. No database, no application server and no outside connection.
+
+### How do I update a copy on a closed network?
+
+Build a new one outside, carry it across and replace the old one. Record which version you are running so you can tell when it is behind. [Run it on a closed network](/guides/closed-networks/) describes the routine.
+
+## Contributing
+
+### How do I ask for a tool?
+
+Open an issue or send an email describing the job, who needs it and the public source it would rest on. [Request a tool or add your own](/guides/request-or-add-a-tool/) has an outline to copy.
+
+### I found a mistake. Where do I report it?
+
+In the tool’s own repository for a wrong result, or in this site’s repository for anything on the site. Email works for both. Leave real contract data out of the report.
+
+### Can I get my own tool listed?
+
+Yes, if it is free, open source, client-side, free of tracking, built from public sources and honest about its limits. [Build a tool that can be listed](/guides/build-a-tool/) goes through each condition.
+
+### I work for the government. Can I contribute?
+
+Your own obligations come first. Contribute only on your own time and equipment, and only what you are free to share. If you are not sure something is public, treat it as not public.
+
+## How tools are chosen and built
+
+### Where do tool ideas come from?
+
+From tools that already exist for government-contracting paperwork, from requests, and from the maintainer’s own experience. The process for finding, screening and scoring ideas is written down under [Platform](/platform/). Start with [How the project is put together](/platform/overview/).
+
+### How is a tool chosen?
+
+An idea has to pass five knockout gates: it rests on a public source, runs in the browser, is private by design, does one job, and does arithmetic instead of giving advice. Ideas that pass are scored on a 100-point rubric, and a person makes the decision. See [How we decide what to build](/platform/how-we-decide/).
+
+### Do you copy other tools?
+
+No. Only the idea of a job to be done is taken, never code, text, screenshots, styling or design. Each tool is built from the public regulation. Where another tool inspired the job, it is credited openly. See [Clean room and credit](/platform/clean-room-and-credit/).
+
+### Can a vendor ask to be removed from a credit?
+
+Yes. If a vendor or creator asks not to be named, the note is changed to say “a commercial product”. Citations to official government sources are never removed. See [Clean room and credit](/platform/clean-room-and-credit/).
+
+### Is this built with AI?
+
+Yes, with AI assistance, under one human maintainer who directs the work, reviews every change and checks every formula and citation against the official text. The tools themselves contain no AI and make no network calls. See [How AI is used to build this project](/platform/built-with-ai/).
+
+### Is the pipeline described under Platform running?
+
+Each platform page carries a label that says whether it describes a design, something built or something running. Read the label before you rely on a page. [Platform](/platform/#status) lists what is true today.
 
 ## When something does not work
 
-### What happens when a worker turns red or an app fails?
+### A page loads without its styling
 
-`cs-store` watches Pod, Deployment, and Event health and surfaces sanitized error codes (such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL`) directly on `/guides/live-command-portal/` and `/tools/#apps`. Visitors can inspect the item trail, view `[Why?]` drawers on `/guides/workflow-state-machine/`, or propose a fix using `✎`. See [When a worker is red](/guides/when-a-worker-is-red/).
+The site is being opened straight from a disk or a file share, or served from a sub-folder of an address. It has to be served by a web server from the root of a host name. See [Host as plain files](/guides/host-static-files/).
 
-### Where else can I report a bug or request a tool?
+### The filter box does nothing
 
-Propose an edit directly on the Portal with `✎`, email [contact@clearedstack.com](mailto:contact@clearedstack.com), or open an issue on the [GitHub mirror](https://github.com/ClearedStack/clearedstack.com/issues). Never include real contract data or CUI in any report or public proposal.
+The filter needs JavaScript. If your browser or an extension blocks scripts, allow them for the site. Everything else on the site, including every guide, can be read with scripts turned off.
+
+### A link to GitHub or to a regulation does not open
+
+On a closed network, links to the public internet lead nowhere. The pages hosted on your copy still work.
+
+### Something else
+
+Email [contact@clearedstack.com](mailto:contact@clearedstack.com) or open an issue on [GitHub](https://github.com/ClearedStack/clearedstack.com/issues). Say which page, which browser and what you expected to happen.

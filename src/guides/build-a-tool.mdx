@@ -1,42 +1,200 @@
 export const meta = {
-  title: "Build and verify a tool (cs-06 to cs-08)",
-  summary: "How cs-06-build generates static tools from deterministic stack templates, how cs-07-verify enforces the 5-condition test suite, and how cs-08-catalog publishes to /tools.",
+  title: "Build a tool that can be listed",
+  summary: "The five listing conditions in practical terms, with a way to meet each one and a checklist to run before you ask for a listing.",
   group: "contribute",
-  order: 6,
+  order: 2,
   revised: "2026-11",
 };
 
-Every tool in the ClearedStack catalog is a small, static, **100% deterministic** web utility built from public regulations—with zero AI at runtime, zero accounts, and zero network calls after the page loads. In ClearedStack v3.1, three workers turn an approved idea into a live listing on `/tools`: `cs-06-build`, `cs-07-verify`, and `cs-08-catalog`.
+If you have turned a regulation into a spreadsheet, a script or a checklist, you have most of a tool already. This guide is about the rest: shaping it so that a stranger can use it, trust it and check it. Nothing here requires a particular language or framework.
 
-Before these three stages run, `cs-04-decide` records owner approval and `cs-05-provenance` stamps the provenance note and compiles a clean-room JSON build specification. That specification describes *what* regulatory job the tool performs without copying any third-party code, styling, or text.
+## Start from one job
 
-## Step 1: Generate the tool with `cs-06-build`
+The tools in the catalog each do a single thing. That is the main design rule, and it does most of the work for you.
 
-`cs-06-build` reads the clean-room JSON specification and its worked-example fixtures, then generates an isolated, MIT-licensed static tool repository inside `cs-git`. Rather than writing custom boilerplate from scratch each time, `cs-06-build` uses four deterministic **stack templates** under `stack-templates/`:
+- **One input, one output.** Rates in, a burdened rate out. A solicitation in, a list of requirements out.
+- **Small enough to read.** Someone should be able to read the part of your code that holds the rules in one sitting.
+- **Useful to one person on their own.** No team features, no sharing, no workflow.
 
-| Stack Template | Best For | Typical Inputs & Outputs |
-| --- | --- | --- |
-| `calculator` | Rate build-ups, interest math, thresholds | Numeric rates or dates in; step-by-step math and cited totals out |
-| `checklist` | Solicitation reviews, compliance prep | Structured yes/no items with regulatory citations and local browser progress |
-| `validator` | Checking codes, tables, or local files | User-supplied text or local files parsed in memory against bundled rules |
-| `decision-tree` | Eligibility, clause applicability, routing | Guided branching questions leading to a deterministic, cited outcome |
+A good test: can you describe the tool in one sentence that starts with a verb? The catalog entries are written that way. “Work out the interest owed on a late government invoice” is a tool. “A platform for contract finance” is not.
 
-Every template produces static files—HTML, CSS, JavaScript, and bundled JSON reference tables—that run entirely in browser memory. There is no backend server, no external font or CDN link, and no runtime LLM.
+## Pick the public source first
 
-If a clean-room specification requires an interaction pattern that none of the four templates support, `cs-06-build` **fails closed**: it pauses the item in `needs_subtool` so a maintainer can add a deterministic template or sub-tool rather than guessing.
+Before writing code, write down what the tool is built on:
 
-## Step 2: Run the 5-condition suite with `cs-07-verify`
+- the regulation, standard or guide, by name
+- the exact part you are implementing, down to the paragraph
+- the revision or the date of the text you read
+- where it is officially published
 
-Once `cs-06-build` produces a tool repository, `cs-runner` builds the static bundle without Docker (using rootless BuildKit) and `cs-07-verify` runs the automated **5-condition verification suite**. A tool cannot be listed unless every check passes:
+If you cannot point to an officially released source for a rule, the rule does not belong in the tool. Experience, convention and “how everyone does it” are worth mentioning in your documentation as such, clearly separated from what the regulation says.
 
-1. **Offline execution:** The tool loads once and continues working with the network completely disconnected. All lookup tables, rates, and regulatory dates ship inside the repository.
-2. **Strict Content Security Policy (`connect-src 'self'`):** Every page enforces a Content Security Policy including `connect-src 'self'`, `default-src 'self'`, and `form-action 'none'`. The browser itself blocks any attempt to fetch remote assets or send data off the user's machine.
-3. **Zero tracking or accounts:** Automated checks confirm there are no sign-in walls, analytics scripts, cookies, visitor counters, or third-party beacons. If a tool remembers work in browser storage, it must disclose that on the page and provide a button to clear it.
-4. **Worked-example assertions:** `cs-07-verify` executes the tool against hand-calculated worked examples, edge cases (such as zero values, empty files, and date boundaries), and made-up test fixtures. Real CUI, proprietary contractor rates, and non-public solicitation text are strictly forbidden.
-5. **Citations, scope limits, and MIT license:** The suite checks that every calculation cites its public source (regulation, paragraph, and revision date), states what the tool does *not* cover, includes a plain disclaimer that outputs are not legal or compliance advice, and carries an `MIT` `LICENSE` file.
+[Where the rules live](/guides/public-sources/) lists the official places to read and cite.
 
-## Step 3: Publish to `/tools` with `cs-08-catalog`
+## Keep everything on the user’s machine
 
-After `cs-07-verify` passes all five conditions, `cs-08-catalog` publishes the tool to the `clearedstack.com` catalog at `/tools`. It manages the full catalog lifecycle—adding newly verified tools, linking approved external tools, merging duplicates, or retiring outdated entries—and `cs-git` mirrors the public source code to GitHub (with zero container images stored on GitHub).
+This is the condition people check first, and the one that takes a tool off the list if it fails.
 
-From that point on, `cs-09-monitor` watches the cited federal sources (such as eCFR, Federal Register, and NIST) for revisions, while anyone visiting `/tools` can inspect the code, run the tool offline, or propose a data or configuration fix using the anonymous `✎` edit button without signing in.
+<Flow
+  caption="Client-side execution and data isolation boundary"
+  direction="down"
+  steps={[
+    { tag: "Static bundle", label: "Page loads once", detail: "Browser fetches HTML, JavaScript, CSS, and reference data." },
+    { tag: "In-memory", label: "Local processing", detail: "Calculations, parsing, and file readers run strictly inside tab memory." },
+    { tag: "Egress blocked", label: "CSP enforcement", detail: "Content Security Policy blocks remote API calls and tracking beacons." },
+    { tag: "Local save", label: "Optional browser storage", detail: "State stays in local storage with a user-facing button to clear it." },
+  ]}
+/>
+
+- **No backend.** The tool is static files: HTML, CSS, JavaScript and data. All processing happens in the page.
+- **No calls out.** No analytics, no error-reporting service, no remote logging, no “anonymous usage statistics”.
+- **Nothing loaded from other servers.** Bundle your scripts. Host your own fonts. Do not link to a CDN, a font service or an icon service.
+- **Files are read locally.** If the tool opens a document, read it in the browser. Do not upload it.
+- **Reference data ships with the tool.** A lookup table is a file in your repository, not a request to an API.
+
+Any build setup that produces static files works. So does a single HTML file with no build step at all.
+
+A tool that runs on the command line can also be listed, if it works with no network connection and sends nothing anywhere.
+
+## Make the promise enforceable
+
+Add a content security policy to every page. It tells the browser to block anything that tries to load or send outside your own address, which turns your promise into something a visitor can verify. This is close to the policy this site uses:
+
+```html
+<meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+/>
+```
+
+Then run the two checks a reviewer will run:
+
+1. Open the tool with the browser’s **Network** tab showing. Use every feature. Nothing should be requested after the page has loaded.
+2. Load the tool, disconnect from the network and use every feature again. Everything should still work.
+
+## Leave out accounts and tracking
+
+No sign-in, no email capture, no cookies, no fingerprinting, no visitor counter. If you want to know whether people use the tool, the honest signals are issues, stars and messages.
+
+If the tool remembers work between visits, keep it in the browser’s own storage, say so on the page, and give the user a button that clears it.
+
+## Show the work
+
+A result nobody can check is a result nobody should use. For every answer the tool gives:
+
+- **Show the steps**, not only the total. A rate build-up shows each layer. A date calculation shows the days counted.
+- **Cite the source next to the result**: the regulation and paragraph the step rests on.
+- **Date your data.** Any table of rates, thresholds or codes carries the date it was taken from the source and the source’s own effective date.
+- **Say which revision** of a standard you implemented.
+
+In the code, put the same citation in a comment beside each formula and each table. That is where a maintainer will look when the rule changes.
+
+## Say what it does not do
+
+Every tool has edges. Put them where the user will see them, not only in the README:
+
+- the cases the tool does not cover
+- the assumptions it makes, such as which base a rate is applied to
+- the date its data was last checked
+- a plain statement that the output is an aid for the user’s own work and not legal, accounting or compliance advice
+
+Do not suggest that using the tool makes anyone compliant, certified or approved. It does not, and saying so is the fastest way to lose a reader’s trust.
+
+## Use made-up examples
+
+Sample inputs, screenshots, test data and documentation must not contain anything real or controlled.
+
+- Invent the company, the rates, the contract number and the labor categories.
+- Do not paste text from a solicitation that is not publicly posted.
+- Never include classified information, CUI or export-controlled data, anywhere, including commit messages.
+
+Round numbers make better examples anyway. A reader can check them in their head.
+
+## Test against worked examples
+
+Tests are how you keep a rule right after the tenth change.
+
+- Work several cases by hand, write down the answers, and make them tests.
+- Where the source itself gives a worked example, use it and cite it.
+- Test the edges: zero, a very large value, an empty file, a date that crosses a rate change, a leap year.
+- When someone reports a wrong result, add their case as a test before you fix it.
+
+## Make it usable by everyone
+
+- It works with a keyboard alone.
+- Inputs have labels. Errors say what is wrong and how to fix it.
+- Text has enough contrast in both light and dark settings.
+- It is readable on a small screen.
+- Results can be copied as text, and tables can be exported in an open format such as CSV.
+
+Government work has accessibility expectations of its own. A tool for this audience should not be the thing that fails them.
+
+## Say where the idea came from
+
+If your tool was inspired by another tool, a vendor product, an open-source project or a spreadsheet, say so openly:
+
+- **Take the job, never the code.** You may take the idea of what problem to solve. Never copy another tool’s code, styling, text, templates or design.
+- **Build from the regulation.** Work the calculations out from the public source itself, such as FAR Part 31 or NIST SP 800-171.
+- **Record it.** A catalog entry can carry an optional `provenance` block in `src/data/catalog.ts` with the kind of source (`government`, `vendor-free`, `commercial`, `open-source`, `template`, `community` or `owner`) and a short note.
+- See [Clean room and credit](/platform/clean-room-and-credit/) for the full policy.
+
+<Branch
+  caption="Clean-room build decision: what may be taken from an existing tool"
+  question="What are you taking from the existing tool?"
+  options={[
+    { when: "The job to be done", then: "Allowed with credit", detail: "Solve the same problem, building clean-room from the underlying public regulation." },
+    { when: "Code, text, UI or assets", then: "Forbidden", detail: "Never copy source code, markup, styling, screenshots, or proprietary data." },
+  ]}
+/>
+
+## If you build with AI
+
+If you use an AI assistant to write or test your tool:
+
+- **Same review rules apply.** An AI-drafted tool must pass the same five listing conditions and the same checks as any other.
+- **Same data rules.** Never paste CUI, non-public procurement information, real contractor rates or personal data into an AI tool. Use made-up examples only.
+- **A person checks the math and the citations.** Verify every formula and every citation against the official text before you open a pull request.
+- **Commit trailers.** Say so in your commit messages with a trailer that names the tool, such as `Assisted-by: Claude Code`.
+- See [How AI is used to build this project](/platform/built-with-ai/) for the rules this project follows.
+
+## Write the README
+
+The README is what a reviewer and a cautious user read first. It should answer, in this order:
+
+1. What does the tool do, in one sentence?
+2. Which public sources is it built on, with links and revision dates?
+3. What does it not cover?
+4. Does anything leave my computer? (No. Say how to verify it.)
+5. How do I run it locally and host it myself?
+6. How do I report a wrong result?
+7. What is the license?
+
+## Choose a license
+
+Use a license approved by the Open Source Initiative. This project uses MIT. Put the full text in a file named `LICENSE` at the top of the repository.
+
+Check the licenses of what you bundle as well. A data file or a library with a restrictive license can make the whole tool unusable for the people it is meant for.
+
+## Checklist before you ask for a listing
+
+- [ ] The tool does one job, described in one sentence.
+- [ ] The repository is public and has a `LICENSE` file with an OSI-approved license.
+- [ ] There is no backend, and nothing is loaded from another server.
+- [ ] The Network tab stays quiet while every feature is used.
+- [ ] Every feature works with the network disconnected.
+- [ ] There are no analytics, accounts, cookies or third-party scripts.
+- [ ] Each result names the regulation and paragraph behind it.
+- [ ] Data tables carry the date they were taken from the source.
+- [ ] The tool states what it does not cover, and that it is not professional advice.
+- [ ] All examples and test data are made up.
+- [ ] The README answers the seven questions above.
+
+Then add your entry to the catalog. [Request a tool or add your own](/guides/request-or-add-a-tool/) shows the entry format and how the listing is reviewed.
+
+## Keep it current
+
+A listed tool is a small commitment. Regulations change, and a tool that quietly goes out of date is worse than no tool.
+
+- Watch the sources you cite for new revisions.
+- When a figure changes, update the data, its date and a test.
+- If you can no longer maintain the tool, say so in the README. Its listing can be marked or removed, and someone else may pick it up. The license makes that possible.

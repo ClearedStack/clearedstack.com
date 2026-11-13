@@ -1,0 +1,104 @@
+export const meta = {
+  title: "RFP Requirement Shredder Specification",
+  summary: "Technical specification for the browser-only RFP Requirement Shredder (CLIN 0002) that extracts binding solicitation sentences into a numbered, traceable requirements list.",
+  revised: "2026-11",
+};
+
+## Overview & Role
+
+The **RFP Requirement Shredder** (`rfp-requirement-shredder`) belongs to **CLIN 0002 — Proposal & capture** in `src/data/catalog.ts`. Its job is mechanical solicitation shredding: pulling every binding sentence containing `"shall"`, `"must"`, `"will"`, or `"should"` out of pasted solicitation text into a numbered, un-paraphrased requirements list with source references.
+
+As documented in [Answer every requirement](/guides/answer-a-solicitation/), proposals are rarely lost on brilliance—they are lost when an instruction, form, or clause requirement goes unanswered. The tool automates the deterministic text extraction and numbering pass while leaving requirement interpretation and compliance judgment to the human reviewer.
+
+| Attribute | Value |
+| --- | --- |
+| **Tool Slug** | `rfp-requirement-shredder` |
+| **Catalog CLIN** | `0002` — Proposal & capture |
+| **Stack Template** | `validator` (local text parser in `cs-06-build`) |
+| **Runtime** | 100% static browser-side HTML/CSS/JS (zero backend, zero runtime AI) |
+| **License** | MIT |
+
+## Governing Regulations & Sources
+
+The shredder is anchored to public federal acquisition structure and solicitation conventions:
+
+- **FAR Part 15 (Contracting by Negotiation) & FAR 15.204-1 (Uniform Contract Format):** Defines the thirteen lettered solicitation sections (`A` through `M`), separating contract terms (`A`–`J`), representations (`K`), proposal instructions (`L`), and evaluation factors (`M`). Note: per [Read a solicitation](/guides/read-a-solicitation/), the FAR overhaul underway since 2025 relocates and makes the Uniform Contract Format optional in draft text while FAR 15.204-1 remains in codified text; the parser supports both lettered UCF headings and plainer headings.
+- **FAR Part 12 (Acquisition of Commercial Products and Commercial Services):** Covers commercial solicitations that omit lettered UCF labels in favor of plain headings such as *Instructions to Offerors* (Section L equivalent), *Evaluation* or *Basis for Award* (Section M equivalent), and *Statement of Work / Performance Work Statement / Statement of Objectives* (Section C equivalent).
+- **FAR 52.215-1 (Instructions to Offerors—Competitive Acquisition):** Establishes binding submission rules, late-proposal treatment, and amendment acknowledgment requirements.
+- **Solicitation precedence rule:** The specific solicitation and its written amendments always outrank general conventions.
+
+## Inputs, Processing Logic & Outputs
+
+### Inputs
+
+| Field | Type | Constraints & Defaults |
+| --- | --- | --- |
+| `solicitationText` | Plain text (pasted or local `.txt`/`.md` file) | Parsed strictly in browser memory; supports UCF Sections `L`, `M`, `C`, `H`, `J`, and amendments. |
+| `defaultSectionPrefix` | Enum (`L`, `M`, `C`, `H`, `J`, `AUTO`) | Defaults to `AUTO` (infers prefix from nearest preceding section heading; falls back to `REQ`). |
+| `includeShould` | Boolean | Defaults to `true` (treats `"should"` in Section L instructions as binding `"shall"`, per [Answer every requirement](/guides/answer-a-solicitation/)). |
+| `splitCompoundVerbs` | Boolean | Defaults to `true` (splits multi-action clauses such as `"shall design, test, and document"` into separate numbered rows). |
+| `startingIndex` | Integer >= 1 | Defaults to `1` per prefix (e.g., `L-001`, `M-001`, `C-001`). |
+
+### Deterministic Processing Logic
+
+1. **Heading & location tracking:** Scans lines sequentially for UCF section markers (`Section L`, `L.4.1`, `Section M`, `Section C`, `Section H`, `Section J`, or FAR Part 12 equivalents like `Instructions to Offerors`, `Evaluation Factors`, `Performance Work Statement`) and explicit page markers (`Page N`, `[p. N]`, or form-feed `\f` breaks) to maintain current `section`, `paragraph`, and `page` state.
+2. **Sentence segmentation:** Splits text into candidate sentences while protecting common federal abbreviations (`U.S.C.`, `C.F.R.`, `FAR 52.215-1`, `e.g.`, `i.e.`, `No.`, `Sec.`) from false period breaks.
+3. **Binding-verb classification:** Matches sentences against case-insensitive word-boundary patterns for `"shall"`, `"must"`, `"will"`, and (when enabled) `"should"`, and classifies the actor/role deterministically:
+   - `"The contractor shall"` → `Work duty` (`C` / `H`)
+   - `"The offeror shall"` / `"Offerors must"` → `Proposal instruction` (`L`)
+   - `"The Government will"` → `Government intent` (`M` / `C`)
+   - `"should"` / `"may"` → `Preference or permission` (flagged for reviewer verification)
+4. **Compound-action splitting (optional):** When `splitCompoundVerbs` is `true` and a sentence contains a single modal verb followed by a comma/conjunction list of transitive verbs (e.g., `"shall design, test, and document"`), emits one child row per action while preserving the full original sentence as context.
+5. **Exact-text preservation & stable IDs:** Copies matched text verbatim without paraphrasing, assigns zero-padded stable IDs (`L-001`, `M-001`, `C-001`), and records `section`, `paragraph`, and `page`.
+
+### Outputs
+
+- **Numbered Requirements Table:** Columns `ID`, `Prefix`, `Actor / Kind`, `Binding Verb`, `Source (Section / Paragraph / Page)`, and `Exact Requirement Text`.
+- **Summary Counts:** Breakdown by prefix (`L`, `M`, `C`, `H`, `J`, `REQ`) and binding verb (`shall`, `must`, `will`, `should`).
+- **Local Exports:** Client-side CSV and JSON downloads (generated via `Blob` URLs in memory) formatted for direct import into the **Compliance Matrix Generator** (`compliance-matrix-generator`).
+
+## Clean-Room & 5-Condition QA Requirements
+
+All five `cs-07-verify` listing conditions are mandatory before catalog publication:
+
+1. **Browser-only execution:** All regex segmentation, heading detection, and CSV/JSON export run in client-side JavaScript memory. No backend API or LLM is used.
+2. **Strict Content Security Policy (`connect-src 'self'`):** Enforces `default-src 'self'; connect-src 'self'; form-action 'none'`. Pasted solicitation text never leaves the user's machine.
+3. **Zero tracking or accounts:** Zero sign-in walls, analytics, cookies, or third-party beacons. Any optional `localStorage` draft persistence is disclosed with an explicit **Clear local data** button.
+4. **Offline execution:** Loads once and operates completely offline with all abbreviation lists, UCF heading patterns, and FAR citations bundled in the repository.
+5. **Worked examples, citations & scope limits:** Includes deterministic worked-example tests and boundary cases (empty input, missing section headers, abbreviations with periods), cites FAR Part 15 / 15.204-1 / Part 12 / 52.215-1, carries an MIT `LICENSE`, and states clearly that automated shredding can miss requirements embedded in images, scanned PDFs, or complex tables and does not replace human review.
+
+## Worked Example & Verification
+
+**Synthetic Input:**
+
+```text
+Section L.4.1 (Page 12)
+The technical volume shall not exceed 30 pages. Offerors must submit pricing in a separate file.
+
+Section C.3.1 (Page 18)
+The contractor shall design, test, and document monthly status reports. The Government will review deliverables within 10 business days.
+```
+
+**Expected Deterministic Output (`splitCompoundVerbs: true`):**
+
+| ID | Kind | Verb | Source | Exact Requirement Text |
+| --- | --- | --- | --- | --- |
+| `L-001` | Proposal instruction | `shall` | `Section L.4.1, p. 12` | The technical volume shall not exceed 30 pages. |
+| `L-002` | Proposal instruction | `must` | `Section L.4.1, p. 12` | Offerors must submit pricing in a separate file. |
+| `C-001a` | Work duty | `shall` | `Section C.3.1, p. 18` | The contractor shall design [monthly status reports]. *(Full sentence: "The contractor shall design, test, and document monthly status reports.")* |
+| `C-001b` | Work duty | `shall` | `Section C.3.1, p. 18` | The contractor shall test [monthly status reports]. |
+| `C-001c` | Work duty | `shall` | `Section C.3.1, p. 18` | The contractor shall document monthly status reports. |
+| `C-002` | Government intent | `will` | `Section C.3.1, p. 18` | The Government will review deliverables within 10 business days. |
+
+**Boundary cases verified by `cs-07-verify`:**
+- Empty or whitespace-only input returns zero rows and a clear validation notice without throwing.
+- Abbreviations (`FAR 52.215-1`, `U.S.C.`, `e.g.`) do not split sentences prematurely.
+- Input lacking UCF section headers falls back cleanly to `REQ-001`, `REQ-002`, etc.
+
+## Related pages
+
+- [Read a solicitation](/guides/read-a-solicitation/)
+- [Answer every requirement](/guides/answer-a-solicitation/)
+- [Compliance Matrix Generator](/tools/compliance-matrix-generator/)
+- [Check a tool’s answer](/guides/checking-results/)
+- [cs-07-verify specification](/platform/cs-07-verify/)

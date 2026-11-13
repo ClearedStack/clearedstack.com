@@ -42,26 +42,26 @@ Anything the tool must NOT do or ask for:
 
 The last line matters more than it looks. If a tool would be useless to you the moment it asked for a company name, say so.
 
-### How a suggestion enters the 10-worker pipeline
+### What happens to a suggestion
 
-Community suggestions can be submitted directly on the Portal via `✎ Edit` (no login required), via GitHub issue, or by email. Every suggestion enters `cs-01-intake` and moves through the 100% deterministic pipeline:
+A suggestion is treated the same way as any other idea for a tool:
 
 <Flow
-  caption="How community tool requests flow through the 10-worker Prior Art engine"
+  caption="What happens to a request for a tool"
   direction="down"
   steps={[
-    { tag: "cs-01-intake", label: "Intake & Dedupe", detail: "Normalizes URLs, SHA-256 deduplicates, and assigns a PA-XXXX ID." },
-    { tag: "cs-02-observe", label: "Observe & Seal", detail: "Inspects public pages and seals raw snapshots behind the clean-room wall." },
-    { tag: "cs-03-evaluate", label: "Screen & Score", detail: "Runs five knockout gates and the 100-point rubric deterministically." },
-    { tag: "cs-04-decide", label: "Decide", detail: "Surfaces in /guides/ownership-map-and-edit-loop/ for human owner determination (Build, Link, Merge, Park, Reject)." },
+    { tag: "1", label: "Recorded", detail: "The request is written down as a candidate, and checked against ones already on the list." },
+    { tag: "2", label: "Screened", detail: "Tested against five knockout gates: public source, runs in the browser, private, one job, arithmetic not advice." },
+    { tag: "3", label: "Scored", detail: "Rated on a 100-point rubric. How many people asked is one of the things that breaks a tie." },
+    { tag: "4", label: "Decided", detail: "A person decides whether to build it, link to something that already does the job, park it or decline it." },
   ]}
 />
 
-Follow live progress in [Pipeline](/guides/workflow-state-machine/) and [Decide](/guides/ownership-map-and-edit-loop/), or read [The 10-Worker Prior Art Engine](/guides/prior-art-engine/).
+[How we decide what to build](/platform/how-we-decide/) has the gates and the rubric in full.
 
 ## Ask for one that is already planned
 
-Every tool in the [catalog](/tools/) starts out as Planned. Saying which of them you are waiting for helps decide what gets built first. A one-line message is enough: the name of the tool and what you would use it for.
+Every tool in the [catalog](/tools/) starts out as Planned. Saying which of them you are waiting for helps decide what gets built first. Each tool’s own page has buttons that start the email or the issue for you. A one-line message is enough: the name of the tool and what you would use it for.
 
 ## Report a mistake
 
@@ -107,16 +107,13 @@ The entry looks like this:
   status: "live",
   url: "https://example.com/wrap-rate/",
   repo: "https://github.com/your-name/wrap-rate-calculator",
-  provenance: {
-    inspiredBy: [
-      { name: "Public Spreadsheets", kind: "template", observed: "2026-11" }
-    ],
-    note: "Built clean-room from FAR Part 31 cost principles.",
-  },
+  detail: "Enter an hourly wage and your indirect rates. The tool shows every layer of the build-up.",
+  sources: [{ name: "FAR Part 31", url: "https://www.acquisition.gov/browse/index/far" }],
+  guides: [{ slug: "labor-rates" }],
 },
 ```
 
-The home page, the catalog and their counts are generated from that file, so the one entry is the whole change. Pull requests may include an optional `provenance` field documenting where the inspiration originated. [Build a tool that can be listed](/guides/build-a-tool/) goes through each condition in detail, with a checklist to run before you open the pull request.
+The home page, the catalog, the tool’s own page and every count are generated from that file, so the one entry is the whole change. An entry can also carry an optional `provenance` field that records where the idea came from. [Work on this site](/guides/work-on-this-site/) lists every field, and [Build a tool that can be listed](/guides/build-a-tool/) goes through each condition in detail, with a checklist to run before you open the pull request.
 
 ## How a listing is reviewed
 

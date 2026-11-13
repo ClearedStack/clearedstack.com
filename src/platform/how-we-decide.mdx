@@ -1,0 +1,91 @@
+export const meta = {
+  title: "How we decide what to build",
+  summary: "The five knockout gates an idea has to pass, the 100-point rubric it is scored on, how ties are broken, and who makes the final decision.",
+  group: "factory",
+  order: 4,
+  revised: "2026-11",
+  status: "design",
+};
+
+Section M of a solicitation tells bidders how their proposals will be judged. This page is the same thing for ideas: the complete set of rules by which a candidate tool is screened, scored and decided. The rules are public so that anyone can see why one tool was built and another was not.
+
+The screening and scoring are done by fixed rules with no AI, so the same facts always give the same score. The decision is made by a person.
+
+## The five knockout gates
+
+Before any points are counted, a candidate has to pass five yes-or-no tests. Failing one ends the evaluation, and the reason is recorded.
+
+1. **Public source.** Its rules, formulas and thresholds come from officially released material: statutes, the FAR, the DFARS, NIST publications. Not a paywalled manual, and not industry folklore.
+2. **Runs in the browser.** It can work entirely on the user’s machine, with no server and no outside service.
+3. **Private by design.** It works offline, needs no account, tracks nothing and can enforce a content security policy that blocks outside requests.
+4. **One job.** It does a single task that can be described in one sentence starting with a verb. A suite fails, unless it is split into smaller ideas.
+5. **Arithmetic, not advice.** It computes, structures or looks things up. It does not give legal advice or stand in for a contracting officer’s judgment.
+
+<Branch
+  caption="The screening decision"
+  question="Does the candidate pass all five gates?"
+  options={[
+    { when: "Yes, all five", then: "Go on to scoring", detail: "Rated on seven weighted factors, up to 100 points." },
+    { when: "No, it fails one", then: "Screened out", detail: "The reason is published. A candidate that does several jobs may be split and tried again." },
+  ]}
+/>
+
+## The 100-point rubric
+
+A candidate that passes the gates is rated from 1 to 5 on seven factors. Each rating is multiplied by the factor’s weight, giving a total between 20 and 100.
+
+| Factor | Weight | A rating of 1 | A rating of 3 | A rating of 5 |
+| --- | --- | --- | --- | --- |
+| Need for small businesses | ×4, up to 20 | A rare edge case | Comes up now and then, such as once a year | A recurring obstacle for most small contractors, costly when done wrong |
+| Gap: no free, private option exists | ×4, up to 20 | Good free tools that run on the user’s machine already exist | A clumsy government portal, or open tools that are hard to use | Only paid products or lead-capture forms exist |
+| Strength of the public source | ×3, up to 15 | An informal slide deck or an unclear draft | A policy memo or an interim rule | A statute, a codified regulation or a published standard |
+| Fits in a browser | ×3, up to 15 | Needs very large data or heavy computing | Needs moderate bundled tables or a special parser | Simple arithmetic or text handling with very little data |
+| Small enough to read | ×2, up to 10 | A sprawling program with many settings | Moderate, with clear inputs and outputs | Short enough to read in one sitting |
+| Can be checked | ×2, up to 10 | Rests on interpretation | A formula with edge cases that need warnings | Plain arithmetic with official worked examples to test against |
+| Low upkeep | ×2, up to 10 | Needs frequent data updates or fragile page reading | Updated once a year | Rests on text that changes only when the rule is amended |
+
+## What the score recommends
+
+| Result | Recommendation |
+| --- | --- |
+| 75 or more, and a Gap rating above 1 | **Build** it from the public rule |
+| 75 or more, and a Gap rating of 1 | **Link** to the existing free, private tool instead of rebuilding it |
+| 55 to 74 | **Park** it: a sound idea held back by missing data, a pending rule or capacity |
+| Below 55 | **Reject** it, with the breakdown of points published |
+
+One more rule: a candidate rated 4 or 5 on Need and 1 or 2 on Small enough to read is flagged for the owner to consider splitting into smaller tools.
+
+ClearedStack does not exist to duplicate good work. The Link outcome is there so that a tool which is already free, private and built on public sources gets pointed to, not rebuilt.
+
+## Breaking a tie
+
+When two candidates have the same total, they are ordered by these tests, in this order:
+
+1. **Fit with the current phase** of the roadmap.
+2. **A higher Gap rating.**
+3. **A higher Low upkeep rating.**
+4. **A higher Small enough to read rating.**
+5. **More independent requests** from the community.
+
+## The decision is a person’s
+
+The score is a recommendation. The owner reviews each scored candidate and chooses one of the outcomes: build, link, merge into another tool, park or reject. The owner can also override the recommendation, or reopen a candidate that was screened out. An override needs a written reason, and the reason is recorded in the public decision log.
+
+<Lanes
+  caption="Who does what in a decision"
+  lanes={["Human owner", "AI assistants (while writing)", "The public"]}
+  steps={[
+    { lane: 2, label: "Suggest a tool or a correction", detail: "By issue, by email or by proposing an edit." },
+    { lane: 1, label: "Help draft the rules", detail: "Help write the scoring rules and their tests. They do not run the scoring." },
+    { lane: 0, label: "Approve or override", detail: "Makes the decision and writes down the reason for any override." },
+    { lane: 1, label: "Help draft the tool", detail: "Help write code and tests from the official rule." },
+    { lane: 0, label: "Check the math and the citations", detail: "Verifies each formula and citation against the official text before anything is merged." },
+    { lane: 2, label: "Check the result", detail: "Anyone can test a live tool and report a wrong answer." },
+  ]}
+/>
+
+## Where the rules come from
+
+Each area of the catalog has its own profile of thresholds for the rubric: pricing, proposals, cyber, market research and DevSecOps. A candidate in an area with no profile is not scored by guesswork. It is paused until a profile is written, the same way any worker handles a case it has no rule for. See [The pipeline and its ten workers](/platform/pipeline/#sub-tools-one-rule-for-each-case).
+
+To suggest a tool, see [Request a tool or add your own](/guides/request-or-add-a-tool/). How often a tool is asked for is the fifth tie-breaker above.

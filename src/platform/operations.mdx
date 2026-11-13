@@ -1,0 +1,164 @@
+export const meta = {
+  title: "Operating it: status views, failures and backups",
+  summary: "The fixed rules that decide what a status page shows first, what happens when a worker fails, and how the three stores of data are backed up and tested.",
+  group: "cluster",
+  order: 3,
+  revised: "2026-11",
+  status: "design",
+};
+
+A platform that one person runs has to say plainly when something is wrong, stay quiet when nothing is, and recover without heroics. This page covers the three parts of the design that deal with that: the rules for the status views, the path a failure takes, and backups.
+
+## What a status view shows first
+
+A dashboard is useless if healthy background noise hides a real failure. In this design, what appears at the top of a status page is decided by five fixed rules, not by a person arranging charts and not by a model guessing what looks important. The same state of the cluster always produces the same page.
+
+| Priority | Name | What triggers it | How it is shown |
+| --- | --- | --- | --- |
+| P0 | Critical | A pod crashes, a health check fails, or an item cannot be processed at all | At the top, in red, with the error code and a rollback control for the owner |
+| P1 | Stalled | A worker is paused waiting for a rule, a queue is backed up, or the feed of updates has been silent for more than 15 seconds | Beside P0, in amber, with the error code and the repository that owns the fix |
+| P2 | Needs a person | Candidates are waiting for a decision, or proposals are waiting for approval | Listed with how long the oldest has waited |
+| P3 | Working | Workers are processing items with no errors | In green, with counts |
+| P4 | Quiet | A healthy worker has nothing to do | Folded into one muted line |
+
+## Six states, never disguised
+
+Every component on a status page is in exactly one of six states. An idle worker is never painted red, and missing data is never shown as healthy.
+
+| State | Looks like | Means |
+| --- | --- | --- |
+| `healthy` | Green | Running, passing its checks, and reporting on time |
+| `idle` | Muted grey | Healthy and ready, with nothing to do |
+| `erroring` | Red, with a code | An active failure. Shows a code such as `E_TIMEOUT`, never a stack trace or an address |
+| `recovering` | Amber | Retrying after an error, or waiting for a missing rule |
+| `stale` | Dashed outline | No update for more than 15 seconds. The view is paused, not live |
+| `empty` | Muted placeholder | Nothing has been collected yet |
+
+**Numbers that do not flicker.** Three guards keep a live page readable. A status has to hold for about two minutes before its color changes, so one brief spike does not flip a label back and forth. Updates are sent in small batches every few seconds instead of one at a time. And every figure carries the time it was produced, so a number that has stopped updating is shown as stale instead of sitting there looking current.
+
+## The building blocks
+
+Status pages are assembled from six parts, so that every page reads the same way.
+
+| Part | What it is for |
+| --- | --- |
+| `PulseStrip` | One bar at the top that says whether the platform as a whole is healthy |
+| `AttentionCard` | A card for anything at P0, P1 or P2, with its state, its code and who owns the fix |
+| `TrailRow` | One line for one item’s progress, or for a quiet worker |
+| `MetricCell` | One number with its unit and the time it was produced |
+| `WhyDrawer` | A panel that explains, on request, why a rule or a state exists |
+| `EditTrigger` | The Edit button described in [Public edits](/platform/public-edits/) |
+
+<div className="my-6 rounded-sm border border-dashed border-line p-4 sm:p-5">
+  <p className="font-mono text-xs uppercase tracking-wider text-muted">Design preview · sample values, not live data</p>
+  <div className="mt-4 grid gap-4">
+    <PulseStrip
+      state="empty"
+      summary="Nothing has been collected yet"
+      freshness="Sample values"
+      metrics={[
+        { label: "Urgent lane", value: "0", unit: "items" },
+        { label: "Normal lane", value: "0", unit: "items" },
+        { label: "Backfill lane", value: "0", unit: "items" },
+        { label: "Waiting for a rule", value: "0", unit: "paused" },
+      ]}
+    />
+    <AttentionCard
+      priority="P1"
+      title="A worker is waiting for a rule"
+      state="recovering"
+      errorCode="E_NEEDS_SUBTOOL"
+      summary="Sample card. A worker met a page layout it has no rule for, paused that one item and asked for a sub-tool. Everything else in the queue carries on."
+      ownerRepo="cs-02-observe"
+      elementId="pipeline.cs-02-observe"
+      editClass="ISSUE"
+      whyTitle="Why a worker stops instead of guessing"
+      whySummary="No worker uses AI to interpret an unfamiliar page. It pauses the item and waits for a tested rule."
+      whyGuideHref="/platform/pipeline/"
+      whyDetails={[
+        "The item is run again automatically once the rule ships.",
+        "One task is opened for the pattern, however many items hit it.",
+      ]}
+    />
+    <TrailRow
+      id="PA-0000"
+      label="Sample item"
+      detail="One line for one item, showing its lane and its state."
+      lane="normal"
+      state="empty"
+      timestamp="sample"
+    />
+    <div className="grid gap-3 sm:grid-cols-3">
+      <MetricCell label="Lane order" value="urgent → normal → backfill" />
+      <MetricCell label="AI calls at run time" value="0" unit="by design" />
+      <MetricCell label="Images kept for rollback" value="5" unit="for each component" />
+    </div>
+  </div>
+</div>
+
+## When a worker fails
+
+Because no worker guesses, a failure is a predictable sequence instead of a mystery.
+
+<Flow
+  caption="The path of a failure, from the pod to a fix"
+  direction="down"
+  steps={[
+    { tag: "1", label: "Noticed and cleaned", detail: "cs-store sees the failing pod, removes anything that names a machine or an address, and reports a public error code." },
+    { tag: "2", label: "Shown", detail: "The failure appears at the top of the status view as P0 or P1." },
+    { tag: "3", label: "Work is kept", detail: "The item stays in the queue. A result the worker had finished waits on its own disk." },
+    { tag: "4", label: "Stopped or rolled back", detail: "The owner can pause the worker, or return it to an earlier image." },
+    { tag: "5", label: "One task, not hundreds", detail: "cs-10-notify opens a single task for the pattern in the repository that owns the fix." },
+  ]}
+/>
+
+**The three error codes.**
+
+| Code | In plain terms | What happens next |
+| --- | --- | --- |
+| `E_TIMEOUT` | Something took too long: an outside site, a download, an internal step | The item stays in the queue and can be tried again without losing earlier progress |
+| `E_PARSE` | The data was broken: malformed, or a damaged file | The worker refuses to guess, records the failure and stops work on that item |
+| `E_NEEDS_SUBTOOL` | The data was fine but unfamiliar, such as a table laid out in a new way | The item is paused until a rule is written, then run again. See [Sub-tools](/platform/pipeline/#sub-tools-one-rule-for-each-case) |
+
+**Two switches for the owner.**
+
+| Action | What it does | When to use it |
+| --- | --- | --- |
+| Pause | Stops the worker without deleting its queue or its settings | An outside site is down, or you want retries to stop while you look |
+| Rollback | Returns the worker to one of the last five images kept inside the cluster | A new version made things worse and you want the last good one back |
+
+A rollback needs nothing from outside the cluster, so it works when the outside network does not.
+
+## Backups
+
+Most of the platform holds no data of its own. If the website, the build runner or a worker stops, a fresh copy is started and nothing is lost. Everything that cannot be recreated lives in three places.
+
+| Store | Holds | Why it cannot simply be rebuilt |
+| --- | --- | --- |
+| The database | The queue, each item’s history, the scores, the decisions and the proposals | It is the record of everything that has been decided |
+| `cs-git` | Every repository, including each app’s manifest | It is the primary copy. GitHub has the code, not necessarily the latest commit |
+| `cs-registry` | The signed images | Images are not on GitHub. Without them nothing can roll back until everything is rebuilt |
+
+**Every night**, a job takes a consistent copy of all three and sends it off the machine.
+
+| Stage | What happens | Why |
+| --- | --- | --- |
+| Consistent copy | The database is dumped at a single moment, and the two volumes are archived | A database copied while it is being written to can be unusable |
+| Encrypted before it leaves | The archives are encrypted on the machine | A leaked backup is unreadable without the key, which is kept somewhere else |
+| Sent elsewhere | The encrypted bundles go to storage off the machine | Losing the machine does not lose the backups too |
+| Old copies removed | Older backups are dropped on a fixed schedule | Storage stays predictable |
+
+## A restore drill every month
+
+A backup that has never been restored is a hope. Backups fail quietly: a key is changed and no longer matches, a table changes shape and breaks an old script, a disk fills halfway through an archive. The usual time to find out is the worst one.
+
+So once a month the design restores everything for real, into a temporary space separate from the running system. It fetches the latest backups, decrypts them, restores all three stores from scratch, checks them and then removes the temporary space.
+
+| Check | What it verifies | What a pass proves |
+| --- | --- | --- |
+| Decrypt and unpack | The archive downloads and opens with the current key | The backup is readable and the key has not drifted |
+| Database | It loads without errors and its tables pass integrity checks | The queue, the items and the decisions are intact |
+| `cs-git` | The repositories pass Git’s own consistency check | The code and the manifests are whole |
+| `cs-registry` | The image manifests and signatures resolve | Components can start and roll back without the internet |
+
+The result of each drill is meant to be published: when it ran, whether it passed, and the outcome of each of the four checks. A broken backup should show up as a visible warning, not as a surprise during an outage.

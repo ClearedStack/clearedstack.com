@@ -1,0 +1,90 @@
+export const meta = {
+  title: "NDC Eligibility Checker Specification",
+  summary: "Deterministic browser-only decision tool that evaluates whether an entity qualifies as a nontraditional defense contractor under 10 U.S.C. 3014 and maps unlocked OTA and commercial pathways.",
+  revised: "2026-11",
+};
+
+## Overview & Role
+
+`ndc-eligibility-checker` (`CLIN 0004`, `category: "market"`, slug: `ndc-eligibility-checker`) is a static, browser-only decision tool in the ClearedStack catalog. It determines whether a business qualifies as a **Nontraditional Defense Contractor (NDC)** under federal defense acquisition statute and explains what contracting pathways that status opens up.
+
+No government agency issues a certificate for NDC status. As explained in [Codes, registration and small business status](/guides/codes-and-small-business/), an offeror establishes its status by comparing its own Department of Defense (DoD) contract and subcontract history against the statutory definition and may be asked to represent that status in a solicitation response.
+
+## Governing Regulations & Sources
+
+| Citation | Scope | Rule Applied in Tool |
+| --- | --- | --- |
+| **10 U.S.C. 3014** | Definition of *Nontraditional Defense Contractor* | An entity that is not currently performing and has not performed, for at least the **one-year period** preceding the DoD solicitation of sources, any DoD contract or subcontract subject to **full coverage** under the Cost Accounting Standards (CAS) prescribed under 41 U.S.C. 1502. |
+| **48 CFR 9903.201-1(b)(3) & 9903.201-2** | CAS exemptions and full vs. modified coverage | Contracts and subcontracts with **small businesses** are exempt from CAS altogether. Full CAS coverage applies only to large non-exempt negotiated awards (such as single awards or net CAS-covered volume reaching the full-CAS threshold). |
+| **DFARS 212.102(a)(iii) / 10 U.S.C. 3457** | Commercial treatment for NDC supplies and services | Authorizes (but does not require) DoD contracting officers to treat supplies and services provided by an NDC as **commercial products or commercial services**, enabling streamlined FAR Part 12 terms. |
+| **10 U.S.C. 4022** | Prototype Other Transaction Agreements (OTAs) | Requires at least one of: (1) significant participation by an NDC or nonprofit research institution; (2) all significant non-federal participants are small businesses or NDCs; (3) at least one-third non-federal cost share; or (4) written exceptional-circumstances determination by the senior procurement executive. |
+
+## Inputs, Processing Logic & Outputs
+
+### Inputs
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `is_small_business` | Enum (`yes` \| `no` \| `unsure`) | Whether the business (including affiliates under 13 CFR 121.103) is small under the applicable SBA NAICS size standard. |
+| `has_dod_awards_past_year` | Enum (`yes` \| `no`) | Whether the entity is currently performing or performed any DoD prime contract or subcontract during the 1-year lookback window. |
+| `subject_to_full_cas` | Enum (`yes` \| `no` \| `unknown`) | Evaluated when `has_dod_awards_past_year === "yes"`: whether any such award included **full** CAS coverage (e.g., FAR 52.230-2). |
+| `solicitation_date` | ISO Date (optional) | Used to compute and display the exact 1-year statutory lookback window `[solicitation_date - 1 year, solicitation_date]`. |
+
+### Deterministic Decision Logic
+
+1. **Small Business CAS-Exemption Fast-Path:**
+   - If `is_small_business === "yes"`: small businesses are exempt from CAS under 48 CFR 9903.201-1(b)(3) -> **Qualifies as Nontraditional Defense Contractor** (with a reminder to verify SBA affiliation if the company has parent/sister entities).
+2. **1-Year Full-CAS Lookback:**
+   - If `has_dod_awards_past_year === "no"` -> **Qualifies as Nontraditional Defense Contractor**.
+   - If `has_dod_awards_past_year === "yes"` and `subject_to_full_cas === "no"` (e.g., firm-fixed-price commercial awards, CAS-exempt contracts, or modified CAS only) -> **Qualifies as Nontraditional Defense Contractor**.
+   - If `has_dod_awards_past_year === "yes"` and `subject_to_full_cas === "yes"` -> **Traditional Defense Contractor (Does Not Qualify as NDC)**.
+   - If `has_dod_awards_past_year === "yes"` and `subject_to_full_cas === "unknown"` -> **Indeterminate — Inspect Contract Clauses** (prompts user to check past DoD contracts/subcontracts for FAR 52.230-2 full CAS coverage).
+3. **Pathway Mapping:**
+   - **NDC Qualified:** Unlocks eligibility as a significant NDC participant under `10 U.S.C. 4022` prototype OTAs and makes the offeror eligible for permissive commercial treatment under `DFARS 212.102(a)(iii)` / `10 U.S.C. 3457`.
+   - **Traditional Defense Contractor:** Cannot satisfy `10 U.S.C. 4022` on its own; outputs the statutory alternatives (teaming with an NDC or nonprofit research institution participating to a significant extent, or providing at least one-third non-federal cost share).
+
+### Outputs
+
+- **Eligibility determination:** `Qualifies as NDC`, `Traditional Defense Contractor`, or `Indeterminate — Verification Required`.
+- **Statutory rationale & lookback window:** Exact rule branch triggered and `[start_date, solicitation_date]` window if a date was entered.
+- **Unlocked authorities breakdown:** Structured summary of `10 U.S.C. 4022` OTA options and `DFARS 212.102(a)(iii)` commercial treatment.
+- **Self-attestation checklist:** Printable/exportable (Markdown or JSON) verification notes for proposal records.
+
+## Clean-Room & 5-Condition QA Requirements
+
+To pass `cs-07-verify` and ship to `live`:
+
+1. **Browser-only & offline execution:** Executes 100% in the browser with all statutory rules and CAS exemption logic bundled locally; works completely offline.
+2. **Strict Content Security Policy:** Enforces `default-src 'self'`, `connect-src 'self'`, and `form-action 'none'`. No contract history or company answers ever leave the browser.
+3. **Zero tracking or accounts:** No login, analytics, cookies, or telemetry. Any optional local reset/save state is disclosed with a clear-data control.
+4. **Worked-example assertions:** Automated tests verify all decision branches (small business fast-path, commercial/modified-CAS NDC, full-CAS traditional, unknown CAS indeterminate) and date-window arithmetic.
+5. **Citations, scope limits & MIT license:** Cites `10 U.S.C. 3014`, `10 U.S.C. 4022`, `DFARS 212.102(a)(iii)`, and `48 CFR 9903.201-1`; includes a clear non-legal-advice disclaimer and MIT `LICENSE`. Built clean-room without proprietary vendor data or user CUI.
+
+## Worked Example & Verification
+
+### Worked Examples
+
+1. **Small Business (CAS-Exempt):**
+   - Inputs: `is_small_business = "yes"`, `has_dod_awards_past_year = "yes"` ($2M DoD SBIR Phase II).
+   - Output: `Qualifies as Nontraditional Defense Contractor` (small businesses are CAS-exempt under `48 CFR 9903.201-1(b)(3)`). Eligible for `10 U.S.C. 4022` prototype OTAs and `DFARS 212.102(a)(iii)` commercial treatment.
+2. **Non-Small Commercial Vendor (No Full CAS):**
+   - Inputs: `is_small_business = "no"`, `has_dod_awards_past_year = "yes"` ($12M DoD FFP commercial software contract), `subject_to_full_cas = "no"`.
+   - Output: `Qualifies as Nontraditional Defense Contractor` (`10 U.S.C. 3014` requires *full* CAS coverage to disqualify).
+3. **Large Defense Prime (Full CAS):**
+   - Inputs: `is_small_business = "no"`, `has_dod_awards_past_year = "yes"`, `subject_to_full_cas = "yes"` (active cost-type DoD contract with FAR 52.230-2), `solicitation_date = "2026-11-15"`.
+   - Output: `Traditional Defense Contractor` (lookback window `2025-11-15` to `2026-11-15`). Must team with an NDC/nonprofit research institution for significant participation or contribute `>= 1/3` cost share under `10 U.S.C. 4022`.
+
+### Boundary & Verification Cases
+
+| Test Case | Input | Expected Deterministic Output |
+| --- | --- | --- |
+| **Unknown CAS clause** | `is_small_business = "no"`, `has_dod_awards_past_year = "yes"`, `subject_to_full_cas = "unknown"` | `Indeterminate — Verification Required` with FAR 52.230-2 inspection prompt. |
+| **Zero prior DoD awards** | `is_small_business = "no"`, `has_dod_awards_past_year = "no"` | `Qualifies as Nontraditional Defense Contractor`. |
+| **Leap-year lookback** | `solicitation_date = "2028-02-29"` | Lookback start `2027-02-28` (deterministic 1-year calendar offset without invalid date). |
+
+## Related pages
+
+- [Codes, registration and small business status](/guides/codes-and-small-business/)
+- [Read a solicitation](/guides/read-a-solicitation/)
+- [The pipeline and its ten workers](/platform/pipeline/#building-verifying-and-listing)
+- [cs-07-verify specification](/platform/cs-07-verify/)

@@ -1,0 +1,96 @@
+export const meta = {
+  title: "Public edits and what stays private",
+  summary: "How a reader is meant to propose a change without an account, the five checks that keep that safe, where each proposal goes, and the line between what the project shows and what it hides.",
+  group: "cluster",
+  order: 2,
+  revised: "2026-11",
+  status: "design",
+};
+
+The design has no login anywhere. A reader should be able to see what the pipeline is doing, see what failed and why, and propose a fix, all without creating an account. This page describes how that is meant to work, and where the line sits between what is shown and what is hidden.
+
+<Callout kind="warning" title="Not connected yet">
+This website is a set of plain files with nothing behind it, so there is nowhere for a proposal to go. The Edit button further down this page is a preview of the form. It sends nothing. To suggest a change today, open an issue on [GitHub](https://github.com/ClearedStack/clearedstack.com/issues) or write to [contact@clearedstack.com](mailto:contact@clearedstack.com).
+</Callout>
+
+## Why there is no lock
+
+Most projects hide their queues and their errors behind a sign-in, or a status page that says everything is fine. This design does the opposite, for a practical reason: every curious reader is a possible tester. When a reader finds a case the pipeline has no rule for, that case becomes a tested rule, and the system is better for it. See [Sub-tools](/platform/pipeline/#sub-tools-one-rule-for-each-case).
+
+## Proposing an edit
+
+Anything a reader might want to correct carries a small Edit button: a description, a setting, a rule. Pressing it opens a form showing what the element holds now, with room for the proposed change and the reason.
+
+The reader does not need to know which repository owns what. A public file in the hub repository, `ownership_map.json`, records for every editable element which repository it belongs to, which file, and what kind of change it is.
+
+| Kind of edit | What it changes | What happens once the owner approves |
+| --- | --- | --- |
+| `DATA` | Catalog text, a description, a record | The record is updated and the change is logged |
+| `CONFIG` | A worker’s settings, a scoring weight, a rule’s options | A change is committed to the owning repository, tested, built and deployed |
+| `ISSUE` | A report of something broken, or a request for a missing rule | One task is opened in the owning repository, or added to an existing one for the same problem |
+
+<Flow
+  caption="The path of a proposal from the form to a deployed change"
+  direction="across"
+  steps={[
+    { tag: "1", label: "Propose", detail: "The reader fills in the form. No account." },
+    { tag: "2", label: "Five checks", detail: "Automatic checks screen out spam and malformed input." },
+    { tag: "3", label: "Owner review", detail: "The proposal waits. Nothing is applied." },
+    { tag: "4", label: "Build and deploy", detail: "An approved change is committed, tested, built and rolled out." },
+  ]}
+/>
+
+After submitting, the button is meant to turn into a status label the reader can watch: **Proposed**, then **Approved**, **Building** and **Live**. A proposal that is declined changes nothing, and the decision is recorded.
+
+<div className="my-6 rounded-sm border border-dashed border-line bg-surface p-5">
+  <p className="font-mono text-xs uppercase tracking-wider text-muted">Preview · sends nothing</p>
+  <p className="mt-2 text-sm leading-relaxed text-muted">Press the button to see the form a reader would fill in. Whatever you type stays in this page and is discarded when you close it.</p>
+  <div className="mt-4 flex flex-wrap items-center gap-3">
+    <EditTrigger
+      elementId="decide.sandbox.test"
+      ownerRepo="clearedstack.com"
+      targetLabel="A sample edit proposal"
+      editClass="ISSUE"
+    />
+  </div>
+</div>
+
+## Five checks instead of a login
+
+Accepting proposals from anyone on the internet invites automated abuse. The design stops it without accounts and without an outside CAPTCHA service.
+
+| Check | How it works | What it costs a real reader |
+| --- | --- | --- |
+| 1. Proof of work | On submit, the browser solves a small puzzle that takes about a second | Nothing noticeable. For a bot sending thousands, it is expensive |
+| 2. Honeypot | A field no person can see. Anything that fills it in is discarded | Nothing |
+| 3. Rate limit | Submissions are capped for each source address, using a one-way hash made with a secret that changes daily | Nothing. The address itself is never stored |
+| 4. Shape and size | The target must exist in `ownership_map.json`, the proposal must be under 4 KB, and all markup and scripts are stripped | A long proposal has to be split |
+| 5. A person | Every proposal waits until the owner approves it | A wait |
+
+The fifth is the one that matters most. No proposal can reach a repository or the cluster by itself.
+
+## What is public and what is private
+
+Being open about how the project works does not mean publishing a map of the machine it runs on. The rule is: hide the network, show the logic.
+
+| Public | Private |
+| --- | --- |
+| All source code, under the MIT license | Addresses, host names and names inside the cluster |
+| Every rule, scoring weight and tie-breaker | Network rules and the layout of the cluster |
+| Every sub-tool and its test examples | Database passwords, tokens and signing keys |
+| Health of each component, queue lengths and each item’s history | The secret used to hash visitor addresses |
+| Error codes such as `E_TIMEOUT`, `E_PARSE` and `E_NEEDS_SUBTOOL` | Visitor addresses, which are never stored |
+| Proposals and their status | The raw pages captured during observation |
+
+Four things in the design hold that line.
+
+- **One door.** Only the website can be reached from outside. The queue service, the database, the Git server, the registry and the workers have private addresses only.
+- **Two namespaces.** The control plane and the workers are separated, and each blocks traffic that is not explicitly allowed.
+- **Views, not tables.** The website reads the database through a restricted role that can see only views built for publication. A private column cannot appear on a page, because the website is never given it.
+- **Errors are cleaned first.** When something fails, the event Kubernetes produces often names a machine or an address. `cs-store` removes those and maps the failure to one of the public error codes before anything is reported. A reader sees what broke and at which stage, not where.
+
+If a bad change does get through, the previous version is one step away: the last five signed images of every component are kept, and a rollback needs nothing from outside. See [Cluster architecture](/platform/cluster-architecture/#install-upgrade-pause-roll-back).
+
+## What never to put in a proposal
+
+A proposal is public by design. Do not include classified information, controlled unclassified information, export-controlled data, real contract figures or anything that identifies a real company’s bid. The same rule applies to an issue or an email. See [What never goes in](/guides/request-or-add-a-tool/#what-never-goes-in).

@@ -94,36 +94,28 @@ export default function AboutPage() {
 
         <Block id="how" label="How it is organized">
           <p>
-            ClearedStack runs as a lightweight, two-namespace Kubernetes platform (<code className="text-ink">clearedstack</code>{" "}
-            and <code className="text-ink">cs-workers</code>) with zero Docker and zero AI at runtime. Each browser tool
-            is a separate MIT-licensed repository, and the factory pipeline itself is split across eleven core
-            repositories (<code className="text-ink">clearedstack.com</code> plus ten deterministic Go workers,{" "}
-            <code className="text-ink">cs-01-intake</code> through <code className="text-ink">cs-10-notify</code>)
-            alongside four clean-room Go control-plane services.
+            Each tool is a separate, MIT-licensed repository, so it can be read, forked and hosted on its own. This
+            site is the index: the <Link href="/tools/">catalog</Link> lists every tool with the regulation it is
+            built from, and the <Link href="/guides/">guides</Link> explain the same work in plain language.
           </p>
           <p>
-            Every browser utility and cluster app is indexed under <Link href="/tools/">Tools</Link> (including the{" "}
-            <Link href="/tools/#apps">Cluster App Store</Link>), and anyone can inspect the live factory directly inside{" "}
-            <Link href="/guides/">Guides</Link> across <Link href="/guides/#command">Command</Link>,{" "}
-            <Link href="/guides/#pipeline">Pipeline</Link>, and <Link href="/guides/#decide">Decide</Link>—or propose
-            edits without signing in. Source code is stored in <code className="text-ink">cs-git</code> and mirrored to{" "}
-            <a href={site.github} rel="noopener">
-              GitHub
-            </a>{" "}
-            (code only, zero container images).
+            Behind the catalog is a design for choosing and building tools in the open: a pipeline of ten small
+            programs that finds ideas, screens and scores them, and builds each tool from the public rule. It is
+            written down in full under <Link href="/platform/">Platform</Link>, with a label on each specification
+            saying whether it describes a design, something built or something running.
           </p>
         </Block>
 
         <Block id="ideas" label="Where ideas come from">
           <p>
-            ClearedStack finds ideas through the 10-worker Prior Art engine. Workers observe public pages, score
-            candidates deterministically against five knockout gates and a 100-point rubric, surface decisions in{" "}
-            <Link href="/guides/#decide">/guides/#decide</Link>, and compile clean-room specs from official public
-            regulations—never copying third-party code, text, or design.
+            Ideas come from tools that already exist for government-contracting paperwork, from requests, and from
+            doing the work. An idea is screened against five knockout gates, scored on a 100-point rubric, and
+            decided by a person. Only the job is taken from an existing tool. Its code, text and design are never
+            copied, and where a product inspired the job it is credited.
           </p>
           <p className="font-mono text-xs text-muted">
-            Read our <Link href="/guides/#how-we-decide">Section M evaluation factors</Link> and{" "}
-            <Link href="/guides/prior-art-engine/">The 10-Worker Prior Art Engine guide</Link>.
+            Read <Link href="/platform/how-we-decide/">How we decide what to build</Link> and{" "}
+            <Link href="/platform/clean-room-and-credit/">Clean room and credit</Link>.
           </p>
         </Block>
 
@@ -139,8 +131,8 @@ export default function AboutPage() {
             contract figures, or personal data into an AI tool.
           </p>
           <p>
-            Most importantly: <strong>zero AI runs at runtime</strong>—not in any of the 10 pipeline workers, not in the
-            control plane, and not in any shipped browser tool. Every runtime step is 100% deterministic.
+            Most importantly: <strong>no AI runs in any tool</strong>, and none is designed into the pipeline that
+            builds them. A tool is ordinary code that gives the same answer for the same input every time.
           </p>
 
           <div className="mt-6">
@@ -202,7 +194,7 @@ export default function AboutPage() {
 
           <p className="mt-6">
             Read the complete disclosure in{" "}
-            <Link href="/guides/built-with-ai/">How AI is used to build this project</Link>.
+            <Link href="/platform/built-with-ai/">How AI is used to build this project</Link>.
           </p>
         </Block>
 

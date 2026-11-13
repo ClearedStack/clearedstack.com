@@ -1,0 +1,116 @@
+export const meta = {
+  title: "Clean room and credit",
+  summary: "What is taken from an existing tool and what never is, how the wall between looking and building is kept, how ideas are credited, and how a vendor can ask for a correction.",
+  group: "factory",
+  order: 5,
+  revised: "2026-11",
+  status: "design",
+};
+
+Federal regulations belong to everyone. A piece of software that implements one belongs to its author. ClearedStack takes ideas for tools from products that already exist, so it has to be exact about the difference: it takes the job to be done and nothing else. This page describes that rule, how the pipeline is designed to enforce it, and how the source of an idea is credited.
+
+## Build, link or skip
+
+The first question is whether to build at all. If a free tool already runs on the user’s machine, respects privacy and cites public sources, rebuilding it is wasted effort.
+
+<Branch
+  caption="Prefer pointing to good work over duplicating it"
+  question="Does an existing tool already meet the five listing conditions?"
+  options={[
+    { when: "Yes: free and private", then: "Link", detail: "List it in the catalog as an outside tool. Do not rebuild it." },
+    { when: "No, and the need is high", then: "Build", detail: "Write a specification from the official rule and build from that." },
+    { when: "No, and the need is low", then: "Skip", detail: "Screen it out or park it, with the reason recorded." },
+  ]}
+/>
+
+## What is taken and what is not
+
+<Layers
+  caption="Only the job crosses from an existing tool into a new one"
+  layers={[
+    { tag: "Taken", label: "The job to be done", detail: "The requirement, the public formula and the rule, as written in official government text." },
+    { tag: "Never taken", label: "Code", detail: "No copying, adapting, decompiling or reverse-engineering." },
+    { tag: "Never taken", label: "Words", detail: "No help text, labels, field descriptions or guides." },
+    { tag: "Never taken", label: "Design", detail: "No layout, color scheme, icons or look." },
+    { tag: "Never taken", label: "Data", detail: "No private tables, benchmark rates or internal structure." },
+    { tag: "Never taken", label: "Names and marks", detail: "No logos or trademarked phrases. A product’s name appears only to say where an idea was seen." },
+  ]}
+/>
+
+Open-source libraries under permissive licenses (MIT, BSD, Apache 2.0) may be used inside a tool, with their copyright notices and license files kept. Code under a strong copyleft license is not mixed into the project’s MIT repositories. A good copyleft tool is linked to instead.
+
+## The wall between looking and building
+
+The rule is not left to good intentions. The worker that looks and the worker that builds are separate programs in separate repositories, and what passes between them is controlled.
+
+| Stage | What it can see | What it passes on |
+| --- | --- | --- |
+| `cs-02-observe` | Public pages and documents | A structured record of facts. The page itself is sealed and goes no further |
+| `cs-03-evaluate`, `cs-04-decide` | The record and the scores | A decision: link, build, park or reject |
+| `cs-05-provenance` | The official rule and its worked examples | A specification with no vendor material in it |
+| `cs-06-build` | Only the specification and its own templates | A new tool, built without ever seeing the product that inspired it |
+
+Because the builder never receives the observed page, it cannot echo its layout, its wording or its code.
+
+## The specification
+
+The specification is the only thing that crosses the wall. It has four parts.
+
+| Part | What goes in | What is left out |
+| --- | --- | --- |
+| Provenance | The credit note, the date observed and whether the vendor has opted out | The captured pages, and vendor marketing links |
+| Authority | The official citations and their effective dates | Any vendor reading that conflicts with the government text |
+| Schema | The inputs, outputs, units, limits and formulas | Vendor field labels and internal structure |
+| Examples | Public worked examples and boundary cases | Any test data taken from a vendor |
+
+Where a commercial tool gives an answer that conflicts with an official publication, the specification follows the official publication.
+
+## How an idea is credited
+
+A tool inspired by an existing product carries a short note in a fixed form, so the wording never varies and never editorializes.
+
+<Callout kind="note" title="The three lines of a credit note">
+**Idea seen in**: the product and its maker, and the month its public pages were looked at. **What we took**: the job, in one sentence. **What we did differently**: runs in your browser, free, no account, built from the named regulation.
+</Callout>
+
+Four rules apply to every note:
+
+- It records only that a workflow was seen on a public page on a given date.
+- It never rates, criticizes or disparages the product.
+- It never implies partnership, sponsorship or endorsement.
+- A product’s name is used only to identify where the idea was seen.
+
+In the catalog, the note is the optional `provenance` field of a tool’s entry, and it is shown on the tool’s page.
+
+## Corrections and opt-outs
+
+The maker of a product can ask for a factual correction, or ask not to be named. Requests go to [contact@clearedstack.com](mailto:contact@clearedstack.com) or to a public issue on GitHub.
+
+<Flow
+  caption="What happens to a correction or an opt-out request"
+  steps={[
+    { tag: "Receive", label: "Log the request", detail: "It is recorded against the catalog entry." },
+    { tag: "Within 48 hours", label: "Confirm who is asking", detail: "Check that the request comes from the maker of the product." },
+    { tag: "Within 5 days", label: "Honor an opt-out", detail: "The product’s name is replaced with a neutral phrase such as “a commercial product”." },
+    { tag: "Always", label: "Keep the public law", detail: "Citations to statutes, regulations and standards stay." },
+  ]}
+/>
+
+A factual error about a product is corrected once it is confirmed. A citation to public law is never removed, because it is not the vendor’s to withdraw.
+
+## The same rule for the platform’s own services
+
+The clean-room rule also applies to the services the pipeline is designed to run on. Self-hosted platforms are usually assembled from large existing projects. This design instead specifies four small services written from scratch, which borrow ideas from those projects and none of their code.
+
+| Idea borrowed from | Service | What it does |
+| --- | --- | --- |
+| Forgejo | `cs-git` | Holds the repositories, signals each push and mirrors code to GitHub |
+| Harbor and similar registries | `cs-registry` | Stores built images inside the cluster and keeps the last five of each |
+| Forgejo Actions | `cs-runner` | Builds and tests on each push, without a Docker daemon |
+| Argo CD and CasaOS | `cs-store` | Deploys what was built, and offers install, upgrade, pause and rollback |
+
+Writing them fresh keeps every repository under one license, MIT, and keeps each service small enough to read. [Cluster architecture](/platform/cluster-architecture/) describes them.
+
+## For someone building a tool
+
+If you are building a tool to be listed, the same rule applies to you: take the job, build from the regulation, and say where the idea came from. [Build a tool that can be listed](/guides/build-a-tool/) has the practical version.

@@ -4,6 +4,7 @@ import { SectionLabel } from "@/components/SectionLabel";
 import { StatusChip } from "@/components/StatusChip";
 import { categories, liveCount, tools, toolsIn } from "@/data/catalog";
 import { site } from "@/data/site";
+import { guides } from "@/lib/docs";
 
 const requirements = [
   {
@@ -49,7 +50,9 @@ const deliveries = [
 const button =
   "inline-flex items-center justify-center rounded-sm border px-4 py-2.5 text-sm font-medium transition-colors";
 
-export default function Home() {
+export default async function Home() {
+  const fieldGuides = (await guides.list()).filter((guide) => guide.group === "field");
+
   return (
     <>
       {/* Hero */}
@@ -74,7 +77,7 @@ export default function Home() {
               Browse the tools
             </Link>
             <Link href="/guides/" className={`${button} border-line text-ink hover:border-ink`}>
-              How to use it
+              Read the guides
             </Link>
             <Link href="/about/" className={`${button} border-line text-ink hover:border-ink`}>
               Read the mission
@@ -152,7 +155,7 @@ export default function Home() {
               Every tool is its own repository, so it can be audited, forked and self-hosted on its own. This site is
               the index.{" "}
               {liveCount === 0
-                ? "None are live yet. The first ones are being built now."
+                ? "None is live yet. Each has a page that says what it will do and which regulation it is built from."
                 : `${liveCount} ${liveCount === 1 ? "is" : "are"} live today.`}
             </p>
           </div>
@@ -170,7 +173,12 @@ export default function Home() {
                 <ul className="mt-5 flex flex-col gap-2.5 border-t border-line pt-5 text-sm">
                   {toolsIn(category.id).map((tool) => (
                     <li key={tool.slug} className="flex items-start justify-between gap-3">
-                      <span>{tool.name}</span>
+                      <Link
+                        href={`/tools/${tool.slug}/`}
+                        className="underline decoration-line underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+                      >
+                        {tool.name}
+                      </Link>
                       <StatusChip status={tool.status} />
                     </li>
                   ))}
@@ -189,6 +197,52 @@ export default function Home() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Field guides */}
+      <section className="border-t border-line">
+        <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
+          <SectionLabel section="Section L">Instructions to offerors</SectionLabel>
+          <div className="mt-4 grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+            <h2 className="text-3xl font-semibold tracking-[-0.015em] text-balance">
+              {liveCount === 0
+                ? "The guides are ready now, and cover the same work by hand."
+                : "Guides to the rules behind the tools."}
+            </h2>
+            <p className="leading-relaxed text-muted">
+              {fieldGuides.length} plain-language guides, in the order a first bid runs into them. Each one names its
+              official sources and the month it was last checked, and the arithmetic is worked through with made-up
+              numbers you can check by hand.
+            </p>
+          </div>
+
+          <ol className="mt-10 grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-2">
+            {fieldGuides.map((guide, index) => (
+              <li key={guide.slug} className="bg-surface">
+                <Link href={guide.href} className="group flex h-full gap-4 p-5 sm:p-6">
+                  <span className="pt-1 font-mono text-xs text-accent">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="min-w-0">
+                    <span className="flex flex-wrap items-baseline justify-between gap-x-4">
+                      <span className="text-lg font-semibold leading-snug transition-colors group-hover:text-accent">
+                        {guide.title}
+                      </span>
+                      <span className="font-mono text-xs whitespace-nowrap text-muted">{guide.minutes} min</span>
+                    </span>
+                    <span className="mt-1.5 block text-sm leading-relaxed text-muted">{guide.summary}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-6">
+            <Link
+              href="/guides/"
+              className="font-mono text-sm text-ink underline decoration-accent underline-offset-4 transition-colors hover:text-accent"
+            >
+              All guides, including hosting your own copy →
+            </Link>
+          </p>
         </div>
       </section>
 
@@ -265,10 +319,10 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <SectionLabel section="Section M">Evaluation factors</SectionLabel>
             <Link
-              href="/guides/#how-we-decide"
+              href="/platform/how-we-decide/"
               className="font-mono text-xs text-accent underline decoration-accent underline-offset-4 hover:text-ink"
             >
-              Read full Section M evaluation factors →
+              Read the gates and the scoring rubric →
             </Link>
           </div>
           <div className="mt-4 grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
@@ -276,9 +330,16 @@ export default function Home() {
               How a tool gets here.
             </h2>
             <p className="leading-relaxed text-muted">
-              We look at tools that already exist for government-contracting paperwork, record what they do from public
-              pages, screen against knockout gates, score them in public, and credit their provenance before building
-              from the regulation.
+              The plan is to look at tools that already exist for government-contracting paperwork, record what they
+              do from public pages, screen each idea against five knockout gates, score it in public, and credit where
+              it came from before building from the regulation. The whole process is written down under{" "}
+              <Link
+                href="/platform/"
+                className="text-ink underline decoration-accent underline-offset-4 hover:text-accent"
+              >
+                Platform
+              </Link>
+              .
             </p>
           </div>
 
@@ -301,7 +362,7 @@ export default function Home() {
           <p className="mt-6 font-mono text-xs text-muted">
             Built with Claude Code and Antigravity, reviewed by a person. Read our{" "}
             <Link
-              href="/guides/built-with-ai/"
+              href="/platform/built-with-ai/"
               className="text-ink underline decoration-accent underline-offset-4 hover:text-accent"
             >
               AI disclosure and verification guide

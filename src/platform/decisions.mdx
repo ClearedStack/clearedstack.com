@@ -1,0 +1,74 @@
+export const meta = {
+  title: "What is decided and what is open",
+  summary: "The choices behind the design and why each one was made, how a question gets settled, and the three questions that are still open.",
+  group: "governance",
+  order: 1,
+  revised: "2026-11",
+};
+
+Publishing the questions that are not yet answered is part of being open about how the project is run. This page records the main choices in the current design, version 3.1, the reasoning behind each, and what remains undecided.
+
+Decided here means the design is settled, not that it has been built. Each page in this section carries a label that says how far along its subject is. See [what the labels mean](/platform/#status).
+
+## How a question gets settled
+
+<Flow
+  caption="How an architectural or policy question is decided"
+  direction="down"
+  steps={[
+    { tag: "Step 1", label: "Raised", detail: "A question comes up during the work, or from a reader." },
+    { tag: "Step 2", label: "Discussed in public", detail: "The question and its trade-offs are posted for comment." },
+    { tag: "Step 3", label: "Decided", detail: "The owner weighs the options and settles it." },
+    { tag: "Step 4", label: "Recorded", detail: "This page is updated, with a new revision date." },
+  ]}
+/>
+
+A decision can be reopened. A change in the law, a licensing problem or a limit nobody foresaw is a reason to look again.
+
+<States
+  caption="The states a question moves between"
+  states={[
+    { id: "open", label: "Open", detail: "Being considered, with a working default in the meantime.", to: [{ id: "decided", when: "the owner settles it" }] },
+    { id: "decided", label: "Decided", detail: "Settled, and written into the design.", to: [{ id: "revisited", when: "new evidence or a new constraint appears" }] },
+    { id: "revisited", label: "Revisited", detail: "Reopened because conditions changed.", to: [{ id: "decided", when: "the revised answer is confirmed" }] },
+  ]}
+/>
+
+## The five choices that shaped the design
+
+The design was reviewed from five points of view before it was settled: running a Kubernetes platform, designing a live interface, queue systems, security and compliance, and what one maintainer can realistically keep going. Each main choice came out of a trade-off between them.
+
+| Question | First assumption | What was decided | Why |
+| --- | --- | --- | --- |
+| A description or a system | Essays describing ten stages | Ten workers, one for each stage, whose state can be shown | A reader should be able to see what the process is doing, not only read about it |
+| Where state lives | A database for each stage | One shared database, one service in front of it, and a small disk on each worker | Workers hold no database password, a hand-off cannot half-happen, and finished work survives a restart |
+| Git, builds and deployment | Large existing projects | Four small services written from scratch | The control plane fits in about 640 MiB, so the whole platform fits on one 4 GiB machine |
+| Awkward cases | AI inside the workers | Fixed rules everywhere, and stop when no rule applies | No running cost for a model, the same result on every machine, and each solved case becomes permanent code |
+| Public access | A login to propose edits | No login, five automatic checks and a person’s approval | Anyone can inspect and improve the work, while addresses and credentials stay hidden |
+
+**Why not assemble it from existing projects.** A Git forge, a registry, a deployment controller and an app dashboard taken off the shelf would have needed several times the memory before the pipeline did any work, and would have brought a mix of licenses. Four single-purpose services keep the control plane small, remove Docker altogether and keep every repository under MIT. See [Clean room and credit](/platform/clean-room-and-credit/#the-same-rule-for-the-platforms-own-services).
+
+**Why two namespaces and not eleven.** An early draft gave the hub and each worker a namespace of its own. Two namespaces give the same separation between the control plane and the workers with far fewer manifests to maintain.
+
+## What is decided
+
+| Decision | In short | Described in |
+| --- | --- | --- |
+| Ten workers, each with one job | The pipeline is ten small programs in ten repositories | [The pipeline and its ten workers](/platform/pipeline/) |
+| No AI when it runs | No worker and no tool calls a model. A case with no rule pauses | [How AI is used](/platform/built-with-ai/) |
+| Four services written from scratch, all MIT | No Forgejo, Argo CD, CasaOS or Docker | [Cluster architecture](/platform/cluster-architecture/) |
+| Two namespaces on one node | Control plane and workers, separated by default-deny network rules | [Cluster architecture](/platform/cluster-architecture/) |
+| GitHub mirrors code only | Images stay inside the cluster | [Cluster architecture](/platform/cluster-architecture/#code-on-github-images-inside) |
+| No login | Reading and proposing need no account. Applying a change needs the owner | [Public edits](/platform/public-edits/) |
+| One accountable owner | The pipeline recommends and a person decides | [How we decide what to build](/platform/how-we-decide/) |
+| No revenue | No ads, sponsors, paid tiers or donations | [About](/about/#rules) |
+
+## What is still open
+
+| Area | The question | Working default | Why it is not settled |
+| --- | --- | --- | --- |
+| Licensing of the data | The code is MIT. What license should cover the records the pipeline produces, when they mix public-domain government tables with facts observed about vendors and corrections sent in by readers? | MIT for all code. Only facts are recorded about vendors and regulations | Mixed-source collections need a clear answer before anyone else starts mirroring them |
+| More than one node | If the project outgrows one machine, or other organizations run their own copies, how should they share repositories, work and images? | One node, with code mirrored outward to GitHub | Sharing work between independent copies raises hard questions: identifiers that clash, and whose owner’s decision counts |
+| Stewardship | When and how does the project move from one owner to several maintainers, with a legal home, a second person who can approve, and shared review? | One owner, a fixed no-revenue rule and a public history | A project that takes no money needs succession rules that a commercial interest cannot capture |
+
+If you have a view on any of these, open an issue on [GitHub](https://github.com/ClearedStack/clearedstack.com/issues) or write to [contact@clearedstack.com](mailto:contact@clearedstack.com).
