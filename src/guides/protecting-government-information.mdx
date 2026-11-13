@@ -1,0 +1,171 @@
+export const meta = {
+  title: "Protecting government information",
+  summary: "FCI and CUI, the security requirements that come with each, how NIST SP 800-171 and CMMC fit together, and how CUI is marked.",
+  group: "field",
+  order: 5,
+  reviewed: "2026-11",
+};
+
+A government contract usually comes with information the government expects you to protect, and with security requirements that depend on what kind of information it is. This guide sorts out the vocabulary, shows which rule applies to which information, and describes the work in the order a small company would do it.
+
+<Callout kind="warning" title="This area is changing">
+The rules below were checked in November 2026. The CMMC rollout schedule was altered in 2026, and several contract clauses are being renumbered. Treat the dates and clause numbers here as a starting point, and confirm each one against your contract and the official pages listed under Sources.
+</Callout>
+
+## Two kinds of information
+
+Most of the rules hang on one question: what kind of government information will you hold?
+
+| | Federal contract information (FCI) | Controlled unclassified information (CUI) |
+| --- | --- | --- |
+| What it is | Information provided by or created for the government under a contract, not intended for public release | Information a law, regulation or government-wide policy says must be protected or have its sharing limited |
+| Examples | Contract documents, schedules, routine correspondence, status reports | Controlled technical drawings, export-controlled data, certain privacy and procurement information |
+| Who decides | It follows from the contract | The government. Categories are listed in the national CUI Registry |
+| Baseline protection | 15 basic safeguards | The 110 requirements of NIST SP 800-171 |
+
+Neither is classified information. Classified information has entirely separate rules, facilities and clearances, and nothing in this guide applies to it.
+
+The government is responsible for telling you what is CUI under your contract and for marking it. If a contract mentions CUI but you cannot tell what you will receive or create, ask the contracting officer in writing before you price the work. The answer changes your costs.
+
+## Which rule applies
+
+| If your systems hold | The contract will usually include | Which requires |
+| --- | --- | --- |
+| FCI only | The basic safeguarding clause, long numbered FAR 52.204-21 | 15 basic security requirements |
+| CUI on a defense contract | DFARS 252.204-7012 | NIST SP 800-171, reporting cyber incidents within 72 hours, and cloud services that meet a FedRAMP Moderate baseline or its equivalent |
+| Either, on a defense contract with a CMMC requirement | DFARS 252.204-7021 | A CMMC status at the level named in the solicitation, held at the time of award |
+
+Read the clauses in your own contract. They are what bind you. A prime contractor must pass the same requirements down to any subcontractor that will handle the same information, so they reach you as a subcontractor too.
+
+## The 15 basic safeguards
+
+The basic safeguarding clause lists fifteen practices. In plain terms:
+
+1. Only authorized users, devices and processes can get in.
+2. Users can do only what they are permitted to do.
+3. Connections to outside systems are controlled.
+4. Nothing sensitive is posted on public systems.
+5. Every user and device is identified.
+6. Identities are verified before access is granted.
+7. Media holding the information is wiped or destroyed before disposal.
+8. Physical access to equipment is limited.
+9. Visitors are escorted and physical access is logged.
+10. Traffic is monitored and controlled at the network boundary.
+11. Public-facing systems sit on a separate network segment.
+12. Flaws are found and fixed in good time.
+13. Protection against malicious code is in place.
+14. That protection is kept up to date.
+15. Systems and incoming files are scanned.
+
+Most companies with ordinary good practice meet most of these. The work is in confirming each one and writing down how.
+
+## NIST SP 800-171
+
+NIST Special Publication 800-171 is the standard for protecting CUI on a contractor’s own systems. Revision 2 has 110 requirements in 14 families:
+
+| Family | Family |
+| --- | --- |
+| Access control | Media protection |
+| Awareness and training | Personnel security |
+| Audit and accountability | Physical protection |
+| Configuration management | Risk assessment |
+| Identification and authentication | Security assessment |
+| Incident response | System and communications protection |
+| Maintenance | System and information integrity |
+
+NIST published Revision 3 in 2024, which reorganizes the requirements into 17 families. The Department of Defense has continued to assess contractors against Revision 2. Use the revision your contract and the current DoD guidance name, not simply the newest one.
+
+Two documents sit beside the requirements:
+
+- A **system security plan** describes the system that holds CUI, its boundary, and how each requirement is met.
+- A **plan of action and milestones** lists each requirement not yet met, what will be done about it and by when.
+
+## Scoring an assessment
+
+The Department of Defense scores an 800-171 assessment with a published method. You start at 110. For each requirement that is not fully implemented, points come off: 5, 3 or 1, depending on how much the requirement matters. Because the deductions add up to more than 110, a score can be negative.
+
+Two practical points follow:
+
+- The score measures what is **implemented**, not what is planned. A requirement on your plan of action still loses its points until it is done.
+- A few requirements can earn partial credit. Most cannot.
+
+Scores from self-assessments are reported to the government in the Supplier Performance Risk System. An affirmation that goes with a score is a statement made to the government by a senior official of your company. Do not sign one you cannot support.
+
+## CMMC
+
+The Cybersecurity Maturity Model Certification program is how the Department of Defense checks that the requirements above have actually been met, before award. It has three levels.
+
+| Level | Protects | Requirements | How it is assessed |
+| --- | --- | --- | --- |
+| 1 | FCI | The 15 basic safeguards | Self-assessment every year, with an annual affirmation |
+| 2 | CUI | The 110 requirements of NIST SP 800-171 Revision 2 | Self-assessment, or assessment by an accredited third-party organization, depending on the contract. Every three years, with an annual affirmation |
+| 3 | CUI needing more protection | Level 2 plus selected requirements from NIST SP 800-172 | Assessment by the government |
+
+The level you need is stated in the solicitation.
+
+## Where the CMMC rollout stands
+
+The program rule, 32 CFR Part 170, took effect in December 2024. The contract clause followed in November 2025, with requirements to be phased in over three years.
+
+- **Phase 1** began on November 10, 2025. Solicitations can require a Level 1 or Level 2 self-assessment as a condition of award.
+- **Later phases**, which were to bring in third-party Level 2 certification from November 2026 and Level 3 after that, were put on hold by the department in mid-2026. As checked for this guide, new solicitations could require only self-assessments, and no new date had been announced.
+
+This is the part of this guide most likely to be out of date when you read it. Check the Department of Defense Chief Information Officer’s CMMC pages for the current schedule, and read the solicitation for what it actually requires.
+
+## Where to start
+
+The order matters more than the speed.
+
+1. **Find the information.** List where FCI and CUI will arrive, where they will be stored and who will touch them. Email, laptops, file shares, cloud services, backups, printers.
+2. **Shrink the boundary.** The requirements apply to the systems that handle the information. Keeping CUI in one separate, well-controlled environment is far cheaper than securing a whole company to that standard.
+3. **Check your cloud services.** A cloud service that stores CUI for a defense contract has to meet the FedRAMP Moderate baseline or its equivalent. Many ordinary commercial plans do not.
+4. **Assess honestly.** Go through the requirements one at a time and record what is implemented, with evidence.
+5. **Write the system security plan** as you go.
+6. **Put every gap on the plan of action**, with an owner and a date.
+7. **Close the gaps**, starting with the ones that carry the most points.
+8. **Be ready to report.** Know how you would detect an incident and how you would report it within 72 hours. Reporting to the Department of Defense needs an account and a certificate that take time to obtain, so set them up before you need them.
+
+A checklist tool helps with steps 4 to 6. It does not do steps 1 to 3 for you, and it cannot tell you whether a requirement is truly met.
+
+## Marking CUI
+
+Marking tells the next person that a document needs protection. The government-wide rules are in 32 CFR Part 2002, and the Department of Defense adds its own in DoD Instruction 5200.48.
+
+**The banner.** A document containing CUI carries the marking `CUI` at the top of every page. Department of Defense practice is to put it at the top and the bottom.
+
+**The designation indicator.** The first page or cover carries a block that says who controls the information and how it may be shared. Defense marking guidance shows it in this form:
+
+```text
+Controlled by: [name of the DoD component]
+Controlled by: [name of the office]
+CUI Category: [category from the CUI Registry]
+Limited Dissemination Control: [for example, FEDCON]
+POC: [name and phone number or email]
+```
+
+**Portion marks.** Individual paragraphs may be marked `(CUI)` or `(U)`. If portion marking is used at all, it has to be used throughout the document.
+
+Things to remember:
+
+- Categories come from the CUI Registry. Do not invent one.
+- Older markings such as “For Official Use Only” are no longer applied to new documents. A document that still carries one is not automatically CUI, and not automatically free of it.
+- Do not mark something CUI to be safe. Marking information that does not qualify restricts it without authority.
+- CUI stays CUI until the government decontrols it.
+- Follow your contract and the marking guide from the agency you work for. Their instructions outrank a general description like this one.
+
+## What this does not cover
+
+- **Classified information.** Entirely separate rules.
+- **Export controls.** Technical data controlled under the ITAR or the EAR has its own rules about who may access it, on top of anything here.
+- **Civilian agencies.** A government-wide contract rule for CUI has been proposed but was not final when this guide was checked. Civilian agency contracts may carry their own security clauses.
+- **Your particular contract.** It can add requirements beyond any of these.
+
+## Sources
+
+- Basic safeguarding clause, FAR 52.204-21, “Basic Safeguarding of Covered Contractor Information Systems”, at [acquisition.gov](https://www.acquisition.gov/browse/index/far).
+- DFARS 252.204-7012, “Safeguarding Covered Defense Information and Cyber Incident Reporting”, and DFARS 252.204-7021, at [acquisition.gov/dfars](https://www.acquisition.gov/dfars).
+- NIST SP 800-171, Revisions 2 and 3, and NIST SP 800-171A, the assessment procedures, at [csrc.nist.gov](https://csrc.nist.gov).
+- CMMC program rule, 32 CFR Part 170, including the scoring method at 170.24, at [ecfr.gov](https://www.ecfr.gov).
+- Department of Defense Chief Information Officer, [CMMC pages](https://dodcio.defense.gov/CMMC/), for the current rollout schedule and assessment guides.
+- CUI rule, 32 CFR Part 2002, and the national [CUI Registry](https://www.archives.gov/cui).
+- DoD Instruction 5200.48, “Controlled Unclassified Information”, and the DoD CUI program’s marking guidance at [dodcui.mil](https://www.dodcui.mil).

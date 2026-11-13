@@ -1,0 +1,182 @@
+export const meta = {
+  title: "Work on this site",
+  summary: "Set the site up on your own machine, find your way around the code, add a guide or a catalog entry, and send the change.",
+  group: "contribute",
+  order: 3,
+};
+
+The site you are reading is one small repository. Fixing a typo, correcting a guide and adding a tool to the catalog are all changes to a text file in it. This guide shows where everything is.
+
+## What the site is made of
+
+The site is built with Next.js, TypeScript and Tailwind CSS, and exported as static files. It has no server, no API routes and no database. The guides are written in MDX, which is Markdown that can also hold a few components.
+
+You do not need to know any of those to fix a sentence. You need a text editor and a GitHub account.
+
+## Make a small fix without installing anything
+
+For a typo or a wording change:
+
+1. Open the file on GitHub. Each guide ends with a **Source of this page** link that goes straight to it.
+2. Click the pencil icon to edit.
+3. Make the change and choose **Propose changes**.
+
+GitHub creates a copy of the repository under your account and opens a pull request from it.
+
+## Set it up on your machine
+
+You need [Node.js](https://nodejs.org) 20 or newer, and git.
+
+```bash
+git clone https://github.com/ClearedStack/clearedstack.com.git
+cd clearedstack.com
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`. The page reloads as you save files.
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Runs the site locally and reloads on every change |
+| `npm run lint` | Checks the code for common mistakes |
+| `npm run typecheck` | Checks the types |
+| `npm run build` | Builds the finished site into the `out` folder |
+| `npm run preview` | Serves the `out` folder, to look at the real build |
+
+## Find your way around
+
+```text
+src/
+  app/              pages: home, /tools, /guides, /about, plus icons and metadata
+  components/       header, footer, logo, the catalog list and the guides list
+  data/
+    catalog.ts      the areas and tools shown on the site
+    site.ts         name, addresses, contact email, short disclaimer
+  guides/           one .mdx file per guide
+  lib/guides.ts     reads the guides and puts them in order
+public/brand/       logo files
+Dockerfile          builds the site and serves it with nginx
+docker/             the nginx configuration used by the image
+k8s/                Kubernetes manifests
+```
+
+Two files hold nearly everything a contributor changes: `src/data/catalog.ts` for the tools, and the folder `src/guides` for the guides.
+
+## Add or change a catalog entry
+
+Open `src/data/catalog.ts` and add an entry to the `tools` list:
+
+```ts
+{
+  slug: "wrap-rate-calculator",
+  name: "Wrap Rate Calculator",
+  summary: "Build a fully burdened labor rate from base pay, fringe, overhead, G&A and fee.",
+  category: "pricing",
+  status: "planned",
+},
+```
+
+| Field | What to put there |
+| --- | --- |
+| `slug` | A short name in lowercase with hyphens. It must be unique |
+| `name` | The tool’s name as people will read it |
+| `summary` | One sentence that starts with a verb and says what the tool produces |
+| `category` | One of `pricing`, `proposal`, `cyber`, `market`, `devsecops` |
+| `status` | `planned`, `building` or `live` |
+| `url` | Where the tool runs. Add it when the tool is live |
+| `repo` | The source repository. Add it when the repository is public |
+
+The home page, the catalog page and every count on them are generated from this list. There is nothing else to update.
+
+## Add a guide
+
+Create a file in `src/guides`. The file name becomes the address: `src/guides/my-guide.mdx` is served at `/guides/my-guide/`. Start the file with its details, then write in Markdown:
+
+```mdx
+export const meta = {
+  title: "The title of the guide",
+  summary: "One sentence shown in the list and under the title.",
+  group: "field",
+  order: 9,
+};
+
+The first paragraph says what the guide covers and who it is for.
+
+## A heading
+
+Text, lists, tables and code blocks.
+```
+
+| Field | What to put there |
+| --- | --- |
+| `title` | The title, in sentence case |
+| `summary` | One sentence. It appears in the list, under the title and in search results |
+| `group` | The section it belongs to: `start`, `field`, `host`, `contribute` or `reference` |
+| `order` | Its position within the section, lowest first |
+| `reviewed` | Optional. For guides about regulations: the month the facts were last checked, as `"2026-11"` |
+
+The guides page, the table of contents, the reading time, the previous and next links and the sitemap all pick the file up on the next build.
+
+## What you can use in a guide
+
+Ordinary Markdown works: headings, bold text, links, numbered and bulleted lists, code blocks and tables.
+
+- **Second-level headings** (`##`) become the table of contents and get a link of their own. Keep them short, and do not repeat one within a guide.
+- **Links to other pages on the site** start with a slash, such as `/guides/your-data/`.
+- **Tables** use pipes. Put `---:` under a column to align numbers to the right.
+- **Callouts** set a short passage apart:
+
+```mdx
+<Callout kind="warning" title="Optional title">
+One or two sentences the reader should not miss.
+</Callout>
+```
+
+The `kind` can be `note`, `check` or `warning`. Use them sparingly. A page with five callouts has none.
+
+Two characters need care in MDX, because it reads them as code: a left curly brace and a less-than sign. Write “less than” in words, or put the text in backticks.
+
+## How the guides are written
+
+The guides are for people who are good at their own work and new to this subject. A few habits keep them readable:
+
+- **Plain words.** If a simpler word says the same thing, use it.
+- **Define a term the first time it appears**, and add it to the [glossary](/guides/glossary/).
+- **One idea per paragraph.** Short sentences.
+- **Say what to do**, then why.
+- **Cite the rule.** Name the regulation and the part, so the reader can check.
+- **Date anything that changes.** Do not print a rate or a threshold without saying when it was current, or better, tell the reader where to look it up.
+- **Made-up examples only.** No real companies, contracts or rates.
+
+Guides that describe regulations should set `reviewed` and end with a “Sources” section.
+
+## Check your change
+
+Before you open a pull request, run:
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+```
+
+All three should finish without errors. The build is the important one: it compiles every guide, and it stops with a message if a guide’s details are missing or a page links to a guide that does not exist.
+
+Then look at the result. Run `npm run dev`, open the pages you changed, and check them at a narrow window width and in dark mode. The site follows the system color setting.
+
+## Send it
+
+1. Create a branch for your change.
+2. Commit with a message that says what changed and why.
+3. Push the branch to your copy of the repository and open a pull request.
+
+Small fixes can go straight to a pull request. For anything larger, open an issue first so the work is not wasted.
+
+## Rules for every change
+
+- **Nothing loads from another server.** No external fonts, scripts, images, embeds or analytics. The content security policy would block them, and the project’s promise depends on it.
+- **No tracking of any kind.** No cookies, counters or forms that send data.
+- **No classified information, CUI, export-controlled data or real contract data**, in code, examples, screenshots, issues or commit messages.
+- **Public sources only.** “Public” means officially released.
+- By contributing you agree that your work is released under the [MIT License](https://github.com/ClearedStack/clearedstack.com/blob/main/LICENSE).

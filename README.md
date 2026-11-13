@@ -87,11 +87,12 @@ static file host.
 ```
 src/
   app/            pages: home, /tools, /guides, /about, plus icons and metadata
-  components/     header, footer, logo, catalog list
+  components/     header, footer, logo, catalog list, guides list
   data/
     catalog.ts    the categories and tools shown on the site
     site.ts       name, URLs, contact address, short disclaimer
   guides/         one .mdx file per guide
+  lib/guides.ts   the guide sections, and the code that reads and orders the guides
 public/brand/     logo files (SVG, light and dark)
 Dockerfile        builds the site and serves it with nginx
 docker/           nginx configuration used by the image
@@ -108,7 +109,7 @@ docker build -t clearedstack .
 docker run -d --name clearedstack --restart unless-stopped -p 8080:8080 clearedstack
 ```
 
-The site is then at http://localhost:8080. The image is about 85 MB, holds
+The site is then at http://localhost:8080. The image is roughly 100 MB, holds
 only nginx and the built pages, and runs as a non-root user. The
 [Docker guide](src/guides/host-with-docker.mdx) covers updates, custom
 domains and moving the image to a network with no internet.
@@ -125,6 +126,8 @@ kubectl apply -f k8s/clearedstack.yaml
 The manifest creates a namespace, a two-replica deployment and a service.
 The pods run non-root with a read-only filesystem and no added privileges.
 The [Kubernetes guide](src/guides/host-on-kubernetes.mdx) has the full steps.
+There are also guides for [serving the plain files](src/guides/host-static-files.mdx)
+from any web server and for [running on a closed network](src/guides/closed-networks.mdx).
 
 ### Listing a tool
 
@@ -147,15 +150,19 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for what a tool needs before it is listed
 
 ### Adding a guide
 
-Guides explain how to use the site. Each one is a file in
-[`src/guides/`](src/guides); the file name becomes the URL. Start the file
-with its details, then write the guide in Markdown:
+The [guides](https://clearedstack.com/guides/) explain how to use the site,
+give plain-language background on the subjects the tools cover, and show how
+to host a copy. Each one is a file in [`src/guides/`](src/guides); the file
+name becomes the URL. Start the file with its details, then write the guide in
+Markdown:
 
 ```mdx
 export const meta = {
   title: "Getting started",
   summary: "One sentence shown in the list and under the title.",
-  order: 1,
+  group: "start",        // "start" | "field" | "host" | "contribute" | "reference"
+  order: 1,              // position within its section
+  reviewed: "2026-11",   // optional: month the facts were last checked
 };
 
 Your first paragraph.
@@ -163,8 +170,13 @@ Your first paragraph.
 ## A heading
 ```
 
-The guides list, the previous/next links and the sitemap pick it up on the
-next build.
+The guides page, the table of contents on each guide, the reading time, the
+previous/next links and the sitemap pick it up on the next build. Tables work,
+and `<Callout kind="note | check | warning">` sets a short passage apart.
+[Work on this site](src/guides/work-on-this-site.mdx) has the details.
+
+Guides that describe regulations set `reviewed` and end with a "Sources"
+section. Check each fact against the official text before you write it down.
 
 ## Brand
 

@@ -1,0 +1,197 @@
+export const meta = {
+  title: "Working on disconnected networks",
+  summary: "The checks you run by hand when nothing can phone home: checksums, transfer manifests, certificates, lockfiles and image digests.",
+  group: "field",
+  order: 7,
+  reviewed: "2026-11",
+};
+
+On a network with no route to the internet, the things a connected machine does quietly in the background stop working. Package managers cannot fetch, certificate checks cannot reach a revocation server, and nothing updates itself. The work moves to people, and it comes down to answering three questions about every file that crosses the boundary: is it the file I meant to bring, is it intact, and what is inside it?
+
+This guide covers the basic techniques. It is not a transfer policy. The rules for what may cross, and how, belong to the organization that owns the network.
+
+## Checksums
+
+A checksum, or hash, is a short fingerprint computed from the contents of a file. Change one byte and the fingerprint changes completely. Two files with the same SHA-256 checksum are, for practical purposes, the same file.
+
+Compute one:
+
+| System | Command |
+| --- | --- |
+| Linux | `sha256sum file.tar.gz` |
+| macOS | `shasum -a 256 file.tar.gz` |
+| Windows PowerShell | `Get-FileHash file.tar.gz -Algorithm SHA256` |
+
+Save one alongside the file, and check it later:
+
+```bash
+sha256sum file.tar.gz > file.tar.gz.sha256
+sha256sum -c file.tar.gz.sha256
+```
+
+The second command prints `file.tar.gz: OK` when the file is unchanged.
+
+Use SHA-256 or stronger. MD5 and SHA-1 still appear on old download pages, but both can be deliberately fooled and should not be relied on to detect tampering.
+
+<Callout kind="note" title="What a checksum proves">
+A checksum proves a file has not changed since the checksum was made. It does not prove who made the file. If someone can replace the file, they can replace a checksum stored next to it. Send the checksum by a different route than the file, or use a digital signature, which ties the file to a key only the publisher holds.
+</Callout>
+
+## A transfer manifest
+
+When you move a folder instead of one file, make a manifest: a list of every file with its checksum. On the sending side:
+
+```bash
+( cd payload && find . -type f -print0 | sort -z | xargs -0 sha256sum ) > payload.sha256
+```
+
+On the receiving side, with the folder and the manifest both carried across:
+
+```bash
+( cd payload && sha256sum -c ../payload.sha256 )
+```
+
+Every line should end in `OK`. A line ending in `FAILED` is a file that changed. A “No such file” message is a file that went missing.
+
+The manifest catches changed and missing files. To catch extra files that were not in the original, count them on both sides:
+
+```bash
+find payload -type f | wc -l
+wc -l < payload.sha256
+```
+
+The two numbers should match.
+
+A useful manifest for a transfer record also notes who prepared it, when, from what source and for what purpose. Keep it with the approval paperwork.
+
+## Reading a certificate
+
+A certificate binds a name to a public key and is signed by an authority that vouches for it. On a disconnected network you often have to inspect one by hand, because the browser’s usual machinery cannot reach outside.
+
+Print the fields that matter:
+
+```bash
+openssl x509 -in server.pem -noout -subject -issuer -dates -ext subjectAltName
+```
+
+| Field | What to check |
+| --- | --- |
+| Subject | Who the certificate was issued to |
+| Subject alternative name | The host names it is valid for. This is what a browser matches against the address |
+| Issuer | The authority that signed it |
+| Not before, not after | The period it is valid for |
+
+Print everything, including key size, permitted uses and the signature algorithm:
+
+```bash
+openssl x509 -in server.pem -noout -text
+```
+
+See the certificates a running server presents:
+
+```bash
+openssl s_client -connect server.internal.example:443 -showcerts
+```
+
+## Checking a chain
+
+A server certificate is trusted because of a chain: it is signed by an intermediate authority, which is signed by a root authority your machine already trusts. To verify a certificate against a file holding the authorities you trust:
+
+```bash
+openssl verify -CAfile ca-chain.pem server.pem
+```
+
+It prints `server.pem: OK` when the chain is complete and every signature checks. The usual failures are:
+
+| Message | Meaning |
+| --- | --- |
+| unable to get local issuer certificate | An intermediate or the root is missing from the file you supplied |
+| certificate has expired | Today is past the “not after” date |
+| certificate is not yet valid | The machine’s clock is behind, or the certificate was issued for a later start |
+| self-signed certificate | The certificate vouches for itself and is not in your trusted set |
+
+Two things are particular to closed networks:
+
+- **Private authorities.** Internal networks, including government ones, run their own certificate authorities. Their root certificates are not built into ordinary browsers and operating systems. They have to be installed, from a source you trust, before anything they signed will verify.
+- **Clocks.** A machine with no time source drifts. A wrong clock makes good certificates look expired or not yet valid. Check the date before you blame the certificate.
+
+## Expiry and revocation
+
+To find certificates about to expire, ask whether one will still be valid a set number of seconds from now. Thirty days is 2,592,000 seconds:
+
+```bash
+openssl x509 -in server.pem -noout -checkend 2592000
+```
+
+The command says whether the certificate will expire in that time, and sets its exit status to match, so it can be used in a script.
+
+Revocation is harder. A certificate can be cancelled before it expires, and the normal ways of finding out need a network connection to the issuing authority. On a disconnected network the lists of revoked certificates have to be brought in on a schedule, like any other update. A certificate that verifies against a stale list may have been revoked since.
+
+## Lockfiles
+
+A lockfile records the exact version of every package a project depends on, usually with a checksum for each. For this site, that file is `package-lock.json`. An entry looks like this:
+
+```json
+"node_modules/react": {
+  "version": "19.3.0",
+  "resolved": "https://registry.npmjs.org/react/-/react-19.3.0.tgz",
+  "integrity": "sha512-..."
+}
+```
+
+| Field | What it tells you |
+| --- | --- |
+| `version` | The exact version that will be installed |
+| `resolved` | Where it was downloaded from |
+| `integrity` | A checksum the installer verifies before using the package |
+
+On a closed network a lockfile is three things at once: the list of what to bring in, the means of checking each item, and a record of what a build contained. Install from it with a command that refuses to deviate, such as `npm ci`, so that the build inside matches the build that was reviewed outside.
+
+Read the `resolved` lines. Every one that points at a public registry is a package that must be mirrored inside before the build can run.
+
+## Container images
+
+A container image is identified two ways. A **tag**, such as `clearedstack:1`, is a label that can be moved to point at different contents. A **digest**, a long string starting with `sha256:`, is computed from the contents and cannot.
+
+When an image crosses a boundary as a file, compare its identity on both sides:
+
+```bash
+docker image inspect clearedstack:1 --format '{{.Id}}'
+```
+
+Run that before `docker save` on the outside and after `docker load` on the inside. The two values should be identical. Check the saved file in transit with an ordinary checksum, as above.
+
+Inside the network, refer to images by digest in anything that matters:
+
+```yaml
+image: registry.internal.example/clearedstack@sha256:<digest>
+```
+
+A tag tells you what someone called an image. A digest tells you what it is.
+
+To see what an image is made of before you approve it, list its layers and the command that created each:
+
+```bash
+docker history --no-trunc clearedstack:1
+```
+
+## Keep a record
+
+For everything that crosses, write down enough to answer questions a year later:
+
+- what it is, and which version
+- where it came from: the address, the commit or the release
+- its checksum or digest
+- who reviewed it and what they checked
+- the date it was brought in
+- what it replaced
+
+Then set a date to look again. Software on a closed network does not learn about its own vulnerabilities. Someone has to bring that news in.
+
+## Sources
+
+- NIST, FIPS 180-4, “Secure Hash Standard”, for SHA-256, at [csrc.nist.gov](https://csrc.nist.gov).
+- RFC 5280, “Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile”.
+- The OpenSSL manual pages for `x509`, `verify` and `s_client`.
+- The npm documentation for `package-lock.json` and `npm ci`.
+- The Open Container Initiative image specification, for image digests.

@@ -1,0 +1,142 @@
+export const meta = {
+  title: "Invoices and late payment interest",
+  summary: "What makes an invoice proper, when the government’s payment is due and how Prompt Payment Act interest is worked out when it is late.",
+  group: "field",
+  order: 4,
+  reviewed: "2026-11",
+};
+
+The government is required by law to pay its bills on time, and to pay interest when it does not. That law is the Prompt Payment Act. It only helps you if your invoice is correct and you know which dates start the clock. This guide covers both, with a worked interest calculation.
+
+## The rule in one paragraph
+
+Under the Prompt Payment Act, an agency generally has to pay within 30 days of receiving a proper invoice or of accepting the work, whichever is later. If it pays after that, it owes interest for every day it is late, at a rate the Treasury sets twice a year. The interest is owed automatically. You should not have to ask for it.
+
+The details are in the contract. Look for the prompt payment clause, long numbered FAR 52.232-25, and for any payment terms particular to your contract in Sections G and I.
+
+## What makes an invoice proper
+
+The clock does not start on an invoice that is missing something. A proper invoice includes:
+
+1. your company’s name and address
+2. the invoice date and an invoice number
+3. the contract number, and the order number and line item number where they apply
+4. a description of what was delivered, with quantity, unit of measure, unit price and extended price
+5. shipping and payment terms
+6. the name and address where payment is to be sent
+7. the name, title and phone number of a person to contact about the invoice
+8. your taxpayer identification number and electronic payment details, when the contract requires them on the invoice
+9. anything else the contract asks for
+
+The contract can add to this list. Read the invoicing instructions before you send the first one, and build a template that matches.
+
+## If the invoice is rejected
+
+When an invoice is not proper, the agency is supposed to send it back within 7 days of receiving it and say what is wrong. Fix it and send it again. The 30 days are counted from the corrected invoice.
+
+If the agency takes longer than 7 days to tell you, the extra days are taken off the time it has to pay.
+
+## Find the due date
+
+Three dates decide when payment is due. Write each one down as it happens.
+
+| Date | What it is |
+| --- | --- |
+| Invoice received | The day the billing office named in the contract receives your proper invoice |
+| Acceptance | The day the government accepts the goods or services |
+| Due date | 30 days after the later of the two, unless the contract sets a different period |
+
+Two details catch people out:
+
+- **Acceptance can be deemed.** For the purpose of counting interest, acceptance is treated as happening on the 7th day after delivery if the government has not actually accepted or rejected the work by then, unless the contract sets a different period. An agency cannot hold the clock by leaving a delivery unreviewed.
+- **The payment date is the date of the transfer**, not the day the money shows in your account.
+
+Contracts can set shorter periods, and some categories of goods have their own by law. The contract is where to look.
+
+## The interest rate
+
+The Treasury sets the rate for each half of the year, starting January 1 and July 1, and publishes it on its [Prompt Payment](https://fiscal.treasury.gov/prompt-payment/) pages and in the Federal Register.
+
+For July 1 to December 31, 2026 the rate is 4.75 percent a year.
+
+The rate that applies to a late payment is the one in effect on the day after the due date. It stays the same for that payment even if a new rate is published while you are waiting.
+
+<Callout kind="check" title="Look the rate up">
+The rate changes every six months. Before you rely on any figure, including the one above or one built into a tool, compare it with the Treasury’s published table for the period your due date falls in.
+</Callout>
+
+## Work out the interest
+
+For a payment up to 30 days late, interest is simple interest on a 360-day year:
+
+```text
+interest = amount x rate x (days late / 360)
+```
+
+Days late run from the day after the due date through the day payment is made.
+
+A made-up example: an invoice for $20,000.00 was due on September 1 and paid on September 21. That is 20 days late, at 4.75 percent.
+
+```text
+20,000.00 x 0.0475 x (20 / 360) = $52.78
+```
+
+When a payment is more than 30 days late, the interest that has built up is added to the amount owed at the end of each 30-day period, and the next period’s interest is worked out on the larger figure. Take the same invoice paid 45 days late:
+
+| Period | Owed at start | Days | Interest |
+| --- | ---: | ---: | ---: |
+| First 30 days | $20,000.00 | 30 | $79.17 |
+| Next 15 days | $20,079.17 | 15 | $39.74 |
+| **Total** | | **45** | **$118.91** |
+
+## The limits
+
+- **Under one dollar.** An interest amount of less than $1.00 is not paid.
+- **One year.** Interest stops building after a year. It also stops if you file a formal claim under the contract’s disputes process, where different interest rules take over.
+- **Disputes.** No interest runs while there is a real disagreement about the amount owed or whether the work meets the contract.
+- **Financing payments.** Progress payments and other contract financing are not covered. The Act applies to payments for delivered and accepted work.
+- **Your own delay.** Interest does not run for time lost to a defective invoice the agency flagged on time.
+
+## If the interest is not paid
+
+Interest should arrive with the late payment, without a request. If it does not, there is a further penalty, and this one you do have to ask for.
+
+- The agency paid late and did not include the interest.
+- It still has not paid the interest 10 days after the payment.
+- You send a written demand to the payment office no later than 40 days after the payment was made.
+
+The additional penalty is equal to the unpaid interest, with a minimum of $25 and a maximum of $5,000. The 40-day limit is strict, which is one more reason to keep the dates.
+
+## Sending invoices to the Department of Defense
+
+Defense contracts normally require invoices to be submitted electronically through Wide Area WorkFlow, which is part of the department’s Procurement Integrated Enterprise Environment at [piee.eb.mil](https://piee.eb.mil). You register your company there, and your contract tells you which document type to submit and the codes that route it to the right offices.
+
+A document rejected in that system is the same as a rejected invoice. Check its status, do not assume.
+
+## What the Act does not cover
+
+- **Payments from a prime contractor to a subcontractor.** The Act governs what the government pays its own contractors. What a prime owes you is set by your subcontract. Negotiate the payment terms before you sign.
+- **Other transaction agreements and grants.** These have their own terms.
+- **Amounts withheld under the contract**, such as retainage, until the condition for release is met.
+
+Small business primes and subcontractors may benefit from accelerated payment policies, under which agencies try to pay sooner than the law requires. That is a goal agencies work toward. It does not change the date from which interest runs.
+
+## Keep the record
+
+For each invoice, keep a line with:
+
+- delivery date
+- acceptance date, or the date acceptance was deemed
+- date the invoice was received by the billing office
+- due date
+- payment date and amount
+- interest owed, and interest received
+
+With those six facts you can check any interest figure by hand, and you can show the payment office exactly where a number comes from.
+
+## Sources
+
+- Prompt Payment Act, 31 U.S.C. Chapter 39.
+- Prompt payment regulations, 5 CFR Part 1315, especially 1315.4 (prompt payment standards), 1315.9 (required documentation), 1315.10 (late payment interest), 1315.11 (additional penalties) and 1315.17 (formulas). Read them at [ecfr.gov](https://www.ecfr.gov).
+- Federal Acquisition Regulation, Subpart 32.9, “Prompt Payment”, and clause 52.232-25, at [acquisition.gov](https://www.acquisition.gov/browse/index/far).
+- Bureau of the Fiscal Service, [Prompt Payment](https://fiscal.treasury.gov/prompt-payment/): current and past interest rates, and the Treasury’s own interest calculators.

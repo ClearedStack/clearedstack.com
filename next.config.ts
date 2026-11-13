@@ -17,7 +17,10 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Guides are written as .mdx files in src/guides.
-const withMDX = createMDX({});
+// Guides are written as .mdx files in src/guides. remark-gfm adds tables.
+// Plugins are named as strings so that Turbopack can load them.
+const withMDX = createMDX({
+  options: { remarkPlugins: ["remark-gfm"] },
+});
 
 export default withMDX(nextConfig);

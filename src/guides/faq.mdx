@@ -1,0 +1,152 @@
+export const meta = {
+  title: "Common questions",
+  summary: "Short answers about cost, privacy, trust, using the tools at work and what to do when something does not behave.",
+  group: "reference",
+  order: 3,
+};
+
+Short answers, each with a link to the guide that has the long one.
+
+## About the project
+
+### Is it really free?
+
+Yes. There is no paid tier, no trial, no ads, no sponsorship and no donation button. The project takes in no revenue. It can stay that way because the tools run on your computer, so there are no servers doing work that someone has to pay for.
+
+### Who runs it?
+
+It is an independent personal project, built on personal time with personal equipment. It is not affiliated with, endorsed by or sponsored by the Department of Defense or any other government agency. The [About](/about/) page has the full statement.
+
+### Does the name mean I am “cleared” for something?
+
+No. The name is only a name. ClearedStack does not grant, verify or imply a security clearance, a facility clearance, an authorization to operate or a certification such as CMMC or FedRAMP.
+
+### Why is no tool live yet?
+
+The catalog was published before the tools on purpose. It lets people say which tools they need first, and it lets anyone see the standard a tool has to meet before one exists. Each tool is marked Live on the day it works and not before. [Getting started](/guides/getting-started/) explains the status labels.
+
+### How do I find out when a tool ships?
+
+Watch the project on [GitHub](https://github.com/ClearedStack). There is no mailing list, because the site collects no addresses.
+
+### Can I use the tools and the code commercially?
+
+Yes. This site is released under the MIT License, which allows use, copying, changes and commercial use, as long as the license notice stays with the code. Each tool carries its own open-source license in its repository. Read it before you reuse the tool’s code.
+
+## Privacy and security
+
+### Does anything I type get sent anywhere?
+
+No. A tool is only listed if the work happens in your browser. You can confirm it with your browser’s Network tab, or by disconnecting from the network and seeing that the tool still works. [What happens to what you type](/guides/your-data/) has the steps.
+
+### Does the site use cookies or analytics?
+
+No cookies, no analytics, no visitor counting and nothing loaded from other companies. The site’s content security policy tells your browser to block any such request.
+
+### What can the site see about me?
+
+What every web server sees: the IP address a page was requested from, which page and when. Nothing you enter into a tool is part of that.
+
+### Can I enter CUI?
+
+Running in a browser does not change the rules for the computer the browser is on. Handle CUI only on a system your contract and your company’s policy allow. If that system cannot reach the internet, host a copy of the tool on it. See [Run it on a closed network](/guides/closed-networks/).
+
+### Can I enter classified information?
+
+No. Never. No tool listed here is approved for it.
+
+### Is it safe to use on a work computer?
+
+The site adds nothing to the computer and sends nothing from it. Whether you are allowed to use an outside website for work is your employer’s decision. If outside sites are restricted, your IT team can [host a copy](/guides/#host) inside the company network in a few minutes.
+
+### Can my security team review it?
+
+Yes, and they are welcome to. All of the code is public. This site is small enough to read in an afternoon, and the hosting guides describe exactly what the container image contains and what privileges it runs with.
+
+## Using the tools
+
+### Do I need to install anything?
+
+No. A tool is a web page. You need a current browser and nothing else.
+
+### Will it work on a phone?
+
+The site and the guides are readable on a small screen. Tools that involve large tables or documents are easier to use on a larger one.
+
+### Will it work with no internet connection?
+
+A copy hosted inside your own network works with no outside connection at all. The public site needs a connection to load a page, and nothing after that.
+
+### Can I trust the numbers?
+
+Trust them the way you would trust a colleague’s spreadsheet: enough to save time, not enough to skip checking. Every tool has to name the regulation behind its results. [Check a tool’s answer](/guides/checking-results/) is a method for verifying one.
+
+### The tool and the solicitation disagree. Which do I follow?
+
+The solicitation. It can set its own rules for format, rounding, page counts and pricing structure. Adjust the tool’s inputs to match, and ask the contracting officer in writing if the solicitation is unclear.
+
+### The tool and the regulation disagree. Which do I follow?
+
+The regulation, as currently published. Then please report it, with the paragraph that shows the right answer.
+
+### Does using a tool make my company compliant?
+
+No. A checklist tool helps you see where you stand. Compliance is what you have actually implemented, and for some requirements it is what an assessor confirms. No tool can attest to that for you.
+
+### Is this legal or accounting advice?
+
+No. The tools and guides are aids for your own work. For a decision with real risk, such as an indirect rate structure or a compliance affirmation you sign, talk to a qualified professional.
+
+## Hosting and offline use
+
+### Can I run my own copy?
+
+Yes. There are three ways, all documented: [with Docker](/guides/host-with-docker/), [on Kubernetes](/guides/host-on-kubernetes/) or [as plain files](/guides/host-static-files/) on any web server.
+
+### Is there a container image I can pull?
+
+No. You build the image from the source yourself, so you know exactly what is in it. The build is three commands.
+
+### What does a copy need to run?
+
+A web server and nothing else. No database, no application server, no outside connection and about 5 MB of memory.
+
+### How do I update a copy on a closed network?
+
+Build a new one outside, carry it across and replace the old one. Record which version you are running so you can tell when it is behind. [Run it on a closed network](/guides/closed-networks/) describes the routine.
+
+## Contributing
+
+### How do I ask for a tool?
+
+Open an issue or send an email describing the job, who needs it and the public source it would rest on. [Request a tool or add your own](/guides/request-or-add-a-tool/) has an outline to copy.
+
+### I found a mistake. Where do I report it?
+
+In the tool’s own repository for a wrong result, or in this site’s repository for anything on the site. Email works for both. Leave real contract data out of the report.
+
+### Can I get my own tool listed?
+
+Yes, if it is free, open source, client-side, free of tracking, built from public sources and honest about its limits. [Build a tool that can be listed](/guides/build-a-tool/) goes through each condition.
+
+### I work for the government. Can I contribute?
+
+Your own obligations come first. Contribute only on your own time and equipment, and only what you are free to share. If you are not sure something is public, treat it as not public.
+
+## When something does not work
+
+### A page loads without its styling
+
+The site is being opened straight from a disk or a file share, or served from a sub-folder of an address. It has to be served by a web server from the root of a host name. See [Host as plain files](/guides/host-static-files/).
+
+### The filter box does nothing
+
+The filter needs JavaScript. If your browser or an extension blocks scripts, allow them for the site. Everything else on the site, including every guide, can be read with scripts turned off.
+
+### A link to GitHub or to a regulation does not open
+
+On a closed network, links to the public internet lead nowhere. The pages hosted on your copy still work.
+
+### Something else
+
+Email [contact@clearedstack.com](mailto:contact@clearedstack.com) or open an issue on [GitHub](https://github.com/ClearedStack/clearedstack.com/issues). Say which page, which browser and what you expected to happen.

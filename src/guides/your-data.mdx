@@ -1,35 +1,100 @@
 export const meta = {
   title: "What happens to what you type",
-  summary: "Where your information goes when you use a tool, and how to confirm it yourself.",
+  summary: "Where your information goes when you use the site or a tool, what can still see it, and how to confirm all of it yourself.",
+  group: "start",
   order: 2,
 };
 
-The short answer is that it stays on your computer. This guide explains what that means and how to check it without taking anyone’s word for it.
+The short answer is that it stays on your computer. This guide explains what that means, where the limits are, and how to check it without taking anyone’s word for it.
+
+## What “runs in your browser” means
+
+Most web applications work in two halves. The page in front of you collects what you type and sends it to a server, the server does the work, and the answer comes back. Your information has left your computer by the time you see a result.
+
+The tools listed here have only the first half. When you open one, your browser downloads the page and its code once. After that, the arithmetic, the text parsing and the file reading are all done by that code on your machine. There is no server waiting for your input, because the project does not run one.
+
+That is also why the tools cost nothing to run and need no account. There is nothing on the other end to pay for or to sign in to.
 
 ## This website
 
-clearedstack.com has no accounts, cookies or analytics, and it loads nothing from other companies’ servers. The pages are plain files.
+clearedstack.com is a set of plain files. It has:
 
-One limit applies to every website: the server that sends you a page can see the IP address the request came from. Nothing you type is part of that.
+- no accounts and no sign-in
+- no cookies
+- no analytics or visitor counting
+- no fonts, scripts or images loaded from other companies’ servers
 
-## The tools
+The last point is enforced, not just promised. Every page carries a content security policy, which is an instruction to your browser. This site’s policy says that scripts, styles, fonts and images may load only from the site itself, that the page may connect only to the site itself, and that forms may not be submitted anywhere. If a line of code tried to send something elsewhere, your browser would refuse.
 
-A tool is only listed here if it runs on your machine. The calculation, the text parsing and the file reading all happen in your browser, and what you enter is not sent to a server.
+## What a web server always sees
+
+One limit applies to every website, this one included. To send you a page, the server has to know where to send it. So the company that hosts the files can see:
+
+- the IP address the request came from
+- which page was asked for, and when
+- the browser name your browser reports
+
+Nothing you type into a tool is part of that. If even this is more than your situation allows, run a copy inside your own network. See [Host your own copy](/guides/#host).
 
 ## Check it yourself
 
-You can confirm this for any tool in about a minute.
+You can confirm that a tool keeps your input on your machine in about a minute. Use made-up numbers for the test.
 
 1. Open the tool.
-2. Open your browser’s developer tools. Press F12 on Windows or Linux, or Command-Option-I on a Mac, then choose the **Network** tab.
-3. Use the tool as you normally would. Type numbers, paste text, load a file.
-4. Watch the list. A tool that works on your machine adds no new requests carrying what you entered.
+2. Open your browser’s developer tools. Press F12 on Windows or Linux, or Command-Option-I on a Mac.
+3. Choose the **Network** tab. It lists every request the page makes.
+4. Clear the list. There is a clear button at the top left of the panel.
+5. Use the tool as you normally would. Type numbers, paste text, load a file.
+6. Watch the list.
 
-A second check is simpler. Load the tool, disconnect from the network, and keep using it. If it still works, the work is happening on your computer.
+A tool that works on your machine adds nothing to the list while you type. If a request does appear, click it and look at what was sent. A request that carries what you entered is a failure of the listing rules, and the project wants to hear about it.
+
+<Callout kind="check" title="The offline test">
+A second check needs no developer tools. Load the tool, then disconnect from the network: turn off Wi-Fi or unplug the cable. Keep using the tool. If it still gives answers, the work is happening on your computer.
+</Callout>
+
+## Read the policy
+
+To see the content security policy for yourself:
+
+1. Open any page on this site.
+2. Right-click and choose **View Page Source**.
+3. Search for `Content-Security-Policy`.
+
+You will find a line listing what the page is allowed to load and where it is allowed to connect. `connect-src 'self'` is the part that stops a page from sending data to another server.
+
+The same test works on any tool. A tool with no such policy is not necessarily sending anything, but one that has it gives you a stronger guarantee than a promise.
+
+## What can still see your screen
+
+Keeping data off a server does not make it invisible. Everything below runs on your side, outside any website’s control:
+
+- **Browser extensions.** Many extensions can read every page you open. A grammar checker, a password manager or a shopping helper may see what you type. For sensitive work, use a browser profile with no extensions or a private window with extensions turned off.
+- **Company monitoring.** A work computer may record screens, keystrokes or web traffic. That is your employer’s system and their rules apply.
+- **Clipboard tools.** If you copy a rate out of a tool, a clipboard manager or a cloud clipboard may keep it.
+- **Screen sharing.** A tool open in a shared window is visible to the meeting.
+- **Translation and “AI assistant” features** built into a browser may send page text to a service. Turn them off for the tab, or use a browser without them.
+
+## Saved work on a shared computer
+
+A tool may let you keep your work between visits by saving it in the browser’s own storage. That storage is on your computer and is not sent anywhere. It does mean the next person to use the same browser profile can open the tool and see what you left.
+
+On a shared or borrowed computer:
+
+- use a private window, which discards its storage when you close it, or
+- clear the site’s data when you finish, from your browser’s privacy settings.
+
+Files you export from a tool are ordinary files. Store and send them the way you would any other document with the same contents.
 
 ## What not to enter
 
-- **Classified information**: never. No tool listed here is approved for it.
-- **CUI and proprietary data**: running in a browser does not change the rules for the computer you are sitting at. Handle controlled information only on a system your contract and your company’s policy allow.
+- **Classified information**: never. No tool listed here is approved for it, and neither is an ordinary web browser.
+- **Controlled unclassified information (CUI)**: running in a browser does not change the rules for the computer you are sitting at. Handle CUI only on a system your contract and your company’s policy allow. If that system cannot reach the internet, host a copy of the tool on it.
+- **Export-controlled technical data**: the same reasoning applies. The tool does not send it anywhere, but your obligations attach to the machine and the people who can see it.
+- **Proprietary rates and bid data**: this is yours to decide. Nothing leaves your machine, so the question is the one above: who else can see your screen and your browser.
 
 If you are unsure whether something is safe to enter, use made-up numbers first to learn how the tool behaves.
+
+## If you find a tool that breaks the rule
+
+Stop using it, and report it. Email [contact@clearedstack.com](mailto:contact@clearedstack.com) or open an issue in the tool’s repository, and include the address of the request you saw in the Network tab. A tool that sends user input to a server is removed from the catalog until it is fixed.
