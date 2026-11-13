@@ -46,7 +46,7 @@ When `cs-02-observe` encounters a page layout, table structure, or document form
 
 1. The worker pauses that item with the sanitized status `needs_subtool` (`E_NEEDS_SUBTOOL`) and continues processing the rest of the queue normally.
 2. `cs-10-notify` opens a task in the `cs-02-observe` repository inside `cs-git` (mirrored publicly to GitHub) describing the unmatched pattern.
-3. The paused item appears on the public `/guides/#pipeline` view so anyone can see why it stopped.
+3. The paused item appears on the public `/guides/workflow-state-machine/` view so anyone can see why it stopped.
 4. Once a contributor or maintainer adds a new deterministic sub-tool under `tools/<case>/` along with a golden fixture, `cs-runner` tests and builds the updated worker image with `ko` (no Docker), `cs-store` deploys it, and `hub-queue-api` **automatically replays** every item paused in `needs_subtool` for that pattern.
 
 Every new edge case becomes permanent, tested, deterministic code—and every solved pattern automatically unblocks past items without human re-entry.

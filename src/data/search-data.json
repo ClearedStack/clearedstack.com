@@ -12,72 +12,72 @@
   {
     "id": "page-tools",
     "type": "page",
-    "title": "Tools & Cluster App Store",
+    "title": "Tools",
     "subtitle": "Contract Line Items (CLIN 0001–0006)",
-    "summary": "Unified catalog of 18 browser contracting utilities and the integrated Cluster App Store for all 17 MIT platform microservices and deterministic workers.",
+    "summary": "Unified catalog of 18 browser contracting utilities and 17 MIT platform and factory tools.",
     "url": "/tools/",
     "badge": "Tools",
-    "content": "Tools and Apps catalog CLIN 0001 Pricing cost accounting CLIN 0002 Proposal capture CLIN 0003 Cybersecurity compliance CLIN 0004 Market research small business CLIN 0005 Tactical DevSecOps CLIN 0006 Platform Factory Apps cs-git cs-registry cs-runner cs-store workers"
+    "content": "Tools catalog CLIN 0001 Pricing cost accounting CLIN 0002 Proposal capture CLIN 0003 Cybersecurity compliance CLIN 0004 Market research small business CLIN 0005 Tactical DevSecOps CLIN 0006 Platform factory tools cs-git cs-registry cs-runner cs-store workers"
   },
   {
     "id": "page-guides",
     "type": "page",
-    "title": "Guides & Integrated Factory",
-    "subtitle": "Section L: Manuals, Command, Pipeline, Decide & Section M",
-    "summary": "Field manual (L.1–L.6) integrated with live Command Portal, 10-Worker Pipeline, Decide & Edits, and Section M evaluation factors.",
+    "title": "Guides",
+    "subtitle": "Section L: Field Guides & Specifications",
+    "summary": "Plain-language field guides, platform specifications, and Section M evaluation rules in one open index.",
     "url": "/guides/",
     "badge": "Guides",
-    "content": "Section L Instructions to offerors Start here Field guides Host your own copy Contribute Reference How this project is run Command Pipeline Decide Section M Reading routes Short answers"
+    "content": "Section L Instructions to offerors Start here Field guides Host your own copy Contribute Reference How this project is run"
   },
   {
     "id": "page-guides-command",
     "type": "page",
-    "title": "Command Portal",
-    "subtitle": "Guides · Integrated Operational View",
-    "summary": "Deterministic P0–P2 attention feed, sanitized error codes, 10-worker pulse strip, and 7 control-plane microservices.",
-    "url": "/guides/#command",
-    "badge": "Command",
+    "title": "Command Portal Spec",
+    "subtitle": "Guide · Live Command Portal",
+    "summary": "Deterministic P0–P2 attention rules, sanitized error codes, and control-plane overview.",
+    "url": "/guides/live-command-portal/",
+    "badge": "Spec",
     "content": "Command Portal open public sandbox no login lock P0 active errors P1 queue sub-tools P2 decisions edits View = f(state) deterministic attention rules clearedstack cs-workers"
   },
   {
     "id": "page-guides-apps",
     "type": "page",
-    "title": "Cluster App Store",
-    "subtitle": "Tools · cs-store Server-Side Apply",
-    "summary": "Integrated App Store on /tools/#apps showing all 7 control-plane microservices and 10 deterministic workers managed by cs-store.",
+    "title": "Platform & Factory Tools (CLIN 0006)",
+    "subtitle": "Tools · Platform & Factory Catalog",
+    "summary": "All 7 control-plane microservices and 10 deterministic workers listed in the unified Tools catalog.",
     "url": "/tools/#apps",
-    "badge": "Apps",
-    "content": "Apps Cluster App Store cs-store Server-Side Apply 7 control-plane pods 10 workers 5 digests cs-registry ko rootless BuildKit Owner Mode Upgrade Pause Rollback"
+    "badge": "CLIN 0006",
+    "content": "Platform factory tools cs-store cs-git cs-registry cs-runner 7 control-plane pods 10 workers"
   },
   {
     "id": "page-guides-pipeline",
     "type": "page",
-    "title": "10-Worker Pipeline",
-    "subtitle": "Guides · cs-01-intake through cs-10-notify",
-    "summary": "Integrated 100% deterministic pipeline across ten worker repositories, PA-XXXX item trails, local spools, and tools/<case>/ sub-tools.",
-    "url": "/guides/#pipeline",
-    "badge": "Pipeline",
+    "title": "10-Worker Pipeline Spec",
+    "subtitle": "Guide · cs-01-intake through cs-10-notify",
+    "summary": "100% deterministic pipeline across ten worker repositories, 14-state lifecycle, and tools/<case>/ sub-tools.",
+    "url": "/guides/workflow-state-machine/",
+    "badge": "Spec",
     "content": "10-Worker Pipeline deterministic zero AI at runtime urgent normal backfill needs_subtool /var/spool/cs PA-XXXX cs-01-intake cs-02-observe cs-03-evaluate cs-04-decide cs-05-provenance cs-06-build cs-07-verify cs-08-catalog cs-09-monitor cs-10-notify"
   },
   {
     "id": "page-guides-decide",
     "type": "page",
-    "title": "Decisions & Public Edits",
-    "subtitle": "Guides · cs-04-decide Queue",
-    "summary": "Integrated public queue for candidate tool determinations and anonymous ✎ Edit proposals routed via ownership_map.json.",
-    "url": "/guides/#decide",
-    "badge": "Decide",
+    "title": "Decisions & Public Edits Spec",
+    "subtitle": "Guide · Ownership Map & Edit Loop",
+    "summary": "Candidate tool determinations and anonymous ✎ Edit proposals routed via ownership_map.json.",
+    "url": "/guides/ownership-map-and-edit-loop/",
+    "badge": "Spec",
     "content": "Decisions and Public Edit Proposals cs-04-decide core.edit_proposal anonymous edits 5-layer anti-spam proof-of-work honeypot ownership_map.json cs-git GitHub mirror"
   },
   {
     "id": "page-how-we-decide",
     "type": "page",
-    "title": "How We Decide",
-    "subtitle": "Guides · Section M Evaluation Factors",
-    "summary": "Evaluation factors, 5 binary knockout gates, 100-point scoring rubric, 14-state record lifecycle, and clean-room provenance rules.",
-    "url": "/guides/#how-we-decide",
-    "badge": "Section M",
-    "content": "Section M evaluation factors how we decide prior art engine ten workers five knockout gates 100-point scoring rubric outcomes Build Link Merge Park Reject 14 record states clean room AI disclosure Claude Code Antigravity review accountability"
+    "title": "How Ideas Are Scored and Decided",
+    "subtitle": "Guide · Section M Evaluation Factors",
+    "summary": "5 binary knockout gates, 100-point scoring rubric, 5 tie-breakers, and cs-04-decide determinations.",
+    "url": "/guides/score-and-decide/",
+    "badge": "Spec",
+    "content": "Section M evaluation factors how we decide prior art engine ten workers five knockout gates 100-point scoring rubric outcomes Build Link Merge Park Reject"
   },
   {
     "id": "page-about",
@@ -288,190 +288,190 @@
     "content": "Air-Gap Transfer Helpers Checksums and transfer manifests for moving files onto a disconnected system. CLIN 0005 Tactical & DevSecOps planned Utilities for disconnected networks, where nothing can phone home."
   },
   {
-    "id": "app-clearedstack-web",
-    "type": "app",
+    "id": "tool-clearedstack-web",
+    "type": "tool",
     "title": "clearedstack-web",
     "subtitle": "CLIN 0006 · Control Plane (clearedstack)",
     "summary": "Unified Command Portal, App Store UI, and anonymous edit intake (only public Ingress).",
-    "url": "/tools/#app-clearedstack-web",
-    "badge": "128 MiB",
-    "status": "healthy",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "building",
     "content": "clearedstack-web clearedstack Unified Command Portal, App Store UI, and anonymous edit intake (only public Ingress). clearedstack.com 128 MiB v0.2.0-draft Reads only sanitized pub.* views; zero login lock. "
   },
   {
-    "id": "app-hub-queue-api",
-    "type": "app",
+    "id": "tool-hub-queue-api",
+    "type": "tool",
     "title": "hub-queue-api",
     "subtitle": "CLIN 0006 · Control Plane (clearedstack)",
     "summary": "Central queue leases, transitions, SSE live feed, and 5-layer anti-spam edit intake.",
-    "url": "/tools/#app-hub-queue-api",
-    "badge": "48 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "hub-queue-api clearedstack Central queue leases, transitions, SSE live feed, and 5-layer anti-spam edit intake. clearedstack.com 48 MiB v0.1.0-draft Only service besides postgres holding core.* write access. "
   },
   {
-    "id": "app-postgres",
-    "type": "app",
+    "id": "tool-postgres",
+    "type": "tool",
     "title": "postgres",
     "subtitle": "CLIN 0006 · Control Plane (clearedstack)",
     "summary": "Single shared PostgreSQL 17 database (core.* state, pub.* views, append-only ledger).",
-    "url": "/tools/#app-postgres",
-    "badge": "256 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "postgres clearedstack Single shared PostgreSQL 17 database (core.* state, pub.* views, append-only ledger). clearedstack.com 256 MiB 17-alpine Backed up nightly with age encryption; monthly restore drill. "
   },
   {
-    "id": "app-cs-git",
-    "type": "app",
+    "id": "tool-cs-git",
+    "type": "tool",
     "title": "cs-git",
     "subtitle": "CLIN 0006 · Control Plane (clearedstack)",
     "summary": "Lightweight MIT Go Git server (primary) with push-mirroring to GitHub on change.",
-    "url": "/tools/#app-cs-git",
-    "badge": "64 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-git clearedstack Lightweight MIT Go Git server (primary) with push-mirroring to GitHub on change. cs-git 64 MiB v0.1.0-draft ClusterIP only; replaces Forgejo without 40+ DB tables. "
   },
   {
-    "id": "app-cs-registry",
-    "type": "app",
+    "id": "tool-cs-registry",
+    "type": "tool",
     "title": "cs-registry",
     "subtitle": "CLIN 0006 · Control Plane (clearedstack)",
     "summary": "Internal-only OCI image store keeping the last 5 signed digests per app.",
-    "url": "/tools/#app-cs-registry",
-    "badge": "64 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-registry clearedstack Internal-only OCI image store keeping the last 5 signed digests per app. cs-registry 64 MiB v0.1.0-draft Zero container images are ever pushed to GitHub. "
   },
   {
-    "id": "app-cs-runner",
-    "type": "app",
+    "id": "tool-cs-runner",
+    "type": "tool",
     "title": "cs-runner",
     "subtitle": "CLIN 0006 · Control Plane (clearedstack)",
     "summary": "No-Docker build controller spawning ko (Go) and rootless BuildKit Jobs on push.",
-    "url": "/tools/#app-cs-runner",
-    "badge": "32 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-runner clearedstack No-Docker build controller spawning ko (Go) and rootless BuildKit Jobs on push. cs-runner 32 MiB v0.1.0-draft Runs golden fixture tests and signs images with cosign. "
   },
   {
-    "id": "app-cs-store",
-    "type": "app",
+    "id": "tool-cs-store",
+    "type": "tool",
     "title": "cs-store",
     "subtitle": "CLIN 0006 · Control Plane (clearedstack)",
     "summary": "App-Store reconciler (Server-Side Apply) + live pod/error sanitizer.",
-    "url": "/tools/#app-cs-store",
-    "badge": "48 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-store clearedstack App-Store reconciler (Server-Side Apply) + live pod/error sanitizer. cs-store 48 MiB v0.1.0-draft Replaces Argo CD + CasaOS with zero custom CRDs. "
   },
   {
-    "id": "app-cs-01-intake",
-    "type": "app",
+    "id": "tool-cs-01-intake",
+    "type": "tool",
     "title": "cs-01-intake",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Find candidates, normalize URLs, SHA-256 deduplicate, and assign PA-XXXX IDs.",
-    "url": "/tools/#app-cs-01-intake",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-01-intake cs-workers Find candidates, normalize URLs, SHA-256 deduplicate, and assign PA-XXXX IDs. cs-01-intake 30 MiB v0.1.0-draft Replaces old Stages 1–2 (Discover + Record). sam-gov github-issues web-sweep site-form"
   },
   {
-    "id": "app-cs-02-observe",
-    "type": "app",
+    "id": "tool-cs-02-observe",
+    "type": "tool",
     "title": "cs-02-observe",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Inspect public pages only via deterministic extractors; seal raw captures behind clean-room wall.",
-    "url": "/tools/#app-cs-02-observe",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-02-observe cs-workers Inspect public pages only via deterministic extractors; seal raw captures behind clean-room wall. cs-02-observe 30 MiB v0.1.0-draft Spawns on-demand headless browser Jobs only for JS-heavy sites. saas-marketing gov-portal agency-pdf on-demand-browser-job"
   },
   {
-    "id": "app-cs-03-evaluate",
-    "type": "app",
+    "id": "tool-cs-03-evaluate",
+    "type": "tool",
     "title": "cs-03-evaluate",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Run 5 binary knockout gates, 100-pt rubric, and 5 tie-breakers using deterministic YAML/Go rules.",
-    "url": "/tools/#app-cs-03-evaluate",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-03-evaluate cs-workers Run 5 binary knockout gates, 100-pt rubric, and 5 tie-breakers using deterministic YAML/Go rules. cs-03-evaluate 30 MiB v0.1.0-draft Zero AI; unknown fields fail closed to needs_subtool. rubric-profiles"
   },
   {
-    "id": "app-cs-04-decide",
-    "type": "app",
+    "id": "tool-cs-04-decide",
+    "type": "tool",
     "title": "cs-04-decide",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Decision & anonymous edit-approval queue surfaced on /guides/#decide.",
-    "url": "/tools/#app-cs-04-decide",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-04-decide cs-workers Decision & anonymous edit-approval queue surfaced on /guides/#decide. cs-04-decide 30 MiB v0.1.0-draft Records Build, Link, Merge, Park, Reject, and edit approvals. "
   },
   {
-    "id": "app-cs-05-provenance",
-    "type": "app",
+    "id": "tool-cs-05-provenance",
+    "type": "tool",
     "title": "cs-05-provenance",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Stamp provenance notes, enforce 48h/5d correction & opt-out SLAs, compile clean-room build specs.",
-    "url": "/tools/#app-cs-05-provenance",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-05-provenance cs-workers Stamp provenance notes, enforce 48h/5d correction & opt-out SLAs, compile clean-room build specs. cs-05-provenance 30 MiB v0.1.0-draft Enforces the clean-room wall before cs-06-build. spec-profiles"
   },
   {
-    "id": "app-cs-06-build",
-    "type": "app",
+    "id": "tool-cs-06-build",
+    "type": "tool",
     "title": "cs-06-build",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Generate isolated static tool repos from clean-room specs + worked-example fixtures.",
-    "url": "/tools/#app-cs-06-build",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-06-build cs-workers Generate isolated static tool repos from clean-room specs + worked-example fixtures. cs-06-build 30 MiB v0.1.0-draft Zero observation artifacts ever enter this worker. calculator checklist validator decision-tree"
   },
   {
-    "id": "app-cs-07-verify",
-    "type": "app",
+    "id": "tool-cs-07-verify",
+    "type": "tool",
     "title": "cs-07-verify",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Verify all 5 listing conditions: offline, CSP connect-src 'self', zero tracking, worked examples.",
-    "url": "/tools/#app-cs-07-verify",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-07-verify cs-workers Verify all 5 listing conditions: offline, CSP connect-src 'self', zero tracking, worked examples. cs-07-verify 30 MiB v0.1.0-draft Split out of old Stage 9 (List) for automated QA. "
   },
   {
-    "id": "app-cs-08-catalog",
-    "type": "app",
+    "id": "tool-cs-08-catalog",
+    "type": "tool",
     "title": "cs-08-catalog",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Publish verified, linked, merged, and retired entries to the clearedstack.com catalog.",
-    "url": "/tools/#app-cs-08-catalog",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-08-catalog cs-workers Publish verified, linked, merged, and retired entries to the clearedstack.com catalog. cs-08-catalog 30 MiB v0.1.0-draft Generates live catalog entries with provenance links. "
   },
   {
-    "id": "app-cs-09-monitor",
-    "type": "app",
+    "id": "tool-cs-09-monitor",
+    "type": "tool",
     "title": "cs-09-monitor",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Watch FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers for drift.",
-    "url": "/tools/#app-cs-09-monitor",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-09-monitor cs-workers Watch FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers for drift. cs-09-monitor 30 MiB v0.1.0-draft Replaces old Stage 10 (Revisit). federal-register ecfr nist-csrc linked-tool-watch live-catalog"
   },
   {
-    "id": "app-cs-10-notify",
-    "type": "app",
+    "id": "tool-cs-10-notify",
+    "type": "tool",
     "title": "cs-10-notify",
     "subtitle": "CLIN 0006 · Deterministic Worker (cs-workers)",
     "summary": "Route approved Portal edits, needs_subtool tasks, and fingerprinted errors to cs-git.",
-    "url": "/tools/#app-cs-10-notify",
-    "badge": "30 MiB",
-    "status": "idle",
+    "url": "/tools/#apps",
+    "badge": "CLIN 0006",
+    "status": "planned",
     "content": "cs-10-notify cs-workers Route approved Portal edits, needs_subtool tasks, and fingerprinted errors to cs-git. cs-10-notify 30 MiB v0.1.0-draft Closes the edit-to-repo and auto-issue loops. internal-git github-mirror webhook-alert portal-sse"
   },
   {
@@ -502,7 +502,7 @@
     "summary": "Behind the scenes, ClearedStack is split into focused repositories: the Portal itself ( clearedstack.com ) and the ten pipeline workers ( cs-01 through cs-10 )....",
     "url": "/guides/anonymous-edits-and-anti-spam/#how-edits-route-to-the-owning-repository",
     "badge": "Section",
-    "content": "How edits route to the owning repository Propose Edits Without Signing In Behind the scenes, ClearedStack is split into focused repositories: the Portal itself ( clearedstack.com ) and the ten pipeline workers ( cs-01 through cs-10 ). You do not need to memorize which repository owns which part of the site. Every editable element is mapped in ownership map.json , which tells the Portal two things: - Where the change belongs: Routes the proposal to clearedstack.com or the specific worker repository ( cs-01 .. cs-10 ) that owns that data or rule. - What kind of change it is: Classifies the proposal as DATA (catalog or content text), CONFIG (a rule or setting), or ISSUE (a problem report or sub-tool request). Once submitted, the proposal enters the queue API ( hub-queue-api ) and waits in the /guides/ decide inbox ( cs-04-decide )."
+    "content": "How edits route to the owning repository Propose Edits Without Signing In Behind the scenes, ClearedStack is split into focused repositories: the Portal itself ( clearedstack.com ) and the ten pipeline workers ( cs-01 through cs-10 ). You do not need to memorize which repository owns which part of the site. Every editable element is mapped in ownership map.json , which tells the Portal two things: - Where the change belongs: Routes the proposal to clearedstack.com or the specific worker repository ( cs-01 .. cs-10 ) that owns that data or rule. - What kind of change it is: Classifies the proposal as DATA (catalog or content text), CONFIG (a rule or setting), or ISSUE (a problem report or sub-tool request). Once submitted, the proposal enters the queue API ( hub-queue-api ) and waits in the /guides/ownership-map-and-edit-loop/ inbox ( cs-04-decide )."
   },
   {
     "id": "section-anonymous-edits-and-anti-spam-live-status-tracking-on-your-edit",
@@ -512,7 +512,7 @@
     "summary": "After you submit a proposal, the edit button on that element turns into a live status pill so you can watch your contribution move through the system in real ti...",
     "url": "/guides/anonymous-edits-and-anti-spam/#live-status-tracking-on-your-edit",
     "badge": "Section",
-    "content": "Live status tracking on your edit Propose Edits Without Signing In After you submit a proposal, the edit button on that element turns into a live status pill so you can watch your contribution move through the system in real time: | Status | What Is Happening | | --- | --- | | Proposed | Your submission passed anti-spam and schema checks and is waiting in /guides/ decide . | | Approved | The proposal was approved and routed to the internal Git server ( cs-git ). | | Building | The build runner ( cs-runner ) is running automated tests and packaging the updated app or worker image. | | Live | The app-store reconciler ( cs-store ) deployed the update, and your change is now live on the Portal. | If a proposal is declined, it never alters the repository and the queue records the decision transparently."
+    "content": "Live status tracking on your edit Propose Edits Without Signing In After you submit a proposal, the edit button on that element turns into a live status pill so you can watch your contribution move through the system in real time: | Status | What Is Happening | | --- | --- | | Proposed | Your submission passed anti-spam and schema checks and is waiting in /guides/ownership-map-and-edit-loop/ . | | Approved | The proposal was approved and routed to the internal Git server ( cs-git ). | | Building | The build runner ( cs-runner ) is running automated tests and packaging the updated app or worker image. | | Live | The app-store reconciler ( cs-store ) deployed the update, and your change is now live on the Portal. | If a proposal is declined, it never alters the repository and the queue records the decision transparently."
   },
   {
     "id": "section-anonymous-edits-and-anti-spam-stopping-spam-without-logins-or-captchas",
@@ -672,7 +672,7 @@
     "summary": "| Design question | Early assumption | Final v3.1 decision | Why it won | | --- | --- | --- | --- | | Workflow vs. website | Static essays describing 10 stages ...",
     "url": "/guides/architecture-council-decisions/#the-five-core-shifts",
     "badge": "Section",
-    "content": "The five core shifts How the Architecture Council Designed v3.1 | Design question | Early assumption | Final v3.1 decision | Why it won | | --- | --- | --- | --- | | Workflow vs. website | Static essays describing 10 stages | 10 live deterministic worker repos ( cs-01 .. cs-10 ) feeding /guides/ command , /tools/ apps , /guides/ pipeline , and /guides/ decide | Real-time status and sanitized errors turn the site into a live operational portal instead of passive text. | | Database & state | Separate per-stage databases | One shared PostgreSQL 17 hub ( clearedstack namespace) + hub-queue-api + local worker spools | Workers hold zero DB passwords, handoffs are atomic, and local spools survive hub restarts. | | Git, builds, and deploy | Heavy third-party suites (Forgejo, Argo CD, CasaOS) | Custom clean-room MIT Go microservices ( cs-git , cs-registry , cs-runner , cs-store ) | Drops control-plane RAM to ~640 MiB so the entire 17-pod platform fits on one 4 GiB k3s node. | | Edge cases & AI | AI inside workers for messy pages | 100% deterministic everywhere ; unknown layouts fail closed into needs subtool | Zero token cost, identical output on every cluster, and every solved edge case becomes permanent code. | | Public access vs. privacy | Login wall for proposing edits | No login lock ( ✎ Edit anywhere behind a 5-layer anti-spam shield) + private NetworkPolicy | Anyone can inspect and improve the platform while internal IPs, tokens, and cluster layout stay hidden. |"
+    "content": "The five core shifts How the Architecture Council Designed v3.1 | Design question | Early assumption | Final v3.1 decision | Why it won | | --- | --- | --- | --- | | Workflow vs. website | Static essays describing 10 stages | 10 live deterministic worker repos ( cs-01 .. cs-10 ) feeding /guides/live-command-portal/ , /tools/ apps , /guides/workflow-state-machine/ , and /guides/ownership-map-and-edit-loop/ | Real-time status and sanitized errors turn the site into a live operational portal instead of passive text. | | Database & state | Separate per-stage databases | One shared PostgreSQL 17 hub ( clearedstack namespace) + hub-queue-api + local worker spools | Workers hold zero DB passwords, handoffs are atomic, and local spools survive hub restarts. | | Git, builds, and deploy | Heavy third-party suites (Forgejo, Argo CD, CasaOS) | Custom clean-room MIT Go microservices ( cs-git , cs-registry , cs-runner , cs-store ) | Drops control-plane RAM to ~640 MiB so the entire 17-pod platform fits on one 4 GiB k3s node. | | Edge cases & AI | AI inside workers for messy pages | 100% deterministic everywhere ; unknown layouts fail closed into needs subtool | Zero token cost, identical output on every cluster, and every solved edge case becomes permanent code. | | Public access vs. privacy | Login wall for proposing edits | No login lock ( ✎ Edit anywhere behind a 5-layer anti-spam shield) + private NetworkPolicy | Anyone can inspect and improve the platform while internal IPs, tokens, and cluster layout stay hidden. |"
   },
   {
     "id": "section-architecture-council-decisions-why-the-council-rejected-heavy-third-party-suites",
@@ -1602,7 +1602,7 @@
     "summary": "Is it really free? Yes. There is no paid tier, no trial, no ads, no sponsorship, and no donation button. The project takes in no revenue. Shipped tools run in y...",
     "url": "/guides/faq/#about-clearedstack-v3-1",
     "badge": "Section",
-    "content": "About ClearedStack v3.1 Common questions Is it really free? Yes. There is no paid tier, no trial, no ads, no sponsorship, and no donation button. The project takes in no revenue. Shipped tools run in your browser, and the entire 17-pod v3.1 platform (7 control-plane pods plus 10 deterministic workers) fits on a single 4 GiB k3s node. Who runs it? It is an independent personal project, built on personal time with personal equipment. It is not affiliated with, endorsed by, or sponsored by the Department of Defense or any other government agency. See the About page for the full statement. What are the live Command Portal and App Store? In v3.1, clearedstack.com pairs its contractor-first catalog ( /tools/ ) with live operational factory views under /guides/ . The Command Portal ( /guides/ command ) uses deterministic priority rules to float P0 errors, P1 stalled queues, and P2 pending decisions or edits to the top while collapsing quiet idle workers to one line. The App Store ( /tools/ apps ) displays CasaOS-style cards for every running app and worker with live version, health, and sanitized errors, plus owner-only 1-click Install / Upgrade / Pause / Rollback controls. See Live Command Portal and Software decides the UI. Why is there no login lock? ClearedStack v3.1 is an open public sandbox. Anyone can browse the Command Portal, inspect running workers, read sanitized error codes, and propose edits using the ✎ button without signing in. To prevent abuse without requiring accounts or CAPTCHAs, public edits pass through a 5-layer shield: a ~1-second browser Proof-of-Work puzzle, a hidden honeypot field, a daily-salted IP hash rate limit, strict ownership map.json schema validation (4 KB max, scripts stripped), and a human approval gate in cs-04-decide . See Open public sandbox and Anonymous edits and anti-spam. What license does ClearedStack use? Every repository in ClearedStack v3.1— clearedstack.com , cs-01 through cs-10 , cs-git , cs-registry , cs-runner , and cs-store —is released under the MIT License . All Go and web code is written clean-room from scratch; while inspired by ideas from Forgejo, Argo CD, and CasaOS, zero upstream code is copied. See MIT clean-room architecture. Does the name mean I am “cleared” for something? No. The name is only a name. ClearedStack does not grant, verify, or imply a security clearance, a facility clearance, an authorization to operate, or a certification such as CMMC or FedRAMP."
+    "content": "About ClearedStack v3.1 Common questions Is it really free? Yes. There is no paid tier, no trial, no ads, no sponsorship, and no donation button. The project takes in no revenue. Shipped tools run in your browser, and the entire 17-pod v3.1 platform (7 control-plane pods plus 10 deterministic workers) fits on a single 4 GiB k3s node. Who runs it? It is an independent personal project, built on personal time with personal equipment. It is not affiliated with, endorsed by, or sponsored by the Department of Defense or any other government agency. See the About page for the full statement. What are the live Command Portal and App Store? In v3.1, clearedstack.com pairs its contractor-first catalog ( /tools/ ) with live operational factory views under /guides/ . The Command Portal ( /guides/live-command-portal/ ) uses deterministic priority rules to float P0 errors, P1 stalled queues, and P2 pending decisions or edits to the top while collapsing quiet idle workers to one line. The App Store ( /tools/ apps ) displays CasaOS-style cards for every running app and worker with live version, health, and sanitized errors, plus owner-only 1-click Install / Upgrade / Pause / Rollback controls. See Live Command Portal and Software decides the UI. Why is there no login lock? ClearedStack v3.1 is an open public sandbox. Anyone can browse the Command Portal, inspect running workers, read sanitized error codes, and propose edits using the ✎ button without signing in. To prevent abuse without requiring accounts or CAPTCHAs, public edits pass through a 5-layer shield: a ~1-second browser Proof-of-Work puzzle, a hidden honeypot field, a daily-salted IP hash rate limit, strict ownership map.json schema validation (4 KB max, scripts stripped), and a human approval gate in cs-04-decide . See Open public sandbox and Anonymous edits and anti-spam. What license does ClearedStack use? Every repository in ClearedStack v3.1— clearedstack.com , cs-01 through cs-10 , cs-git , cs-registry , cs-runner , and cs-store —is released under the MIT License . All Go and web code is written clean-room from scratch; while inspired by ideas from Forgejo, Argo CD, and CasaOS, zero upstream code is copied. See MIT clean-room architecture. Does the name mean I am “cleared” for something? No. The name is only a name. ClearedStack does not grant, verify, or imply a security clearance, a facility clearance, an authorization to operate, or a certification such as CMMC or FedRAMP."
   },
   {
     "id": "section-faq-10-deterministic-workers-and-zero-ai-at-runtime",
@@ -1652,7 +1652,7 @@
     "summary": "What happens when a worker turns red or an app fails? cs-store watches Pod, Deployment, and Event health and surfaces sanitized error codes (such as E TIMEOUT ,...",
     "url": "/guides/faq/#when-something-does-not-work",
     "badge": "Section",
-    "content": "When something does not work Common questions What happens when a worker turns red or an app fails? cs-store watches Pod, Deployment, and Event health and surfaces sanitized error codes (such as E TIMEOUT , E PARSE , or E NEEDS SUBTOOL ) directly on /guides/ command and /tools/ apps . Visitors can inspect the item trail, view [Why?] drawers on /guides/ pipeline , or propose a fix using ✎ . See When a worker is red. Where else can I report a bug or request a tool? Propose an edit directly on the Portal with ✎ , email contact@clearedstack.com, or open an issue on the GitHub mirror. Never include real contract data or CUI in any report or public proposal."
+    "content": "When something does not work Common questions What happens when a worker turns red or an app fails? cs-store watches Pod, Deployment, and Event health and surfaces sanitized error codes (such as E TIMEOUT , E PARSE , or E NEEDS SUBTOOL ) directly on /guides/live-command-portal/ and /tools/ apps . Visitors can inspect the item trail, view [Why?] drawers on /guides/workflow-state-machine/ , or propose a fix using ✎ . See When a worker is red. Where else can I report a bug or request a tool? Propose an edit directly on the Portal with ✎ , email contact@clearedstack.com, or open an issue on the GitHub mirror. Never include real contract data or CUI in any report or public proposal."
   },
   {
     "id": "guide-find-candidates",
@@ -1682,7 +1682,7 @@
     "summary": "Once a URL is normalized, cs-01-intake computes its SHA-256 cryptographic hash and checks it against hub-queue-api and Postgres ( core. tables) in the clearedst...",
     "url": "/guides/find-candidates/#sha-256-deduplication-and-pa-xxxx-assignment",
     "badge": "Section",
-    "content": "SHA-256 deduplication and PA-XXXX assignment How candidates are found Once a URL is normalized, cs-01-intake computes its SHA-256 cryptographic hash and checks it against hub-queue-api and Postgres ( core. tables) in the clearedstack control-plane namespace: 1. Duplicate hash found: If the SHA-256 digest already matches an existing record or known alias, cs-01-intake does not create a duplicate. It logs the sighting against the existing PA-XXXX entry (or links it as a mirror) and stops. 2. New canonical URL: If the hash is new, cs-01-intake mints a persistent PA-XXXX identifier (such as PA-0001 ), records the intake source, and queues the item for cs-02-observe via hub-queue-api . Every state change is immediately visible through read-only pub. Postgres views on the /guides/ pipeline page of clearedstack.com ."
+    "content": "SHA-256 deduplication and PA-XXXX assignment How candidates are found Once a URL is normalized, cs-01-intake computes its SHA-256 cryptographic hash and checks it against hub-queue-api and Postgres ( core. tables) in the clearedstack control-plane namespace: 1. Duplicate hash found: If the SHA-256 digest already matches an existing record or known alias, cs-01-intake does not create a duplicate. It logs the sighting against the existing PA-XXXX entry (or links it as a mirror) and stops. 2. New canonical URL: If the hash is new, cs-01-intake mints a persistent PA-XXXX identifier (such as PA-0001 ), records the intake source, and queues the item for cs-02-observe via hub-queue-api . Every state change is immediately visible through read-only pub. Postgres views on the /guides/workflow-state-machine/ page of clearedstack.com ."
   },
   {
     "id": "section-find-candidates-four-deterministic-sub-tools",
@@ -1702,7 +1702,7 @@
     "summary": "ClearedStack has no login lock. Any visitor can submit a candidate tool or propose an intake edit ( ✎ ) on clearedstack.com without creating an account or signi...",
     "url": "/guides/find-candidates/#anonymous-no-login-submissions",
     "badge": "Section",
-    "content": "Anonymous no-login submissions How candidates are found ClearedStack has no login lock. Any visitor can submit a candidate tool or propose an intake edit ( ✎ ) on clearedstack.com without creating an account or signing in. To keep the queue clean without CAPTCHAs or user accounts, site-form and Portal ✎ submissions pass through a five-layer deterministic shield: 1. Browser Proof-of-Work: A roughly one-second SHA-256 puzzle solved in the visitor's browser on submit stops automated bot floods. 2. Honeypot field: A hidden form field silently discards automated scraper submissions. 3. Daily-salted IP hash rate limit: Limits repeated submissions per hashed IP without ever storing raw visitor IP addresses. 4. Strict schema validation: Checks the submission against ownership map.json , caps payload size at 4 KB, and strips all HTML and scripts. 5. Owner gate ( cs-04-decide ): Community proposals sit in core.edit proposal ( pending approval ) and never touch cs-git or the cluster until the owner clicks Approve in /guides/ decide . Visitors see their submission's progress live on the Portal as a status pill: Proposed -> Approved -> Building -> Live ."
+    "content": "Anonymous no-login submissions How candidates are found ClearedStack has no login lock. Any visitor can submit a candidate tool or propose an intake edit ( ✎ ) on clearedstack.com without creating an account or signing in. To keep the queue clean without CAPTCHAs or user accounts, site-form and Portal ✎ submissions pass through a five-layer deterministic shield: 1. Browser Proof-of-Work: A roughly one-second SHA-256 puzzle solved in the visitor's browser on submit stops automated bot floods. 2. Honeypot field: A hidden form field silently discards automated scraper submissions. 3. Daily-salted IP hash rate limit: Limits repeated submissions per hashed IP without ever storing raw visitor IP addresses. 4. Strict schema validation: Checks the submission against ownership map.json , caps payload size at 4 KB, and strips all HTML and scripts. 5. Owner gate ( cs-04-decide ): Community proposals sit in core.edit proposal ( pending approval ) and never touch cs-git or the cluster until the owner clicks Approve in /guides/ownership-map-and-edit-loop/ . Visitors see their submission's progress live on the Portal as a status pill: Proposed -> Approved -> Building -> Live ."
   },
   {
     "id": "section-find-candidates-what-intake-never-does",
@@ -1882,7 +1882,7 @@
     "summary": "ClearedStack ( clearedstack.com ) keeps top navigation focused on Tools , Guides , About , and GitHub , while housing every live factory and evaluation view und...",
     "url": "/guides/getting-started/#navigating-the-open-portal",
     "badge": "Section",
-    "content": "Navigating the open Portal Getting started ClearedStack ( clearedstack.com ) keeps top navigation focused on Tools , Guides , About , and GitHub , while housing every live factory and evaluation view under Guides . Every route is readable without signing in: | Route | Name | What you see | | --- | --- | --- | | / | Home | Federal contract overview ( Sections B, C, F, H, M ), $0.00 CLIN schedule, catalog preview, and 10-worker factory summary. | | /tools/ | Tools & Apps | Unified catalog of 18 browser contracting utilities ( CLIN 0001 – 0005 ) plus all 17 MIT platform microservices and workers ( CLIN 0006 , apps ). | | /guides/ | Guides Library | Field manuals ( L.1 – L.6 ), reading tracks, and entry cards to all live factory views. | | /guides/ command | Command | Priority dashboard that floats P0 errors, P1 stalled queues, and P2 pending decisions or edits to the top. | | /tools/ apps | Apps | Cluster App Store view of every control-plane service and worker ( cs-01 through cs-10 ), showing version, live health, and Owner Mode rollback preview. | | /guides/ pipeline | Pipeline | Real-time view of the 10-worker deterministic pipeline ( cs-01-intake through cs-10-notify ), queue depths, item trails, and [? Why] drawers. | | /guides/ decide | Decide | Publicly visible inbox for cs-04-decide item determinations and community ✎ Edit proposals. | | /guides/ how-we-decide | How We Decide | Section M evaluation factors, 5 binary knockout gates, 100-point rubric, and 14-state lifecycle. |"
+    "content": "Navigating the open Portal Getting started ClearedStack ( clearedstack.com ) keeps top navigation focused on Tools , Guides , About , and GitHub , while housing every live factory and evaluation view under Guides . Every route is readable without signing in: | Route | Name | What you see | | --- | --- | --- | | / | Home | Federal contract overview ( Sections B, C, F, H, M ), $0.00 CLIN schedule, catalog preview, and 10-worker factory summary. | | /tools/ | Tools & Apps | Unified catalog of 18 browser contracting utilities ( CLIN 0001 – 0005 ) plus all 17 MIT platform microservices and workers ( CLIN 0006 , apps ). | | /guides/ | Guides Library | Field manuals ( L.1 – L.6 ), reading tracks, and entry cards to all live factory views. | | /guides/live-command-portal/ | Command | Priority dashboard that floats P0 errors, P1 stalled queues, and P2 pending decisions or edits to the top. | | /tools/ apps | Apps | Cluster App Store view of every control-plane service and worker ( cs-01 through cs-10 ), showing version, live health, and Owner Mode rollback preview. | | /guides/workflow-state-machine/ | Pipeline | Real-time view of the 10-worker deterministic pipeline ( cs-01-intake through cs-10-notify ), queue depths, item trails, and [? Why] drawers. | | /guides/ownership-map-and-edit-loop/ | Decide | Publicly visible inbox for cs-04-decide item determinations and community ✎ Edit proposals. | | /guides/score-and-decide/ | How We Decide | Section M evaluation factors, 5 binary knockout gates, 100-point rubric, and 14-state lifecycle. |"
   },
   {
     "id": "section-getting-started-snapshot-mode-vs-live-cluster",
@@ -1902,7 +1902,7 @@
     "summary": "ClearedStack separates cluster-private internals from public operational transparency . Only the Portal ( clearedstack-web ) faces the internet, and it queries ...",
     "url": "/guides/getting-started/#inspecting-worker-health-without-an-account",
     "badge": "Section",
-    "content": "Inspecting worker health without an account Getting started ClearedStack separates cluster-private internals from public operational transparency . Only the Portal ( clearedstack-web ) faces the internet, and it queries read-only pub. database views ( pub ro role). When you open /guides/ command , /tools/ apps , or /guides/ pipeline without signing in, you can inspect: - Worker status and versions: Live health for all 10 deterministic workers ( cs-01-intake through cs-10-notify ) and control-plane services. - Queue depths and item trails: Which items are queued, verified, parked, or waiting in needs subtool for a new deterministic sub-tool. - Sanitized error codes: Structured failure codes such as E TIMEOUT , E PARSE , or E NEEDS SUBTOOL so anyone can see why an item paused. At the same time, internal cluster IPs, node names, pod hostnames, .svc.cluster.local DNS names, credentials, and signing keys are stripped by cs-store and never exposed."
+    "content": "Inspecting worker health without an account Getting started ClearedStack separates cluster-private internals from public operational transparency . Only the Portal ( clearedstack-web ) faces the internet, and it queries read-only pub. database views ( pub ro role). When you open /guides/live-command-portal/ , /tools/ apps , or /guides/workflow-state-machine/ without signing in, you can inspect: - Worker status and versions: Live health for all 10 deterministic workers ( cs-01-intake through cs-10-notify ) and control-plane services. - Queue depths and item trails: Which items are queued, verified, parked, or waiting in needs subtool for a new deterministic sub-tool. - Sanitized error codes: Structured failure codes such as E TIMEOUT , E PARSE , or E NEEDS SUBTOOL so anyone can see why an item paused. At the same time, internal cluster IPs, node names, pod hostnames, .svc.cluster.local DNS names, credentials, and signing keys are stripped by cs-store and never exposed."
   },
   {
     "id": "section-getting-started-proposing-edits-without-an-account",
@@ -1912,7 +1912,7 @@
     "summary": "Anyone can suggest a fix, report a broken extractor, or propose a catalog update directly from the Portal—no GitHub account or site login required. To keep the ...",
     "url": "/guides/getting-started/#proposing-edits-without-an-account",
     "badge": "Section",
-    "content": "Proposing edits without an account Getting started Anyone can suggest a fix, report a broken extractor, or propose a catalog update directly from the Portal—no GitHub account or site login required. To keep the open sandbox safe without CAPTCHAs or logins, every ✎ submission passes through a five-layer deterministic shield: 1. Browser Proof-of-Work: Your browser solves a ~1-second SHA-256 puzzle on submit to stop automated spam. 2. Honeypot field: A hidden form field silently discards automated scraper submissions. 3. Daily-salted IP hash rate limit: Caps submission volume per hashed IP without ever storing raw IP addresses. 4. Strict schema validation: Checks the target element against ownership map.json , enforces the edit class ( DATA , CONFIG , or ISSUE ) and a 4 KB size limit, and strips all HTML or scripts. 5. Human approval gate: Proposals sit in pending approval inside /guides/ decide and never touch cs-git or the cluster until the owner clicks Approve . Once submitted, your ✎ button turns into a live status pill so you can track your proposal from Proposed to Approved , Building , and Live ."
+    "content": "Proposing edits without an account Getting started Anyone can suggest a fix, report a broken extractor, or propose a catalog update directly from the Portal—no GitHub account or site login required. To keep the open sandbox safe without CAPTCHAs or logins, every ✎ submission passes through a five-layer deterministic shield: 1. Browser Proof-of-Work: Your browser solves a ~1-second SHA-256 puzzle on submit to stop automated spam. 2. Honeypot field: A hidden form field silently discards automated scraper submissions. 3. Daily-salted IP hash rate limit: Caps submission volume per hashed IP without ever storing raw IP addresses. 4. Strict schema validation: Checks the target element against ownership map.json , enforces the edit class ( DATA , CONFIG , or ISSUE ) and a 4 KB size limit, and strips all HTML or scripts. 5. Human approval gate: Proposals sit in pending approval inside /guides/ownership-map-and-edit-loop/ and never touch cs-git or the cluster until the owner clicks Approve . Once submitted, your ✎ button turns into a live status pill so you can track your proposal from Proposed to Approved , Building , and Live ."
   },
   {
     "id": "section-getting-started-what-clearedstack-is-not",
@@ -2327,52 +2327,52 @@
   {
     "id": "guide-live-command-portal",
     "type": "guide",
-    "title": "The Live Command Portal & App Store",
+    "title": "The Live Command Portal & Platform Tools",
     "subtitle": "Guide · Section L.1",
-    "summary": "How clearedstack.com pairs a clean contract catalog on /tools/ with live cluster views under /guides/ (Command, Apps, Pipeline, Decide) powered by deterministic priority rules.",
+    "summary": "How clearedstack.com pairs a unified catalog on /tools/ with live operational views, deterministic P0–P2 priority rules, and sanitized cluster status.",
     "url": "/guides/live-command-portal/",
     "badge": "L.1",
-    "content": "The Live Command Portal & App Store How clearedstack.com pairs a clean contract catalog on /tools/ with live cluster views under /guides/ (Command, Apps, Pipeline, Decide) powered by deterministic priority rules. start L.1  Most documentation sites ask you to read thousands of words of prose before you ever see software do anything. Folks are done reading. ClearedStack v3.1 pairs the contractor-first catalog at /tools/ with a live operational window inside /guides/ —opening directly into the cluster running the software factory. Instead of only reading about how the system is supposed to work, you can open /guides/ command , /tools/ apps , /guides/ pipeline , or /guides/ decide and inspect live state: which apps are healthy, which workers are busy, what is waiting in a queue, and what paused. From static essays t"
+    "content": "The Live Command Portal & Platform Tools How clearedstack.com pairs a unified catalog on /tools/ with live operational views, deterministic P0–P2 priority rules, and sanitized cluster status. start L.1  Most documentation sites ask you to read thousands of words of prose before you ever see software do anything. ClearedStack v3.1 pairs the contractor-first catalog at /tools/ with live operational status powered by deterministic priority rules. Attention Feed (P0–P2) A live dashboard is useless if healthy background noise buries a real outage. Deterministic priority rules automatically sort what appears at the top of the screen: normal -> backfill.\", \"Paused items replay automatically when cs-store deploys the updated worker digest.\", ]} /> How software rules promote what matters | Priority | "
   },
   {
-    "id": "section-live-command-portal-from-static-essays-to-live-factory-views-under-guides",
+    "id": "section-live-command-portal-attention-feed-p0-p2",
     "type": "section",
-    "title": "From static essays to live factory views under Guides",
-    "subtitle": "The Live Command Portal & App Store",
-    "summary": "Earlier versions of the site explained the architecture solely through long-form guides. In v3.1, all operational views live side-by-side with the Section L man...",
-    "url": "/guides/live-command-portal/#from-static-essays-to-live-factory-views-under-guides",
+    "title": "Attention Feed (P0–P2)",
+    "subtitle": "The Live Command Portal & Platform Tools",
+    "summary": "A live dashboard is useless if healthy background noise buries a real outage. Deterministic priority rules automatically sort what appears at the top of the scr...",
+    "url": "/guides/live-command-portal/#attention-feed-p0-p2",
     "badge": "Section",
-    "content": "From static essays to live factory views under Guides The Live Command Portal & App Store Earlier versions of the site explained the architecture solely through long-form guides. In v3.1, all operational views live side-by-side with the Section L manual under /guides/ , powered by hub-queue-api and cs-store : - Live status over static claims: Every worker and app reports real health, version, and queue depth straight from the cluster. - Short explanations in context: Instead of forcing you out of context, each live view uses compact [? Why] drawers right next to rules and metrics so you can inspect the rationale in seconds. - 100% deterministic behavior: There is no AI running in the portal or in any of the 10 workers ( cs-01 through cs-10 ). Every status badge, queue transition, and priority ranking follows fixed, predictable rules."
+    "content": "Attention Feed (P0–P2) The Live Command Portal & Platform Tools A live dashboard is useless if healthy background noise buries a real outage. Deterministic priority rules automatically sort what appears at the top of the screen: normal -> backfill.\", \"Paused items replay automatically when cs-store deploys the updated worker digest.\", ]} />"
   },
   {
     "id": "section-live-command-portal-how-software-rules-promote-what-matters",
     "type": "section",
     "title": "How software rules promote what matters",
-    "subtitle": "The Live Command Portal & App Store",
-    "summary": "A live dashboard is useless if healthy background noise buries a real outage. On Command, deterministic priority rules automatically sort what appears at the to...",
+    "subtitle": "The Live Command Portal & Platform Tools",
+    "summary": "| Priority | What triggers it | How the portal displays it | | --- | --- | --- | | P0 (Critical) | An app or worker is down, crashing, or reporting an active er...",
     "url": "/guides/live-command-portal/#how-software-rules-promote-what-matters",
     "badge": "Section",
-    "content": "How software rules promote what matters The Live Command Portal & App Store A live dashboard is useless if healthy background noise buries a real outage. On Command, deterministic priority rules automatically sort what appears at the top of the screen: | Priority | What triggers it | How the portal displays it | | --- | --- | --- | | P0 (Critical) | An app or worker is down, crashing, or reporting an active error code | Promoted to the top in crimson ( AttentionCard ) with the sanitized error code and affected component | | P1 (Stalled) | A worker queue is backed up, a job timed out, or an item is paused in needs subtool | Surfaced alongside P0 items in amber so bottlenecks are obvious immediately | | P2 (Pending) | Items waiting in cs-04-decide or public edit proposals waiting for owner review | Listed as actionable pending work ready for a decision in /guides/ decide | | Quiet / Idle | Healthy workers with empty queues and no errors | Kept calm and muted so idle infrastructure stays out of your way | Because these rules are pure code rather than guesswork, the same cluster state always produces the exact same view."
+    "content": "How software rules promote what matters The Live Command Portal & Platform Tools | Priority | What triggers it | How the portal displays it | | --- | --- | --- | | P0 (Critical) | An app or worker is down, crashing, or reporting an active error code | Promoted to the top in crimson ( AttentionCard ) with the sanitized error code and affected component | | P1 (Stalled) | A worker queue is backed up, a job timed out, or an item is paused in needs subtool | Surfaced alongside P0 items in amber so bottlenecks are obvious immediately | | P2 (Pending) | Items waiting in cs-04-decide or public edit proposals waiting for owner review | Listed as actionable pending work ready for a decision | | Quiet / Idle | Healthy workers with empty queues and no errors | Kept calm and muted so idle infrastructure stays out of your way | Because these rules are pure code rather than guesswork, the same cluster state always produces the exact same view."
   },
   {
-    "id": "section-live-command-portal-how-the-views-fit-together",
+    "id": "section-live-command-portal-how-the-specifications-fit-together",
     "type": "section",
-    "title": "How the views fit together",
-    "subtitle": "The Live Command Portal & App Store",
-    "summary": "Top navigation stays uncluttered ( Tools , Guides , About , GitHub ), while every operational view has a dedicated route under /guides/ and every app is also li...",
-    "url": "/guides/live-command-portal/#how-the-views-fit-together",
+    "title": "How the specifications fit together",
+    "subtitle": "The Live Command Portal & Platform Tools",
+    "summary": "Top navigation stays uncluttered ( Home , Tools , Guides , About , GitHub ), while every operational and evaluation spec lives under /guides/ : | Route | Spec /...",
+    "url": "/guides/live-command-portal/#how-the-specifications-fit-together",
     "badge": "Section",
-    "content": "How the views fit together The Live Command Portal & App Store Top navigation stays uncluttered ( Tools , Guides , About , GitHub ), while every operational view has a dedicated route under /guides/ and every app is also listed under /tools/ apps : | Route | View Name | What it shows | Who uses it | | --- | --- | --- | --- | | /tools/ | Tools & Apps | All 18 browser contracting utilities ( CLIN 0001 – 0005 ) plus all 17 platform/factory apps ( CLIN 0006 , apps ) | Contractors, engineers, and self-hosters | | /guides/ command | Command | Priority-sorted live status ( P0 errors, P1 stalls, P2 pending work), 10-worker pulse, and 7 control-plane pods | Anyone checking cluster health at a glance | | /tools/ apps | Apps | Cluster App Store cards for every running app and worker, showing version, live health, and Owner Mode lifecycle controls | Public visitors and operators | | /guides/ pipeline | Pipeline | Real-time flow across all 10 deterministic workers ( cs-01-intake through cs-10-notify ), queue depths, item trails, and [? Why] drawers | Visitors and contributors tracing PA-XXXX candidates | | /guides/ decide | Decide | The decision inbox for cs-04-decide , holding candidate determinations (Build, Link, Merge, Park, Reject) and pending ✎ Edit proposals | Anyone reviewing queued decisions and community edits | | /guides/ how-we-decide | How We Decide | Section M evaluation factors, 5 binary knockout gates, 100-point rubric, and 14-state lifecycle | Auditors, tool authors, and contributors |"
+    "content": "How the specifications fit together The Live Command Portal & Platform Tools Top navigation stays uncluttered ( Home , Tools , Guides , About , GitHub ), while every operational and evaluation spec lives under /guides/ : | Route | Spec / View | What it covers | | --- | --- | --- | | /tools/ | Tools ( CLIN 0001–0006 ) | All 18 browser contracting utilities plus all 17 platform and factory tools ( apps ) | | /guides/live-command-portal/ | Command Portal | Priority-sorted P0 – P2 attention rules, sanitized errors, and control-plane pods | | /guides/workflow-state-machine/ | 10-Worker Pipeline | Real-time flow across cs-01-intake through cs-10-notify , PA-XXXX trails, and 14-state lifecycle | | /guides/ownership-map-and-edit-loop/ | Decide & Public Edits | cs-04-decide determinations and anonymous ✎ Edit proposals routed via ownership map.json | | /guides/score-and-decide/ | How We Decide (Section M) | 5 binary knockout gates, 100-point rubric, 5 tie-breakers, and accountability lanes |"
   },
   {
     "id": "section-live-command-portal-one-control-plane-one-lifecycle",
     "type": "section",
     "title": "One control plane, one lifecycle",
-    "subtitle": "The Live Command Portal & App Store",
+    "subtitle": "The Live Command Portal & Platform Tools",
     "summary": "Behind the scenes, the portal connects two halves of the platform without mixing them up: 1. Software delivery ( /tools/ apps ): cs-git stores the code, cs-runn...",
     "url": "/guides/live-command-portal/#one-control-plane-one-lifecycle",
     "badge": "Section",
-    "content": "One control plane, one lifecycle The Live Command Portal & App Store Behind the scenes, the portal connects two halves of the platform without mixing them up: 1. Software delivery ( /tools/ apps ): cs-git stores the code, cs-runner builds container images without Docker (using ko for Go and rootless BuildKit for web apps) and pushes them to cs-registry , and cs-store applies those apps to Kubernetes and streams sanitized health back to the App Store. 2. Data and tool production ( /guides/ pipeline , /guides/ decide , /tools/ ): The 10 deterministic workers pull tasks from hub-queue-api , process public sources, pause for human judgment at /guides/ decide , and publish verified browser tools to /tools/ . Every piece you see in the portal is backed by open-source code mirrored to GitHub, so what you see running on clearedstack.com is the exact system you can inspect or host yourself."
+    "content": "One control plane, one lifecycle The Live Command Portal & Platform Tools Behind the scenes, the portal connects two halves of the platform without mixing them up: 1. Software delivery ( /tools/ apps ): cs-git stores the code, cs-runner builds container images without Docker (using ko for Go and rootless BuildKit for web apps) and pushes them to cs-registry , and cs-store applies those apps to Kubernetes. 2. Data and tool production ( /guides/ and /tools/ ): The 10 deterministic workers pull tasks from hub-queue-api , process public sources, pause for human judgment at cs-04-decide , and publish verified browser tools to /tools/ . Every piece you see in the portal is backed by open-source code mirrored to GitHub, so what you see running on clearedstack.com is the exact system you can inspect or host yourself."
   },
   {
     "id": "guide-mit-clean-room-architecture",
@@ -2442,7 +2442,7 @@
     "summary": "Top navigation shows only Home ( / ), Tools ( /tools/ ), Guides ( /guides/ ), About ( /about/ ), and GitHub alongside instant site search. Every live factory an...",
     "url": "/guides/navigating-this-site/#the-main-areas",
     "badge": "Section",
-    "content": "The main areas How to navigate this site Top navigation shows only Home ( / ), Tools ( /tools/ ), Guides ( /guides/ ), About ( /about/ ), and GitHub alongside instant site search. Every live factory and governance view is integrated directly into Tools and Guides with no login lock , and every editable element carries a ✎ Edit button (5-layer anti-spam shield) and contextual [? Why] drawers: 1. Home ( / ) The clean contractor-first front door ( Sections B, C, F, H, M ), presenting the $0.00 CLIN 0001 – 0005 schedule, the 18 browser utilities, the four permanent ground rules, the three-phase delivery roadmap, and how tools are evaluated. 2. Tools & Cluster App Store ( /tools/ ) The unified catalog of everything ClearedStack builds and runs: - Browser Contracting Utilities ( CLIN 0001 – 0005 ): 18 single-purpose client-side tools ( pricing , proposal , cyber , market , devsecops ) with instant search and provenance links. - Cluster App Store ( CLIN 0006 , apps ): Integrated App Store view powered by cs-store (Server-Side Apply) covering all 7 clean-room Go/Postgres control-plane services in clearedstack and all 10 deterministic worker repositories ( cs-01-intake through cs-10-notify ) in cs-workers , with Owner Mode preview for 1-click Upgrade, Pause, and 5-digest Rollback. 3. Guides & Integrated Factory Workspace ( /guides/ ) The documentation hub ( L.1 – L.6 ) integrated with live operational and evaluation tabs inside /guides/ : - Field Manual ( L.1 – L.6 ): All 49 plain-language guides, reading routes, search filter, and short answers. - Command ( /guides/ command ): Priority dashboard driven by deterministic P0 – P2 attention rules ( PulseStrip , AttentionCard , 10-worker strip, and control-plane summary). - Pipeline ( /guides/ pipeline ): Real-time view of cs-01-intake through cs-10-notify , PA-XXXX trails, /var/spool/cs local spools, and tools// deterministic sub-tools. - Decide ( /guides/ decide ): Publicly readable queue for cs-04-decide candidate determinations and core.edit proposal anonymous ✎ Edit submissions. - How We Decide ( /guides/ how-we-decide ): Section M evaluation factors, 5 binary knockout gates, 100-point rubric, 14-state lifecycle, and clean-room rules. 4. About ( /about/ ) Mission (workplace autonomy for builders over corporate overhead), 11-repo + 2-namespace organization, authoring-only AI disclosure, ground rules, and full legal disclaimer."
+    "content": "The main areas How to navigate this site Top navigation shows only Home ( / ), Tools ( /tools/ ), Guides ( /guides/ ), About ( /about/ ), and GitHub alongside instant site search. Every live factory and governance view is integrated directly into Tools and Guides with no login lock , and every editable element carries a ✎ Edit button (5-layer anti-spam shield) and contextual [? Why] drawers: 1. Home ( / ) The clean contractor-first front door ( Sections B, C, F, H, M ), presenting the $0.00 CLIN 0001 – 0005 schedule, the 18 browser utilities, the four permanent ground rules, the three-phase delivery roadmap, and how tools are evaluated. 2. Tools & Cluster App Store ( /tools/ ) The unified catalog of everything ClearedStack builds and runs: - Browser Contracting Utilities ( CLIN 0001 – 0005 ): 18 single-purpose client-side tools ( pricing , proposal , cyber , market , devsecops ) with instant search and provenance links. - Cluster App Store ( CLIN 0006 , apps ): Integrated App Store view powered by cs-store (Server-Side Apply) covering all 7 clean-room Go/Postgres control-plane services in clearedstack and all 10 deterministic worker repositories ( cs-01-intake through cs-10-notify ) in cs-workers , with Owner Mode preview for 1-click Upgrade, Pause, and 5-digest Rollback. 3. Guides & Integrated Factory Workspace ( /guides/ ) The documentation hub ( L.1 – L.6 ) integrated with live operational and evaluation tabs inside /guides/ : - Field Manual ( L.1 – L.6 ): All 49 plain-language guides, reading routes, search filter, and short answers. - Command ( /guides/live-command-portal/ ): Priority dashboard driven by deterministic P0 – P2 attention rules ( PulseStrip , AttentionCard , 10-worker strip, and control-plane summary). - Pipeline ( /guides/workflow-state-machine/ ): Real-time view of cs-01-intake through cs-10-notify , PA-XXXX trails, /var/spool/cs local spools, and tools// deterministic sub-tools. - Decide ( /guides/ownership-map-and-edit-loop/ ): Publicly readable queue for cs-04-decide candidate determinations and core.edit proposal anonymous ✎ Edit submissions. - How We Decide ( /guides/score-and-decide/ ): Section M evaluation factors, 5 binary knockout gates, 100-point rubric, 14-state lifecycle, and clean-room rules. 4. About ( /about/ ) Mission (workplace autonomy for builders over corporate overhead), 11-repo + 2-namespace organization, authoring-only AI disclosure, ground rules, and full legal disclaimer."
   },
   {
     "id": "section-navigating-this-site-finding-tools-and-apps-in-the-catalog",
@@ -2622,7 +2622,7 @@
     "summary": "When cs-02-observe encounters a page layout, table structure, or document format that none of its registered sub-tools recognize, it never guesses . Instead, it...",
     "url": "/guides/observe-a-tool/#failing-closed-into-needssubtool",
     "badge": "Section",
-    "content": "Failing closed into needssubtool How cs-02-observe inspects a tool When cs-02-observe encounters a page layout, table structure, or document format that none of its registered sub-tools recognize, it never guesses . Instead, it fails closed: 1. The worker pauses that item with the sanitized status needs subtool ( E NEEDS SUBTOOL ) and continues processing the rest of the queue normally. 2. cs-10-notify opens a task in the cs-02-observe repository inside cs-git (mirrored publicly to GitHub) describing the unmatched pattern. 3. The paused item appears on the public /guides/ pipeline view so anyone can see why it stopped. 4. Once a contributor or maintainer adds a new deterministic sub-tool under tools// along with a golden fixture, cs-runner tests and builds the updated worker image with ko (no Docker), cs-store deploys it, and hub-queue-api automatically replays every item paused in needs subtool for that pattern. Every new edge case becomes permanent, tested, deterministic code—and every solved pattern automatically unblocks past items without human re-entry."
+    "content": "Failing closed into needssubtool How cs-02-observe inspects a tool When cs-02-observe encounters a page layout, table structure, or document format that none of its registered sub-tools recognize, it never guesses . Instead, it fails closed: 1. The worker pauses that item with the sanitized status needs subtool ( E NEEDS SUBTOOL ) and continues processing the rest of the queue normally. 2. cs-10-notify opens a task in the cs-02-observe repository inside cs-git (mirrored publicly to GitHub) describing the unmatched pattern. 3. The paused item appears on the public /guides/workflow-state-machine/ view so anyone can see why it stopped. 4. Once a contributor or maintainer adds a new deterministic sub-tool under tools// along with a golden fixture, cs-runner tests and builds the updated worker image with ko (no Docker), cs-store deploys it, and hub-queue-api automatically replays every item paused in needs subtool for that pattern. Every new edge case becomes permanent, tested, deterministic code—and every solved pattern automatically unblocks past items without human re-entry."
   },
   {
     "id": "guide-one-command-quickstart",
@@ -2682,7 +2682,7 @@
     "summary": "Most platforms hide their errors, queues, and internal workflows behind login screens or status pages that only say \"All systems operational.\" ClearedStack does...",
     "url": "/guides/open-public-sandbox/#why-there-is-no-lock-on-the-site",
     "badge": "Section",
-    "content": "Why there is no lock on the site No Lock On It: Open Public Sandbox Most platforms hide their errors, queues, and internal workflows behind login screens or status pages that only say \"All systems operational.\" ClearedStack does the opposite: - Zero accounts for visitors: You never need to sign in or hand over an email address to browse /tools/ apps , trace /guides/ pipeline , use /tools/ , or propose an edit using the ✎ Edit button. - MIT-licensed code: Every repository—from the portal ( clearedstack.com ) to cs-git , cs-registry , cs-runner , cs-store , and all 10 workers ( cs-01 through cs-10 )—is clean-room Go or web code under the MIT license, mirrored publicly on GitHub. - Visible failures: When a worker hits a snag, it does not silently swallow the problem. It logs a sanitized error code (such as E TIMEOUT , E PARSE , or E NEEDS SUBTOOL ) and surfaces it in the portal."
+    "content": "Why there is no lock on the site No Lock On It: Open Public Sandbox Most platforms hide their errors, queues, and internal workflows behind login screens or status pages that only say \"All systems operational.\" ClearedStack does the opposite: - Zero accounts for visitors: You never need to sign in or hand over an email address to browse /tools/ apps , trace /guides/workflow-state-machine/ , use /tools/ , or propose an edit using the ✎ Edit button. - MIT-licensed code: Every repository—from the portal ( clearedstack.com ) to cs-git , cs-registry , cs-runner , cs-store , and all 10 workers ( cs-01 through cs-10 )—is clean-room Go or web code under the MIT license, mirrored publicly on GitHub. - Visible failures: When a worker hits a snag, it does not silently swallow the problem. It logs a sanitized error code (such as E TIMEOUT , E PARSE , or E NEEDS SUBTOOL ) and surfaces it in the portal."
   },
   {
     "id": "section-open-public-sandbox-how-breaking-things-makes-the-platform-stronger",
@@ -2702,7 +2702,7 @@
     "summary": "Letting anyone propose a change without signing in would normally invite spam bots. ClearedStack stops abuse without forcing humans through logins or third-part...",
     "url": "/guides/open-public-sandbox/#anonymous-edits-with-a-5-layer-safety-shield",
     "badge": "Section",
-    "content": "Anonymous edits with a 5-layer safety shield No Lock On It: Open Public Sandbox Letting anyone propose a change without signing in would normally invite spam bots. ClearedStack stops abuse without forcing humans through logins or third-party CAPTCHAs by using five deterministic checks: 1. Browser Proof-of-Work: Submitting an edit runs a quick (~1 second) cryptographic puzzle in your browser, making bulk bot spam expensive. 2. Honeypot field: A hidden form field invisible to humans catches automated scrapers and silently drops their submissions. 3. Daily-salted IP hash rate limit: The server caps submissions per hashed IP using a salt that rotates daily, so raw visitor IP addresses are never stored. 4. Strict schema validation: Every proposal is checked against ownership map.json , limited to 4 KB, restricted to allowed edit classes ( DATA , CONFIG , or ISSUE ), and stripped of HTML or scripts. 5. Human review gate: Proposals sit in a pending queue and never touch cs-git or the cluster until reviewed and approved in /guides/ decide ( cs-04-decide ). While waiting, your edit button updates live in place so you can watch your contribution move from Proposed to Approved , Building , and Live ."
+    "content": "Anonymous edits with a 5-layer safety shield No Lock On It: Open Public Sandbox Letting anyone propose a change without signing in would normally invite spam bots. ClearedStack stops abuse without forcing humans through logins or third-party CAPTCHAs by using five deterministic checks: 1. Browser Proof-of-Work: Submitting an edit runs a quick (~1 second) cryptographic puzzle in your browser, making bulk bot spam expensive. 2. Honeypot field: A hidden form field invisible to humans catches automated scrapers and silently drops their submissions. 3. Daily-salted IP hash rate limit: The server caps submissions per hashed IP using a salt that rotates daily, so raw visitor IP addresses are never stored. 4. Strict schema validation: Every proposal is checked against ownership map.json , limited to 4 KB, restricted to allowed edit classes ( DATA , CONFIG , or ISSUE ), and stripped of HTML or scripts. 5. Human review gate: Proposals sit in a pending queue and never touch cs-git or the cluster until reviewed and approved in /guides/ownership-map-and-edit-loop/ ( cs-04-decide ). While waiting, your edit button updates live in place so you can watch your contribution move from Proposed to Approved , Building , and Live ."
   },
   {
     "id": "section-open-public-sandbox-how-isolation-and-rollbacks-protect-the-host",
@@ -2772,7 +2772,7 @@
     "summary": "How ownership_map.json maps every ✎ Edit button on the Portal to its owning repository, edit class (DATA, CONFIG, ISSUE), and live status pill.",
     "url": "/guides/ownership-map-and-edit-loop/",
     "badge": "L.4",
-    "content": "Ownership Map & the Edit-to-Repo Loop How ownership_map.json maps every ✎ Edit button on the Portal to its owning repository, edit class (DATA, CONFIG, ISSUE), and live status pill. contribute L.4  Every ✎ Edit button on clearedstack.com knows exactly which repository and file it belongs to. That routing is governed by a single public file in this repository: ownership map.json . Instead of sending generic feedback into a black hole, each editable element on Command, Apps, Pipeline, and Decide maps to an ownerRepo , an editClass , and a target filePath . The three edit classes | Edit class | What it changes | What happens after owner approval | | --- | --- | --- | | DATA | Catalog text, descriptions, or record metadata | Updates Postgres ( core. ), logs to the append-only ledger, and ref"
+    "content": "Ownership Map & the Edit-to-Repo Loop How ownership_map.json maps every ✎ Edit button on the Portal to its owning repository, edit class (DATA, CONFIG, ISSUE), and live status pill. contribute L.4  Every ✎ Edit button on clearedstack.com knows exactly which repository and file it belongs to. That routing is governed by a single public file in this repository: ownership map.json . Instead of sending generic feedback into a black hole, each editable element on Command, Tools, Pipeline, and How Ideas Are Scored and Decided maps to an ownerRepo , an editClass , and a target filePath . The three edit classes | Edit class | What it changes | What happens after owner approval | | --- | --- | --- | | DATA | Catalog text, descriptions, or record metadata | Updates Postgres ( core. ), logs to the "
   },
   {
     "id": "section-ownership-map-and-edit-loop-the-three-edit-classes",
@@ -2783,6 +2783,16 @@
     "url": "/guides/ownership-map-and-edit-loop/#the-three-edit-classes",
     "badge": "Section",
     "content": "The three edit classes Ownership Map & the Edit-to-Repo Loop | Edit class | What it changes | What happens after owner approval | | --- | --- | --- | | DATA | Catalog text, descriptions, or record metadata | Updates Postgres ( core. ), logs to the append-only ledger, and refreshes the Portal view. | | CONFIG | Worker manifest ( app.yaml ), rubric weights, or sub-tool settings | cs-10-notify commits a branch/PR in cs-git , cs-runner builds and tests without Docker, and cs-store rolls it out. | | ISSUE | Bug report, broken extractor, or needs subtool request | cs-10-notify computes a deterministic error fingerprint and opens or updates a deduplicated issue in cs-git (mirrored to GitHub). |"
+  },
+  {
+    "id": "section-ownership-map-and-edit-loop-decisions-public-edit-queue-cs-04-decide",
+    "type": "section",
+    "title": "Decisions & Public Edit Queue (cs-04-decide)",
+    "subtitle": "Ownership Map & the Edit-to-Repo Loop",
+    "summary": "There is no lock on this site. Every scored candidate waiting for determination and every anonymous ✎ Edit proposal from visitors appears transparently: Candida...",
+    "url": "/guides/ownership-map-and-edit-loop/#decisions-public-edit-queue-cs-04-decide",
+    "badge": "Section",
+    "content": "Decisions & Public Edit Queue (cs-04-decide) Ownership Map & the Edit-to-Repo Loop There is no lock on this site. Every scored candidate waiting for determination and every anonymous ✎ Edit proposal from visitors appears transparently: Candidate Decisions (cs-04-decide) Honest empty state: 0 scored candidates are waiting for a determination yet. Once cs-01-intake through cs-03-evaluate run, scored items appear here for Build, Link, Merge, Park, or Reject. Anonymous Edit Proposals (core.edit proposal) Try clicking ✎ Edit below to see how a public proposal routes to its owning repository via ownership map.json."
   },
   {
     "id": "section-ownership-map-and-edit-loop-how-the-live-status-pill-works",
@@ -2799,10 +2809,10 @@
     "type": "guide",
     "title": "The 10-Worker Prior Art Engine",
     "subtitle": "Guide · Section L.6",
-    "summary": "How the old ten-stage essay became ten live, 100% deterministic worker repositories coordinated by hub-queue-api and Postgres, feeding /guides/#pipeline, /guides/#decide, and /tools/.",
+    "summary": "How the old ten-stage essay became ten live, 100% deterministic worker repositories coordinated by hub-queue-api and Postgres, feeding /guides/workflow-state-machine/, /guides/ownership-map-and-edit-loop/, and /tools/.",
     "url": "/guides/prior-art-engine/",
     "badge": "L.6",
-    "content": "The 10-Worker Prior Art Engine How the old ten-stage essay became ten live, 100% deterministic worker repositories coordinated by hub-queue-api and Postgres, feeding /guides/#pipeline, /guides/#decide, and /tools/. project L.6  Earlier versions of this guide described a ten-stage pipeline as an unbuilt plan. In ClearedStack v3.1, that essay is now running software: ten separate, MIT-licensed Go repositories ( cs-01-intake through cs-10-notify ) that discover existing government-contracting tools, check them against public rules, build clean-room browser alternatives, and keep the live catalog up to date. Every worker in the engine is 100% deterministic —meaning there is zero AI at runtime, no language-model token cost, and no guesswork. Given the same input, each worker produces the exact same output on any cluster. "
+    "content": "The 10-Worker Prior Art Engine How the old ten-stage essay became ten live, 100% deterministic worker repositories coordinated by hub-queue-api and Postgres, feeding /guides/workflow-state-machine/, /guides/ownership-map-and-edit-loop/, and /tools/. project L.6  Earlier versions of this guide described a ten-stage pipeline as an unbuilt plan. In ClearedStack v3.1, that essay is now running software: ten separate, MIT-licensed Go repositories ( cs-01-intake through cs-10-notify ) that discover existing government-contracting tools, check them against public rules, build clean-room browser alternatives, and keep the live catalog up to date. Every worker in the engine is 100% deterministic —meaning there is zero AI at runtime, no language-model token cost, and no guesswork. Given the same input, each worker produces the exact same output on any cluster. "
   },
   {
     "id": "section-prior-art-engine-from-ten-stages-on-paper-to-ten-live-repositories",
@@ -2832,7 +2842,7 @@
     "summary": "The public Portal ( clearedstack-web ) reads sanitized pub. Postgres views and live Server-Sent Events (SSE) from hub-queue-api . There is no login lock: any vi...",
     "url": "/guides/prior-art-engine/#feeding-the-live-portal",
     "badge": "Section",
-    "content": "Feeding the live Portal The 10-Worker Prior Art Engine The public Portal ( clearedstack-web ) reads sanitized pub. Postgres views and live Server-Sent Events (SSE) from hub-queue-api . There is no login lock: any visitor can watch the engine run, inspect errors, or propose an edit ( ✎ ) that enters cs-04-decide for owner approval. | Portal Route | What the 10-worker engine feeds into it | | --- | --- | | /guides/ pipeline | Live queue depths, active worker health, item trails from PA-XXXX intake to catalog, and compact [Why?] rule drawers replacing long static essays. | | /guides/ decide | The cs-04-decide owner inbox for pending tool determinations and anonymous public edit proposals. | | /tools/ | The finished, verified client-side tools published by cs-08-catalog , plus all 17 platform and worker apps ( apps ). |"
+    "content": "Feeding the live Portal The 10-Worker Prior Art Engine The public Portal ( clearedstack-web ) reads sanitized pub. Postgres views and live Server-Sent Events (SSE) from hub-queue-api . There is no login lock: any visitor can watch the engine run, inspect errors, or propose an edit ( ✎ ) that enters cs-04-decide for owner approval. | Portal Route | What the 10-worker engine feeds into it | | --- | --- | | /guides/workflow-state-machine/ | Live queue depths, active worker health, item trails from PA-XXXX intake to catalog, and compact [Why?] rule drawers replacing long static essays. | | /guides/ownership-map-and-edit-loop/ | The cs-04-decide owner inbox for pending tool determinations and anonymous public edit proposals. | | /tools/ | The finished, verified client-side tools published by cs-08-catalog , plus all 17 platform and worker apps ( apps ). |"
   },
   {
     "id": "guide-protecting-government-information",
@@ -3259,10 +3269,10 @@
     "type": "guide",
     "title": "How Ideas Are Scored and Decided",
     "subtitle": "Guide · Section L.4",
-    "summary": "How cs-03-evaluate runs deterministic knockout gates, the 100-point rubric, and tie-breakers, and how cs-04-decide powers the /guides/#decide owner inbox for tool outcomes and anonymous public edits.",
+    "summary": "How cs-03-evaluate runs deterministic knockout gates, the 100-point rubric, and tie-breakers, and how cs-04-decide powers the /guides/ownership-map-and-edit-loop/ owner inbox for tool outcomes and anonymous public edits.",
     "url": "/guides/score-and-decide/",
     "badge": "L.4",
-    "content": "How Ideas Are Scored and Decided How cs-03-evaluate runs deterministic knockout gates, the 100-point rubric, and tie-breakers, and how cs-04-decide powers the /guides/#decide owner inbox for tool outcomes and anonymous public edits. contribute L.4  In ClearedStack v3.1, evaluating candidate tools and approving changes is split between two focused Go services in the cs-workers namespace: cs-03-evaluate (which scores candidates with zero AI) and cs-04-decide (which powers the human owner's /guides/ decide inbox). Every rule, weight, and decision outcome is visible to the public through read-only pub. database views on the Portal—no sign-in required. Deterministic evaluation with cs-03-evaluate cs-03-evaluate leases observed items from hub-queue-api and runs a 100% deterministic YAML/Go rule engine. Given the same observed facts, it produce"
+    "content": "How Ideas Are Scored and Decided How cs-03-evaluate runs deterministic knockout gates, the 100-point rubric, and tie-breakers, and how cs-04-decide powers the /guides/ownership-map-and-edit-loop/ owner inbox for tool outcomes and anonymous public edits. contribute L.4  In ClearedStack v3.1, evaluating candidate tools and approving changes is split between two focused Go services in the cs-workers namespace: cs-03-evaluate (which scores candidates with zero AI) and cs-04-decide (which powers the human owner's /guides/ownership-map-and-edit-loop/ inbox). Every rule, weight, and decision outcome is visible to the public through read-only pub. database views on the Portal—no sign-in required. Deterministic evaluation with cs-03-evaluate cs-03-evaluate leases observed items from hub-queue-api and runs a 100% deterministic YAML/Go rule engine. Given the same obser"
   },
   {
     "id": "section-score-and-decide-deterministic-evaluation-with-cs-03-evaluate",
@@ -3292,7 +3302,7 @@
     "summary": "Candidates that pass all five gates are scored across seven weighted factors. Each factor receives an integer rating from 1 to 5 , multiplied by its weight for ...",
     "url": "/guides/score-and-decide/#the-100-point-rubric",
     "badge": "Section",
-    "content": "The 100-point rubric How Ideas Are Scored and Decided Candidates that pass all five gates are scored across seven weighted factors. Each factor receives an integer rating from 1 to 5 , multiplied by its weight for a composite score between 20 and 100 . | Factor | Weight | Max points | What it measures | | --- | --- | --- | --- | | Need for small businesses | ×4 | 20 | Severity of manual administrative burden or error risk for small contractors. | | Gap in existing free options | ×4 | 20 | Scarcity of free, private, tracking-free alternatives ( 5 means only paid or gated tools exist). | | Strength of the public source | ×3 | 15 | Grounding in enacted statute, Title 48 CFR, or published NIST standards. | | Fits in a browser | ×3 | 15 | Ability to run cleanly in browser memory without large remote datasets. | | Small enough to read | ×2 | 10 | Core logic is concise enough for a reviewer to audit in one sitting. | | Can be checked | ×2 | 10 | Availability of official worked examples or agency test vectors to verify outputs. | | Low upkeep of reference data | ×2 | 10 | Preference for stable statutory math over volatile tables requiring frequent updates. | Based on the composite score and deterministic override rules, cs-03-evaluate assigns a preliminary recommendation and moves the item to scored : - Build (Score ≥ 75 and Gap > 1): Recommended for clean-room implementation. - Link (Score ≥ 75 and Gap = 1): Override—an acceptable free, private tool already exists, so ClearedStack links to it rather than rebuilding. - Park (Score 55–74): Valid idea deferred due to missing public data, pending rulemaking, or capacity. - Reject (Score < 55): Below the inclusion threshold, logged publicly with its point breakdown. If a candidate scores 4 or 5 on Need but 1 or 2 on Small enough to read , the engine flags it for split/merge review so the owner can break it into atomic single-job tools."
+    "content": "The 100-point rubric How Ideas Are Scored and Decided Candidates that pass all five gates are scored across seven weighted factors. Each factor receives an integer rating from 1 to 5 , multiplied by its weight for a composite score between 20 and 100 . | Factor | Weight | Score 1 (Low) | Score 3 (Mid) | Score 5 (High) | | --- | --- | --- | --- | --- | | Need for small businesses | 20 pts (×4) | Rare edge case; minimal time spent. | Occasional requirement (such as annual reporting). | Universal recurring blocker for small contractors; high manual friction or penalty if miscalculated. | | Gap: no free, private option exists | 20 pts (×4) | Multiple high-quality, free, client-side tools already exist. | Government provides a clunky portal, or open tools exist with poor usability. | Only predatory paywalled SaaS or lead-generation traps exist; zero free tools available. | | Strength of the public source | 15 pts (×3) | Informal agency slide deck or ambiguous draft. | Agency policy memo or fluctuating interim rule. | Codified statute, enacted Federal Regulation (FAR/DFARS), or ratified NIST standard. | | Fits in a browser | 15 pts (×3) | Demands heavy multi-megabyte datasets or compute near browser memory limits. | Requires moderate bundled lookup tables ( 1): Recommended for clean-room implementation. - Link (Score ≥ 75 and Gap = 1): Override—an acceptable free, private tool already exists, so ClearedStack links to it rather than rebuilding. - Park (Score 55–74): Valid idea deferred due to missing public data, pending rulemaking, or capacity. - Reject (Score < 55): Below the inclusion threshold, logged publicly with its point breakdown. If a candidate scores 4 or 5 on Need but 1 or 2 on Small enough to read , the engine flags it for split/merge review so the owner can break it into atomic single-job tools."
   },
   {
     "id": "section-score-and-decide-five-deterministic-tie-breakers",
@@ -3305,14 +3315,14 @@
     "content": "Five deterministic tie-breakers How Ideas Are Scored and Decided When multiple scored candidates share the exact same composite score, cs-03-evaluate breaks ties in a fixed five-step order: 1. Roadmap phase fit — Direct alignment with the active project phase wins. 2. Gap severity — Higher score on the Gap factor wins. 3. Low upkeep — Higher score on the Low upkeep factor wins. 4. Small code footprint — Higher score on the Small enough to read factor wins. 5. Community demand — Higher count of independent requests and issue upvotes wins."
   },
   {
-    "id": "section-score-and-decide-human-decisions-and-guides-decide-cs-04-decide",
+    "id": "section-score-and-decide-human-decisions-and-accountability-cs-04-decide",
     "type": "section",
-    "title": "Human decisions and /guides/#decide (cs-04-decide)",
+    "title": "Human decisions and accountability (cs-04-decide)",
     "subtitle": "How Ideas Are Scored and Decided",
-    "summary": "cs-04-decide has no tools// sub-tools because final judgment belongs strictly to the human project owner. It powers the /guides/ decide inbox on clearedstack.co...",
-    "url": "/guides/score-and-decide/#human-decisions-and-guides-decide-cs-04-decide",
+    "summary": "cs-04-decide has no tools// sub-tools because final judgment belongs strictly to the human project owner. It powers the Decisions & Public Edits queue on cleare...",
+    "url": "/guides/score-and-decide/#human-decisions-and-accountability-cs-04-decide",
     "badge": "Section",
-    "content": "Human decisions and /guides/#decide (cs-04-decide) How Ideas Are Scored and Decided cs-04-decide has no tools// sub-tools because final judgment belongs strictly to the human project owner. It powers the /guides/ decide inbox on clearedstack.com , which handles two queues: - Tool determinations: The owner reviews scored (or overridden screened-out ) candidates and chooses Approve (Build) , Link , Merge , Park , Reject , or Override . Any override requires an explicit written reason, which is recorded in the public decision log. Approved items advance to cs-05-provenance ( approved state). - Anonymous public edit approvals: Any visitor can click ✎ anywhere on the Portal to propose a DATA , CONFIG , or ISSUE edit without signing in. After passing browser Proof-of-Work, a honeypot check, daily-salted IP hash rate limits, and ownership map.json schema validation, proposals wait in core.edit proposal ( pending approval ). Nothing touches cs-git or the cluster until the owner clicks Approve in /guides/ decide , which dispatches cs-10-notify on the urgent lane ( Proposed -> Approved -> Building -> Live )."
+    "content": "Human decisions and accountability (cs-04-decide) How Ideas Are Scored and Decided cs-04-decide has no tools// sub-tools because final judgment belongs strictly to the human project owner. It powers the Decisions & Public Edits queue on clearedstack.com , which handles two queues: - Tool determinations: The owner reviews scored (or overridden screened-out ) candidates and chooses Approve (Build) , Link , Merge , Park , Reject , or Override . Any override requires an explicit written reason, which is recorded in the public decision log. Approved items advance to cs-05-provenance ( approved state). - Anonymous public edit approvals: Any visitor can click ✎ anywhere on the Portal to propose a DATA , CONFIG , or ISSUE edit without signing in. After passing browser Proof-of-Work, a honeypot check, daily-salted IP hash rate limits, and ownership map.json schema validation, proposals wait in core.edit proposal ( pending approval ). Nothing touches cs-git or the cluster until the owner clicks Approve , which dispatches cs-10-notify on the urgent lane ( Proposed -> Approved -> Building -> Live ). /) during authoring; never runs inside the cluster.\" }, { lane: 0, label: \"Approve or override\", detail: \"Makes final determination in cs-04-decide: Build, Link, Merge, Park, or Reject; logs overrides.\" }, { lane: 1, label: \"Draft clean-room tool code\", detail: \"Writes browser tool code, unit tests, and guides strictly from the primary regulation.\" }, { lane: 0, label: \"Audit math and citations\", detail: \"Checks every calculation and regulatory citation against official sources before merging.\" }, { lane: 2, label: \"Audit live tools\", detail: \"Verifies formulas, reports regulatory updates, and submits improvements via ✎ Edit or GitHub.\" }, ]} />"
   },
   {
     "id": "guide-self-building-factory-loop",
@@ -3342,7 +3352,7 @@
     "summary": "A static catalog decays as regulations change, third-party pages shift layout, and users spot edge cases. ClearedStack turns all three failure modes into closed...",
     "url": "/guides/self-building-factory-loop/#three-closed-loops-that-make-the-factory-self-improving",
     "badge": "Section",
-    "content": "Three closed loops that make the factory self-improving How the Self-Building Factory Loop Works A static catalog decays as regulations change, third-party pages shift layout, and users spot edge cases. ClearedStack turns all three failure modes into closed, deterministic loops gated by human accountability. cs-git)\", detail: \"cs-10-notify writes the approved DATA/CONFIG change or opens a fingerprinted sub-tool task in the owning repo inside cs-git.\", }, { tag: \"4 · Build & Verify\", label: \"Dockerless build & golden fixtures (cs-runner)\", detail: \"cs-runner runs golden fixture tests, builds via ko or rootless BuildKit, signs with cosign, and pushes to cs-registry.\", }, { tag: \"5 · Reconcile & Replay\", label: \"Server-Side Apply & queue replay (cs-store + hub-queue-api)\", detail: \"cs-store rolls out the new digest, cs-git mirrors code to GitHub, and paused needs subtool records replay automatically.\", }, ]} /> Loop A: Unknown layouts grow tools// sub-tools Workers never call an LLM at runtime to guess how to parse an unfamiliar page or edge case. When cs-02-observe , cs-03-evaluate , or cs-09-monitor encounters an unrecognized structure, it transitions the item to needs subtool ( E NEEDS SUBTOOL ). cs-10-notify deduplicates the fingerprint and opens a structured task in the owning worker repository in cs-git . Once a deterministic Go sub-tool and golden fixture are committed (authored by a human or with authoring-time AI review), cs-runner verifies the fixture, cs-store deploys the worker, and hub-queue-api automatically replays every record waiting on that case. Loop B: Anonymous ✎ Edit proposals route directly to owning repos Every editable element across /guides/ command , /guides/ pipeline , /guides/ decide , and /tools/ apps carries an elementId registered in src/data/ownership map.json . Visitors propose corrections without an account. After clearing the 5-layer anti-spam shield in hub-queue-api and receiving human approval in /guides/ decide , cs-10-notify routes the change straight to the target repository in cs-git , which triggers cs-runner and pushes a code-only mirror to GitHub. Loop C: Regulatory drift triggers verification and rebuilds cs-09-monitor watches official public feeds (Federal Register, eCFR, NIST CSRC) alongside live and linked tools. When a cited clause in FAR, DFARS, or NIST SP 800-171 changes, cs-09-monitor queues a drift event back into the pipeline so formulas, citations, and worked examples are re-verified by cs-07-verify and republished by cs-08-catalog ."
+    "content": "Three closed loops that make the factory self-improving How the Self-Building Factory Loop Works A static catalog decays as regulations change, third-party pages shift layout, and users spot edge cases. ClearedStack turns all three failure modes into closed, deterministic loops gated by human accountability. cs-git)\", detail: \"cs-10-notify writes the approved DATA/CONFIG change or opens a fingerprinted sub-tool task in the owning repo inside cs-git.\", }, { tag: \"4 · Build & Verify\", label: \"Dockerless build & golden fixtures (cs-runner)\", detail: \"cs-runner runs golden fixture tests, builds via ko or rootless BuildKit, signs with cosign, and pushes to cs-registry.\", }, { tag: \"5 · Reconcile & Replay\", label: \"Server-Side Apply & queue replay (cs-store + hub-queue-api)\", detail: \"cs-store rolls out the new digest, cs-git mirrors code to GitHub, and paused needs subtool records replay automatically.\", }, ]} /> Loop A: Unknown layouts grow tools// sub-tools Workers never call an LLM at runtime to guess how to parse an unfamiliar page or edge case. When cs-02-observe , cs-03-evaluate , or cs-09-monitor encounters an unrecognized structure, it transitions the item to needs subtool ( E NEEDS SUBTOOL ). cs-10-notify deduplicates the fingerprint and opens a structured task in the owning worker repository in cs-git . Once a deterministic Go sub-tool and golden fixture are committed (authored by a human or with authoring-time AI review), cs-runner verifies the fixture, cs-store deploys the worker, and hub-queue-api automatically replays every record waiting on that case. Loop B: Anonymous ✎ Edit proposals route directly to owning repos Every editable element across /guides/live-command-portal/ , /guides/workflow-state-machine/ , /guides/ownership-map-and-edit-loop/ , and /tools/ apps carries an elementId registered in src/data/ownership map.json . Visitors propose corrections without an account. After clearing the 5-layer anti-spam shield in hub-queue-api and receiving human approval in /guides/ownership-map-and-edit-loop/ , cs-10-notify routes the change straight to the target repository in cs-git , which triggers cs-runner and pushes a code-only mirror to GitHub. Loop C: Regulatory drift triggers verification and rebuilds cs-09-monitor watches official public feeds (Federal Register, eCFR, NIST CSRC) alongside live and linked tools. When a cited clause in FAR, DFARS, or NIST SP 800-171 changes, cs-09-monitor queues a drift event back into the pipeline so formulas, citations, and worked examples are re-verified by cs-07-verify and republished by cs-08-catalog ."
   },
   {
     "id": "section-self-building-factory-loop-human-authority-vs-automated-execution",
@@ -3402,7 +3412,7 @@
     "summary": "Instead of letting a language model guess what looks important, the Portal sorts every worker, app, and queued item into one of five fixed priority tiers ( P0 t...",
     "url": "/guides/software-decides-ui/#deterministic-p0-p4-attention-rules-no-ai",
     "badge": "Section",
-    "content": "Deterministic P0–P4 attention rules (no AI) How Software Decides What Appears on Screen Instead of letting a language model guess what looks important, the Portal sorts every worker, app, and queued item into one of five fixed priority tiers ( P0 through P4 ). Because the rules are plain code, the same cluster state always produces the exact same screen layout. | Priority Tier | Name | What Triggers It | What Appears on Screen | | --- | --- | --- | --- | | P0 | Critical | A pod crashes, a health check fails, an app goes down, or dead-lettered items are greater than zero. | Promoted to the top of Command in crimson ( --danger ) with a sanitized error code and a 1-click Rollback button for the owner. | | P1 | Stalled / Attention | A worker pauses in needs subtool , a queue backs up or times out, or the live data stream goes silent for more than 15 seconds. | Surfaced directly alongside P0 items in amber ( --warn ) with the error code and a link to the owning worker repository. | | P2 | Human Action | Items are waiting in cs-04-decide for a determination, or anonymous public ✎ edit proposals are waiting for owner approval. | Listed in /guides/ decide and highlighted on Command with the oldest wait time so nothing stalls indefinitely. | | P3 | Active / Healthy | Workers or apps are actively processing items with zero errors and fresh timestamps. | Shown in green with current counts and normal status indicators. | | P4 | Quiet / Idle | A healthy worker has zero queued items and zero errors. | Collapsed into a single muted summary line so idle components never clutter the page. |"
+    "content": "Deterministic P0–P4 attention rules (no AI) How Software Decides What Appears on Screen Instead of letting a language model guess what looks important, the Portal sorts every worker, app, and queued item into one of five fixed priority tiers ( P0 through P4 ). Because the rules are plain code, the same cluster state always produces the exact same screen layout. | Priority Tier | Name | What Triggers It | What Appears on Screen | | --- | --- | --- | --- | | P0 | Critical | A pod crashes, a health check fails, an app goes down, or dead-lettered items are greater than zero. | Promoted to the top of Command in crimson ( --danger ) with a sanitized error code and a 1-click Rollback button for the owner. | | P1 | Stalled / Attention | A worker pauses in needs subtool , a queue backs up or times out, or the live data stream goes silent for more than 15 seconds. | Surfaced directly alongside P0 items in amber ( --warn ) with the error code and a link to the owning worker repository. | | P2 | Human Action | Items are waiting in cs-04-decide for a determination, or anonymous public ✎ edit proposals are waiting for owner approval. | Listed in /guides/ownership-map-and-edit-loop/ and highlighted on Command with the oldest wait time so nothing stalls indefinitely. | | P3 | Active / Healthy | Workers or apps are actively processing items with zero errors and fresh timestamps. | Shown in green with current counts and normal status indicators. | | P4 | Quiet / Idle | A healthy worker has zero queued items and zero errors. | Collapsed into a single muted summary line so idle components never clutter the page. |"
   },
   {
     "id": "section-software-decides-ui-the-6-fixed-ui-primitives",
@@ -3532,7 +3542,7 @@
     "summary": "When a worker pod in the cs-workers namespace stalls, crashes, or fails a job, cs-store notices immediately. It watches pod, deployment, and Kubernetes event he...",
     "url": "/guides/when-a-worker-is-red/#1-live-error-reporting-without-exposing-cluster-internals",
     "badge": "Section",
-    "content": "1. Live Error Reporting Without Exposing Cluster Internals When a Worker Turns Red: Troubleshooting Big Picture When a worker pod in the cs-workers namespace stalls, crashes, or fails a job, cs-store notices immediately. It watches pod, deployment, and Kubernetes event health across the cluster and strips out all private infrastructure details—such as internal IP addresses, node names, pod hostnames, and cluster DNS names—before forwarding a sanitized status update to hub-queue-api . From there, hub-queue-api updates the read-only pub. database views and pushes live updates over Server-Sent Events (SSE) to the Portal. On Command ( /guides/ command ), urgent P0 errors and P1 stalled queues float straight to the top while healthy, idle workers stay collapsed. On Apps ( /tools/ apps ), the affected worker card turns red and displays its active error code. Because the Portal is an open public sandbox with no login wall, anyone can inspect live worker health and sanitized errors without ever seeing credentials or private network topology."
+    "content": "1. Live Error Reporting Without Exposing Cluster Internals When a Worker Turns Red: Troubleshooting Big Picture When a worker pod in the cs-workers namespace stalls, crashes, or fails a job, cs-store notices immediately. It watches pod, deployment, and Kubernetes event health across the cluster and strips out all private infrastructure details—such as internal IP addresses, node names, pod hostnames, and cluster DNS names—before forwarding a sanitized status update to hub-queue-api . From there, hub-queue-api updates the read-only pub. database views and pushes live updates over Server-Sent Events (SSE) to the Portal. On Command ( /guides/live-command-portal/ ), urgent P0 errors and P1 stalled queues float straight to the top while healthy, idle workers stay collapsed. On Apps ( /tools/ apps ), the affected worker card turns red and displays its active error code. Because the Portal is an open public sandbox with no login wall, anyone can inspect live worker health and sanitized errors without ever seeing credentials or private network topology."
   },
   {
     "id": "section-when-a-worker-is-red-2-sanitized-error-codes",
@@ -3672,7 +3682,7 @@
     "summary": "cs-10-notify is the cross-cutting router that turns worker failures, needs subtool pauses, and owner-approved Portal proposals into clean repository commits, al...",
     "url": "/guides/worker-09-monitor-and-10-notify/#cs-10-notify-deduplication-git-routing-and-alerts",
     "badge": "Section",
-    "content": "cs-10-notify: Deduplication, Git Routing, and Alerts Workers 09 & 10: Continuous Monitoring & Notifications cs-10-notify is the cross-cutting router that turns worker failures, needs subtool pauses, and owner-approved Portal proposals into clean repository commits, alerts, and live browser updates. A key job of cs-10-notify is issue deduplication by deterministic fingerprint . If two hundred queued items hit the exact same unfamiliar HTML table or timed-out endpoint, creating two hundred identical tickets would drown out real problems. Before opening an issue or firing an alert, cs-10-notify computes a repeatable fingerprint from the worker name, sanitized error code (such as E TIMEOUT or E NEEDS SUBTOOL ), and failure pattern. If an open issue with that fingerprint already exists in cs-git , cs-10-notify increments the occurrence count on that existing issue instead of creating noise. To keep responsibilities cleanly separated, cs-10-notify relies on four deterministic sub-tools: | Sub-tool | Responsibility | Where it writes | |---|---|---| | internal-git | Commits owner-approved anonymous Portal edits ( DATA , CONFIG , ISSUE from cs-04-decide ), needs subtool tasks, and fingerprinted error issues. | Cluster-private cs-git repositories. | | github-mirror | Coordinates outbound code mirroring on change so public contributors can inspect every commit and issue. | Public GitHub mirror (source code only; zero container images). | | webhook-alert | Dispatches concise owner notifications when a genuinely new fingerprinted error, P0 failure, or urgent regulatory shift occurs. | Configured external webhook endpoint. | | portal-sse | Pushes sanitized real-time Server-Sent Events (SSE) through hub-queue-api to clearedstack-web . | Public Portal UI ( /guides/ command , /guides/ pipeline , /tools/ apps , and live ✎ edit status pills). | Through portal-sse , a visitor who submits an anonymous ✎ edit watches their proposal move live from Proposed to Approved (in cs-04-decide ), then Building (as internal-git commits to cs-git and cs-runner builds), and finally Live —all without signing in or refreshing the page."
+    "content": "cs-10-notify: Deduplication, Git Routing, and Alerts Workers 09 & 10: Continuous Monitoring & Notifications cs-10-notify is the cross-cutting router that turns worker failures, needs subtool pauses, and owner-approved Portal proposals into clean repository commits, alerts, and live browser updates. A key job of cs-10-notify is issue deduplication by deterministic fingerprint . If two hundred queued items hit the exact same unfamiliar HTML table or timed-out endpoint, creating two hundred identical tickets would drown out real problems. Before opening an issue or firing an alert, cs-10-notify computes a repeatable fingerprint from the worker name, sanitized error code (such as E TIMEOUT or E NEEDS SUBTOOL ), and failure pattern. If an open issue with that fingerprint already exists in cs-git , cs-10-notify increments the occurrence count on that existing issue instead of creating noise. To keep responsibilities cleanly separated, cs-10-notify relies on four deterministic sub-tools: | Sub-tool | Responsibility | Where it writes | |---|---|---| | internal-git | Commits owner-approved anonymous Portal edits ( DATA , CONFIG , ISSUE from cs-04-decide ), needs subtool tasks, and fingerprinted error issues. | Cluster-private cs-git repositories. | | github-mirror | Coordinates outbound code mirroring on change so public contributors can inspect every commit and issue. | Public GitHub mirror (source code only; zero container images). | | webhook-alert | Dispatches concise owner notifications when a genuinely new fingerprinted error, P0 failure, or urgent regulatory shift occurs. | Configured external webhook endpoint. | | portal-sse | Pushes sanitized real-time Server-Sent Events (SSE) through hub-queue-api to clearedstack-web . | Public Portal UI ( /guides/live-command-portal/ , /guides/workflow-state-machine/ , /tools/ apps , and live ✎ edit status pills). | Through portal-sse , a visitor who submits an anonymous ✎ edit watches their proposal move live from Proposed to Approved (in cs-04-decide ), then Building (as internal-git commits to cs-git and cs-runner builds), and finally Live —all without signing in or refreshing the page."
   },
   {
     "id": "guide-workflow-state-machine",
@@ -3692,7 +3702,7 @@
     "summary": "The original website described ten conceptual stages from discovery to monthly revisit. In v3.1, some stages were combined into a single worker, automated quali...",
     "url": "/guides/workflow-state-machine/#from-10-website-stages-to-10-worker-repositories",
     "badge": "Section",
-    "content": "From 10 website stages to 10 worker repositories The Redesigned 10-Worker Workflow & Lifecycle The original website described ten conceptual stages from discovery to monthly revisit. In v3.1, some stages were combined into a single worker, automated quality checks were split into their own worker, and a tenth worker was added to close notification and code-change loops. | Worker repo | Replaces old stage(s) | Deterministic job | Sub-tools ( tools// ) | |---|---|---|---| | cs-01-intake | Stage 1 (Discover) + Stage 2 (Record) | Normalize URLs, deduplicate by SHA-256, and assign PA-XXXX IDs. | Yes ( sam-gov , github-issues , web-sweep , site-form ) | | cs-02-observe | Stage 3 (Observe) | Fetch public pages via Go extractors (or on-demand headless browser jobs for JS-heavy sites) and seal raw captures behind the clean-room wall. | Yes ( saas-marketing , gov-portal , agency-pdf , ) | | cs-03-evaluate | Stage 4 (Screen) + Stage 5 (Score) | Run 5 binary knockout gates, the 100-point rubric, and 5 tie-breakers using YAML/Go rules. | Yes ( rubric-profiles/ ) | | cs-04-decide | Stage 6 (Decide) | Surface the owner-only decision queue on /guides/ decide for item outcomes and anonymous public edit approvals. | No | | cs-05-provenance | Stage 7 (Credit) | Stamp provenance notes via Go templates, enforce 48-hour identity verification and 5-day opt-out SLAs, and compile clean-room JSON build specs. | Yes ( spec-profiles/ ) | | cs-06-build | Stage 8 (Build) | Generate isolated static tool repositories from clean-room specs and worked-example fixtures. | Yes ( calculator , checklist , validator , decision-tree ) | | cs-07-verify | Stage 9 (List, QA split) | Run automated 5-condition checks (offline execution, connect-src 'self' , zero tracking, worked examples). | No | | cs-08-catalog | Stage 9 (List, publish) | Publish verified, linked, merged, and retired entries to the clearedstack.com catalog. | No | | cs-09-monitor | Stage 10 (Revisit) | Run scheduled ETag, XML, and DOM diff checks on FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers. | Yes ( federal-register , ecfr , nist-csrc , linked-tool-watch , live-catalog ) | | cs-10-notify | New cross-cutting worker | Route approved Portal edits, needs subtool tasks, and fingerprinted errors into cs-git , and send owner alerts. | Yes ( internal-git , github-mirror , webhook-alert , portal-sse ) |"
+    "content": "From 10 website stages to 10 worker repositories The Redesigned 10-Worker Workflow & Lifecycle The original website described ten conceptual stages from discovery to monthly revisit. In v3.1, some stages were combined into a single worker, automated quality checks were split into their own worker, and a tenth worker was added to close notification and code-change loops. | Worker repo | Replaces old stage(s) | Deterministic job | Sub-tools ( tools// ) | |---|---|---|---| | cs-01-intake | Stage 1 (Discover) + Stage 2 (Record) | Normalize URLs, deduplicate by SHA-256, and assign PA-XXXX IDs. | Yes ( sam-gov , github-issues , web-sweep , site-form ) | | cs-02-observe | Stage 3 (Observe) | Fetch public pages via Go extractors (or on-demand headless browser jobs for JS-heavy sites) and seal raw captures behind the clean-room wall. | Yes ( saas-marketing , gov-portal , agency-pdf , ) | | cs-03-evaluate | Stage 4 (Screen) + Stage 5 (Score) | Run 5 binary knockout gates, the 100-point rubric, and 5 tie-breakers using YAML/Go rules. | Yes ( rubric-profiles/ ) | | cs-04-decide | Stage 6 (Decide) | Surface the owner-only decision queue for item outcomes and anonymous public edit approvals. | No | | cs-05-provenance | Stage 7 (Credit) | Stamp provenance notes via Go templates, enforce 48-hour identity verification and 5-day opt-out SLAs, and compile clean-room JSON build specs. | Yes ( spec-profiles/ ) | | cs-06-build | Stage 8 (Build) | Generate isolated static tool repositories from clean-room specs and worked-example fixtures. | Yes ( calculator , checklist , validator , decision-tree ) | | cs-07-verify | Stage 9 (List, QA split) | Run automated 5-condition checks (offline execution, connect-src 'self' , zero tracking, worked examples). | No | | cs-08-catalog | Stage 9 (List, publish) | Publish verified, linked, merged, and retired entries to the clearedstack.com catalog. | No | | cs-09-monitor | Stage 10 (Revisit) | Run scheduled ETag, XML, and DOM diff checks on FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers. | Yes ( federal-register , ecfr , nist-csrc , linked-tool-watch , live-catalog ) | | cs-10-notify | New cross-cutting worker | Route approved Portal edits, needs subtool tasks, and fingerprinted errors into cs-git , and send owner alerts. | Yes ( internal-git , github-mirror , webhook-alert , portal-sse ) |"
   },
   {
     "id": "section-workflow-state-machine-the-14-item-states-and-non-linear-moves",
@@ -3702,7 +3712,7 @@
     "summary": "An item ( PA-XXXX ) does not always march straight from intake to live. The state machine supports 14 explicit states, including early exits, side-branches, rev...",
     "url": "/guides/workflow-state-machine/#the-14-item-states-and-non-linear-moves",
     "badge": "Section",
-    "content": "The 14 item states and non-linear moves The Redesigned 10-Worker Workflow & Lifecycle An item ( PA-XXXX ) does not always march straight from intake to live. The state machine supports 14 explicit states, including early exits, side-branches, revisit loops, and a fail-closed pause state when a worker encounters an unfamiliar format. | State | Meaning | Normal next step | Non-linear moves & loops | |---|---|---|---| | discovered | Candidate URL detected by cs-01-intake . | recorded | Moves to rejected if dead, unreachable, or duplicate. | | recorded | Assigned a PA-XXXX ID and deduplicated. | observed | Pauses in needs subtool if intake source format is unknown. | | observed | Public pages extracted and raw snapshot sealed. | scored or screened-out | Pauses in needs subtool if cs-02-observe hits an unknown layout. | | screened-out | Failed one of the 5 knockout gates. | Terminal (archived) | Owner override in cs-04-decide can return it to observed . | | scored | Graded on the 100-point rubric by cs-03-evaluate . | approved | Owner in cs-04-decide can choose parked , linked , merged , or rejected . | | approved | Owner chose Build ; provenance & spec compiled. | building | Pauses in needs subtool if cs-05-provenance lacks a spec profile. | | building | Static repo generated ( cs-06-build ) and verified ( cs-07-verify ). | live | Moves to parked if blocked by regulatory ambiguity. | | live | Published in the catalog ( cs-08-catalog ). | Monitored by cs-09-monitor | Revisit loop: regulatory drift sends it back to building ; repeal moves it to retired . | | parked | Valid idea deferred for missing data, pending rules, or capacity. | Held in backlog | Revisit loop: cs-09-monitor returns it to observed when the blocker clears. | | linked | Acceptable free, private tool already exists; linked in catalog. | Monitored by cs-09-monitor | Revisit loop: if the external tool breaks or adds tracking, returns to observed . | | merged | Scope folded into an existing or planned tool repository. | Catalog note published | Re-opens to observed only if the parent tool is retired. | | rejected | Declined with a public rationale in the decision log. | Terminal (archived) | None unless re-submitted as a new candidate after major changes. | | retired | Decommissioned from live with historical note retained. | Terminal (archived) | None. | | needs subtool | Fail-closed pause when a worker hits an unknown layout or rule. | Resumes previous worker | cs-10-notify opens a task in the owning repo; once cs-runner builds the new sub-tool and cs-store deploys it, hub-queue-api automatically replays the item. |"
+    "content": "The 14 item states and non-linear moves The Redesigned 10-Worker Workflow & Lifecycle An item ( PA-XXXX ) does not always march straight from intake to live. The state machine supports 14 explicit states, including early exits, side-branches, revisit loops, and a fail-closed pause state when a worker encounters an unfamiliar format. / sub-tool is deployed, then auto-replayed.\", to: [{ id: \"observed\", when: \"new deterministic sub-tool deployed by cs-store\" }] }, { id: \"screened out\", tag: \"Terminal / Reopenable\", label: \"Screened out\", detail: \"Disqualified with non-compliance reason logged.\", to: [{ id: \"observed\", when: \"scope changes or candidate is restructured (owner only)\" }] }, { id: \"scored\", label: \"Scored\", detail: \"Graded on the 100-point rubric.\", to: [{ id: \"approved\", when: \"owner approves clean-room build (score >= 75)\" }, { id: \"linked\", when: \"equivalent free, private tool already exists\" }, { id: \"merged\", when: \"candidate is a feature of an existing tool\" }, { id: \"parked\", when: \"viable but deferred or blocked (score 55-74)\" }, { id: \"rejected\", when: \"fails viability threshold (score | State | Meaning | Normal next step | Non-linear moves & loops | |---|---|---|---| | discovered | Candidate URL detected by cs-01-intake . | recorded | Moves to rejected if dead, unreachable, or duplicate. | | recorded | Assigned a PA-XXXX ID and deduplicated. | observed | Pauses in needs subtool if intake source format is unknown. | | observed | Public pages extracted and raw snapshot sealed. | scored or screened-out | Pauses in needs subtool if cs-02-observe hits an unknown layout. | | screened-out | Failed one of the 5 knockout gates. | Terminal (archived) | Owner override in cs-04-decide can return it to observed . | | scored | Graded on the 100-point rubric by cs-03-evaluate . | approved | Owner in cs-04-decide can choose parked , linked , merged , or rejected . | | approved | Owner chose Build ; provenance & spec compiled. | building | Pauses in needs subtool if cs-05-provenance lacks a spec profile. | | building | Static repo generated ( cs-06-build ) and verified ( cs-07-verify ). | live | Moves to parked if blocked by regulatory ambiguity. | | live | Published in the catalog ( cs-08-catalog ). | Monitored by cs-09-monitor | Revisit loop: regulatory drift sends it back to building ; repeal moves it to retired . | | parked | Valid idea deferred for missing data, pending rules, or capacity. | Held in backlog | Revisit loop: cs-09-monitor returns it to observed when the blocker clears. | | linked | Acceptable free, private tool already exists; linked in catalog. | Monitored by cs-09-monitor | Revisit loop: if the external tool breaks or adds tracking, returns to observed . | | merged | Scope folded into an existing or planned tool repository. | Catalog note published | Re-opens to observed only if the parent tool is retired. | | rejected | Declined with a public rationale in the decision log. | Terminal (archived) | None unless re-submitted as a new candidate after major changes. | | retired | Decommissioned from live with historical note retained. | Terminal (archived) | None. | | needs subtool | Fail-closed pause when a worker hits an unknown layout or rule. | Resumes previous worker | cs-10-notify opens a task in the owning repo; once cs-runner builds the new sub-tool and cs-store deploys it, hub-queue-api automatically replays the item. |"
   },
   {
     "id": "section-workflow-state-machine-how-priority-lanes-flow-end-to-end",

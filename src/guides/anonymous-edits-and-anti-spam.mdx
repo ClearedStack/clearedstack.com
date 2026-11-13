@@ -23,7 +23,7 @@ Every editable element is mapped in `ownership_map.json`, which tells the Portal
 - **Where the change belongs:** Routes the proposal to `clearedstack.com` or the specific worker repository (`cs-01`..`cs-10`) that owns that data or rule.
 - **What kind of change it is:** Classifies the proposal as `DATA` (catalog or content text), `CONFIG` (a rule or setting), or `ISSUE` (a problem report or sub-tool request).
 
-Once submitted, the proposal enters the queue API (`hub-queue-api`) and waits in the [`/guides/#decide`](/guides/#decide) inbox (`cs-04-decide`).
+Once submitted, the proposal enters the queue API (`hub-queue-api`) and waits in the [`/guides/ownership-map-and-edit-loop/`](/guides/ownership-map-and-edit-loop/) inbox (`cs-04-decide`).
 
 ## Live status tracking on your edit
 
@@ -31,7 +31,7 @@ After you submit a proposal, the edit button on that element turns into a live s
 
 | Status | What Is Happening |
 | --- | --- |
-| **Proposed** | Your submission passed anti-spam and schema checks and is waiting in [`/guides/#decide`](/guides/#decide). |
+| **Proposed** | Your submission passed anti-spam and schema checks and is waiting in [`/guides/ownership-map-and-edit-loop/`](/guides/ownership-map-and-edit-loop/). |
 | **Approved** | The proposal was approved and routed to the internal Git server (`cs-git`). |
 | **Building** | The build runner (`cs-runner`) is running automated tests and packaging the updated app or worker image. |
 | **Live** | The app-store reconciler (`cs-store`) deployed the update, and your change is now live on the Portal. |

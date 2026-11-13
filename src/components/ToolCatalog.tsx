@@ -4,9 +4,53 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { StatusChip } from "@/components/StatusChip";
 import { categories, tools, type Tool } from "@/data/catalog";
+import { controlPlaneApps, workerApps } from "@/data/platform";
+import { site } from "@/data/site";
 
-function matches(tool: Tool, categoryName: string, query: string) {
-  const haystack = `${tool.name} ${tool.summary} ${categoryName}`.toLowerCase();
+type CatalogGroup = {
+  id: string;
+  clin: string;
+  name: string;
+  blurb: string;
+  tools: (Tool & { detailNote?: string })[];
+};
+
+const platformTools: (Tool & { detailNote?: string })[] = [...controlPlaneApps, ...workerApps].map((app) => ({
+  slug: app.id,
+  name: app.name,
+  summary: app.role,
+  category: "devsecops", // unused for grouping here
+  status: app.health === "healthy" ? "building" : "planned",
+  repo: `${site.github}/${app.ownerRepo}`,
+  detailNote: [
+    `ns: ${app.namespace}`,
+    app.version,
+    app.ramBudget,
+    app.subTools.length > 0 ? `Sub-tools: ${app.subTools.join(", ")}` : app.notes,
+  ].join(" · "),
+}));
+
+const allGroups: CatalogGroup[] = [
+  ...categories.map((category) => ({
+    id: category.id,
+    clin: category.clin,
+    name: category.name,
+    blurb: category.blurb,
+    tools: tools.filter((tool) => tool.category === category.id),
+  })),
+  {
+    id: "apps",
+    clin: "0006",
+    name: "Platform & factory tools",
+    blurb: "Clean-room MIT microservices and deterministic workers that run the factory.",
+    tools: platformTools,
+  },
+];
+
+const totalToolsCount = tools.length + platformTools.length;
+
+function matches(tool: Tool & { detailNote?: string }, categoryName: string, query: string) {
+  const haystack = `${tool.name} ${tool.summary} ${tool.detailNote ?? ""} ${categoryName}`.toLowerCase();
   return query
     .toLowerCase()
     .split(/\s+/)
@@ -19,9 +63,9 @@ export function ToolCatalog() {
 
   const groups = useMemo(
     () =>
-      categories.map((category) => ({
+      allGroups.map((category) => ({
         category,
-        tools: tools.filter((tool) => tool.category === category.id && matches(tool, category.name, query)),
+        tools: category.tools.filter((tool) => matches(tool, category.name, query)),
       })),
     [query],
   );
@@ -36,19 +80,19 @@ export function ToolCatalog() {
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Filter: wrap rate, CUI, NAICS…"
+            placeholder="Filter: wrap rate, CUI, NAICS, cs-git…"
             autoComplete="off"
             spellCheck={false}
             className="w-full rounded-sm border border-line bg-surface px-3.5 py-2.5 text-[15px] text-ink placeholder:text-muted focus:border-accent focus:outline-none"
           />
         </label>
         <p className="font-mono text-xs text-muted" aria-live="polite">
-          {shown} of {tools.length} tools
+          {shown} of {totalToolsCount} tools
         </p>
       </div>
 
       <nav aria-label="Categories" className="mt-5 flex flex-wrap gap-2">
-        {categories.map((category) => (
+        {allGroups.map((category) => (
           <a
             key={category.id}
             href={`#${category.id}`}
@@ -57,12 +101,6 @@ export function ToolCatalog() {
             {category.clin} {category.name}
           </a>
         ))}
-        <a
-          href="#apps"
-          className="rounded-sm border border-line px-2.5 py-1.5 font-mono text-xs text-accent transition-colors hover:border-ink hover:text-ink"
-        >
-          0006 Platform &amp; Factory Apps
-        </a>
       </nav>
 
       {shown === 0 ? (
@@ -99,7 +137,9 @@ export function ToolCatalog() {
                   <div>
                     <p className="text-sm leading-relaxed text-muted">{tool.summary}</p>
                     <p className="mt-1.5 font-mono text-xs text-muted">
-                      {tool.provenance?.inspiredBy && tool.provenance.inspiredBy.length > 0 ? (
+                      {tool.detailNote ? (
+                        <span>{tool.detailNote}</span>
+                      ) : tool.provenance?.inspiredBy && tool.provenance.inspiredBy.length > 0 ? (
                         <span>
                           <span className="text-muted">Where the idea came from: </span>
                           {tool.provenance.inspiredBy.map((item, idx) => (

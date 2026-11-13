@@ -33,7 +33,7 @@ A static catalog decays as regulations change, third-party pages shift layout, a
 <Flow
   caption="The closed factory loop from runtime signal or visitor edit to rebuilt pod and GitHub mirror."
   direction="down"
-  loop="cs-store reconciles the new signed digest into Kubernetes and streams sanitized health back to /guides/#command and /tools/#apps."
+  loop="cs-store reconciles the new signed digest into Kubernetes and streams sanitized health back to /guides/live-command-portal/ and /tools/#apps."
   steps={[
     {
       tag: "1 · Signal",
@@ -43,7 +43,7 @@ A static catalog decays as regulations change, third-party pages shift layout, a
     {
       tag: "2 · Gate",
       label: "Anti-spam shield & owner decision (cs-04-decide)",
-      detail: "hub-queue-api validates schemas against ownership_map.json; human owner approves outcomes and edits in /guides/#decide.",
+      detail: "hub-queue-api validates schemas against ownership_map.json; human owner approves outcomes and edits in /guides/ownership-map-and-edit-loop/.",
     },
     {
       tag: "3 · Route",
@@ -69,7 +69,7 @@ Workers never call an LLM at runtime to guess how to parse an unfamiliar page or
 
 ### Loop B: Anonymous `✎ Edit` proposals route directly to owning repos
 
-Every editable element across `/guides/#command`, `/guides/#pipeline`, `/guides/#decide`, and `/tools/#apps` carries an `elementId` registered in `src/data/ownership_map.json`. Visitors propose corrections without an account. After clearing the 5-layer anti-spam shield in `hub-queue-api` and receiving human approval in `/guides/#decide`, `cs-10-notify` routes the change straight to the target repository in `cs-git`, which triggers `cs-runner` and pushes a code-only mirror to GitHub.
+Every editable element across `/guides/live-command-portal/`, `/guides/workflow-state-machine/`, `/guides/ownership-map-and-edit-loop/`, and `/tools/#apps` carries an `elementId` registered in `src/data/ownership_map.json`. Visitors propose corrections without an account. After clearing the 5-layer anti-spam shield in `hub-queue-api` and receiving human approval in `/guides/ownership-map-and-edit-loop/`, `cs-10-notify` routes the change straight to the target repository in `cs-git`, which triggers `cs-runner` and pushes a code-only mirror to GitHub.
 
 ### Loop C: Regulatory drift triggers verification and rebuilds
 
@@ -94,7 +94,7 @@ Every editable element across `/guides/#command`, `/guides/#pipeline`, `/guides/
     {
       lane: 0,
       label: "Approve decisions, edits & math",
-      detail: "Reviews every candidate in /guides/#decide, verifies statutory math, and approves Git merges.",
+      detail: "Reviews every candidate in /guides/ownership-map-and-edit-loop/, verifies statutory math, and approves Git merges.",
     },
     {
       lane: 1,
@@ -105,5 +105,5 @@ Every editable element across `/guides/#command`, `/guides/#pipeline`, `/guides/
 />
 
 <Callout kind="check" title="Inspect the factory live">
-  Explore every moving part of the factory directly inside Guides ([Command](/guides/#command), [Pipeline](/guides/#pipeline), [Decide](/guides/#decide), and [How We Decide](/guides/#how-we-decide)) and browse all 18 contracting utilities plus the 17-pod [Cluster App Store](/tools/#apps) on [Tools](/tools/).
+  Explore every moving part of the factory directly inside Guides ([Command](/guides/live-command-portal/), [Pipeline](/guides/workflow-state-machine/), [Decide](/guides/ownership-map-and-edit-loop/), and [How We Decide](/guides/score-and-decide/)) and browse all 18 contracting utilities plus the 17-pod [Cluster App Store](/tools/#apps) on [Tools](/tools/).
 </Callout>

@@ -27,78 +27,78 @@ documents.push({
 documents.push({
   id: "page-tools",
   type: "page",
-  title: "Tools & Cluster App Store",
+  title: "Tools",
   subtitle: "Contract Line Items (CLIN 0001–0006)",
-  summary: "Unified catalog of 18 browser contracting utilities and the integrated Cluster App Store for all 17 MIT platform microservices and deterministic workers.",
+  summary: "Unified catalog of 18 browser contracting utilities and 17 MIT platform and factory tools.",
   url: "/tools/",
   badge: "Tools",
-  content: "Tools and Apps catalog CLIN 0001 Pricing cost accounting CLIN 0002 Proposal capture CLIN 0003 Cybersecurity compliance CLIN 0004 Market research small business CLIN 0005 Tactical DevSecOps CLIN 0006 Platform Factory Apps cs-git cs-registry cs-runner cs-store workers"
+  content: "Tools catalog CLIN 0001 Pricing cost accounting CLIN 0002 Proposal capture CLIN 0003 Cybersecurity compliance CLIN 0004 Market research small business CLIN 0005 Tactical DevSecOps CLIN 0006 Platform factory tools cs-git cs-registry cs-runner cs-store workers"
 });
 
 documents.push({
   id: "page-guides",
   type: "page",
-  title: "Guides & Integrated Factory",
-  subtitle: "Section L: Manuals, Command, Pipeline, Decide & Section M",
-  summary: "Field manual (L.1–L.6) integrated with live Command Portal, 10-Worker Pipeline, Decide & Edits, and Section M evaluation factors.",
+  title: "Guides",
+  subtitle: "Section L: Field Guides & Specifications",
+  summary: "Plain-language field guides, platform specifications, and Section M evaluation rules in one open index.",
   url: "/guides/",
   badge: "Guides",
-  content: "Section L Instructions to offerors Start here Field guides Host your own copy Contribute Reference How this project is run Command Pipeline Decide Section M Reading routes Short answers"
+  content: "Section L Instructions to offerors Start here Field guides Host your own copy Contribute Reference How this project is run"
 });
 
 documents.push({
   id: "page-guides-command",
   type: "page",
-  title: "Command Portal",
-  subtitle: "Guides · Integrated Operational View",
-  summary: "Deterministic P0–P2 attention feed, sanitized error codes, 10-worker pulse strip, and 7 control-plane microservices.",
-  url: "/guides/#command",
-  badge: "Command",
+  title: "Command Portal Spec",
+  subtitle: "Guide · Live Command Portal",
+  summary: "Deterministic P0–P2 attention rules, sanitized error codes, and control-plane overview.",
+  url: "/guides/live-command-portal/",
+  badge: "Spec",
   content: "Command Portal open public sandbox no login lock P0 active errors P1 queue sub-tools P2 decisions edits View = f(state) deterministic attention rules clearedstack cs-workers"
 });
 
 documents.push({
   id: "page-guides-apps",
   type: "page",
-  title: "Cluster App Store",
-  subtitle: "Tools · cs-store Server-Side Apply",
-  summary: "Integrated App Store on /tools/#apps showing all 7 control-plane microservices and 10 deterministic workers managed by cs-store.",
+  title: "Platform & Factory Tools (CLIN 0006)",
+  subtitle: "Tools · Platform & Factory Catalog",
+  summary: "All 7 control-plane microservices and 10 deterministic workers listed in the unified Tools catalog.",
   url: "/tools/#apps",
-  badge: "Apps",
-  content: "Apps Cluster App Store cs-store Server-Side Apply 7 control-plane pods 10 workers 5 digests cs-registry ko rootless BuildKit Owner Mode Upgrade Pause Rollback"
+  badge: "CLIN 0006",
+  content: "Platform factory tools cs-store cs-git cs-registry cs-runner 7 control-plane pods 10 workers"
 });
 
 documents.push({
   id: "page-guides-pipeline",
   type: "page",
-  title: "10-Worker Pipeline",
-  subtitle: "Guides · cs-01-intake through cs-10-notify",
-  summary: "Integrated 100% deterministic pipeline across ten worker repositories, PA-XXXX item trails, local spools, and tools/<case>/ sub-tools.",
-  url: "/guides/#pipeline",
-  badge: "Pipeline",
+  title: "10-Worker Pipeline Spec",
+  subtitle: "Guide · cs-01-intake through cs-10-notify",
+  summary: "100% deterministic pipeline across ten worker repositories, 14-state lifecycle, and tools/<case>/ sub-tools.",
+  url: "/guides/workflow-state-machine/",
+  badge: "Spec",
   content: "10-Worker Pipeline deterministic zero AI at runtime urgent normal backfill needs_subtool /var/spool/cs PA-XXXX cs-01-intake cs-02-observe cs-03-evaluate cs-04-decide cs-05-provenance cs-06-build cs-07-verify cs-08-catalog cs-09-monitor cs-10-notify"
 });
 
 documents.push({
   id: "page-guides-decide",
   type: "page",
-  title: "Decisions & Public Edits",
-  subtitle: "Guides · cs-04-decide Queue",
-  summary: "Integrated public queue for candidate tool determinations and anonymous ✎ Edit proposals routed via ownership_map.json.",
-  url: "/guides/#decide",
-  badge: "Decide",
+  title: "Decisions & Public Edits Spec",
+  subtitle: "Guide · Ownership Map & Edit Loop",
+  summary: "Candidate tool determinations and anonymous ✎ Edit proposals routed via ownership_map.json.",
+  url: "/guides/ownership-map-and-edit-loop/",
+  badge: "Spec",
   content: "Decisions and Public Edit Proposals cs-04-decide core.edit_proposal anonymous edits 5-layer anti-spam proof-of-work honeypot ownership_map.json cs-git GitHub mirror"
 });
 
 documents.push({
   id: "page-how-we-decide",
   type: "page",
-  title: "How We Decide",
-  subtitle: "Guides · Section M Evaluation Factors",
-  summary: "Evaluation factors, 5 binary knockout gates, 100-point scoring rubric, 14-state record lifecycle, and clean-room provenance rules.",
-  url: "/guides/#how-we-decide",
-  badge: "Section M",
-  content: "Section M evaluation factors how we decide prior art engine ten workers five knockout gates 100-point scoring rubric outcomes Build Link Merge Park Reject 14 record states clean room AI disclosure Claude Code Antigravity review accountability"
+  title: "How Ideas Are Scored and Decided",
+  subtitle: "Guide · Section M Evaluation Factors",
+  summary: "5 binary knockout gates, 100-point scoring rubric, 5 tie-breakers, and cs-04-decide determinations.",
+  url: "/guides/score-and-decide/",
+  badge: "Spec",
+  content: "Section M evaluation factors how we decide prior art engine ten workers five knockout gates 100-point scoring rubric outcomes Build Link Merge Park Reject"
 });
 
 documents.push({
@@ -174,14 +174,14 @@ for (const match of [cpMatch, wkMatch]) {
     apps.forEach((app) => {
       const kindLabel = app.kind === "control-plane" ? "Control Plane" : "Deterministic Worker";
       documents.push({
-        id: `app-${app.id}`,
-        type: "app",
+        id: `tool-${app.id}`,
+        type: "tool",
         title: app.name,
         subtitle: `CLIN 0006 · ${kindLabel} (${app.namespace})`,
         summary: app.role,
-        url: `/tools/#app-${app.id}`,
-        badge: app.ramBudget,
-        status: app.health,
+        url: `/tools/#apps`,
+        badge: "CLIN 0006",
+        status: app.health === "healthy" ? "building" : "planned",
         content: `${app.name} ${app.namespace} ${app.role} ${app.ownerRepo} ${app.ramBudget} ${app.version} ${app.notes} ${(app.subTools || []).join(" ")}`
       });
     });

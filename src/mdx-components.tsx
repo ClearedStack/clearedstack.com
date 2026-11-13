@@ -2,7 +2,14 @@ import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import { Children, isValidElement, type ReactNode } from "react";
 import { slugify } from "@/lib/slug";
+import { AttentionCard } from "@/components/AttentionCard";
 import { Branch, Flow, Lanes, Layers, States } from "@/components/Diagram";
+import { EditTrigger } from "@/components/EditTrigger";
+import { MetricCell } from "@/components/MetricCell";
+import { PulseStrip } from "@/components/PulseStrip";
+import { DraftChip, HealthChip } from "@/components/StatusChip";
+import { TrailRow } from "@/components/TrailRow";
+import { WhyDrawer } from "@/components/WhyDrawer";
 
 function textOf(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -72,12 +79,20 @@ const components: MDXComponents = {
       <table {...props} />
     </div>
   ),
-  Callout,
-  Flow,
+  AttentionCard,
   Branch,
-  Layers,
+  Callout,
+  DraftChip,
+  EditTrigger,
+  Flow,
+  HealthChip,
   Lanes,
+  Layers,
+  MetricCell,
+  PulseStrip,
   States,
+  TrailRow,
+  WhyDrawer,
 };
 
 export function useMDXComponents(): MDXComponents {

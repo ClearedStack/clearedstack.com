@@ -8,16 +8,60 @@ export const meta = {
 
 ClearedStack v3.1 turns the original ten-stage prior-art workflow from a static set of essays into a live, 100% deterministic pipeline. Ten small Go services (`cs-01-intake` through `cs-10-notify`) run in the `cs-workers` Kubernetes namespace and pull leased work from `hub-queue-api`. There is zero AI at runtime: every step uses repeatable rules, templates, and sub-tools so the same inputs always produce the same outputs.
 
+<PulseStrip
+  state="empty"
+  summary="0 records collected yet · all 10 deterministic workers idle and ready"
+  metrics={[
+    { label: "Urgent lane", value: "0", unit: "items" },
+    { label: "Normal lane", value: "0", unit: "items" },
+    { label: "Backfill lane", value: "0", unit: "items" },
+    { label: "needs_subtool", value: "0", unit: "paused" },
+  ]}
+/>
+
+<div className="my-6 grid gap-3 sm:grid-cols-3">
+  <MetricCell label="Priority order" value="urgent → normal → backfill" />
+  <MetricCell label="Runtime AI calls" value="0" unit="100% deterministic" />
+  <MetricCell label="Local spool" value="/var/spool/cs" unit="survives hub restart" />
+</div>
+
+<TrailRow
+  id="PA-0000"
+  label="Nothing collected yet"
+  detail="Submit a candidate or propose an edit with ✎ to start the 10-worker deterministic trail."
+  lane="normal"
+  state="empty"
+  timestamp="initial"
+/>
+
 ## From 10 website stages to 10 worker repositories
 
 The original website described ten conceptual stages from discovery to monthly revisit. In v3.1, some stages were combined into a single worker, automated quality checks were split into their own worker, and a tenth worker was added to close notification and code-change loops.
+
+<Flow
+  caption="The ten deterministic worker repositories (cs-01-intake through cs-10-notify) in the cs-workers namespace."
+  direction="down"
+  loop="cs-09-monitor feeds regulatory drift back to cs-06-build and cleared blockers back to cs-02-observe; cs-10-notify routes approved Portal edits and needs_subtool tasks into cs-git."
+  steps={[
+    { tag: "cs-01-intake", label: "Intake & Dedupe", detail: "Normalizes URLs, deduplicates via SHA-256, and assigns a permanent PA-XXXX ID." },
+    { tag: "cs-02-observe", label: "Observe & Seal", detail: "Fetches public pages (~30 MiB Go HTTP pods + on-demand browser Jobs) and seals raw snapshots behind the clean-room wall." },
+    { tag: "cs-03-evaluate", label: "Screen & Score", detail: "Runs 5 binary knockout gates, the 100-point rubric, and 5 tie-breakers using deterministic YAML/Go rules." },
+    { tag: "cs-04-decide", label: "Human Decide", detail: "Powers the decision queue for tool outcomes (Approve, Link, Merge, Park, Reject) and anonymous public edit approvals." },
+    { tag: "cs-05-provenance", label: "Credit & Spec", detail: "Stamps Go-template provenance notes, enforces 48h/5d SLAs, and compiles sanitized JSON build specs." },
+    { tag: "cs-06-build", label: "Clean-Room Build", detail: "Generates an isolated MIT static tool repository from the clean-room spec and stack templates." },
+    { tag: "cs-07-verify", label: "5-Condition QA", detail: "Verifies offline execution, connect-src 'self', zero tracking, worked examples, and citations." },
+    { tag: "cs-08-catalog", label: "Catalog Publish", detail: "Publishes verified, linked, merged, or retired entries to the live /tools catalog." },
+    { tag: "cs-09-monitor", label: "Scheduled Monitor", detail: "Runs ETag, XML, and DOM diff checks on FAR/DFARS/NIST feeds, live tools, linked tools, and parked blockers." },
+    { tag: "cs-10-notify", label: "Notify & Route", detail: "Deduplicates errors by fingerprint, routes approved Portal edits and needs_subtool tasks into cs-git, and streams SSE updates." },
+  ]}
+/>
 
 | Worker repo | Replaces old stage(s) | Deterministic job | Sub-tools (`tools/<case>/`) |
 |---|---|---|---|
 | `cs-01-intake` | Stage 1 (Discover) + Stage 2 (Record) | Normalize URLs, deduplicate by SHA-256, and assign `PA-XXXX` IDs. | Yes (`sam-gov`, `github-issues`, `web-sweep`, `site-form`) |
 | `cs-02-observe` | Stage 3 (Observe) | Fetch public pages via Go extractors (or on-demand headless browser jobs for JS-heavy sites) and seal raw captures behind the clean-room wall. | Yes (`saas-marketing`, `gov-portal`, `agency-pdf`, `<vendor-slug>`) |
 | `cs-03-evaluate` | Stage 4 (Screen) + Stage 5 (Score) | Run 5 binary knockout gates, the 100-point rubric, and 5 tie-breakers using YAML/Go rules. | Yes (`rubric-profiles/<category>`) |
-| `cs-04-decide` | Stage 6 (Decide) | Surface the owner-only decision queue on `/guides/#decide` for item outcomes and anonymous public edit approvals. | No |
+| `cs-04-decide` | Stage 6 (Decide) | Surface the owner-only decision queue for item outcomes and anonymous public edit approvals. | No |
 | `cs-05-provenance` | Stage 7 (Credit) | Stamp provenance notes via Go templates, enforce 48-hour identity verification and 5-day opt-out SLAs, and compile clean-room JSON build specs. | Yes (`spec-profiles/<tool-type>`) |
 | `cs-06-build` | Stage 8 (Build) | Generate isolated static tool repositories from clean-room specs and worked-example fixtures. | Yes (`calculator`, `checklist`, `validator`, `decision-tree`) |
 | `cs-07-verify` | Stage 9 (List, QA split) | Run automated 5-condition checks (offline execution, `connect-src 'self'`, zero tracking, worked examples). | No |
@@ -28,6 +72,26 @@ The original website described ten conceptual stages from discovery to monthly r
 ## The 14 item states and non-linear moves
 
 An item (`PA-XXXX`) does not always march straight from intake to live. The state machine supports 14 explicit states, including early exits, side-branches, revisit loops, and a fail-closed pause state when a worker encounters an unfamiliar format.
+
+<States
+  caption="Record state transitions from initial discovery to catalog publication or terminal archival."
+  states={[
+    { id: "discovered", tag: "Initial", label: "Discovered", detail: "Candidate URL or suggestion captured.", to: [{ id: "recorded", when: "assigned a PA-XXXX identifier and deduplicated" }] },
+    { id: "recorded", label: "Recorded", detail: "Cataloged in the dataset queue.", to: [{ id: "observed", when: "public pages, inputs, and outputs are documented" }] },
+    { id: "observed", label: "Observed", detail: "Public footprint and citations logged (raw snapshot sealed).", to: [{ id: "screened_out", when: "candidate fails any knockout gate" }, { id: "scored", when: "candidate clears all five knockout gates" }, { id: "needs_subtool", when: "unknown page layout (fail closed)" }] },
+    { id: "needs_subtool", tag: "Fail-closed pause", label: "Needs sub-tool", detail: "Paused until a deterministic tools/<case>/ sub-tool is deployed, then auto-replayed.", to: [{ id: "observed", when: "new deterministic sub-tool deployed by cs-store" }] },
+    { id: "screened_out", tag: "Terminal / Reopenable", label: "Screened out", detail: "Disqualified with non-compliance reason logged.", to: [{ id: "observed", when: "scope changes or candidate is restructured (owner only)" }] },
+    { id: "scored", label: "Scored", detail: "Graded on the 100-point rubric.", to: [{ id: "approved", when: "owner approves clean-room build (score >= 75)" }, { id: "linked", when: "equivalent free, private tool already exists" }, { id: "merged", when: "candidate is a feature of an existing tool" }, { id: "parked", when: "viable but deferred or blocked (score 55-74)" }, { id: "rejected", when: "fails viability threshold (score < 55)" }] },
+    { id: "parked", tag: "Deferred", label: "Parked", detail: "Held in reserve with a named blocker.", to: [{ id: "observed", when: "named blocker is resolved on monthly revisit" }] },
+    { id: "approved", tag: "Catalog: planned", label: "Approved", detail: "Scheduled for clean-room implementation.", to: [{ id: "building", when: "repository created and code development begins" }] },
+    { id: "building", tag: "Catalog: building", label: "Building", detail: "Active implementation and test writing.", to: [{ id: "live", when: "passes all five listing conditions" }] },
+    { id: "live", tag: "Catalog: live", label: "Live", detail: "Published in the active catalog with provenance.", to: [{ id: "retired", when: "governing regulation is repealed or superseded" }] },
+    { id: "rejected", tag: "End state", label: "Rejected", detail: "Candidate disqualified. Reason and rubric score permanently archived." },
+    { id: "linked", tag: "End state", label: "Linked", detail: "Existing free tool referenced in documentation. Rebuild avoided." },
+    { id: "merged", tag: "End state", label: "Merged", detail: "Absorbed into parent tool issue tracker as an enhancement." },
+    { id: "retired", tag: "End state", label: "Retired", detail: "Tool deprecated due to statutory amendment or obsolescence." },
+  ]}
+/>
 
 | State | Meaning | Normal next step | Non-linear moves & loops |
 |---|---|---|---|

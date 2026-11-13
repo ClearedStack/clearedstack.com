@@ -12,7 +12,7 @@ Short answers for ClearedStack v3.1, each pointing to the guide with the full de
   caption="ClearedStack v3.1 quick guide finder"
   direction="down"
   steps={[
-    { tag: "Portal & App Store", label: "Live Command Portal", detail: "How /guides/#command, /tools/#apps, /guides/#pipeline, and /guides/#decide work with no login lock." },
+    { tag: "Portal & App Store", label: "Live Command Portal", detail: "How /guides/live-command-portal/, /tools/#apps, /guides/workflow-state-machine/, and /guides/ownership-map-and-edit-loop/ work with no login lock." },
     { tag: "10 Workers", label: "Zero AI at runtime", detail: "100% deterministic Go workers and tools/<case>/ sub-tools." },
     { tag: "No Docker", label: "ko, BuildKit, and cs-registry", detail: "How images are built and stored inside k3s + containerd." },
     { tag: "MIT & GitHub", label: "Clean-room code-only mirror", detail: "MIT across all repos; cs-git mirrors code to GitHub with zero images." },
@@ -31,7 +31,7 @@ It is an independent personal project, built on personal time with personal equi
 
 ### What are the live Command Portal and App Store?
 
-In v3.1, `clearedstack.com` pairs its contractor-first catalog (`/tools/`) with live operational factory views under `/guides/`. The **Command Portal** (`/guides/#command`) uses deterministic priority rules to float `P0` errors, `P1` stalled queues, and `P2` pending decisions or edits to the top while collapsing quiet idle workers to one line. The **App Store** (`/tools/#apps`) displays CasaOS-style cards for every running app and worker with live version, health, and sanitized errors, plus owner-only 1-click **Install / Upgrade / Pause / Rollback** controls. See [Live Command Portal](/guides/live-command-portal/) and [Software decides the UI](/guides/software-decides-ui/).
+In v3.1, `clearedstack.com` pairs its contractor-first catalog (`/tools/`) with live operational factory views under `/guides/`. The **Command Portal** (`/guides/live-command-portal/`) uses deterministic priority rules to float `P0` errors, `P1` stalled queues, and `P2` pending decisions or edits to the top while collapsing quiet idle workers to one line. The **App Store** (`/tools/#apps`) displays CasaOS-style cards for every running app and worker with live version, health, and sanitized errors, plus owner-only 1-click **Install / Upgrade / Pause / Rollback** controls. See [Live Command Portal](/guides/live-command-portal/) and [Software decides the UI](/guides/software-decides-ui/).
 
 ### Why is there no login lock?
 
@@ -106,7 +106,7 @@ Yes. You can deploy the full 17-pod v3.1 platform on a single `k3s` node with on
 
 ### What happens when a worker turns red or an app fails?
 
-`cs-store` watches Pod, Deployment, and Event health and surfaces sanitized error codes (such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL`) directly on `/guides/#command` and `/tools/#apps`. Visitors can inspect the item trail, view `[Why?]` drawers on `/guides/#pipeline`, or propose a fix using `✎`. See [When a worker is red](/guides/when-a-worker-is-red/).
+`cs-store` watches Pod, Deployment, and Event health and surfaces sanitized error codes (such as `E_TIMEOUT`, `E_PARSE`, or `E_NEEDS_SUBTOOL`) directly on `/guides/live-command-portal/` and `/tools/#apps`. Visitors can inspect the item trail, view `[Why?]` drawers on `/guides/workflow-state-machine/`, or propose a fix using `✎`. See [When a worker is red](/guides/when-a-worker-is-red/).
 
 ### Where else can I report a bug or request a tool?
 

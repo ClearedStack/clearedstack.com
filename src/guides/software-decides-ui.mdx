@@ -16,9 +16,9 @@ Instead of letting a language model guess what looks important, the Portal sorts
 
 | Priority Tier | Name | What Triggers It | What Appears on Screen |
 | --- | --- | --- | --- |
-| **P0** | Critical | A pod crashes, a health check fails, an app goes down, or dead-lettered items are greater than zero. | Promoted to the top of [Command](/guides/#command) in crimson (`--danger`) with a sanitized error code and a 1-click Rollback button for the owner. |
+| **P0** | Critical | A pod crashes, a health check fails, an app goes down, or dead-lettered items are greater than zero. | Promoted to the top of [Command](/guides/live-command-portal/) in crimson (`--danger`) with a sanitized error code and a 1-click Rollback button for the owner. |
 | **P1** | Stalled / Attention | A worker pauses in `needs_subtool`, a queue backs up or times out, or the live data stream goes silent for more than 15 seconds. | Surfaced directly alongside P0 items in amber (`--warn`) with the error code and a link to the owning worker repository. |
-| **P2** | Human Action | Items are waiting in `cs-04-decide` for a determination, or anonymous public `✎` edit proposals are waiting for owner approval. | Listed in [`/guides/#decide`](/guides/#decide) and highlighted on [Command](/guides/#command) with the oldest wait time so nothing stalls indefinitely. |
+| **P2** | Human Action | Items are waiting in `cs-04-decide` for a determination, or anonymous public `✎` edit proposals are waiting for owner approval. | Listed in [`/guides/ownership-map-and-edit-loop/`](/guides/ownership-map-and-edit-loop/) and highlighted on [Command](/guides/live-command-portal/) with the oldest wait time so nothing stalls indefinitely. |
 | **P3** | Active / Healthy | Workers or apps are actively processing items with zero errors and fresh timestamps. | Shown in green with current counts and normal status indicators. |
 | **P4** | Quiet / Idle | A healthy worker has zero queued items and zero errors. | Collapsed into a single muted summary line so idle components never clutter the page. |
 

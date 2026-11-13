@@ -12,7 +12,7 @@ Because ClearedStack runs 100% deterministic workers with zero AI at runtime, a 
 
 When a worker pod in the `cs-workers` namespace stalls, crashes, or fails a job, `cs-store` notices immediately. It watches pod, deployment, and Kubernetes event health across the cluster and strips out all private infrastructure details—such as internal IP addresses, node names, pod hostnames, and cluster DNS names—before forwarding a sanitized status update to `hub-queue-api`.
 
-From there, `hub-queue-api` updates the read-only `pub.*` database views and pushes live updates over Server-Sent Events (SSE) to the Portal. On Command (`/guides/#command`), urgent `P0` errors and `P1` stalled queues float straight to the top while healthy, idle workers stay collapsed. On Apps (`/tools/#apps`), the affected worker card turns red and displays its active error code. Because the Portal is an open public sandbox with no login wall, anyone can inspect live worker health and sanitized errors without ever seeing credentials or private network topology.
+From there, `hub-queue-api` updates the read-only `pub.*` database views and pushes live updates over Server-Sent Events (SSE) to the Portal. On Command (`/guides/live-command-portal/`), urgent `P0` errors and `P1` stalled queues float straight to the top while healthy, idle workers stay collapsed. On Apps (`/tools/#apps`), the affected worker card turns red and displays its active error code. Because the Portal is an open public sandbox with no login wall, anyone can inspect live worker health and sanitized errors without ever seeing credentials or private network topology.
 
 ## 2. Sanitized Error Codes
 
