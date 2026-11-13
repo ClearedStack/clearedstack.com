@@ -56,8 +56,8 @@ export const guideGroups = [
   {
     id: "specs",
     code: "L.7",
-    name: "Platform & factory specs",
-    blurb: "Individual technical specifications for every control-plane service and deterministic worker (CLIN 0006).",
+    name: "Tool & platform specs",
+    blurb: "Individual technical specifications for all 35 browser contracting, platform, and factory tools (CLIN 0001–0006).",
   },
 ] as const;
 

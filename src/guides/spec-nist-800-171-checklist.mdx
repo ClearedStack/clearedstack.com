@@ -1,0 +1,86 @@
+export const meta = {
+  title: "NIST SP 800-171 / CMMC Readiness Checklist Specification",
+  summary: "Browser-only checklist and SPRS score calculator for walking through NIST SP 800-171 Revision 2 and FAR 52.204-21 requirements offline.",
+  group: "specs",
+  order: 26,
+  revised: "2026-11",
+  draft: true,
+};
+
+## Overview & Role
+
+The **NIST SP 800-171 / CMMC Readiness Checklist** (`slug: nist-800-171-checklist`, CLIN `0003` — Cybersecurity & compliance, template family `checklist`) is a static, browser-only readiness tool for defense and federal contractors. It lets a user walk through the 15 basic safeguarding requirements of FAR 52.204-21 (CMMC Level 1) or the 110 security requirements of NIST SP 800-171 Revision 2 (CMMC Level 2), record implementation status, compute a deterministic DoD Assessment Methodology (SPRS) score, and export a prioritized Plan of Action and Milestones (POA&M) gap list.
+
+**Scope boundaries:**
+- Covers self-assessment tracking and deterministic scoring only.
+- Does not verify whether a technical control is actually effective on a live system, does not generate a signed affirmation, and does not submit scores to the Supplier Performance Risk System (SPRS).
+- Does not cover classified information or NIST SP 800-172 enhanced requirements (CMMC Level 3).
+
+## Governing Regulations & Sources
+
+- **NIST SP 800-171 Revision 2** (*Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations*): Defines the 110 security requirements across 14 families (Access Control, Awareness and Training, Audit and Accountability, Configuration Management, Identification and Authentication, Incident Response, Maintenance, Media Protection, Personnel Security, Physical Protection, Risk Assessment, Security Assessment, System and Communications Protection, System and Information Integrity). Note: NIST published Revision 3 in 2024 (17 families), but DoD assessments and CMMC Level 2 continue to use Revision 2 unless a contract specifies otherwise.
+- **NIST SP 800-171A** (*Assessing Security Requirements for Controlled Unclassified Information*): Defines the assessment objectives and determination statements for each requirement.
+- **32 CFR Part 170** (CMMC Program rule, specifically **§ 170.24** DoD Assessment Methodology) and **DFARS 252.204-7012 / 252.204-7019 / 252.204-7020 / 252.204-7021**: Govern CUI safeguarding, SPRS self-assessment scoring, and CMMC level requirements.
+- **FAR 52.204-21** (*Basic Safeguarding of Covered Contractor Information Systems*): Defines the 15 basic safeguarding practices for systems holding Federal Contract Information (FCI) only (CMMC Level 1).
+
+## Inputs, Processing Logic & Outputs
+
+### Inputs
+- **Assessment baseline:** `CMMC Level 1 (FAR 52.204-21, 15 practices)` or `CMMC Level 2 / NIST SP 800-171 Rev 2 (110 requirements)`.
+- **Per-requirement record:**
+  - `status`: `not_assessed` | `implemented` | `partially_implemented` | `not_implemented` | `not_applicable`
+  - `notes`: Optional local implementation summary (plain text)
+  - `poamOwner`: Optional owner string for open gaps
+  - `poamTargetDate`: Optional `YYYY-MM-DD` target completion date
+- **Optional state import:** JSON file exported from an earlier local session.
+
+### Deterministic Processing Logic
+1. **Bundled catalog:** All 15 FAR 52.204-21 practices and all 110 NIST SP 800-171 Rev 2 requirements (`3.1.1` through `3.14.7`), family assignments, official DoD Assessment Methodology point weights (`5`, `3`, or `1`), and partial-credit eligibility flags are bundled statically inside the repository.
+2. **SPRS score calculation (NIST SP 800-171 Rev 2):**
+   - Start at `110`.
+   - For each requirement:
+     - `implemented` or `not_applicable`: deduct `0`.
+     - `not_implemented` or `not_assessed`: deduct full weight (`-5`, `-3`, or `-1`). Treating `not_assessed` as unimplemented ensures incomplete checklists fail closed and never inflate a score.
+     - `partially_implemented`: deduct full weight unless the requirement is explicitly eligible for partial credit under the DoD Assessment Methodology (for example, `3.5.3` multifactor authentication implemented for remote/privileged access only, or `3.13.11` non-FIPS cryptography in use, each carrying a `-3` partial deduction instead of `-5`).
+   - Planned items on a POA&M still incur full point deductions until their status is changed to `implemented`.
+   - Valid score range is `-203` to `110`.
+3. **CMMC Level 1 tally:** Counts `implemented` practices out of `15` (all 15 must be `implemented` for Level 1 readiness).
+4. **Family rollup & POA&M prioritization:** Aggregates counts and point deductions per family, then filters `not_implemented` and `partially_implemented` items sorted by descending point weight (`5` → `3` → `1`) so high-impact gaps appear first.
+
+### Outputs
+- **SPRS Readiness Score** (`-203` to `110`) or **Level 1 Tally** (`0/15` to `15/15`).
+- **Family-by-family summary table** showing implemented, partial, open, N/A, and unassessed counts plus points deducted.
+- **Prioritized POA&M gap table** ordered by point impact.
+- **Client-side exports:** Downloadable JSON (round-trip state), CSV, or Markdown summary generated in-memory via `Blob` URLs.
+
+## Clean-Room & 5-Condition QA Requirements
+
+- **Browser-only execution:** All scoring, filtering, and export generation run in client-side JavaScript with zero backend servers.
+- **Strict Content Security Policy:** Enforces `default-src 'self'`, `connect-src 'self'`, and `form-action 'none'` so no assessment data or notes can leave the browser.
+- **Zero tracking or accounts:** No login walls, analytics, cookies, or beacons. If optional `localStorage` persistence is offered, it must be clearly disclosed and paired with a one-click **Clear local data** control.
+- **Offline operation:** All 110 requirement definitions, weights, and scoring rules are bundled in the static build; the tool operates normally with Wi-Fi or Ethernet disconnected.
+- **Clean-room & data hygiene:** Bundled fixtures use synthetic system descriptions only. Displays a clear notice reminding users not to enter real CUI or proprietary SSP details on unapproved machines, linking to [What happens to what you type](/guides/your-data/), and ships under an MIT `LICENSE` with a non-advice disclaimer.
+
+## Worked Example & Verification
+
+**Worked Example (NIST SP 800-171 Rev 2):**
+- Baseline: `110` points.
+- Suppose `107` of `110` requirements are marked `implemented`, and `3` requirements have gaps:
+  - `3.1.1` (Access Control, weight `5`): `not_implemented` → `-5`
+  - `3.5.3` (Identification & Authentication — MFA, weight `5`, partial credit eligible): `partially_implemented` (remote/privileged only) → `-3`
+  - `3.14.6` (System & Information Integrity, weight `1`): `not_implemented` → `-1`
+- Total deductions: `5 + 3 + 1 = 9`.
+- Expected SPRS score: `110 - 9 = 101`.
+
+**Boundary & Edge-Case Assertions:**
+- All `110` requirements `implemented` → score `110`, POA&M list empty (`0` items).
+- All `110` requirements `not_implemented` → score `-203`.
+- Fresh checklist with `0` items assessed (`not_assessed`) → score `-203` (never defaults to `110`).
+- Marking a gap with a `poamTargetDate` without changing `status` to `implemented` leaves the score unchanged.
+
+## Related Guides
+
+- [Protecting government information](/guides/protecting-government-information/)
+- [What happens to what you type](/guides/your-data/)
+- [Build and verify a tool (cs-06 to cs-08)](/guides/build-a-tool/)
+- [cs-07-verify Specification](/guides/spec-cs-07-verify/)

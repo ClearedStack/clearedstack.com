@@ -1,0 +1,101 @@
+export const meta = {
+  title: "Compliance Matrix Generator Specification",
+  summary: "Technical specification for the browser-only Compliance Matrix Generator (CLIN 0002) that maps Section L instructions, Section M evaluation criteria, and Section C work requirements to proposal sections.",
+  group: "specs",
+  order: 23,
+  revised: "2026-11",
+  draft: true,
+};
+
+## Overview & Role
+
+The **Compliance Matrix Generator** (`compliance-matrix-generator`) belongs to **CLIN 0002 — Proposal & capture** in [src/data/catalog.ts](file:///home/antigravity/ClearedStack/clearedstack.com/src/data/catalog.ts). It transforms shredded solicitation requirements into a structured compliance matrix that cross-references **Section L** instructions, **Section M** evaluation factors, and **Section C** work requirements against the bidder's proposal outline, owners, and review status.
+
+As described in [Answer every requirement](/guides/answer-a-solicitation/), a compliance matrix is built before anyone writes a paragraph: it serves as the proposal plan on day one and the final submission checklist before delivery.
+
+| Attribute | Value |
+| --- | --- |
+| **Tool Slug** | `compliance-matrix-generator` |
+| **Catalog CLIN** | `0002` — Proposal & capture |
+| **Stack Template** | `checklist` / `validator` (local matrix builder in `cs-06-build`) |
+| **Runtime** | 100% static browser-side HTML/CSS/JS (zero backend, zero runtime AI) |
+| **License** | MIT |
+
+## Governing Regulations & Sources
+
+- **FAR Part 15 & FAR 15.204-1 (Uniform Contract Format):** Defines the structural separation between **Section L** (*Instructions, conditions, and notices to offerors*), **Section M** (*Evaluation factors for award*), and **Section C** (*Description/specifications/statement of work*). Where the FAR overhaul or FAR Part 12 commercial formats omit lettered sections, the tool maps *Instructions to Offerors*, *Evaluation / Basis for Award*, and *SOW / PWS / SOO* equivalently.
+- **FAR 52.215-1 (Instructions to Offerors—Competitive Acquisition):** Governs responsiveness to instructions, amendment acknowledgment, and compliance with solicitation-supplied templates.
+- **Solicitation-supplied matrix rule:** When a solicitation includes its own compliance matrix template or prescribes specific column headers (e.g., in Section L or a Section J attachment), the solicitation's columns take precedence over default columns.
+
+## Inputs, Processing Logic & Outputs
+
+### Inputs
+
+| Field | Type | Constraints & Defaults |
+| --- | --- | --- |
+| `requirements` | JSON/CSV from `rfp-requirement-shredder` or manual paste | Array of rows containing `id`, `source`, `text`, and optional `kind` (`L`, `M`, `C`, `H`, `J`). |
+| `proposalOutline` | Structured list of volumes/sections | Each entry has `volume`, `sectionNumber`, `heading`, and optional `pageLimit`. |
+| `crosswalkLinks` | Array of `{ reqId, factorId, sectionId }` | Links Section M evaluation factors to Section L instructions and Section C tasks. |
+| `customColumns` | Optional list of column names | Supports overriding default columns to match a government-mandated template. |
+
+### Deterministic Processing Logic
+
+1. **Requirement ingestion & deduplication:** Parses imported CSV/JSON or pasted rows, validates unique requirement IDs (`L-001`, `M-001`, `C-001`), and preserves exact solicitation wording.
+2. **Three-way crosswalk validation:** Checks alignment across the three requirement types:
+   - Flags any **Section M** evaluation factor with no linked **Section L** instruction (orphan evaluation factor — candidate for a pre-award question to the contracting officer).
+   - Flags any **Section L** content instruction with no linked **Section M** factor or **Section C** requirement.
+   - Flags any requirement row whose `Proposal location` is unassigned or whose `Status` is not `final` when running the readiness check.
+3. **Outline-driven sorting:** Orders matrix rows either by solicitation ID (`L` → `M` → `C`) or by proposal volume/section order so evaluators and red-team reviewers can walk the matrix top-to-bottom.
+4. **Status & coverage rollup:** Computes deterministic counts by status (`Not started`, `Drafted`, `Reviewed`, `Final`), by owner, and by volume.
+
+### Outputs
+
+- **Interactive Compliance Matrix Table:** Default columns per [Answer every requirement](/guides/answer-a-solicitation/):
+  - `ID`
+  - `Source` (section, paragraph, page)
+  - `Requirement` (exact text)
+  - `Linked Factor / Instruction` (crosswalk reference)
+  - `Proposal Location` (volume, section, page)
+  - `Owner`
+  - `Status` (`Not started` | `Drafted` | `Reviewed` | `Final`)
+  - `Notes` (open questions, assumptions, amendment references)
+- **Gap & Orphan Report:** Lists unmapped requirements, Section L/M mismatches, and incomplete rows.
+- **Local Exports:** Client-side CSV (RFC 4180 escaped) and JSON exports for spreadsheet or proposal-folder archiving.
+
+## Clean-Room & 5-Condition QA Requirements
+
+1. **Browser-only execution:** All matrix assembly, crosswalk validation, and CSV/JSON generation execute locally in browser memory.
+2. **Strict Content Security Policy (`connect-src 'self'`):** Enforces `default-src 'self'; connect-src 'self'; form-action 'none'`. Proprietary proposal outlines, win themes, and capture notes never leave the browser.
+3. **Zero tracking or accounts:** Zero authentication, telemetry, cookies, or external scripts. Any optional `localStorage` persistence for work-in-progress matrices is disclosed with a one-click **Clear local data** control.
+4. **Offline execution:** Operates completely offline after initial page load, with all validation rules and templates bundled locally.
+5. **Worked examples, citations & scope limits:** Verified against synthetic test fixtures, cites FAR Part 15 / 15.204-1 / 52.215-1, includes an MIT `LICENSE`, and states that a compliance matrix verifies structural coverage—not whether the written technical narrative actually persuades an evaluator.
+
+## Worked Example & Verification
+
+**Synthetic Input:**
+- `L-001` (`Section L.4.1, p. 12`): `"The technical volume shall describe the transition-in approach."`
+- `M-001` (`Section M.2.1, p. 20`): `"Factor 1, Technical Approach, evaluates transition-in readiness."`
+- `M-002` (`Section M.2.2, p. 21`): `"Factor 2, Past Performance, evaluates recent similar contracts."` *(No Section L instruction linked)*
+- `C-001` (`Section C.3.1, p. 18`): `"The contractor shall complete transition-in within 30 days of award."`
+- Proposal outline: `Vol I, Section 1.1 — Transition-In Approach`
+
+**Expected Output:**
+
+| ID | Source | Linked | Proposal Location | Owner | Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| `L-001` | `L.4.1, p. 12` | `M-001` | `Vol I, Sec 1.1` | `Capture Lead` | `Drafted` | Uses solicitation term "transition-in" |
+| `M-001` | `M.2.1, p. 20` | `L-001`, `C-001` | `Vol I, Sec 1.1` | `Capture Lead` | `Drafted` | Scored under Factor 1 |
+| `C-001` | `C.3.1, p. 18` | `M-001` | `Vol I, Sec 1.1` | `Tech Lead` | `Drafted` | 30-day schedule milestone |
+| `M-002` | `M.2.2, p. 21` | *None* | *Unassigned* | *Unassigned* | `Not started` | **Gap:** Section M factor without Section L link |
+
+**Verification assertions:**
+- Coverage rollup reports `3 / 4` mapped (`75%`), `1` unassigned row (`M-002`), and `1` Section L/M crosswalk gap (`M-002`).
+- CSV export properly quotes cells containing commas and newlines.
+
+## Related Guides
+
+- [Answer every requirement](/guides/answer-a-solicitation/)
+- [Read a solicitation](/guides/read-a-solicitation/)
+- [RFP Requirement Shredder Specification](/guides/spec-rfp-requirement-shredder/)
+- [Page Budget Planner Specification](/guides/spec-page-budget-planner/)
+- [cs-07-verify Specification](/guides/spec-cs-07-verify/)

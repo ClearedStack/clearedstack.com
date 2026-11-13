@@ -1,0 +1,94 @@
+export const meta = {
+  title: "Certificate Verifier Specification",
+  summary: "Browser-only X.509 certificate decoder, chain validator, and expiry checker using RFC 5280 rules and Web Crypto on disconnected machines.",
+  group: "specs",
+  order: 34,
+  revised: "2026-11",
+  draft: true,
+};
+
+## Overview & Role
+
+**Certificate Verifier** (`slug: certificate-verifier`, CLIN `0005` — Tactical & DevSecOps) is a client-side X.509 inspection and chain-verification tool in the ClearedStack catalog. On disconnected or air-gapped networks, browsers and operating systems cannot reach public OCSP responders, Authority Information Access (AIA) intermediate URLs, or NTP time servers. Internal enclaves also rely on private Certificate Authorities (CAs) that are not pre-installed in public trust stores, and host clocks can drift.
+
+Certificate Verifier lets operators decode PEM or DER certificates, inspect Subject Alternative Names (SANs) and key usages, validate signature chains against a user-supplied CA bundle, check expiry windows, and evaluate offline Certificate Revocation Lists (CRLs) entirely inside the browser—never transmitting certificates or private data off the machine.
+
+## Governing Standards & Sources
+
+| Topic | Governing Standard | Scope in Tool |
+| --- | --- | --- |
+| **Certificate & CRL Profile** | RFC 5280 (*Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile*) | `TBSCertificate`, `Subject`, `Issuer`, `Validity` (`UTCTime` / `GeneralizedTime`), `BasicConstraints` (`cA`, `pathLenConstraint`), `KeyUsage`, `ExtendedKeyUsage`, `SubjectAlternativeName`, `SKI`/`AKI`, and X.509 v2 CRLs. |
+| **ASN.1 Binary Encoding** | ITU-T X.690 (*ASN.1 Distinguished Encoding Rules — DER*) | Deterministic tag-length-value (TLV) decoding of X.509 certificates and CRLs from raw bytes without external libraries making network calls. |
+| **PEM Textual Encoding** | RFC 7468 (*Textual Encodings of PKIX, PKCS, and CMS Structures*) | Parsing `-----BEGIN CERTIFICATE-----` and `-----BEGIN X509 CRL-----` blocks, including multi-certificate PEM bundles. |
+| **Hashes & Signatures** | NIST FIPS 180-4 (*SHA-256/384/512*), RFC 8017 (RSA), RFC 5480 (ECDSA) | Fingerprinting and cryptographic signature verification via Web Crypto (`crypto.subtle.digest` and `crypto.subtle.verify`). |
+
+**Scope limits:** Certificate Verifier never requests or accepts private keys. It does **not** perform live OCSP or AIA network lookups, does **not** modify the host operating system's trust store, and does **not** replace formal PKI accreditation checks.
+
+## Inputs, Processing Logic & Outputs
+
+### Inputs
+
+- **Target certificate:** Pasted PEM text or uploaded `.pem`, `.crt`, `.cer`, or `.der` file (leaf or CA certificate).
+- **Optional CA trust bundle:** One or more PEM/DER intermediate and root CA certificates used as the local trust anchor set (`CAfile` equivalent).
+- **Optional offline CRL:** A `.crl` file (PEM or DER) brought across the boundary on a schedule to check for revoked serial numbers.
+- **Evaluation options:**
+  - **Reference UTC timestamp:** Defaults to the browser's current UTC time, with a manual override so operators can detect or compensate for disconnected clock drift.
+  - **Expiry warning window (seconds):** Defaults to `2592000` seconds (30 days, matching `openssl x509 -checkend 2592000`).
+  - **Optional hostname:** Checked against `SubjectAlternativeName` (`dNSName` / `iPAddress`).
+
+### Deterministic Browser-Only Processing Logic
+
+1. **PEM/DER normalization:** Detects RFC 7468 PEM headers or raw ASN.1 DER `SEQUENCE` (`0x30`) bytes. Extracts exact DER byte slices for the target certificate, each CA bundle certificate, and any supplied CRL.
+2. **SHA-256 fingerprint:** Computes `crypto.subtle.digest("SHA-256", derBytes)` for each certificate.
+3. **ASN.1 DER decoding:** Parses `Certificate` (`tbsCertificate` raw slice, `signatureAlgorithm` OID, `signatureValue` bit string) and extracts Subject, Issuer, Serial Number, `notBefore`, `notAfter`, `SubjectPublicKeyInfo`, and standard X.509 v3 extensions (`BasicConstraints`, `KeyUsage`, `ExtendedKeyUsage`, `SubjectAlternativeName`, `SubjectKeyIdentifier`, `AuthorityKeyIdentifier`).
+4. **Chain construction & Web Crypto signature verification:**
+   - Builds the chain from leaf to a root in the supplied CA bundle by matching `Issuer` DN and `AuthorityKeyIdentifier` to `Subject` DN and `SubjectKeyIdentifier`.
+   - Enforces `BasicConstraints.cA === true` and `pathLenConstraint` on every intermediate and root CA.
+   - Verifies each child certificate's signature by calling `crypto.subtle.importKey` on the parent's `SubjectPublicKeyInfo` and `crypto.subtle.verify` over the child's exact `tbsCertificate` DER bytes (supporting RSA PKCS#1 v1.5, RSA-PSS, and ECDSA P-256 / P-384 with SHA-256/384/512).
+5. **Validity, SAN, & CRL evaluation:**
+   - Checks `notBefore <= evalTime <= notAfter` and flags upcoming expiry if `evalTime + warningSeconds > notAfter`.
+   - Matches optional hostname against SAN entries (supporting exact and single-label wildcard DNS rules).
+   - If a CRL is supplied, verifies its signature against the matching issuer CA, checks whether the leaf serial number appears in `revokedCertificates`, and warns if `evalTime > crl.nextUpdate` (stale CRL).
+6. **Deterministic outcome classification:** Maps failures to explicit diagnostics matching [Working on disconnected networks](/guides/disconnected-networks/): `OK`, `Missing authority (unable to get local issuer certificate)`, `Expired or not yet valid (check clock drift)`, `Self-signed / untrusted root`, `Signature invalid`, or `Revoked in CRL`.
+
+### Outputs
+
+- **Decoded certificate table:** Subject, Issuer, Serial Number, Validity dates, SANs, Key Usage, Signature Algorithm, and SHA-256 fingerprint.
+- **Chain verification diagram:** Step-by-step link status from leaf through intermediates to root trust anchor.
+- **Exportable verification record:** JSON or Markdown report generated locally via `Blob` URL (`URL.createObjectURL`).
+
+## Clean-Room & 5-Condition QA Requirements
+
+To pass `cs-07-verify` and move from `planned` to `live` in `src/data/catalog.ts`, Certificate Verifier must satisfy all five universal QA conditions and ClearedStack's clean-room rules:
+
+| Requirement | Verification Criterion |
+| --- | --- |
+| **1. Browser-only & offline** | All ASN.1 DER parsing, date math, and RSA/ECDSA signature checks run locally in the browser using TypeScript and Web Crypto (`crypto.subtle`); works in both Full Enclave Stack and Snapshot Mode. |
+| **2. Strict CSP** | Enforces `default-src 'self'`, `connect-src 'self'`, and `form-action 'none'`; zero network calls (no OCSP, CRL, or AIA fetches). |
+| **3. Zero tracking or accounts** | No cookies, analytics, sign-in walls, or telemetry; certificates are never uploaded or persisted on any server. |
+| **4. Worked examples** | Ships with synthetic PEM test chains (valid chain, expired cert, missing intermediate, self-signed leaf) verified by automated unit tests. |
+| **5. Citations, scope & MIT** | Cites RFC 5280, ITU-T X.690, RFC 7468, and FIPS 180-4; states scope exclusions and non-advice notice; includes an MIT `LICENSE` file. |
+
+**Clean-room boundary:** Built from scratch in `cs-06-build` from the `cs-05-provenance` JSON specification, without copying code or UI from third-party online SSL/TLS decoders.
+
+## Worked Example & Verification
+
+### Synthetic Verification Case: 2-Certificate Internal Enclave Chain
+
+1. **Inputs:**
+   - **Leaf:** Synthetic ECDSA P-256 certificate for `Subject: CN=server.internal.example`, `SAN: DNS:server.internal.example`, `Validity: 2026-01-01T00:00:00Z` to `2027-01-01T00:00:00Z`, `BasicConstraints: cA=FALSE`.
+   - **CA Bundle:** Synthetic self-signed `Internal Enclave Root CA` (`BasicConstraints: cA=TRUE`, `KeyUsage: keyCertSign, cRLSign`).
+   - **Evaluation timestamp:** `2026-11-15T00:00:00Z`; **Warning window:** `2592000` seconds (30 days); **Hostname:** `server.internal.example`.
+2. **Expected Processing & Output:**
+   - **Signature check:** `crypto.subtle.verify` confirms leaf `tbsCertificate` signature against `Internal Enclave Root CA` public key → `VALID`.
+   - **Validity check:** `2026-11-15` is within `[2026-01-01, 2027-01-01]` → `VALID`.
+   - **30-day expiry check:** `2026-11-15 + 30 days = 2026-12-15 <= 2027-01-01` → `PASS` (47 days remaining).
+   - **SAN check:** `server.internal.example` matches `DNS:server.internal.example` → `MATCH`.
+   - **Missing-CA negative test:** Removing `Internal Enclave Root CA` from the CA bundle deterministically returns `Missing authority (unable to get local issuer certificate)`.
+
+## Related Guides
+
+- [Working on disconnected networks](/guides/disconnected-networks/)
+- [Run it on a closed network](/guides/closed-networks/)
+- [cs-07-verify Specification](/guides/spec-cs-07-verify/)
+- [Clean-Room MIT Architecture](/guides/mit-clean-room-architecture/)

@@ -1,0 +1,108 @@
+export const meta = {
+  title: "Page Budget Planner Specification",
+  summary: "Technical specification for the browser-only Page Budget Planner (CLIN 0002) that allocates solicitation page limits across proposal volumes and sections by evaluation weight.",
+  group: "specs",
+  order: 25,
+  revised: "2026-11",
+  draft: true,
+};
+
+## Overview & Role
+
+The **Page Budget Planner** (`page-budget-planner`) belongs to **CLIN 0002 — Proposal & capture** in [src/data/catalog.ts](file:///home/antigravity/ClearedStack/clearedstack.com/src/data/catalog.ts). It divides a solicitation's hard page limit across proposal volumes and sections in proportion to Section M evaluation weights, after reserving fixed pages for introductions, summaries, or counted front matter.
+
+As explained in [Answer every requirement](/guides/answer-a-solicitation/), a page limit is a strict requirement: pages beyond the limit are commonly removed unread. Setting each writer's page budget on day one prevents last-minute cutting of scored technical content.
+
+| Attribute | Value |
+| --- | --- |
+| **Tool Slug** | `page-budget-planner` |
+| **Catalog CLIN** | `0002` — Proposal & capture |
+| **Stack Template** | `calculator` (deterministic allocation math in `cs-06-build`) |
+| **Runtime** | 100% static browser-side HTML/CSS/JS (zero backend, zero runtime AI) |
+| **License** | MIT |
+
+## Governing Regulations & Sources
+
+- **FAR Part 15 & FAR 15.204-1 (Sections L and M):** Section L establishes volume structure, page limits, and formatting constraints (paper size, margins, font size, line spacing, and whether covers, tables of contents, acronym lists, resumes, or fold-outs count toward the limit). Section M states the evaluation factors and their relative importance (numerical weights or qualitative rankings such as *"significantly more important than"*).
+- **FAR 52.215-1 (Instructions to Offerors—Competitive Acquisition):** Governs compliance with proposal preparation instructions and page-limit enforcement.
+- **Solicitation-specific counting rules:** Because solicitations differ on whether covers, TOCs, compliance matrices, and resumes count toward the cap, the planner models fixed reservations explicitly so the user can align inputs to Section L.
+
+## Inputs, Processing Logic & Outputs
+
+### Inputs
+
+| Field | Type | Constraints & Defaults |
+| --- | --- | --- |
+| `totalPageLimit` | Integer >= 1 | Total allowed pages for the volume (from Section L). |
+| `fixedAllocations` | Array of `{ label, pages, counted }` | Fixed pages (e.g., Introduction/Executive Summary, or counted TOC/Compliance Matrix). Items with `counted: false` are tracked separately and excluded from the `totalPageLimit` pool. |
+| `sections` | Array of `{ name, weight, minPages? }` | Scored sections/factors with relative weights (percentages or points, normalized automatically if they do not sum to 100) and optional minimum floor (`>= 0`). |
+| `roundingStep` | Enum (`1`, `0.5`) | Defaults to `1` (whole-page budgets) or `0.5` (half-page increments). |
+
+### Deterministic Processing Logic
+
+1. **Available pool calculation:**
+   - `countedFixed = sum(fixed.pages where fixed.counted === true)`
+   - `availablePages = totalPageLimit - countedFixed`
+   - Fails closed with a clear validation error if `countedFixed > totalPageLimit` or if `sum(section.minPages) > availablePages`.
+2. **Weight normalization:**
+   - `totalWeight = sum(section.weight)` (must be `> 0`).
+   - `share_i = section_i.weight / totalWeight`
+3. **Proportional allocation & largest-remainder rounding:**
+   - Computes exact target `exact_i = availablePages * share_i`, clamped to at least `minPages_i`.
+   - Floors each section to `roundingStep` (`floor(exact_i / step) * step`) and distributes remaining `step` units deterministically by largest fractional remainder (tie-breaking by highest weight, then section order) so the allocated pages **sum exactly** to `availablePages` and `countedFixed + sum(allocated) === totalPageLimit`.
+4. **Word-count guidance (informational):** Estimates approximate word budget (`allocatedPages * wordsPerPage`, defaulting to `350`–`450` words/page depending on user-selected density) as a writer aid.
+
+### Outputs
+
+- **Volume Page Budget Table:** Columns `Part / Section`, `Working Weight (%)`, `Exact Share`, `Allocated Pages`, `Counted?`, and `Estimated Words`.
+- **Excluded Front/Back Matter Summary:** Lists items marked `counted: false` (e.g., covers, resumes, acronym lists if excluded by Section L) so writers still track total deliverable length.
+- **Local Exports:** CSV and Markdown table exports for immediate inclusion in the proposal kickoff plan.
+
+## Clean-Room & 5-Condition QA Requirements
+
+1. **Browser-only execution:** All allocation arithmetic and largest-remainder rounding run in client-side JavaScript.
+2. **Strict Content Security Policy (`connect-src 'self'`):** Enforces `default-src 'self'; connect-src 'self'; form-action 'none'`. Capture strategies and volume outlines stay strictly local.
+3. **Zero tracking or accounts:** No sign-in, cookies, analytics, or external requests. Any optional `localStorage` persistence is disclosed with a **Clear local data** control.
+4. **Offline execution:** Works completely offline after initial load with zero external dependencies.
+5. **Worked examples, citations & scope limits:** Verified against the exact worked example in [Answer every requirement](/guides/answer-a-solicitation/) and boundary edge cases (zero weights, over-allocated fixed pages, fractional remainders), cites FAR Part 15 / 52.215-1, carries an MIT `LICENSE`, and states that working weights represent the bidder's reading of Section M prose—not official government scoring formulas—unless Section M states explicit point values.
+
+## Worked Example & Verification
+
+**Synthetic Input (from [Answer every requirement](/guides/answer-a-solicitation/)):**
+- `totalPageLimit`: `30`
+- `fixedAllocations`: `Introduction and summary` = `2` pages (`counted: true`)
+- `sections`:
+  - `Factor 1, technical approach` — weight `50`
+  - `Factor 2, management approach` — weight `30`
+  - `Factor 3, staffing` — weight `20`
+- `roundingStep`: `1`
+
+**Step-by-step calculation:**
+- `availablePages = 30 - 2 = 28` pages.
+- Exact shares:
+  - Factor 1: `28 × 0.50 = 14.0` → `14` pages (remainder `0.0`)
+  - Factor 2: `28 × 0.30 = 8.4` → `8` pages (remainder `0.4`)
+  - Factor 3: `28 × 0.20 = 5.6` → `5` pages + `1` largest remainder = `6` pages (remainder `0.6`)
+
+**Expected Output:**
+
+| Part | Working Weight | Pages |
+| --- | ---: | ---: |
+| Introduction and summary | — | 2 |
+| Factor 1, technical approach | 50% | 14 |
+| Factor 2, management approach | 30% | 8 |
+| Factor 3, staffing | 20% | 6 |
+| **Total** | **100%** | **30** |
+
+**Boundary cases verified by `cs-07-verify`:**
+- `countedFixed > totalPageLimit` displays an inline error and refuses to emit negative section budgets.
+- `totalWeight === 0` displays an inline validation error instead of dividing by zero.
+- Unnormalized weights (e.g., `5, 3, 2`) normalize identically to `50%, 30%, 20%`.
+
+## Related Guides
+
+- [Answer every requirement](/guides/answer-a-solicitation/)
+- [Read a solicitation](/guides/read-a-solicitation/)
+- [Compliance Matrix Generator Specification](/guides/spec-compliance-matrix-generator/)
+- [Check a tool’s answer](/guides/checking-results/)
+- [cs-07-verify Specification](/guides/spec-cs-07-verify/)

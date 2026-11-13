@@ -127,13 +127,12 @@ export function ToolCatalog() {
                   className="grid gap-x-6 gap-y-1.5 border-b border-line py-4 sm:grid-cols-[minmax(0,17rem)_1fr_auto] sm:items-baseline"
                 >
                   <h3 className="font-medium">
-                    {tool.url ? (
-                      <a href={tool.url} className="underline decoration-accent underline-offset-4 hover:text-accent">
-                        {tool.name}
-                      </a>
-                    ) : (
-                      tool.name
-                    )}
+                    <Link
+                      href={tool.url ?? `/guides/spec-${tool.slug}/`}
+                      className="underline decoration-accent underline-offset-4 hover:text-accent"
+                    >
+                      {tool.name}
+                    </Link>
                   </h3>
                   <div>
                     <p className="text-sm leading-relaxed text-muted">{tool.summary}</p>
