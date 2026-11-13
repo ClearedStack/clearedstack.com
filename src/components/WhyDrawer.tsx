@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export function WhyDrawer({
@@ -77,12 +78,13 @@ export function WhyDrawer({
 
             {guideHref && (
               <div className="border-t border-line pt-4">
-                <a
+                <Link
                   href={guideHref}
+                  onClick={() => setOpen(false)}
                   className="font-mono text-xs uppercase tracking-wider text-accent underline underline-offset-4 hover:text-ink"
                 >
                   Read full big-picture guide -&gt;
-                </a>
+                </Link>
               </div>
             )}
           </div>

@@ -3,7 +3,7 @@ import searchData from "@/data/search-data.json";
 
 export type SearchItem = {
   id: string;
-  type: "tool" | "guide" | "section" | "page";
+  type: "tool" | "app" | "guide" | "section" | "page";
   title: string;
   subtitle: string;
   summary: string;

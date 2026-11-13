@@ -1,6 +1,6 @@
 export const meta = {
   title: "When a Worker Turns Red: Troubleshooting Big Picture",
-  summary: "How live error reporting, sanitized error codes, local worker spools, 1-click Pause and Rollback in /apps, and automatic issue deduplication in cs-10-notify work together when a worker fails.",
+  summary: "How live error reporting, sanitized error codes, local worker spools, 1-click Pause and Rollback in /guides/apps/, and automatic issue deduplication in cs-10-notify work together when a worker fails.",
   group: "host",
   order: 12,
   revised: "2026-11",
@@ -12,7 +12,7 @@ Because ClearedStack runs 100% deterministic workers with zero AI at runtime, a 
 
 When a worker pod in the `cs-workers` namespace stalls, crashes, or fails a job, `cs-store` notices immediately. It watches pod, deployment, and Kubernetes event health across the cluster and strips out all private infrastructure details—such as internal IP addresses, node names, pod hostnames, and cluster DNS names—before forwarding a sanitized status update to `hub-queue-api`.
 
-From there, `hub-queue-api` updates the read-only `pub.*` database views and pushes live updates over Server-Sent Events (SSE) to the Portal. On Command (`/`), urgent `P0` errors and `P1` stalled queues float straight to the top while healthy, idle workers stay collapsed. On Apps (`/apps`), the affected worker card turns red and displays its active error code. Because the Portal is an open public sandbox with no login wall, anyone can inspect live worker health and sanitized errors without ever seeing credentials or private network topology.
+From there, `hub-queue-api` updates the read-only `pub.*` database views and pushes live updates over Server-Sent Events (SSE) to the Portal. On Command (`/guides/command/`), urgent `P0` errors and `P1` stalled queues float straight to the top while healthy, idle workers stay collapsed. On Apps (`/guides/apps/` and `/tools/#apps`), the affected worker card turns red and displays its active error code. Because the Portal is an open public sandbox with no login wall, anyone can inspect live worker health and sanitized errors without ever seeing credentials or private network topology.
 
 ## 2. Sanitized Error Codes
 
@@ -32,9 +32,9 @@ Sometimes the problem is not the data—it is a brief hiccup between a worker an
 
 If `hub-queue-api` is temporarily unreachable when a worker finishes a job or needs to report an error, the worker writes the result to its local spool instead of dropping it on the floor. As soon as the connection recovers, the worker flushes its spooled updates in order. Because every worker is deterministic, replaying or flushing spooled work produces the exact same outcome.
 
-## 4. 1-Click Pause and Rollback in `/apps`
+## 4. 1-Click Pause and Rollback in `/guides/apps/`
 
-If a worker turns red right after an update—or keeps hammering a broken external site—you do not need to edit cluster manifests by hand. In Owner Mode on `/apps`, `cs-store` gives you two immediate safety switches on every worker card:
+If a worker turns red right after an update—or keeps hammering a broken external site—you do not need to edit cluster manifests by hand. In Owner Mode on `/guides/apps/` (or `/tools/#apps`), `cs-store` gives you two immediate safety switches on every worker card:
 
 | Action | What It Does | When to Use It |
 | --- | --- | --- |

@@ -32,16 +32,18 @@ A current web browser (Firefox, Chrome, Edge, or Safari) is all you need.
 
 ## Navigating the open Portal
 
-The ClearedStack v3.1 Portal (`clearedstack.com`) is organized into six public routes. Every route is readable without signing in:
+ClearedStack (`clearedstack.com`) keeps top navigation focused on **Tools**, **Guides**, **About**, and **GitHub**, while housing every live factory and evaluation view under **Guides**. Every route is readable without signing in:
 
 | Route | Name | What you see |
 | --- | --- | --- |
-| [`/`](/) | **Command** | Priority dashboard that floats `P0` errors, `P1` stalled queues, and `P2` pending decisions or edits to the top while collapsing quiet idle workers to a single line. |
-| [`/apps`](/apps) | **Apps** | Card view of every running control-plane service and worker (`cs-01` through `cs-10`), showing version, live health, and sanitized errors. Owner-only controls (**Install**, **Upgrade**, **Pause**, **Rollback**) stay locked to the owner. |
-| [`/pipeline`](/pipeline) | **Pipeline** | Real-time view of the 10-worker deterministic pipeline (`cs-01-intake` through `cs-10-notify`), queue depths, item trails, and `[Why?]` drawers explaining each rule. |
-| [`/decide`](/decide) | **Decide** | Publicly visible inbox for `cs-04-decide` item determinations and community edit proposals. Anyone can read pending items and rationale; only the owner can approve or reject them. |
-| [`/tools`](/tools/) | **Tools** | The catalog of MIT-licensed, client-side contracting tools across five Contract Line Item Number (CLIN) areas, including verification status and direct launch links. |
-| [`/guides`](/guides/) | **Guides** | The plain-language reference library covering federal contracting concepts, compliance frameworks, and ClearedStack architecture. |
+| [`/`](/) | **Home** | Federal contract overview (`Sections B, C, F, H, M`), $0.00 CLIN schedule, catalog preview, and 10-worker factory summary. |
+| [`/tools/`](/tools/) | **Tools & Apps** | Unified catalog of 18 browser contracting utilities (`CLIN 0001`–`0005`) plus all 17 MIT platform microservices and workers (`CLIN 0006`, [`#apps`](/tools/#apps)). |
+| [`/guides/`](/guides/) | **Guides Library** | Field manuals (`L.1`–`L.6`), reading tracks, and entry cards to all live factory views. |
+| [`/guides/command/`](/guides/command/) | **Command** | Priority dashboard that floats `P0` errors, `P1` stalled queues, and `P2` pending decisions or edits to the top. |
+| [`/guides/apps/`](/guides/apps/) | **Apps** | Cluster App Store view of every control-plane service and worker (`cs-01` through `cs-10`), showing version, live health, and Owner Mode rollback preview. |
+| [`/guides/pipeline/`](/guides/pipeline/) | **Pipeline** | Real-time view of the 10-worker deterministic pipeline (`cs-01-intake` through `cs-10-notify`), queue depths, item trails, and `[? Why]` drawers. |
+| [`/guides/decide/`](/guides/decide/) | **Decide** | Publicly visible inbox for `cs-04-decide` item determinations and community `✎ Edit` proposals. |
+| [`/guides/how-we-decide/`](/guides/how-we-decide/) | **How We Decide** | Section M evaluation factors, 5 binary knockout gates, 100-point rubric, and 14-state lifecycle. |
 
 ## Snapshot Mode vs. live cluster
 
@@ -52,13 +54,13 @@ Depending on how you access ClearedStack, you will interact with either the **li
 | **Live cluster** | Full 17-pod Kubernetes platform (7 control-plane pods in `clearedstack` and 10 deterministic Go workers in `cs-workers`), backed by `cs-git`, `cs-registry`, `cs-runner`, `cs-store`, and Postgres. | Live worker health, real-time Server-Sent Events (SSE), queue inspection, and anonymous `✎` edit proposals. | Exploring the live public sandbox at `clearedstack.com` or running a self-hosted `k3s` cluster. |
 | **Snapshot Mode** | A frozen, timestamped static bundle (HTML, CSS, JavaScript, fonts, guides, catalog, and verified tools) with no backend database or workers. | Reading all guides, searching the catalog, and running verified client-side tools locally in browser memory. | Air-gapped networks, local folders, or single-file offline use where no cluster is needed. |
 
-In Snapshot Mode, interactive control-plane features—such as submitting `✎` proposals, watching live `cs-09-monitor` checks, or inspecting real-time worker queues—are turned off. Every snapshot displays its build timestamp so you always know the exact date of the catalog and rules you are using. See [Closed and air-gapped networks](/guides/closed-networks/) for deployment details.
+In Snapshot Mode, interactive control-plane features—such as submitting live `✎` proposals to `hub-queue-api`, watching live `cs-09-monitor` checks, or streaming real-time worker queues—fall back cleanly to static preview state. See [Closed and air-gapped networks](/guides/closed-networks/) for deployment details.
 
 ## Inspecting worker health without an account
 
 ClearedStack separates **cluster-private internals** from **public operational transparency**. Only the Portal (`clearedstack-web`) faces the internet, and it queries read-only `pub.*` database views (`pub_ro` role).
 
-When you open [`/`](/), [`/apps`](/apps), or [`/pipeline`](/pipeline) without signing in, you can inspect:
+When you open [`/guides/command/`](/guides/command/), [`/guides/apps/`](/guides/apps/), or [`/guides/pipeline/`](/guides/pipeline/) without signing in, you can inspect:
 
 - **Worker status and versions:** Live health for all 10 deterministic workers (`cs-01-intake` through `cs-10-notify`) and control-plane services.
 - **Queue depths and item trails:** Which items are queued, verified, parked, or waiting in `needs_subtool` for a new deterministic sub-tool.
@@ -76,7 +78,7 @@ Anyone can suggest a fix, report a broken extractor, or propose a catalog update
   steps={[
     { tag: "1", label: "Click ✎", detail: "Select the edit button next to any eligible element on the Portal." },
     { tag: "2", label: "5-layer check", detail: "Browser solves a ~1s SHA-256 Proof-of-Work puzzle and validates schema." },
-    { tag: "3", label: "Owner review", detail: "Proposal waits in /decide (cs-04-decide) as pending_approval." },
+    { tag: "3", label: "Owner review", detail: "Proposal waits in /guides/decide/ (cs-04-decide) as pending_approval." },
     { tag: "4", label: "Build & deploy", detail: "Approved edits commit to cs-git, build via cs-runner, and go live." },
   ]}
 />
@@ -87,7 +89,7 @@ To keep the open sandbox safe without CAPTCHAs or logins, every `✎` submission
 2. **Honeypot field:** A hidden form field silently discards automated scraper submissions.
 3. **Daily-salted IP hash rate limit:** Caps submission volume per hashed IP without ever storing raw IP addresses.
 4. **Strict schema validation:** Checks the target element against `ownership_map.json`, enforces the edit class (`DATA`, `CONFIG`, or `ISSUE`) and a 4 KB size limit, and strips all HTML or scripts.
-5. **Human approval gate:** Proposals sit in `pending_approval` inside [`/decide`](/decide) and never touch `cs-git` or the cluster until the owner clicks **Approve**.
+5. **Human approval gate:** Proposals sit in `pending_approval` inside [`/guides/decide/`](/guides/decide/) and never touch `cs-git` or the cluster until the owner clicks **Approve**.
 
 Once submitted, your `✎` button turns into a live status pill so you can track your proposal from **Proposed** to **Approved**, **Building**, and **Live**.
 

@@ -57,6 +57,12 @@ export function ToolCatalog() {
             {category.clin} {category.name}
           </a>
         ))}
+        <a
+          href="#apps"
+          className="rounded-sm border border-line px-2.5 py-1.5 font-mono text-xs text-accent transition-colors hover:border-ink hover:text-ink"
+        >
+          0006 Platform &amp; Factory Apps
+        </a>
       </nav>
 
       {shown === 0 ? (

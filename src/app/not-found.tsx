@@ -21,14 +21,14 @@ export default function NotFound() {
               detail: "Pricing schedule, catalog summary, principles, and phased roadmap.",
             },
             {
-              tag: "CLIN 0001–0005",
-              label: "Tools",
-              detail: "All planned and live browser-based compliance utilities.",
+              tag: "CLIN 0001–0006",
+              label: "Tools & Apps",
+              detail: "All browser compliance utilities and MIT platform/factory apps.",
             },
             {
               tag: "Section L",
-              label: "Guides",
-              detail: "Instructions, regulatory background, and self-hosting guides.",
+              label: "Guides & Factory",
+              detail: "Field manuals plus Command, Apps, Pipeline, and Decide views.",
             },
             {
               tag: "Section M",
@@ -44,16 +44,19 @@ export default function NotFound() {
         <Link href="/" className="text-ink underline decoration-accent underline-offset-4 hover:text-accent">
           home page
         </Link>
-        , browse the{" "}
+        , browse{" "}
         <Link href="/tools/" className="text-ink underline decoration-accent underline-offset-4 hover:text-accent">
-          tools catalog
+          tools &amp; apps
         </Link>
-        , read the{" "}
+        , explore{" "}
         <Link href="/guides/" className="text-ink underline decoration-accent underline-offset-4 hover:text-accent">
-          guides
+          guides &amp; live factory views
         </Link>
         , or inspect{" "}
-        <Link href="/how-we-decide/" className="text-ink underline decoration-accent underline-offset-4 hover:text-accent">
+        <Link
+          href="/guides/how-we-decide/"
+          className="text-ink underline decoration-accent underline-offset-4 hover:text-accent"
+        >
           how we decide what to build
         </Link>
         .

@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { EditTrigger } from "@/components/EditTrigger";
+import { GuidesSubnav } from "@/components/GuidesSubnav";
 import { MetricCell } from "@/components/MetricCell";
 import { PulseStrip } from "@/components/PulseStrip";
 import { SectionLabel } from "@/components/SectionLabel";
@@ -8,22 +10,25 @@ import { TrailRow } from "@/components/TrailRow";
 import { WhyDrawer } from "@/components/WhyDrawer";
 import { workerApps } from "@/data/platform";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "10-Worker Pipeline",
   description:
     "Live 100% deterministic pipeline across cs-01-intake through cs-10-notify with per-case sub-tools.",
+  alternates: { canonical: "/guides/pipeline/" },
 };
 
-export default function PipelinePage() {
+export default function PipelineGuidePage() {
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-12 lg:pt-16">
+    <div className="mx-auto max-w-6xl px-5 pt-10 lg:pt-14">
+      <GuidesSubnav current="pipeline" />
+
       <div className="flex flex-wrap items-center justify-between gap-2">
         <SectionLabel section="Pipeline">100% Deterministic · Zero AI at Runtime</SectionLabel>
         <div className="flex items-center gap-2">
           <DraftChip />
           <WhyDrawer
             title="How unique cases reinforce determinism"
-            summary="When a worker sees an unknown layout, it never guesses with AI. It pauses in needs_subtool, opens a task in the worker repo, and replays automatically once a sub-tool + golden fixture is added."
+            summary="When a worker sees an unknown layout, it never guesses with AI. It pauses in needs_subtool, opens a task in the worker repo via cs-10-notify, and replays automatically once a sub-tool + golden fixture is added."
             guideHref="/guides/deterministic-sub-tools/"
             details={[
               "0 records collected yet (honest empty state).",
@@ -39,10 +44,11 @@ export default function PipelinePage() {
       </h1>
       <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
         Every worker lives in its own repository (<code className="text-ink">cs-01-intake</code> through{" "}
-        <code className="text-ink">cs-10-notify</code>) and runs in <code className="text-ink">cs-workers</code>.
-        Read the full lifecycle rules in{" "}
-        <Link href="/how-we-decide/" className="text-accent underline underline-offset-4">
-          How we decide
+        <code className="text-ink">cs-10-notify</code>)—forming the 11-repository pipeline alongside{" "}
+        <code className="text-ink">clearedstack.com</code>—and runs in <code className="text-ink">cs-workers</code>.
+        Read the full evaluation gates and 14-state lifecycle in{" "}
+        <Link href="/guides/how-we-decide/" className="text-accent underline underline-offset-4">
+          How we decide (Section M)
         </Link>
         .
       </p>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GuidesSubnav } from "@/components/GuidesSubnav";
 import { DraftChip } from "@/components/StatusChip";
 import { site } from "@/data/site";
 import { formatReviewed, groupOf, guideSlugs, listGuides, loadGuide } from "@/lib/guides";
@@ -34,10 +35,12 @@ export default async function GuidePage({ params }: PageProps<"/guides/[slug]">)
   const siblings = guides.filter((item) => item.group === guide.group);
 
   return (
-    <article className="mx-auto max-w-6xl px-5 pt-14 lg:pt-20">
+    <article className="mx-auto max-w-6xl px-5 pt-10 lg:pt-14">
+      <GuidesSubnav current="guide" />
+
       <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">
         <Link href="/guides/" className="text-accent hover:underline">
-          Guides
+          Guides Library
         </Link>{" "}
         ·{" "}
         <Link href={`/guides/#${group.id}`} className="hover:text-ink hover:underline">

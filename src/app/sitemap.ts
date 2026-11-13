@@ -8,8 +8,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     "/",
     "/tools/",
-    "/how-we-decide/",
     "/guides/",
+    "/guides/command/",
+    "/guides/apps/",
+    "/guides/pipeline/",
+    "/guides/decide/",
+    "/guides/how-we-decide/",
     ...guideSlugs().map((slug) => `/guides/${slug}/`),
     "/about/",
   ];

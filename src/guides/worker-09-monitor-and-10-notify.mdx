@@ -41,6 +41,6 @@ To keep responsibilities cleanly separated, `cs-10-notify` relies on four determ
 | `internal-git` | Commits owner-approved anonymous Portal edits (`DATA`, `CONFIG`, `ISSUE` from `cs-04-decide`), `needs_subtool` tasks, and fingerprinted error issues. | Cluster-private `cs-git` repositories. |
 | `github-mirror` | Coordinates outbound code mirroring on change so public contributors can inspect every commit and issue. | Public GitHub mirror (source code only; zero container images). |
 | `webhook-alert` | Dispatches concise owner notifications when a genuinely new fingerprinted error, `P0` failure, or `urgent` regulatory shift occurs. | Configured external webhook endpoint. |
-| `portal-sse` | Pushes sanitized real-time Server-Sent Events (SSE) through `hub-queue-api` to `clearedstack-web`. | Public Portal UI (`/` Command, `/apps`, `/pipeline`, and live `✎` edit status pills). |
+| `portal-sse` | Pushes sanitized real-time Server-Sent Events (SSE) through `hub-queue-api` to `clearedstack-web`. | Public Portal UI (`/guides/command/`, `/guides/apps/`, `/guides/pipeline/`, `/tools/#apps`, and live `✎` edit status pills). |
 
 Through `portal-sse`, a visitor who submits an anonymous `✎` edit watches their proposal move live from `Proposed` to `Approved` (in `cs-04-decide`), then `Building` (as `internal-git` commits to `cs-git` and `cs-runner` builds), and finally `Live`—all without signing in or refreshing the page.

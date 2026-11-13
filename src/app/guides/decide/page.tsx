@@ -1,24 +1,30 @@
+import type { Metadata } from "next";
+import Link from "next/link";
 import { EditTrigger } from "@/components/EditTrigger";
+import { GuidesSubnav } from "@/components/GuidesSubnav";
 import { SectionLabel } from "@/components/SectionLabel";
 import { DraftChip, HealthChip } from "@/components/StatusChip";
 import { WhyDrawer } from "@/components/WhyDrawer";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Decisions & Public Edits",
   description:
     "cs-04-decide queue and anonymous public edit proposals routed to cs-git and mirrored to GitHub.",
+  alternates: { canonical: "/guides/decide/" },
 };
 
-export default function DecidePage() {
+export default function DecideGuidePage() {
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-12 lg:pt-16">
+    <div className="mx-auto max-w-6xl px-5 pt-10 lg:pt-14">
+      <GuidesSubnav current="decide" />
+
       <div className="flex flex-wrap items-center justify-between gap-2">
         <SectionLabel section="Decide">cs-04-decide · Public Decision &amp; Edit Queue</SectionLabel>
         <div className="flex items-center gap-2">
           <DraftChip />
           <WhyDrawer
             title="How anonymous edits work with no login lock"
-            summary="Anyone can propose edits on any element without signing in. Proposals pass a 5-layer anti-spam shield, wait in cs-04-decide, and route to cs-git when approved."
+            summary="Anyone can propose edits on any element without signing in. Proposals pass a 5-layer anti-spam shield, wait in cs-04-decide, and route via cs-10-notify to cs-git when approved."
             guideHref="/guides/anonymous-edits-and-anti-spam/"
             details={[
               "Browser proof-of-work + honeypot + daily-salted IP rate limit (no raw IPs stored).",
@@ -34,7 +40,15 @@ export default function DecidePage() {
       </h1>
       <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
         There is no lock on this site. Every scored candidate waiting for determination and every anonymous{" "}
-        <code className="text-ink">✎ Edit</code> proposal from visitors appears here transparently.
+        <code className="text-ink">✎ Edit</code> proposal from visitors appears here transparently. See the full
+        5-gate screening rules and 100-point rubric in{" "}
+        <Link
+          href="/guides/how-we-decide/"
+          className="text-ink underline decoration-accent underline-offset-4 hover:text-accent"
+        >
+          How we decide (Section M)
+        </Link>
+        .
       </p>
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -61,7 +75,7 @@ export default function DecidePage() {
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted">
             Click <code className="text-ink">✎ Edit</code> anywhere on the Portal—or try it right here—to see how a
-            public proposal routes to its owning repository.
+            public proposal routes to its owning repository via <code className="text-ink">ownership_map.json</code>.
           </p>
           <div className="mt-4">
             <EditTrigger

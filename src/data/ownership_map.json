@@ -7,10 +7,30 @@
       "editClass": "DATA",
       "filePath": "src/data/site.ts"
     },
+    "portal.home.hero": {
+      "ownerRepo": "clearedstack.com",
+      "editClass": "CONFIG",
+      "filePath": "src/app/guides/command/page.tsx"
+    },
+    "command.attention.p0": {
+      "ownerRepo": "cs-store",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "command.attention.p1": {
+      "ownerRepo": "clearedstack.com",
+      "editClass": "ISSUE",
+      "filePath": "deploy/hub-queue-api/app.yaml"
+    },
+    "command.attention.p2": {
+      "ownerRepo": "cs-04-decide",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
     "decide.sandbox.test": {
       "ownerRepo": "clearedstack.com",
       "editClass": "ISSUE",
-      "filePath": "src/app/decide/page.tsx"
+      "filePath": "src/app/guides/decide/page.tsx"
     },
     "app.clearedstack-web.manifest": {
       "ownerRepo": "clearedstack.com",
@@ -95,6 +115,106 @@
     "worker.cs-10-notify.manifest": {
       "ownerRepo": "cs-10-notify",
       "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-01-intake.role": {
+      "ownerRepo": "cs-01-intake",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-02-observe.role": {
+      "ownerRepo": "cs-02-observe",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-03-evaluate.role": {
+      "ownerRepo": "cs-03-evaluate",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-04-decide.role": {
+      "ownerRepo": "cs-04-decide",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-05-provenance.role": {
+      "ownerRepo": "cs-05-provenance",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-06-build.role": {
+      "ownerRepo": "cs-06-build",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-07-verify.role": {
+      "ownerRepo": "cs-07-verify",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-08-catalog.role": {
+      "ownerRepo": "cs-08-catalog",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-09-monitor.role": {
+      "ownerRepo": "cs-09-monitor",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "worker.cs-10-notify.role": {
+      "ownerRepo": "cs-10-notify",
+      "editClass": "CONFIG",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-01-intake": {
+      "ownerRepo": "cs-01-intake",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-02-observe": {
+      "ownerRepo": "cs-02-observe",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-03-evaluate": {
+      "ownerRepo": "cs-03-evaluate",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-04-decide": {
+      "ownerRepo": "cs-04-decide",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-05-provenance": {
+      "ownerRepo": "cs-05-provenance",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-06-build": {
+      "ownerRepo": "cs-06-build",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-07-verify": {
+      "ownerRepo": "cs-07-verify",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-08-catalog": {
+      "ownerRepo": "cs-08-catalog",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-09-monitor": {
+      "ownerRepo": "cs-09-monitor",
+      "editClass": "ISSUE",
+      "filePath": "app.yaml"
+    },
+    "pipeline.cs-10-notify": {
+      "ownerRepo": "cs-10-notify",
+      "editClass": "ISSUE",
       "filePath": "app.yaml"
     }
   }

@@ -2,27 +2,74 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Flow } from "@/components/Diagram";
 import { GuideIndex } from "@/components/GuideIndex";
+import { GuidesSubnav } from "@/components/GuidesSubnav";
 import { SectionLabel } from "@/components/SectionLabel";
+import { DraftChip, HealthChip } from "@/components/StatusChip";
 import { site } from "@/data/site";
 import { guideGroups, listGuides, type Guide } from "@/lib/guides";
 
 export const metadata: Metadata = {
-  title: "Guides",
+  title: "Guides & Live Factory",
   description:
-    "Guides to ClearedStack and the work behind it: using the tools, checking a result, reading a solicitation, pricing labor, protecting CUI, getting paid, contributing and hosting your own copy.",
+    "Section L · Guides and live factory views for ClearedStack: Command Portal, Cluster App Store, 10-Worker Pipeline, Decide Queue, Section M evaluation rubric, contracting field guides, and self-hosting manuals.",
   alternates: { canonical: "/guides/" },
 };
 
-/** Reading routes through the guides, for readers who arrive with one question. */
+const factoryViews = [
+  {
+    code: "L.0.1",
+    title: "Command Portal",
+    href: "/guides/command/",
+    badge: "Portal",
+    state: "idle" as const,
+    body: "Deterministic P0–P2 attention feed, sanitized error codes, 10-worker pulse strip, and 7 control-plane pods with no login lock.",
+  },
+  {
+    code: "L.0.2",
+    title: "Cluster App Store",
+    href: "/guides/apps/",
+    badge: "cs-store",
+    state: "healthy" as const,
+    body: "Live Server-Side Apply view of all 17 pods across clearedstack and cs-workers, with Owner Mode 5-digest rollback preview.",
+  },
+  {
+    code: "L.0.3",
+    title: "10-Worker Pipeline",
+    href: "/guides/pipeline/",
+    badge: "cs-01..10",
+    state: "idle" as const,
+    body: "Real-time queue lanes, PA-XXXX item trails, local /var/spool/cs volumes, and per-case deterministic tools/<case>/ sub-tools.",
+  },
+  {
+    code: "L.0.4",
+    title: "Decide & Public Edits",
+    href: "/guides/decide/",
+    badge: "cs-04-decide",
+    state: "idle" as const,
+    body: "Publicly readable queue for candidate determinations (Build, Link, Merge, Park, Reject) and anonymous ✎ Edit proposals.",
+  },
+  {
+    code: "L.0.5",
+    title: "How We Decide (Section M)",
+    href: "/guides/how-we-decide/",
+    badge: "Rubric",
+    state: "healthy" as const,
+    body: "Full evaluation specification: 5 binary knockout gates, 100-point weighted rubric, 14-state record lifecycle, and clean-room rules.",
+  },
+];
+
+/** Reading routes through the guides, organized by reader goal. */
 const routes = [
   {
+    tag: "Route 01 · Orientation",
     title: "New to the site",
-    body: "How to navigate the site, what ClearedStack is, where your data stays and how to check results.",
+    body: "How to navigate ClearedStack, where your data stays, and how to verify any result before using it.",
     slugs: ["navigating-this-site", "getting-started", "your-data", "checking-results", "faq"],
   },
   {
-    title: "New to government contracting",
-    body: "The shape of a solicitation, then the three things a first bid has to get right.",
+    tag: "Route 02 · Contracting",
+    title: "Bidding a first contract",
+    body: "The structure of a federal solicitation and the core pricing, CUI, and registration rules.",
     slugs: [
       "read-a-solicitation",
       "answer-a-solicitation",
@@ -32,57 +79,66 @@ const routes = [
     ],
   },
   {
-    title: "Running your own copy",
-    body: "For a company intranet, a lab or a network that cannot reach the internet.",
-    slugs: ["one-command-quickstart", "host-on-kubernetes", "host-static-files", "closed-networks"],
+    tag: "Route 03 · Factory",
+    title: "How the factory builds itself",
+    body: "How 11 pipeline repos, 4 Go control-plane services, deterministic sub-tools, and ✎ Edit close the loop.",
+    slugs: [
+      "live-command-portal",
+      "prior-art-engine",
+      "self-building-factory-loop",
+      "deterministic-sub-tools",
+      "ownership-map-and-edit-loop",
+    ],
   },
   {
-    title: "Building or fixing something",
-    body: "From a one-line correction to a tool of your own in the catalog.",
-    slugs: ["request-or-add-a-tool", "build-a-tool", "work-on-this-site"],
+    tag: "Route 04 · Operations",
+    title: "Self-hosting & contributing",
+    body: "Run a Dockerless k3s or static copy on an air-gapped network, or build a tool for the catalog.",
+    slugs: [
+      "one-command-quickstart",
+      "host-on-kubernetes",
+      "closed-networks",
+      "request-or-add-a-tool",
+      "build-a-tool",
+    ],
   },
 ];
 
 const answers = [
   {
-    question: "How do I navigate the site?",
+    question: "How is the site organized?",
     answer:
-      "The site uses federal contract structure (Sections B, C, F, H, L) across Home, Tools, Guides, and About.",
+      "Top navigation stays focused on four links: Tools (all 18 browser utilities + 17 platform apps), Guides (all live factory views + field manuals), About, and GitHub.",
     slug: "navigating-this-site",
   },
   {
+    question: "Where did Command, Apps, Pipeline, and Decide go?",
+    answer:
+      "All five interactive operational and evaluation pages live right here under Guides (/guides/command/, /guides/apps/, /guides/pipeline/, /guides/decide/, and /guides/how-we-decide/), and every app is also listed under /tools/#apps.",
+    slug: "live-command-portal",
+  },
+  {
     question: "Do I need an account?",
-    answer: "No. There are no accounts on this site or on any tool it lists, and there is nothing to install.",
+    answer: "No. There are no accounts on this site, on the live factory views, or on any tool we ship.",
     slug: "getting-started",
   },
   {
     question: "Where does what I type go?",
     answer:
-      "Nowhere. A tool is only listed if the work happens in your browser, and you can confirm that yourself in about a minute.",
+      "Nowhere in shipped tools. A contracting tool is only listed if all computation stays in your browser, and you can confirm that in DevTools in under a minute.",
     slug: "your-data",
   },
   {
     question: "Can I put a tool’s number straight into a bid?",
     answer:
-      "Check it first. Every tool has to name the regulation behind its result, and the current text of that regulation wins over the tool.",
+      "Check it first. Every tool cites the governing regulation, and the official text of that regulation always wins over software.",
     slug: "checking-results",
   },
   {
-    question: "Can I enter CUI or proprietary rates?",
+    question: "Will it work on an air-gapped network with no Docker?",
     answer:
-      "A browser tab does not change the rules for the computer it runs on. Use controlled information only on a system your contract and your company allow, and never enter classified information.",
-    slug: "your-data",
-  },
-  {
-    question: "Will it work on a network with no internet?",
-    answer: "Yes. The site loads everything from itself, so a copy you host keeps working with no outside connection.",
+      "Yes. Static Snapshot Mode needs only plain file hosting, and full Platform Mode runs on k3s + containerd using ko and rootless BuildKit with zero Docker daemon.",
     slug: "closed-networks",
-  },
-  {
-    question: "How can I see what is running or propose a change?",
-    answer:
-      "Open Command (/), Apps (/apps/), Pipeline (/pipeline/), or Decide (/decide/) with no login required, and click ✎ Edit on any element to propose a change.",
-    slug: "live-command-portal",
   },
 ];
 
@@ -99,27 +155,30 @@ export default async function GuidesPage() {
 
   const minutes = guides.reduce((total, guide) => total + guide.minutes, 0);
   const facts = [
-    { value: String(guides.length), label: "guides" },
-    { value: String(guideGroups.length), label: "sections" },
-    { value: `${Math.floor(minutes / 60)} h ${minutes % 60} min`, label: "to read them all" },
-    { value: "$0.00", label: "and no sign-up" },
+    { value: String(factoryViews.length), label: "live factory views" },
+    { value: String(guides.length), label: "field & system guides" },
+    { value: `${Math.floor(minutes / 60)} h ${minutes % 60} min`, label: "total reading time" },
+    { value: "$0.00", label: "and no login lock" },
   ];
 
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-14 lg:pt-20">
+    <div className="mx-auto max-w-6xl px-5 pt-10 lg:pt-14">
+      <GuidesSubnav current="library" />
+
       {/* Introduction */}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <SectionLabel section="Section L">Instructions to offerors</SectionLabel>
+        <SectionLabel section="Section L">Instructions, field guides &amp; live factory</SectionLabel>
         <span className="font-mono text-xs text-muted">Revised {site.revised}</span>
       </div>
-      <div className="mt-4 grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:items-end lg:gap-16">
+      <div className="mt-4 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:gap-16">
         <div>
           <h1 className="text-4xl font-semibold leading-[1.08] tracking-[-0.02em] text-balance sm:text-5xl">
-            Guides to the tools, and to the work behind them.
+            Guides, live factory views, and the rules behind every tool.
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
-            How to use ClearedStack and check what it tells you, plain-language background on pricing, proposals and
-            protecting government information, and full instructions for running your own copy.
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
+            Inspect the live Kubernetes Command Portal, Cluster App Store, 10-Worker Pipeline, Decide queue, and
+            Section M rubric directly below—or read plain-language field guides on federal contracting, clean-room
+            architecture, and air-gapped self-hosting.
           </p>
         </div>
         <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-4 lg:grid-cols-2">
@@ -132,16 +191,75 @@ export default async function GuidesPage() {
         </dl>
       </div>
 
+      {/* Interactive Factory & Governance Views under /guides/* */}
+      <section aria-labelledby="factory-views-title" className="mt-14 border-t-2 border-ink pt-10">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <SectionLabel section="Section L.0">Interactive Factory &amp; Governance Views</SectionLabel>
+            <h2 id="factory-views-title" className="mt-3 text-2xl font-semibold tracking-[-0.015em]">
+              Inspect the running system with no login wall.
+            </h2>
+          </div>
+          <DraftChip />
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {factoryViews.map((view) => (
+            <Link
+              key={view.href}
+              href={view.href}
+              className="group flex flex-col justify-between rounded-sm border border-line bg-surface p-5 transition-colors hover:border-ink"
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs text-accent">
+                    {view.code} · {view.badge}
+                  </span>
+                  <HealthChip state={view.state} />
+                </div>
+                <h3 className="mt-2.5 text-lg font-semibold text-ink transition-colors group-hover:text-accent">
+                  {view.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{view.body}</p>
+              </div>
+              <p className="mt-4 border-t border-line pt-3 font-mono text-xs text-ink group-hover:text-accent">
+                Open {view.href} →
+              </p>
+            </Link>
+          ))}
+
+          <Link
+            href="/tools/#apps"
+            className="group flex flex-col justify-between rounded-sm border border-dashed border-line bg-paper p-5 transition-colors hover:border-ink"
+          >
+            <div>
+              <span className="font-mono text-xs text-accent">CLIN 0001–0006 · Unified Catalog</span>
+              <h3 className="mt-2.5 text-lg font-semibold text-ink transition-colors group-hover:text-accent">
+                All Tools &amp; Platform Apps
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">
+                Looking for a calculator, checklist, or microservice repository? All 18 contracting utilities and all
+                17 platform/worker apps are indexed together under Tools.
+              </p>
+            </div>
+            <p className="mt-4 border-t border-line pt-3 font-mono text-xs text-ink group-hover:text-accent">
+              Browse /tools/#apps →
+            </p>
+          </Link>
+        </div>
+      </section>
+
       {/* Reading routes */}
-      <section aria-labelledby="routes-title" className="mt-14 border-t border-line pt-10">
-        <SectionLabel>Where to begin</SectionLabel>
+      <section aria-labelledby="routes-title" className="mt-16 border-t border-line pt-10">
+        <SectionLabel>Reading routes</SectionLabel>
         <h2 id="routes-title" className="mt-3 text-2xl font-semibold tracking-[-0.015em]">
-          Pick the route that matches why you are here.
+          Pick the track that matches why you are here.
         </h2>
         <div className="mt-8 grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-2 lg:grid-cols-4">
           {routes.map((route) => (
             <div key={route.title} className="flex flex-col bg-surface p-5">
-              <h3 className="text-lg font-semibold">{route.title}</h3>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-accent">{route.tag}</p>
+              <h3 className="mt-1.5 text-lg font-semibold">{route.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{route.body}</p>
               <ol className="mt-5 flex flex-col gap-2.5 border-t border-line pt-5 text-sm">
                 {route.slugs.map(find).map((guide, index) => (
@@ -163,16 +281,18 @@ export default async function GuidesPage() {
 
       {/* Every guide, by section */}
       <section aria-labelledby="all-title" className="mt-16 border-t border-line pt-10">
-        <SectionLabel>All guides</SectionLabel>
+        <SectionLabel>Complete Manual (L.1–L.6)</SectionLabel>
         <h2 id="all-title" className="mt-3 text-2xl font-semibold tracking-[-0.015em]">
-          Everything, in reading order.
+          Every guide, filterable by section or topic.
         </h2>
-        <Flow
-          direction="across"
-          caption="The six sections of the guides, from first visit to how the project itself is run."
-          steps={guideGroups.map((group) => ({ tag: group.code, label: group.name }))}
-          highlight={guideGroups.length - 1}
-        />
+        <div className="mt-6">
+          <Flow
+            direction="across"
+            caption="The six sections of the manual, from first visit to how the self-building factory is run."
+            steps={guideGroups.map((group) => ({ tag: group.code, label: group.name }))}
+            highlight={guideGroups.length - 1}
+          />
+        </div>
         <div className="mt-8">
           <GuideIndex
             groups={guideGroups}
@@ -184,7 +304,6 @@ export default async function GuidesPage() {
               group: guide.group,
               minutes: guide.minutes,
               draft: guide.draft,
-              // "Sources" closes every field guide, so it says nothing in a list.
               topics: guide.headings.map((heading) => heading.text).filter((text) => text !== "Sources"),
             }))}
           />
@@ -194,7 +313,7 @@ export default async function GuidesPage() {
       {/* Short answers */}
       <section
         aria-labelledby="answers-title"
-        className="mt-16 grid gap-x-16 gap-y-6 border-t border-line pt-10 lg:grid-cols-[14rem_minmax(0,1fr)]"
+        className="mt-16 grid gap-x-16 gap-y-6 border-t border-line pt-10 lg:grid-cols-[15rem_minmax(0,1fr)]"
       >
         <div>
           <SectionLabel>Short answers</SectionLabel>
@@ -229,9 +348,9 @@ export default async function GuidesPage() {
         <div>
           <SectionLabel>Before you rely on a guide</SectionLabel>
           <p className="mt-4 max-w-xl leading-relaxed text-muted">
-            The field guides explain public rules in plain language. They are not legal, accounting or compliance
-            advice, and rules change. Each one names its sources and the month it was last checked. When a guide and
-            the current text of a regulation disagree, the regulation wins, and{" "}
+            The field guides explain public rules in plain language. They are not legal, accounting, or compliance
+            advice, and rules change. Each regulatory guide names its official sources and the month it was last
+            checked. When a guide and the current text of a regulation disagree, the regulation wins, and{" "}
             <Link href="/guides/public-sources/" className={inlineLink}>
               {find("public-sources").title}
             </Link>{" "}
@@ -241,15 +360,16 @@ export default async function GuidesPage() {
         <div>
           <SectionLabel>Missing or wrong</SectionLabel>
           <p className="mt-4 max-w-xl leading-relaxed text-muted">
-            If a guide is unclear, out of date or does not exist yet, say so. Open an issue on{" "}
+            If a guide is unclear, out of date, or does not exist yet, say so. Click{" "}
+            <code className="text-ink">✎ Edit</code> on any live view, open an issue on{" "}
             <a href={`${site.repo}/issues`} rel="noopener" className={inlineLink}>
               GitHub
-            </a>{" "}
-            or write to{" "}
+            </a>
+            , or write to{" "}
             <a href={`mailto:${site.email}`} className={inlineLink}>
               {site.email}
             </a>
-            . Every guide is a text file in the repository, so a correction can also be a pull request.
+            . Every guide is a plain MDX file in <code className="text-ink">src/guides/</code>.
           </p>
         </div>
       </section>

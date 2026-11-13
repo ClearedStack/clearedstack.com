@@ -41,13 +41,13 @@ Inside the cluster, `cs-git` is the primary Git server. Whenever changes land on
 
 | Repository group | What it holds | Typical contributions |
 | :--- | :--- | :--- |
-| **`clearedstack.com`** | Next.js, TypeScript, and Tailwind CSS Portal, tool catalog (`src/data/catalog.ts`), and guides (`src/guides/`) | Writing or updating guides, adding catalog entries, improving Portal UI |
+| **`clearedstack.com`** | Next.js, TypeScript, and Tailwind CSS Portal, tool catalog (`src/data/catalog.ts`), and guides (`src/guides/`, grouped under `start`, `use`, `contribute`, `build`, `host`, and `project`) | Writing or updating guides, adding catalog entries, improving Portal UI |
 | **Control plane** (`cs-git`, `cs-registry`, `cs-runner`, `cs-store`) | Clean-room Go services for Git mirroring, internal OCI storage, Dockerless builds, and Kubernetes app deployment | Fixing bugs, tightening guardrails, improving build or deploy reliability |
 | **10 Worker repos** (`cs-01-intake` .. `cs-10-notify`) | Deterministic Go pipelines for intake, observation, evaluation, decisions, provenance, building, verification, cataloging, monitoring, and notifications | Adding deterministic sub-tools (`tools/<case>/`) and golden fixtures |
 
 ## Adding deterministic sub-tools and golden fixtures
 
-Every worker runs with **100% deterministic logic**—there are no language models, no guesswork, and no hidden network calls at runtime. When a worker encounters an unfamiliar page layout, document format, or edge case, it **fails closed**: it pauses the item in a `needs_subtool` state and opens a task in the owning worker repository.
+Every worker runs with **100% deterministic logic**—there are no language models, no guesswork, and no hidden network calls at runtime. When a worker encounters an unfamiliar page layout, document format, or edge case, it **fails closed**: it pauses the item in a `needs_subtool` state, and `cs-10-notify` opens a fingerprinted task in the owning worker repository.
 
 Contributors solve these edge cases permanently by adding a deterministic sub-tool inside the worker repository:
 

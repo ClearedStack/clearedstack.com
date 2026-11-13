@@ -27,7 +27,7 @@ Writing `cs-git` from scratch in Go under the MIT license removes upstream licen
 Because `cs-git` sits inside the cluster-private `clearedstack` namespace behind a `ClusterIP` service and `NetworkPolicy`, it is unreachable from the public internet. Only `clearedstack-web` exposes a public door. Everything that writes code or configuration inside the platform talks to `cs-git` first:
 
 - **Approved public edits:** When a visitor proposes a change on `clearedstack.com` and the owner approves it in `cs-04-decide`, `cs-10-notify` commits the patch directly to `cs-git`.
-- **Missing sub-tool tasks:** When a deterministic worker encounters an unfamiliar page or table layout, it pauses in `needs_subtool` and opens a task in the owning repository in `cs-git`.
+- **Missing sub-tool tasks:** When a deterministic worker encounters an unfamiliar page or table layout, it pauses in `needs_subtool`, and `cs-10-notify` opens a fingerprinted task in the owning repository in `cs-git`.
 - **Image digest updates:** After `cs-runner` builds and tests a new version, it updates the app's `app.yaml` manifest in `cs-git` (tagged `[skip-ci]` so it does not trigger another build loop).
 
 Whenever a commit lands on `main` or a new tag is created, `cs-git` fires two actions: it sends a push webhook to `cs-runner` to start a build, and it automatically pushes the updated code commits to the public GitHub mirror.

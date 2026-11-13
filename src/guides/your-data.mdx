@@ -12,7 +12,7 @@ The short answer is that everything you type into a shipped tool stays on your c
 
 Most web applications collect what you type, send it to a server, and return an answer. Your information leaves your machine before you see a result.
 
-Every shipped ClearedStack tool has only the local half. When you open a tool, your browser downloads the static page and its TypeScript logic once. After that, all arithmetic, text parsing, and file reading happen on your workstation. There is no backend server waiting for your input, no login, no analytics, and zero network calls.
+Every shipped ClearedStack tool has only the local half. When you open a tool, your browser downloads the static page and its compiled JavaScript once. After that, all arithmetic, text parsing, and file reading happen on your workstation. There is no backend server waiting for your input, no login, no analytics, and zero network calls.
 
 Every page and shipped tool enforces a Content Security Policy with `connect-src 'self'`. That instruction tells your browser to block any outbound network request, third-party API call, or form submission to another server. If a line of code tried to send your numbers elsewhere, your browser would refuse.
 

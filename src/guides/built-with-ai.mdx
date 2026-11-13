@@ -25,7 +25,7 @@ ClearedStack treats AI assistants as drafting and research aids, never as autono
 
 Many software pipelines reach for an AI model whenever they encounter an unfamiliar web page, an awkward PDF table, or a messy edge case. ClearedStack takes the opposite approach. All 10 workers—from `cs-01-intake` (deduplication) and `cs-02-observe` (page extraction) through `cs-03-evaluate` (rubric scoring), `cs-06-build` (tool generation), and `cs-07-verify` (automated testing)—execute plain, deterministic Go code and explicit rules.
 
-When a worker hits an unknown layout it cannot parse cleanly, it **fails closed**. Instead of guessing with an AI model, the worker pauses that item in a `needs_subtool` state and logs a task in the worker's repository. During authoring time, a new deterministic sub-tool (stored under `tools/<case>/` with golden test fixtures) is written, reviewed by the owner, and deployed. Once deployed, the queue automatically replays the paused items. Every solved edge case becomes permanent, repeatable code rather than a probabilistic guess.
+When a worker hits an unknown layout it cannot parse cleanly, it **fails closed**. Instead of guessing with an AI model, the worker pauses that item in a `needs_subtool` state, and `cs-10-notify` logs a fingerprinted task in the worker's repository in `cs-git`. During authoring time, a new deterministic sub-tool (stored under `tools/<case>/` with golden test fixtures) is written, reviewed by the owner, and deployed. Once deployed, the queue automatically replays the paused items. Every solved edge case becomes permanent, repeatable code rather than a probabilistic guess.
 
 ## The human review rule and known AI failure modes
 

@@ -16,7 +16,7 @@ ClearedStack solves this by making `clearedstack.com`—the hub repository—the
 | --- | --- | --- |
 | **Queue lease API** | `lease`, `heartbeat`, `complete`, `fail`, and `needs_subtool` endpoints on `hub-queue-api` | Validated by `hub-queue-api` on every worker call |
 | **14 item states** | Exact allowed transitions (`discovered` through `live`, `parked`, `retired`, `needs_subtool`) | Enforced atomically in Postgres transactions |
-| **Sanitized error codes** | `E_TIMEOUT`, `E_PARSE`, `E_NEEDS_SUBTOOL` and deterministic `error_fingerprint` format | Mapped by `cs-store` and deduplicated by `cs-10-notify` |
+| **Sanitized error codes** | `E_TIMEOUT`, `E_PARSE`, `E_NEEDS_SUBTOOL` and deterministic `error_fingerprint` format | Emitted by workers to `hub-queue-api`, stripped of cluster metadata by `cs-store`, and deduplicated by `cs-10-notify` |
 | **Clean-room boundary** | Strict rule rejecting raw `cs-02-observe` HTML/snapshots from `cs-06-build` payloads | Rejected at `hub-queue-api` before any build starts |
 
 ## Independent upgrades without lockstep deploys

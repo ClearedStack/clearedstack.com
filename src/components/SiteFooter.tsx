@@ -26,33 +26,38 @@ export function SiteFooter() {
         </div>
         <ul className="flex flex-col gap-2.5 font-mono text-[13px] md:items-end">
           <li>
-            <Link href="/apps/" className={footLink}>
-              Apps &amp; Cluster
-            </Link>
-          </li>
-          <li>
-            <Link href="/pipeline/" className={footLink}>
-              10-Worker Pipeline
-            </Link>
-          </li>
-          <li>
-            <Link href="/decide/" className={footLink}>
-              Decide &amp; Edits
-            </Link>
-          </li>
-          <li>
             <Link href="/tools/" className={footLink}>
-              Tools Catalog
-            </Link>
-          </li>
-          <li>
-            <Link href="/how-we-decide/" className={footLink}>
-              How we decide
+              Tools &amp; Apps
             </Link>
           </li>
           <li>
             <Link href="/guides/" className={footLink}>
-              Guides
+              Guides Library
+            </Link>
+          </li>
+          <li>
+            <Link href="/guides/command/" className={footLink}>
+              Command Portal
+            </Link>
+          </li>
+          <li>
+            <Link href="/guides/apps/" className={footLink}>
+              Cluster App Store
+            </Link>
+          </li>
+          <li>
+            <Link href="/guides/pipeline/" className={footLink}>
+              10-Worker Pipeline
+            </Link>
+          </li>
+          <li>
+            <Link href="/guides/decide/" className={footLink}>
+              Decide &amp; Edits
+            </Link>
+          </li>
+          <li>
+            <Link href="/guides/how-we-decide/" className={footLink}>
+              How we decide (Section M)
             </Link>
           </li>
           <li>

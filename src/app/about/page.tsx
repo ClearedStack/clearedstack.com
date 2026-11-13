@@ -95,15 +95,17 @@ export default function AboutPage() {
         <Block id="how" label="How it is organized">
           <p>
             ClearedStack runs as a lightweight, two-namespace Kubernetes platform (<code className="text-ink">clearedstack</code>{" "}
-            and <code className="text-ink">cs-workers</code>) with zero Docker and zero AI at runtime. Each tool is a
-            separate MIT-licensed repository, and the pipeline itself is split into ten deterministic Go worker
-            repositories (<code className="text-ink">cs-01-intake</code> through <code className="text-ink">cs-10-notify</code>).
+            and <code className="text-ink">cs-workers</code>) with zero Docker and zero AI at runtime. Each browser tool
+            is a separate MIT-licensed repository, and the factory pipeline itself is split across eleven core
+            repositories (<code className="text-ink">clearedstack.com</code> plus ten deterministic Go workers,{" "}
+            <code className="text-ink">cs-01-intake</code> through <code className="text-ink">cs-10-notify</code>)
+            alongside four clean-room Go control-plane services.
           </p>
           <p>
-            This site is the open public Command Portal and App Store: anyone can inspect what is running on{" "}
-            <Link href="/">Command</Link>, <Link href="/apps/">Apps</Link>, and{" "}
-            <Link href="/pipeline/">Pipeline</Link>, and propose edits without signing in. Source code is stored in{" "}
-            <code className="text-ink">cs-git</code> and mirrored to{" "}
+            Every app and tool is indexed under <Link href="/tools/">Tools</Link>, and anyone can inspect the live
+            factory under Guides on <Link href="/guides/command/">Command</Link>,{" "}
+            <Link href="/guides/apps/">Apps</Link>, and <Link href="/guides/pipeline/">Pipeline</Link>—or propose edits
+            without signing in. Source code is stored in <code className="text-ink">cs-git</code> and mirrored to{" "}
             <a href={site.github} rel="noopener">
               GitHub
             </a>{" "}
@@ -115,12 +117,12 @@ export default function AboutPage() {
           <p>
             ClearedStack finds ideas through the 10-worker Prior Art engine. Workers observe public pages, score
             candidates deterministically against five knockout gates and a 100-point rubric, surface decisions in{" "}
-            <Link href="/decide/">/decide</Link>, and compile clean-room specs from official public regulations—never
-            copying third-party code, text, or design.
+            <Link href="/guides/decide/">/guides/decide/</Link>, and compile clean-room specs from official public
+            regulations—never copying third-party code, text, or design.
           </p>
           <p className="font-mono text-xs text-muted">
-            Read our <Link href="/how-we-decide/">Section M evaluation factors</Link> and the{" "}
-            <Link href="/guides/prior-art-engine/">10-Worker Prior Art Engine guide</Link>.
+            Read our <Link href="/guides/how-we-decide/">Section M evaluation factors</Link> and{" "}
+            <Link href="/guides/prior-art-engine/">The 10-Worker Prior Art Engine guide</Link>.
           </p>
         </Block>
 

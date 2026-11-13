@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Branch, Flow, Lanes, Layers, States } from "@/components/Diagram";
+import { GuidesSubnav } from "@/components/GuidesSubnav";
 import { SectionLabel } from "@/components/SectionLabel";
+import { DraftChip } from "@/components/StatusChip";
 import { site } from "@/data/site";
+import { listGuides } from "@/lib/guides";
 
 export const metadata: Metadata = {
   title: "How We Decide",
   description:
     "Section M · Evaluation factors: how ClearedStack evaluates tool candidates, screens against knockout gates, scores with a 100-point rubric, and credits inspirations without copying.",
-  alternates: { canonical: "/how-we-decide/" },
+  alternates: { canonical: "/guides/how-we-decide/" },
 };
 
 const rubricFactors = [
@@ -63,47 +66,14 @@ const rubricFactors = [
   },
 ];
 
-const guides = [
-  {
-    slug: "prior-art-engine",
-    title: "How the project chooses what to build",
-    body: "The end-to-end Prior Art engine architecture, rationale, and governing standards.",
-  },
-  {
-    slug: "find-candidates",
-    title: "How candidates are found",
-    body: "Systematic sweeps across public sources, community issues, and category coverage.",
-  },
-  {
-    slug: "observe-a-tool",
-    title: "How an existing tool is observed",
-    body: "The passive observation protocol: public pages only, zero logins, and verifiable evidence snapshots.",
-  },
-  {
-    slug: "score-and-decide",
-    title: "How an idea is scored and decided",
-    body: "The five knockout gates, 100-point rubric mechanics, threshold rules, and public decision logs.",
-  },
-  {
-    slug: "credit-and-clean-room",
-    title: "How ideas are credited",
-    body: "Clean-room development rules, provenance notes, opt-out policies, and intellectual property boundaries.",
-  },
-  {
-    slug: "built-with-ai",
-    title: "How AI is used to build this project",
-    body: "The strict division between authoring-time AI assistance and zero-AI runtime execution.",
-  },
-  {
-    slug: "open-questions",
-    title: "What is not decided yet",
-    body: "Unresolved architectural questions, dataset licensing, and long-term community stewardship.",
-  },
-];
+export default async function HowWeDecidePage() {
+  const allGuides = await listGuides();
+  const projectGuides = allGuides.filter((g) => g.group === "project");
 
-export default function HowWeDecidePage() {
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-14 lg:pt-20">
+    <div className="mx-auto max-w-6xl px-5 pt-10 lg:pt-14">
+      <GuidesSubnav current="how-we-decide" />
+
       {/* Page Header */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <SectionLabel section="Section M">Evaluation factors</SectionLabel>
@@ -125,15 +95,15 @@ export default function HowWeDecidePage() {
           v3.1 Architecture · 100% deterministic at runtime
         </p>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          ClearedStack v3.1 replaces the original static essay with ten separate, MIT-licensed, 100% deterministic Go
-          worker repositories (<code className="text-ink">cs-01-intake</code> through{" "}
-          <code className="text-ink">cs-10-notify</code>) running in <code className="text-ink">cs-workers</code>,
-          coordinated by <code className="text-ink">hub-queue-api</code> and Postgres. Explore the live{" "}
-          <Link href="/pipeline/" className="text-ink underline decoration-accent underline-offset-4">
+          ClearedStack v3.1 runs this evaluation system across ten separate, MIT-licensed, 100% deterministic Go worker
+          repositories (<code className="text-ink">cs-01-intake</code> through{" "}
+          <code className="text-ink">cs-10-notify</code>) in <code className="text-ink">cs-workers</code>, coordinated
+          by <code className="text-ink">hub-queue-api</code> and Postgres. Explore the live{" "}
+          <Link href="/guides/pipeline/" className="text-ink underline decoration-accent underline-offset-4">
             Pipeline view
           </Link>{" "}
           and{" "}
-          <Link href="/decide/" className="text-ink underline decoration-accent underline-offset-4">
+          <Link href="/guides/decide/" className="text-ink underline decoration-accent underline-offset-4">
             Decide inbox
           </Link>
           .
@@ -177,12 +147,12 @@ export default function HowWeDecidePage() {
               {
                 tag: "cs-04-decide",
                 label: "Human Decide",
-                detail: "Powers the /decide inbox for tool outcomes (Approve, Link, Merge, Park, Reject) and anonymous public edit approvals.",
+                detail: "Powers the /guides/decide inbox for tool outcomes (Approve, Link, Merge, Park, Reject) and anonymous public edit approvals.",
               },
               {
                 tag: "cs-05-provenance",
                 label: "Credit & Spec",
-                detail: "Stamps Go-template provenance notes, enforces 48h/5d SLAs, and compiles sanitized JSON build specs.",
+                detail: "Stamps Go-template provenance notes, enforces 48h/5d SLAs (48h identity check, 5d opt-out), and compiles sanitized JSON build specs.",
               },
               {
                 tag: "cs-06-build",
@@ -207,7 +177,7 @@ export default function HowWeDecidePage() {
               {
                 tag: "cs-10-notify",
                 label: "Notify & Route",
-                detail: "Deduplicates errors by fingerprint, routes approved Portal edits into cs-git, and streams SSE updates.",
+                detail: "Deduplicates errors by fingerprint, routes approved Portal edits and needs_subtool tasks into cs-git, and streams SSE updates.",
               },
             ]}
           />
@@ -516,8 +486,11 @@ export default function HowWeDecidePage() {
           What does the owner decide?
         </h2>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-          Scores are advisory. The human maintainer makes every final determination and records the rationale in the
-          public decision log. The rubric maps to five distinct outcomes:
+          Scores are advisory. The human maintainer makes every final determination in{" "}
+          <Link href="/guides/decide/" className="text-ink underline decoration-accent underline-offset-4">
+            /guides/decide/
+          </Link>{" "}
+          and records the rationale in the public decision log. The rubric maps to five distinct outcomes:
         </p>
 
         <div className="mt-8">
@@ -562,44 +535,40 @@ export default function HowWeDecidePage() {
           Who does what
         </h2>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-          AI agents assist with drafting, research sweeps, and initial evaluations. The human owner holds sole legal,
-          editorial, and architectural accountability. The community audits work and identifies candidates.
+          AI agents assist at authoring time with drafting code, tests, and documentation—never at runtime. The human
+          owner holds sole legal, editorial, and architectural accountability, while the community audits work and
+          proposes improvements.
         </p>
 
         <div className="mt-8">
           <Lanes
-            caption="Division of responsibilities across the human maintainer, AI drafting agents, and the community."
-            lanes={["Owner", "AI agents (Claude Code, Antigravity)", "Community"]}
+            caption="Division of responsibilities across the human maintainer, authoring-time AI agents, and the community."
+            lanes={["Owner", "AI agents (authoring time only)", "Community"]}
             steps={[
               {
                 lane: 2,
-                label: "Suggest candidate tool",
-                detail: "Opens a GitHub issue identifying a repetitive paperwork problem or public regulation.",
+                label: "Suggest candidate or edit",
+                detail: "Opens a GitHub issue or clicks ✎ Edit on any Portal element with zero login wall.",
               },
               {
                 lane: 1,
-                label: "Draft observation record",
-                detail: "Collects public page details, inputs, outputs, licenses, and official regulatory citations.",
+                label: "Draft deterministic sub-tools",
+                detail: "Helps author Go extractors, YAML rubric profiles, and golden test fixtures offline.",
               },
               {
                 lane: 0,
-                label: "Evaluate knockout gates",
-                detail: "Verifies public source integrity, client-side feasibility, and single-job scope.",
-              },
-              {
-                lane: 1,
-                label: "Draft rubric scores",
-                detail: "Proposes 1–5 ratings with written rationale across the seven evaluation factors.",
+                label: "Verify knockout gates & rules",
+                detail: "Audits public source integrity, client-side feasibility, and deterministic scoring profiles.",
               },
               {
                 lane: 0,
                 label: "Decide the outcome",
-                detail: "Makes final determination: Build, Link, Merge, Park, or Reject; logs any overrides.",
+                detail: "Makes final determination in cs-04-decide: Build, Link, Merge, Park, or Reject; logs overrides.",
               },
               {
                 lane: 1,
-                label: "Draft clean-room code",
-                detail: "Writes browser tool code, unit tests, and documentation from the primary regulation.",
+                label: "Draft clean-room tool code",
+                detail: "Writes browser tool code, unit tests, and guides strictly from the primary regulation.",
               },
               {
                 lane: 0,
@@ -609,7 +578,7 @@ export default function HowWeDecidePage() {
               {
                 lane: 2,
                 label: "Audit live tools",
-                detail: "Verifies formulas, reports regulatory updates, and submits improvements via GitHub.",
+                detail: "Verifies formulas, reports regulatory updates, and submits improvements via ✎ Edit or GitHub.",
               },
             ]}
           />
@@ -638,8 +607,8 @@ export default function HowWeDecidePage() {
           <div className="border-t-2 border-ink pt-3">
             <dt className="font-semibold text-ink">Clean-room source</dt>
             <dd className="mt-1 text-sm leading-relaxed text-muted">
-              Builders work solely from the public regulation and the architectural decision specification, never from
-              the inspected third-party software.
+              Builders work solely from the public regulation and the sanitized specification from{" "}
+              <code className="text-ink">cs-05-provenance</code>, never from the inspected third-party software.
             </dd>
           </div>
           <div className="border-t-2 border-ink pt-3">
@@ -651,11 +620,11 @@ export default function HowWeDecidePage() {
             </dd>
           </div>
           <div className="border-t-2 border-ink pt-3">
-            <dt className="font-semibold text-ink">Corrections and opt-outs</dt>
+            <dt className="font-semibold text-ink">Corrections and opt-outs (48h / 5d SLA)</dt>
             <dd className="mt-1 text-sm leading-relaxed text-muted">
-              A tool owner can request factual corrections or ask to have their name removed from attribution. Opt-out
-              requests are honored: the note then credits “a commercial product,” while citation to the public
-              regulation remains permanent.
+              A tool owner can request factual corrections or ask to have their name removed from attribution. Identity
+              verification starts within 48 hours and valid opt-out requests are completed within 5 business days: the
+              note then credits “a commercial product,” while citation to the public regulation remains permanent.
             </dd>
           </div>
         </dl>
@@ -668,14 +637,19 @@ export default function HowWeDecidePage() {
           Read the complete specifications
         </h2>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-          The full details of the Prior Art engine, observation protocols, AI policies, and ethical boundaries are
-          documented across seven dedicated guides:
+          The full details of the 10-worker Prior Art engine, observation protocols, deterministic sub-tools, AI
+          policies, and clean-room boundaries are documented across {projectGuides.length} dedicated Section L.6
+          guides:
         </p>
 
         <ul className="mt-8 grid gap-4 sm:grid-cols-2">
-          {guides.map((guide) => (
+          {projectGuides.map((guide) => (
             <li key={guide.slug} className="flex flex-col rounded-sm border border-line bg-surface p-5">
-              <h3 className="font-semibold text-ink">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-mono text-xs text-accent">{guide.code}</span>
+                {guide.draft ? <DraftChip /> : null}
+              </div>
+              <h3 className="mt-1.5 font-semibold text-ink">
                 <Link
                   href={`/guides/${guide.slug}/`}
                   className="underline decoration-line underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
@@ -683,7 +657,7 @@ export default function HowWeDecidePage() {
                   {guide.title}
                 </Link>
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{guide.body}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{guide.summary}</p>
             </li>
           ))}
         </ul>

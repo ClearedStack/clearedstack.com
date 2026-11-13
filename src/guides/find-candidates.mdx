@@ -28,7 +28,7 @@ Once a URL is normalized, `cs-01-intake` computes its **SHA-256** cryptographic 
 1. **Duplicate hash found:** If the SHA-256 digest already matches an existing record or known alias, `cs-01-intake` does not create a duplicate. It logs the sighting against the existing `PA-XXXX` entry (or links it as a mirror) and stops.
 2. **New canonical URL:** If the hash is new, `cs-01-intake` mints a persistent `PA-XXXX` identifier (such as `PA-0001`), records the intake source, and queues the item for `cs-02-observe` via `hub-queue-api`.
 
-Every state change is immediately visible through read-only `pub.*` Postgres views on the `/pipeline` page of `clearedstack.com`.
+Every state change is immediately visible through read-only `pub.*` Postgres views on the `/guides/pipeline/` page of `clearedstack.com`.
 
 ## Four deterministic sub-tools
 
@@ -53,7 +53,7 @@ To keep the queue clean without CAPTCHAs or user accounts, `site-form` and Porta
 2. **Honeypot field:** A hidden form field silently discards automated scraper submissions.
 3. **Daily-salted IP hash rate limit:** Limits repeated submissions per hashed IP without ever storing raw visitor IP addresses.
 4. **Strict schema validation:** Checks the submission against `ownership_map.json`, caps payload size at 4 KB, and strips all HTML and scripts.
-5. **Owner gate (`cs-04-decide`):** Community proposals sit in `core.edit_proposal` (`pending_approval`) and never touch `cs-git` or the cluster until the owner clicks **Approve** in `/decide`.
+5. **Owner gate (`cs-04-decide`):** Community proposals sit in `core.edit_proposal` (`pending_approval`) and never touch `cs-git` or the cluster until the owner clicks **Approve** in `/guides/decide/`.
 
 Visitors see their submission's progress live on the Portal as a status pill: **Proposed -> Approved -> Building -> Live**.
 

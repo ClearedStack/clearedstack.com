@@ -1,0 +1,109 @@
+export const meta = {
+  title: "How the Self-Building Factory Loop Works",
+  summary: "How the 11 pipeline repositories (clearedstack.com plus cs-01 through cs-10) and 4 clean-room control-plane services close the loop from public signal or edit proposal to live software.",
+  group: "project",
+  order: 10,
+  revised: "2026-11",
+  draft: true,
+};
+
+ClearedStack is organized as a **self-building software factory** rather than a monolith. Every component has one bounded responsibility, runs 100% deterministic code at runtime, and connects to the rest of the factory through explicit schemas, Git commits, and signed OCI image digests.
+
+## Why 11 pipeline repositories stay separate
+
+The factory is intentionally split into **eleven core pipeline repositories**—the hub (`clearedstack.com`) plus ten single-stage deterministic workers (`cs-01-intake` through `cs-10-notify`)—supported by four tiny MIT Go control-plane repositories (`cs-git`, `cs-registry`, `cs-runner`, and `cs-store`).
+
+| Repository group | Repositories | Primary role in the factory |
+| --- | --- | --- |
+| **Hub & contracts (1 repo)** | `clearedstack.com` | Public static/SSR Portal, `ownership_map.json`, canonical JSON Schemas, `hub-queue-api` deployment config, and the catalog index under `/tools/`. |
+| **Deterministic pipeline (10 repos)** | `cs-01-intake` .. `cs-10-notify` | Ten isolated Go worker pods in `cs-workers` (~30 MiB each). Each owns one stage, its own `tools/<case>/` deterministic sub-tools, and its own golden test fixtures. |
+| **Clean-room control plane (4 repos)** | `cs-git`, `cs-registry`, `cs-runner`, `cs-store` | Internal bare Git + GitHub code mirror, internal 5-digest OCI store, Dockerless `ko`/BuildKit builder, and Server-Side Apply reconciler in `clearedstack`. |
+| **Shipped browser tools (1 repo per tool)** | Individual tool repos | Standalone, zero-backend, offline-capable MIT web utilities listed on `/tools/` once verified by `cs-07-verify`. |
+
+Keeping the eleven pipeline repositories separate guarantees three operational properties:
+
+1. **Blast-radius isolation:** Updating an extractor in `cs-02-observe` or a rubric profile in `cs-03-evaluate` rebuilds and rolls out only that 30 MiB worker pod—never touching `clearedstack.com` or the other nine workers.
+2. **Clean-room enforcement by repository boundary:** Raw public observation snapshots stay sealed inside `cs-02-observe`. `cs-06-build` lives in a separate repository with zero access to observation artifacts; it reads only sanitized JSON specifications stamped by `cs-05-provenance` and primary federal regulations.
+3. **Independent rollback:** `cs-registry` retains the last five signed OCI digests per repository, allowing `cs-store` to roll back a single worker in seconds if a new sub-tool regresses.
+
+## Three closed loops that make the factory self-improving
+
+A static catalog decays as regulations change, third-party pages shift layout, and users spot edge cases. ClearedStack turns all three failure modes into closed, deterministic loops gated by human accountability.
+
+<Flow
+  caption="The closed factory loop from runtime signal or visitor edit to rebuilt pod and GitHub mirror."
+  direction="down"
+  loop="cs-store reconciles the new signed digest into Kubernetes and streams sanitized health back to /guides/command/ and /guides/apps/."
+  steps={[
+    {
+      tag: "1 · Signal",
+      label: "Visitor edit, regulatory drift, or unknown layout",
+      detail: "A visitor clicks ✎ Edit, cs-09-monitor detects an eCFR/NIST change, or a worker fails closed into needs_subtool.",
+    },
+    {
+      tag: "2 · Gate",
+      label: "Anti-spam shield & owner decision (cs-04-decide)",
+      detail: "hub-queue-api validates schemas against ownership_map.json; human owner approves outcomes and edits in /guides/decide/.",
+    },
+    {
+      tag: "3 · Route",
+      label: "Deterministic commit or task (cs-10-notify -> cs-git)",
+      detail: "cs-10-notify writes the approved DATA/CONFIG change or opens a fingerprinted sub-tool task in the owning repo inside cs-git.",
+    },
+    {
+      tag: "4 · Build & Verify",
+      label: "Dockerless build & golden fixtures (cs-runner)",
+      detail: "cs-runner runs golden fixture tests, builds via ko or rootless BuildKit, signs with cosign, and pushes to cs-registry.",
+    },
+    {
+      tag: "5 · Reconcile & Replay",
+      label: "Server-Side Apply & queue replay (cs-store + hub-queue-api)",
+      detail: "cs-store rolls out the new digest, cs-git mirrors code to GitHub, and paused needs_subtool records replay automatically.",
+    },
+  ]}
+/>
+
+### Loop A: Unknown layouts grow `tools/<case>/` sub-tools
+
+Workers never call an LLM at runtime to guess how to parse an unfamiliar page or edge case. When `cs-02-observe`, `cs-03-evaluate`, or `cs-09-monitor` encounters an unrecognized structure, it transitions the item to `needs_subtool` (`E_NEEDS_SUBTOOL`). `cs-10-notify` deduplicates the fingerprint and opens a structured task in the owning worker repository in `cs-git`. Once a deterministic Go sub-tool and golden fixture are committed (authored by a human or with authoring-time AI review), `cs-runner` verifies the fixture, `cs-store` deploys the worker, and `hub-queue-api` automatically replays every record waiting on that case.
+
+### Loop B: Anonymous `✎ Edit` proposals route directly to owning repos
+
+Every editable element across `/guides/command/`, `/guides/apps/`, `/guides/pipeline/`, `/guides/decide/`, and `/tools/` carries an `elementId` registered in `src/data/ownership_map.json`. Visitors propose corrections without an account. After clearing the 5-layer anti-spam shield in `hub-queue-api` and receiving human approval in `/guides/decide/`, `cs-10-notify` routes the change straight to the target repository in `cs-git`, which triggers `cs-runner` and pushes a code-only mirror to GitHub.
+
+### Loop C: Regulatory drift triggers verification and rebuilds
+
+`cs-09-monitor` watches official public feeds (Federal Register, eCFR, NIST CSRC) alongside live and linked tools. When a cited clause in FAR, DFARS, or NIST SP 800-171 changes, `cs-09-monitor` queues a drift event back into the pipeline so formulas, citations, and worked examples are re-verified by `cs-07-verify` and republished by `cs-08-catalog`.
+
+## Human authority vs. automated execution
+
+<Lanes
+  caption="Strict separation between deterministic factory automation, authoring-time AI, and human sign-off."
+  lanes={["Human Owner", "Deterministic Factory (Runtime)", "AI Assistants (Authoring Only)"]}
+  steps={[
+    {
+      lane: 1,
+      label: "Intake, observe, score & monitor",
+      detail: "cs-01..cs-03 and cs-09 process public sources with 100% deterministic Go rules and zero AI.",
+    },
+    {
+      lane: 2,
+      label: "Draft sub-tools & clean-room code",
+      detail: "Helps write Go sub-tools, golden fixtures, and browser tools offline from public statutes.",
+    },
+    {
+      lane: 0,
+      label: "Approve decisions, edits & math",
+      detail: "Reviews every candidate in /guides/decide/, verifies statutory math, and approves Git merges.",
+    },
+    {
+      lane: 1,
+      label: "Build, sign, deploy & publish",
+      detail: "cs-runner, cs-registry, cs-store, cs-07-verify, and cs-08-catalog test, sign, deploy, and list.",
+    },
+  ]}
+/>
+
+<Callout kind="check" title="Inspect the factory live">
+  Explore every moving part of the factory under Guides: [Command](/guides/command/), [Apps](/guides/apps/), [Pipeline](/guides/pipeline/), [Decide](/guides/decide/), and [How We Decide](/guides/how-we-decide/), or browse all 18 contracting utilities and 17 platform apps together on [Tools](/tools/).
+</Callout>

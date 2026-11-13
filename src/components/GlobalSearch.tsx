@@ -167,7 +167,7 @@ export function GlobalSearch() {
                   setSelectedIndex(0);
                 }}
                 onKeyDown={handleInputKeyDown}
-                placeholder="Search tools, guides, regulations, CLINs, headings…"
+                placeholder="Search tools, apps, guides, regulations, CLINs…"
                 autoComplete="off"
                 spellCheck={false}
                 className="w-full bg-transparent text-[15px] text-ink placeholder:text-muted focus:outline-none"
@@ -187,12 +187,12 @@ export function GlobalSearch() {
                 <div className="px-4 py-8 text-center text-sm text-muted">
                   <p className="font-medium text-ink">Instant, client-side site search</p>
                   <p className="mt-1 text-xs">
-                    Type a keyword, CLIN number (e.g. <span className="font-mono text-accent">0001</span>), regulation (e.g. <span className="font-mono text-accent">FAR 15</span>, <span className="font-mono text-accent">DFARS 7012</span>), or topic (<span className="font-mono text-accent">wrap rate</span>, <span className="font-mono text-accent">CMMC</span>, <span className="font-mono text-accent">Docker</span>).
+                    Type a keyword, CLIN number (e.g. <span className="font-mono text-accent">0001</span>), regulation (e.g. <span className="font-mono text-accent">FAR 15</span>, <span className="font-mono text-accent">DFARS 7012</span>), or topic (<span className="font-mono text-accent">wrap rate</span>, <span className="font-mono text-accent">CMMC</span>, <span className="font-mono text-accent">cs-store</span>, <span className="font-mono text-accent">k3s</span>).
                   </p>
                 </div>
               ) : results.length === 0 ? (
                 <div className="px-4 py-8 text-center text-sm text-muted">
-                  No matching tools, guides, or sections for &ldquo;{query}&rdquo;.
+                  No matching tools, apps, guides, or sections for &ldquo;{query}&rdquo;.
                 </div>
               ) : (
                 <ul ref={listRef} role="listbox" className="flex flex-col gap-1">
@@ -213,7 +213,7 @@ export function GlobalSearch() {
                           <span className="flex items-center gap-2 font-medium text-ink">
                             <span
                               className={`rounded-sm px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider ${
-                                item.type === "tool"
+                                item.type === "tool" || item.type === "app"
                                   ? "bg-accent text-accent-ink"
                                   : item.type === "guide"
                                   ? "border border-accent text-accent"

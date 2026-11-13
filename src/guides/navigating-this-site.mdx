@@ -18,23 +18,23 @@ ClearedStack borrows this exact structure across its pages. Instead of arbitrary
 
 | UCF Section | Title in Federal Contracting | ClearedStack Location | What you find there |
 | --- | --- | --- | --- |
-| **Section B** | Supplies or services and prices/costs | [Home](/) and [Tools](/tools/) | The 5 Contract Line Item Number (CLIN) categories, all priced at a firm-fixed-price of $0.00. |
-| **Section C** | Description/specifications/statement of work | [Home](/) and [Tools](/tools/) | The statement of work for all 18 single-purpose browser tools. |
+| **Section B** | Supplies or services and prices/costs | [Home](/) and [Tools](/tools/) | Contract Line Item Numbers `CLIN 0001`–`0006` (browser tools + platform apps), all priced at $0.00. |
+| **Section C** | Description/specifications/statement of work | [Home](/) and [Tools](/tools/) | The statement of work for all 18 single-purpose browser tools and 17 MIT platform/factory apps. |
 | **Section F** | Deliveries or performance | [Home](/) | The delivery roadmap across three phases: the free arsenal, the community, and the institution. |
-| **Section H** | Special contract requirements | [Home](/) and [About](/about/) | The four core ground rules: free, open source, client-side execution, and independent governance. |
-| **Section L** | Instructions, conditions and notices to offerors | [Guides](/guides/) | The documentation library, numbered from L.1 through L.6 (Start here, Field guides, Hosting, Contributing, Reference, How this project is run). |
-| **Section M** | Evaluation factors for award | [How we decide](/how-we-decide/) | The Prior Art decision engine (draft): ten stages, five knockout gates, scoring rubric, and public decision log. |
+| **Section H** | Special contract requirements | [Home](/) and [About](/about/) | The four core ground rules: free, open source, client-side & deterministic execution, and independent governance. |
+| **Section L** | Instructions, conditions and notices to offerors | [Guides](/guides/) | Live factory views (`L.0`) plus the documentation library numbered `L.1` through `L.6`. |
+| **Section M** | Evaluation factors for award | [How we decide](/guides/how-we-decide/) | The 10-worker Prior Art evaluation engine: five knockout gates, 100-point rubric, 14-state lifecycle, and provenance rules. |
 
 <Flow
   caption="Federal contract structure (UCF) mapped to ClearedStack pages"
   direction="down"
   steps={[
-    { tag: "Section B", label: "Pricing schedule", detail: "Firm-fixed-price of $0.00 across all tool categories on Home." },
-    { tag: "Section C", label: "Statement of work", detail: "Functional scope and specifications for 18 tools in the Catalog." },
+    { tag: "Section B", label: "Pricing schedule", detail: "Firm-fixed-price of $0.00 across CLIN 0001–0006 on Home and Tools." },
+    { tag: "Section C", label: "Statement of work", detail: "Functional scope for 18 browser tools and 17 platform apps on Tools." },
     { tag: "Section F", label: "Deliveries and roadmap", detail: "Three delivery phases: arsenal, community, and institution on Home." },
-    { tag: "Section H", label: "Special contract requirements", detail: "Ground rules: free, open-source, client-side, independent on About." },
-    { tag: "Section L", label: "Instructions to offerors", detail: "Guides library organized into Sections L.1 through L.6." },
-    { tag: "Section M", label: "Evaluation factors for award", detail: "Prior Art engine, knockout gates, and decision log on How we decide." },
+    { tag: "Section H", label: "Special contract requirements", detail: "Ground rules: free, open-source, deterministic, independent on About." },
+    { tag: "Section L", label: "Instructions & live factory", detail: "Live views (Command, Apps, Pipeline, Decide) + Sections L.1–L.6 under Guides." },
+    { tag: "Section M", label: "Evaluation factors for award", detail: "Knockout gates, 100-pt rubric, and record lifecycle at /guides/how-we-decide/." },
   ]}
 />
 
@@ -42,37 +42,32 @@ Learning this layout once helps you navigate both ClearedStack and federal reque
 
 ## The main areas
 
-The ClearedStack v3.1 Portal is an open public sandbox with **no login lock**, organized across **Command** ([`/`](/)), **Apps** ([`/apps/`](/apps/)), **Pipeline** ([`/pipeline/`](/pipeline/)), **Decide** ([`/decide/`](/decide/)), **Tools** ([`/tools/`](/tools/)), **Guides** ([`/guides/`](/guides/)), **How we decide** ([`/how-we-decide/`](/how-we-decide/)), and **About** ([`/about/`](/about/)).
+Top navigation stays intentionally clean with four links alongside **Home** ([`/`](/)) and instant site search: **Tools** ([`/tools/`](/tools/)), **Guides** ([`/guides/`](/guides/)), **About** ([`/about/`](/about/)), and **GitHub**.
 
-Every live element carries a `✎ Edit` button (anonymous 5-layer anti-spam shield) and contextual `[? Why]` drawers.
+Every live factory and governance view sits inside **Guides** with **no login lock**, and every editable element carries a `✎ Edit` button (5-layer anti-spam shield) and contextual `[? Why]` drawers:
 
-### 1. Command (`/`)
-The live priority dashboard driven by deterministic `P0`–`P4` attention rules (zero AI at runtime):
-- **Live Pulse Strip:** Shows control-plane pods, 10 deterministic workers, queue depth, and stream freshness.
-- **Attention Cards (`P0`–`P2`):** Surfaces critical errors, stalled `needs_subtool` queues, and pending decisions or public edit proposals at the top while collapsing idle workers to one line.
+### 1. Home (`/`)
+The contract-structured front door (`Sections B, C, F, H, M`), summarizing the $0.00 CLIN schedule, the 18 browser utilities + 17 platform apps, the three-phase delivery roadmap, and the 10-worker deterministic factory.
 
-### 2. Apps (`/apps/`)
-The clean-room App Store powered by `cs-store` (replacing Argo CD and CasaOS):
-- **Control Plane (`clearedstack` namespace):** Live status and RAM budgets for `clearedstack-web`, `hub-queue-api`, `postgres`, `cs-git`, `cs-registry`, `cs-runner`, and `cs-store`.
-- **10 Workers (`cs-workers` namespace):** Live health, active sub-tools, and owner-only 1-click **Install / Upgrade / Pause / Rollback** controls.
+### 2. Tools & Apps (`/tools/`)
+The unified catalog of everything ClearedStack builds and runs:
+- **Browser Contracting Utilities (`CLIN 0001`–`0005`):** 18 single-purpose client-side tools (`#pricing`, `#proposal`, `#cyber`, `#market`, `#devsecops`) with instant search and provenance links.
+- **Platform & Factory Apps (`CLIN 0006`, [`#apps`](/tools/#apps)):** All 7 clean-room Go/Postgres control-plane services in `clearedstack` and all 10 deterministic worker repositories (`cs-01-intake` through `cs-10-notify`) in `cs-workers`.
 
-### 3. Pipeline (`/pipeline/`) & Decide (`/decide/`)
-- **Pipeline (`/pipeline/`):** Real-time view of `cs-01-intake` through `cs-10-notify`, their `tools/<case>/` sub-tools, and `[? Why]` drawers.
-- **Decide (`/decide/`):** Publicly visible inbox for `cs-04-decide` candidate determinations and anonymous `✎ Edit` proposals.
+### 3. Guides & Live Factory Views (`/guides/*`)
+The documentation hub (`L.1`–`L.6`) and the five live operational & evaluation views connected by a shared sub-navigation bar:
+- **Command ([`/guides/command/`](/guides/command/)):** Priority dashboard driven by deterministic `P0`–`P2` attention rules (`PulseStrip`, `AttentionCard`, 10-worker strip, and control-plane summary).
+- **Apps ([`/guides/apps/`](/guides/apps/)):** Dedicated Cluster App Store powered by `cs-store` (Server-Side Apply) with Owner Mode preview for 1-click Upgrade, Pause, and 5-digest Rollback.
+- **Pipeline ([`/guides/pipeline/`](/guides/pipeline/)):** Real-time view of `cs-01-intake` through `cs-10-notify`, `PA-XXXX` trails, `/var/spool/cs` local spools, and `tools/<case>/` deterministic sub-tools.
+- **Decide ([`/guides/decide/`](/guides/decide/)):** Publicly readable queue for `cs-04-decide` candidate determinations and `core.edit_proposal` anonymous `✎ Edit` submissions.
+- **How We Decide ([`/guides/how-we-decide/`](/guides/how-we-decide/)):** Section M evaluation factors, 5 binary knockout gates, 100-point rubric, 14-state lifecycle, and clean-room rules.
 
-### 4. Tools (`/tools/`)
-The catalog of single-purpose client-side contracting tools organized by 4-digit CLINs (`#pricing`, `#proposal`, `#cyber`, `#market`, `#devsecops`), with real-time search and provenance links.
+### 4. About (`/about/`)
+Mission (workplace autonomy for builders over corporate overhead), 11-repo + 2-namespace organization, authoring-only AI disclosure, ground rules, and full legal disclaimer.
 
-### 5. Guides (`/guides/`)
-The documentation hub structured under UCF Section L (`L.1` through `L.6`), with curated reading routes, live text search, and short answers.
+## Finding tools and apps in the catalog
 
-### 6. How we decide (`/how-we-decide/`) & About (`/about/`)
-- **How we decide:** Section M evaluation factors, the 10-worker flow, 14-state lifecycle (including `needs_subtool`), 5 knockout gates, and 100-point rubric.
-- **About:** Mission, 2-namespace organization, zero-AI-at-runtime policy, MIT license, and full legal disclaimer.
-
-## Finding tools in the catalog
-
-All tools are indexed on the [Tools](/tools/) page. The catalog is organized into five CLIN categories:
+All browser utilities and platform apps are indexed on the [Tools](/tools/) page across six CLIN categories:
 
 | CLIN | Anchor Link | Area | Focus |
 | --- | --- | --- | --- |
@@ -81,13 +76,14 @@ All tools are indexed on the [Tools](/tools/) page. The catalog is organized int
 | **0003** | [`#cyber`](/tools/#cyber) | Cybersecurity & compliance | NIST SP 800-171 / CMMC readiness checklists, CUI marking generators, DISA STIG reference lookups, and OSCAL validation. |
 | **0004** | [`#market`](/tools/#market) | Market research & small business | NAICS-to-PSC code crosswalks, Nontraditional Defense Contractor (NDC) eligibility, and small business set-aside guides. |
 | **0005** | [`#devsecops`](/tools/#devsecops) | Tactical & DevSecOps | Offline container manifest inspectors, X.509 certificate chain decoders, and air-gap transfer checksum helpers. |
+| **0006** | [`#apps`](/tools/#apps) | Platform & Factory Apps | 7 clean-room control-plane microservices (`clearedstack`) + 10 deterministic Go workers (`cs-workers`). |
 
 ### Using the interactive search filter
 At the top of the catalog is an interactive search input:
 - **Instant filtering:** As you type, the tool list updates immediately without reloading the page.
 - **Multi-field matching:** The search scans across tool names (such as "Wrap Rate Calculator"), summaries (such as "cost pools"), and category titles simultaneously.
 - **Multi-word AND logic:** Typing `labor rate` finds tools containing both "labor" and "rate", filtering out irrelevant items.
-- **Live tally:** A counter to the right of the search input displays the exact count of matches (`X of 18 tools`), announced directly to assistive technologies.
+- **Live tally:** A counter to the right of the search input displays the exact count of matches (`X of 18 tools`), announced directly to assistive technologies, while [`#apps`](/tools/#apps) provides its own namespace tabs and filter for the 17 platform apps.
 - **Clearing your query:** Press `Escape`, click the clear button (`✕`) inside the search box, or delete the search text to restore the complete catalog.
 
 ### Reading status labels
@@ -107,51 +103,52 @@ For details on contributing your own tools, see [Request a tool or add your own]
 
 ## Using the guides library
 
-The [Guides](/guides/) page contains in-depth documentation covering contracting regulations, site architecture, self-hosting, and contribution.
+The [Guides](/guides/) page contains live factory views alongside in-depth documentation covering contracting regulations, platform architecture, self-hosting, and contribution.
 
 ### The Section L organization
-Guides are grouped into six logical sections under UCF Section L:
-- **L.1 Start here:** Essential onboarding guides covering site navigation, browser data isolation, result verification, and core operating principles.
+Guides are grouped into six manual sections under UCF Section L (alongside `L.0` Interactive Factory Views):
+- **L.1 Start here:** Essential onboarding guides covering site navigation, browser data isolation, live portal views, result verification, and core operating principles.
 - **L.2 Field guides:** Detailed primers on government contracting mechanics—reading RFPs, answering requirements, building labor rates, submitting proper invoices, protecting CUI, handling STIGs and OSCAL, and working on disconnected networks.
-- **L.3 Host your own copy:** Complete engineering guides for deploying ClearedStack on Docker, Kubernetes, bare static web servers, or air-gapped security enclaves.
-- **L.4 Contribute:** Step-by-step instructions for submitting tool requests, reporting regulatory errors, building compliant client-side tools, and maintaining this website.
+- **L.3 Host your own copy:** Complete engineering guides for deploying ClearedStack on Dockerless Kubernetes (`k3s` + `containerd`), bare static web servers (Snapshot Mode), or air-gapped security enclaves.
+- **L.4 Contribute:** Step-by-step instructions for submitting tool requests, proposing anonymous `✎` edits, building compliant client-side tools, and maintaining this website.
 - **L.5 Reference:** Quick lookups including a comprehensive contracting acronym glossary, regulatory source links, and answers to common questions.
-- **L.6 How this project is run:** How ClearedStack discovers and observes existing tools, scores ideas in public, credits prior art, builds clean-room software with AI assistance, and logs decisions.
+- **L.6 How this project is run:** How the 11 pipeline repositories and 4 control-plane services discover and observe tools, score ideas deterministically, enforce clean-room boundaries, and close the self-building factory loop.
 
 <Flow
-  caption="Six Section L guide groups"
+  caption="Six Section L manual groups"
   direction="down"
   steps={[
-    { tag: "L.1", label: "Start here", detail: "Onboarding, data privacy, and verifying results." },
+    { tag: "L.1", label: "Start here", detail: "Onboarding, live portal orientation, data privacy, and verifying results." },
     { tag: "L.2", label: "Field guides", detail: "Solicitations, labor rates, invoices, CUI, and air gaps." },
-    { tag: "L.3", label: "Host your own copy", detail: "Docker, Kubernetes, static files, and closed networks." },
-    { tag: "L.4", label: "Contribute", detail: "Request a tool, build a tool, and work on this site." },
+    { tag: "L.3", label: "Host your own copy", detail: "Dockerless k3s + containerd, static Snapshot Mode, and closed networks." },
+    { tag: "L.4", label: "Contribute", detail: "Request a tool, anonymous ✎ edits, build a tool, and work on this site." },
     { tag: "L.5", label: "Reference", detail: "Acronym glossary, regulatory sources, and common questions." },
-    { tag: "L.6", label: "How this project is run", detail: "Prior art process, scoring, credit, and AI assistance." },
+    { tag: "L.6", label: "How this project is run", detail: "10-worker Prior Art engine, sub-tools, clean-room wall, and factory loop." },
   ]}
 />
 
 ### The four reading routes
-If you are looking for a guided sequence rather than browsing the full list, use the four curated routes at the top of `/guides/`:
-1. **New to the site:** For first-time visitors wanting to understand how the tools work, where data goes, and how to verify calculations ([Getting started](/guides/getting-started/), [What happens to what you type](/guides/your-data/), [Check a tool’s answer](/guides/checking-results/), and [Common questions](/guides/faq/)).
-2. **New to government contracting:** For engineers and founders preparing their first bid ([Read a solicitation](/guides/read-a-solicitation/), [Answer a solicitation](/guides/answer-a-solicitation/), [Labor rates and wrap rates](/guides/labor-rates/), [Protecting government information](/guides/protecting-government-information/), and [Codes, registration and small business status](/guides/codes-and-small-business/)).
-3. **Running your own copy:** For DevOps engineers and system administrators deploying inside corporate networks or secure labs ([One-command quickstart](/guides/one-command-quickstart/), [Host on Kubernetes (No Docker)](/guides/host-on-kubernetes/), [Host as plain files](/guides/host-static-files/), and [Run it on a closed network](/guides/closed-networks/)).
-4. **Building or fixing something:** For developers and technical contributors ([Request a tool or add your own](/guides/request-or-add-a-tool/), [Build a tool that can be listed](/guides/build-a-tool/), and [Work on this site](/guides/work-on-this-site/)).
+If you are looking for a guided sequence rather than browsing the full list, use the four curated tracks on `/guides/`:
+1. **New to the site:** Orientation on layout, data privacy, result verification, and common questions ([How to navigate this site](/guides/navigating-this-site/), [Getting started](/guides/getting-started/), [What happens to what you type](/guides/your-data/), [Check a tool’s answer](/guides/checking-results/), and [Common questions](/guides/faq/)).
+2. **Bidding a first contract:** Solicitations, labor pricing, CUI safeguarding, and SAM/NAICS registration ([Read a solicitation](/guides/read-a-solicitation/), [Answer a solicitation](/guides/answer-a-solicitation/), [Labor rates and wrap rates](/guides/labor-rates/), [Protecting government information](/guides/protecting-government-information/), and [Codes, registration and small business status](/guides/codes-and-small-business/)).
+3. **How the factory builds itself:** How the live portal, 10 deterministic workers, per-case sub-tools, and `ownership_map.json` close the loop ([The Live Command Portal & App Store](/guides/live-command-portal/), [The 10-Worker Prior Art Engine](/guides/prior-art-engine/), [How the Self-Building Factory Loop Works](/guides/self-building-factory-loop/), [Deterministic Sub-Tools](/guides/deterministic-sub-tools/), and [Ownership Map & the Edit-to-Repo Loop](/guides/ownership-map-and-edit-loop/)).
+4. **Self-hosting & contributing:** Deploying inside corporate networks or secure labs and adding tools ([One-command quickstart](/guides/one-command-quickstart/), [Host on Kubernetes (No Docker)](/guides/host-on-kubernetes/), [Run it on a closed network](/guides/closed-networks/), [Request a tool or add your own](/guides/request-or-add-a-tool/), and [Build a tool that can be listed](/guides/build-a-tool/)).
 
 ### The guide reading interface
 Every individual guide page provides structured navigation aids:
-- **Header Breadcrumb:** Located at the top left, linking back to `/guides/` and directly to the parent section anchor (for example, `Guides · L.1 Start here`).
-- **Metadata Line:** Displays the official Section L designation (such as `L.1.1`), estimated reading time based on a 220 word-per-minute standard, and regulatory currency ("Checked against its sources in November 2026").
+- **Shared Guides Sub-Navigation:** Jump directly between the `Library`, `Command`, `Apps`, `Pipeline`, `Decide`, and `How We Decide` views from the top of any guide.
+- **Header Breadcrumb:** Links back to `/guides/` and directly to the parent section anchor (for example, `Guides Library · L.1 Start here`).
+- **Metadata Line:** Displays the official Section L designation (such as `L.1.1`), estimated reading time based on a 220 word-per-minute standard, and revision currency.
 - **Sticky Desktop Table of Contents:** On large screens, an "On this page" sidebar follows your scroll position on the right, listing all level-2 headings (`##`) for instant jumping.
 - **Section Sibling Navigation:** Below the desktop TOC, the sidebar lists all sibling guides within the current Section L category, highlighting your active page.
 - **Collapsible Mobile TOC:** On mobile devices and small viewports, the table of contents folds into an accessible `<details>` accordion labeled "On this page" located immediately above the text.
 - **Previous and Next Navigation Cards:** Large cards at the bottom of the article link sequentially to the preceding and following guides across the library.
 
 ### Searching and filtering guides
-Like the tool catalog, the guides index on `/guides/` includes an instant search filter:
-- Enter any term (e.g. `wrap rate`, `CUI`, `Docker`, `invoice`, `DFARS`).
-- The filter matches guide titles, summaries, section names, and second-level heading topics.
-- Section navigation pills (`L.1 Start here`, `L.2 Field guides`, etc.) display live match counts and jump directly to the relevant section heading.
+Like the tool catalog, the guides index on `/guides/` includes interactive section tabs and an instant search filter:
+- Enter any term (e.g. `wrap rate`, `CUI`, `k3s`, `cs-store`, `invoice`, `DFARS`).
+- Filter to a single section (`L.1` through `L.6`) using the section tabs, or search across all sections simultaneously.
+- The filter matches section codes, guide titles, summaries, section names, and second-level heading topics.
 
 ## Finding what you need by role
 
@@ -202,7 +199,7 @@ ClearedStack is built to comply with federal accessibility standards (Section 50
 ### Global site search (⌘K or /)
 Pressing `⌘K` (on macOS), `Ctrl+K` (on Windows and Linux), or `/` anywhere on the site opens the instant site-wide search dialog. The search engine runs 100% locally in your browser memory:
 - **Zero latency:** Queries resolve in 1 to 2 milliseconds using client-side MiniSearch indexing.
-- **Deep heading indexing:** Search indexes all 18 planned tools, 22 guides, key site pages, and over 200 individual `##` headings with direct deep links.
+- **Deep heading indexing:** Search indexes all 18 planned browser tools, all 17 platform/worker apps, all 49 guides, live factory views under `/guides/`, and over 250 individual `##` headings with direct deep links.
 - **Keyboard operation:** Use `↓` and `↑` arrow keys to highlight results, `Enter` to navigate directly to the page or subsection, and `Escape` to close the dialog.
 - **Strict privacy:** No search queries, keystrokes, or IP addresses are transmitted to external servers or search APIs.
 
@@ -212,8 +209,8 @@ Pressing `Tab` upon initial page load reveals a high-contrast **"Skip to content
 ### High-contrast focus rings and logical tab order
 All interactive elements—links, search inputs, buttons, and summary disclosures—feature high-contrast focus rings (`focus:border-accent` and `focus:outline-none`). Tab order follows the visual and logical structure of the document:
 1. Skip link (when focused)
-2. SiteHeader branding and navigation links
-3. Search inputs or section jump links
+2. SiteHeader branding, search trigger, and four main navigation links
+3. Guides sub-navigation or catalog section jump links
 4. Main article text and internal links
 5. Sticky or inline table of contents
 6. Footer site map and repository links
@@ -223,14 +220,14 @@ Both the Tool Catalog (`/tools/`) and Guides Index (`/guides/`) feature real-tim
 
 ### Dark mode and system preferences
 The site automatically detects and honors your operating system color scheme preference (`prefers-color-scheme`). High contrast is maintained in both modes:
-- **Light mode:** Warm parchment background (`#f5f4ef`) with dense charcoal ink text (`#1a1d1b`) and deep copper accent highlights.
-- **Dark mode:** Tactical black/forest background (`#0b0f0d`) with off-white typography and vibrant copper accents.
+- **Light mode:** Warm parchment background (`#f5f4ef`) with dense charcoal ink text (`#1a1d1b`) and deep forest accent highlights.
+- **Dark mode:** Tactical black/forest background (`#0b0f0d`) with off-white typography and crisp green accents.
 - Both modes strictly avoid pure `#000000` or `#ffffff` extremes to minimize eye fatigue during extended proposal reviews.
 
 ### Deep linking with URL fragments
 Every second-level heading (`##`) automatically generates an anchor ID and an interactive anchor symbol (`#`) linking directly to that section. You can right-click or copy any heading link to share or bookmark an exact subsection.
 
-Similarly, all CLIN categories (`#pricing`, `#proposal`, `#cyber`, `#market`, `#devsecops`) and guide sections (`#start`, `#field`, `#host`, `#contribute`, `#reference`) support direct fragment URLs.
+Similarly, all CLIN categories (`#pricing`, `#proposal`, `#cyber`, `#market`, `#devsecops`, `#apps`) and guide sections (`#start`, `#field`, `#host`, `#contribute`, `#reference`, `#project`) support direct fragment URLs.
 
 ## Navigating offline and on closed networks
 

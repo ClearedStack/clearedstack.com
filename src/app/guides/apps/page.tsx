@@ -1,19 +1,25 @@
+import type { Metadata } from "next";
+import Link from "next/link";
 import { AppStoreGrid } from "@/components/AppStoreGrid";
+import { GuidesSubnav } from "@/components/GuidesSubnav";
 import { PulseStrip } from "@/components/PulseStrip";
 import { SectionLabel } from "@/components/SectionLabel";
 import { DraftChip } from "@/components/StatusChip";
 import { WhyDrawer } from "@/components/WhyDrawer";
 import { controlPlaneApps, workerApps } from "@/data/platform";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Apps & Cluster App Store",
   description:
     "Live App Store view of all 7 control-plane microservices and 10 deterministic workers managed by cs-store.",
+  alternates: { canonical: "/guides/apps/" },
 };
 
-export default function AppsPage() {
+export default function AppsGuidePage() {
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-12 lg:pt-16">
+    <div className="mx-auto max-w-6xl px-5 pt-10 lg:pt-14">
+      <GuidesSubnav current="apps" />
+
       <div className="flex flex-wrap items-center justify-between gap-2">
         <SectionLabel section="App Store">cs-store · Server-Side Apply</SectionLabel>
         <div className="flex items-center gap-2">
@@ -36,7 +42,12 @@ export default function AppsPage() {
       </h1>
       <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
         Every control-plane microservice in <code className="text-ink">clearedstack</code> and every deterministic
-        worker in <code className="text-ink">cs-workers</code> is shown publicly with no login lock.
+        worker in <code className="text-ink">cs-workers</code> is shown publicly with no login lock. All 17 platform
+        apps are also listed alongside our 18 browser contracting utilities under{" "}
+        <Link href="/tools/#apps" className="text-ink underline decoration-accent underline-offset-4 hover:text-accent">
+          Tools &amp; Apps (/tools/#apps)
+        </Link>
+        .
       </p>
 
       <div className="mt-6">

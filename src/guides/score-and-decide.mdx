@@ -1,12 +1,12 @@
 export const meta = {
   title: "How Ideas Are Scored and Decided",
-  summary: "How cs-03-evaluate runs deterministic knockout gates, the 100-point rubric, and tie-breakers, and how cs-04-decide powers the /decide owner inbox for tool outcomes and anonymous public edits.",
+  summary: "How cs-03-evaluate runs deterministic knockout gates, the 100-point rubric, and tie-breakers, and how cs-04-decide powers the /guides/decide/ owner inbox for tool outcomes and anonymous public edits.",
   group: "contribute",
   order: 4,
   revised: "2026-11",
 };
 
-In ClearedStack v3.1, evaluating candidate tools and approving changes is split between two focused Go services in the `cs-workers` namespace: `cs-03-evaluate` (which scores candidates with zero AI) and `cs-04-decide` (which powers the human owner's `/decide` inbox). Every rule, weight, and decision outcome is visible to the public through read-only `pub.*` database views on the Portal—no sign-in required.
+In ClearedStack v3.1, evaluating candidate tools and approving changes is split between two focused Go services in the `cs-workers` namespace: `cs-03-evaluate` (which scores candidates with zero AI) and `cs-04-decide` (which powers the human owner's `/guides/decide/` inbox). Every rule, weight, and decision outcome is visible to the public through read-only `pub.*` database views on the Portal—no sign-in required.
 
 ## Deterministic evaluation with cs-03-evaluate
 
@@ -57,9 +57,9 @@ When multiple `scored` candidates share the exact same composite score, `cs-03-e
 4. **Small code footprint** — Higher score on the Small enough to read factor wins.
 5. **Community demand** — Higher count of independent requests and issue upvotes wins.
 
-## Human decisions and /decide (cs-04-decide)
+## Human decisions and /guides/decide/ (cs-04-decide)
 
-`cs-04-decide` has no `tools/<case>/` sub-tools because final judgment belongs strictly to the human project owner. It powers the `/decide` inbox on `clearedstack.com`, which handles two queues:
+`cs-04-decide` has no `tools/<case>/` sub-tools because final judgment belongs strictly to the human project owner. It powers the `/guides/decide/` inbox on `clearedstack.com`, which handles two queues:
 
 - **Tool determinations:** The owner reviews `scored` (or overridden `screened-out`) candidates and chooses **Approve (Build)**, **Link**, **Merge**, **Park**, **Reject**, or **Override**. Any override requires an explicit written reason, which is recorded in the public decision log. Approved items advance to `cs-05-provenance` (`approved` state).
-- **Anonymous public edit approvals:** Any visitor can click `✎` anywhere on the Portal to propose a `DATA`, `CONFIG`, or `ISSUE` edit without signing in. After passing browser Proof-of-Work, a honeypot check, daily-salted IP hash rate limits, and `ownership_map.json` schema validation, proposals wait in `core.edit_proposal` (`pending_approval`). Nothing touches `cs-git` or the cluster until the owner clicks **Approve** in `/decide`, which dispatches `cs-10-notify` on the `urgent` lane (`Proposed -> Approved -> Building -> Live`).
+- **Anonymous public edit approvals:** Any visitor can click `✎` anywhere on the Portal to propose a `DATA`, `CONFIG`, or `ISSUE` edit without signing in. After passing browser Proof-of-Work, a honeypot check, daily-salted IP hash rate limits, and `ownership_map.json` schema validation, proposals wait in `core.edit_proposal` (`pending_approval`). Nothing touches `cs-git` or the cluster until the owner clicks **Approve** in `/guides/decide/`, which dispatches `cs-10-notify` on the `urgent` lane (`Proposed -> Approved -> Building -> Live`).

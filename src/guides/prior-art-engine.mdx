@@ -1,12 +1,12 @@
 export const meta = {
   title: "The 10-Worker Prior Art Engine",
-  summary: "How the old ten-stage essay became ten live, 100% deterministic worker repositories coordinated by hub-queue-api and Postgres, feeding /pipeline, /decide, and /tools.",
+  summary: "How the old ten-stage essay became ten live, 100% deterministic worker repositories coordinated by hub-queue-api and Postgres, feeding /guides/pipeline/, /guides/decide/, and /tools/.",
   group: "project",
   order: 1,
   revised: "2026-11",
 };
 
-Earlier versions of this guide described a ten-stage pipeline as an unbuilt plan. In ClearedStack v3, that essay is now running software: ten separate, MIT-licensed Go repositories (`cs-01-intake` through `cs-10-notify`) that discover existing government-contracting tools, check them against public rules, build clean-room browser alternatives, and keep the live catalog up to date.
+Earlier versions of this guide described a ten-stage pipeline as an unbuilt plan. In ClearedStack v3.1, that essay is now running software: ten separate, MIT-licensed Go repositories (`cs-01-intake` through `cs-10-notify`) that discover existing government-contracting tools, check them against public rules, build clean-room browser alternatives, and keep the live catalog up to date.
 
 Every worker in the engine is **100% deterministic**—meaning there is zero AI at runtime, no language-model token cost, and no guesswork. Given the same input, each worker produces the exact same output on any cluster.
 
@@ -20,14 +20,14 @@ All ten workers run inside the `cs-workers` Kubernetes namespace. Each repositor
 | `cs-02-observe` | Fetches public pages as tiny ~30 MiB Go HTTP pods (spawning on-demand headless browser `Job` pods only for JS-heavy sites), extracts inputs/outputs into JSON, and seals raw snapshots behind the clean-room wall. | Yes (`saas-marketing`, `gov-portal`, `agency-pdf`, `<vendor-slug>`) |
 | `cs-03-evaluate` | Runs the YAML/Go rule engine for the five knockout gates, the 100-point rubric, and five tie-breakers. | Yes (`rubric-profiles/<category>`) |
 | `cs-04-decide` | Powers the owner-only decision inbox on the Portal (Approve, Link, Merge, Park, Reject, Override, and public edit approvals). | No |
-| `cs-05-provenance` | Stamps provenance notes with Go templates, enforces 48-hour/5-day SLAs, and compiles clean-room JSON build specs. | Yes (`spec-profiles/<tool-type>`) |
+| `cs-05-provenance` | Stamps provenance notes with Go templates, enforces 48-hour identity verification and 5-day opt-out SLAs, and compiles clean-room JSON build specs. | Yes (`spec-profiles/<tool-type>`) |
 | `cs-06-build` | Generates an isolated static tool repository from the clean-room spec and worked-example fixtures. | Yes (`stack-templates/calculator`, `checklist`, `validator`, `decision-tree`) |
 | `cs-07-verify` | Runs the five-condition verification suite (offline operation, `connect-src 'self'`, zero tracking, worked-example assertions). | No |
 | `cs-08-catalog` | Publishes verified, linked, merged, or retired entries to the live `clearedstack.com` catalog. | No |
 | `cs-09-monitor` | Runs scheduled ETag, XML, and DOM diff checks on FAR/DFARS/NIST rules, live tools, linked tools, and parked blockers. | Yes (`federal-register`, `ecfr`, `nist-csrc`, `linked-tool-watch`, `live-catalog`) |
 | `cs-10-notify` | Routes approved Portal edits, `needs_subtool` tasks, and fingerprinted errors into `cs-git`, and sends owner alerts. | Yes (`internal-git`, `github-mirror`, `webhook-alert`, `portal-sse`) |
 
-When a worker encounters an unfamiliar page layout or document format, it **fails closed**: it pauses that item in `needs_subtool` and opens a task in the owning repository. Once a new deterministic sub-tool and golden test are added, `cs-runner` builds the updated worker image with `ko` (zero Docker anywhere), `cs-store` rolls it out, and `hub-queue-api` automatically replays every paused item.
+When a worker encounters an unfamiliar page layout or document format, it **fails closed**: it pauses that item in `needs_subtool`, and `cs-10-notify` opens a task in the owning repository. Once a new deterministic sub-tool and golden test are added, `cs-runner` builds the updated worker image with `ko` (zero Docker anywhere), `cs-store` rolls it out, and `hub-queue-api` automatically replays every paused item.
 
 ## How hub-queue-api and Postgres coordinate the line
 
@@ -43,6 +43,6 @@ The public Portal (`clearedstack-web`) reads sanitized `pub.*` Postgres views an
 
 | Portal Route | What the 10-worker engine feeds into it |
 | --- | --- |
-| `/pipeline` | Live queue depths, active worker health, item trails from `PA-XXXX` intake to catalog, and compact `[Why?]` rule drawers replacing long static essays. |
-| `/decide` | The `cs-04-decide` owner inbox for pending tool determinations and anonymous public edit proposals. |
-| `/tools` | The finished, verified client-side tools published by `cs-08-catalog`, complete with provenance notes and regulatory citations. |
+| `/guides/pipeline/` | Live queue depths, active worker health, item trails from `PA-XXXX` intake to catalog, and compact `[Why?]` rule drawers replacing long static essays. |
+| `/guides/decide/` | The `cs-04-decide` owner inbox for pending tool determinations and anonymous public edit proposals. |
+| `/tools/` | The finished, verified client-side tools published by `cs-08-catalog`, plus all 17 platform and worker apps (`#apps`). |

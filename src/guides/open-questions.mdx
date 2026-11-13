@@ -91,14 +91,14 @@ Zero AI runs at runtime anywhere in the pipeline or in any shipped compliance to
 | `cs-02-observe` | Fetch public pages and run DOM/PDF extractors into strict JSON behind a clean-room wall. | Tiny ~30 MiB HTTP Go pods; spawns on-demand headless browser `Job` pods only for JS-heavy sites |
 | `cs-03-evaluate` | Run YAML/Go rule engine for 5 knockout gates, 100-point rubric, and 5 tie-breakers. | Category rubric profiles in `tools/<case>/` |
 | `cs-04-decide` | Owner-only decision inbox on the Portal for item determinations and edit approvals. | Human gate only |
-| `cs-05-provenance` | Stamp provenance notes via Go templates, enforce 48h/5d SLAs, and compile clean-room JSON specs. | Spec profiles in `tools/<case>/` |
+| `cs-05-provenance` | Stamp provenance notes via Go templates, enforce 48h identity verification and 5d opt-out SLAs, and compile clean-room JSON specs. | Spec profiles in `tools/<case>/` |
 | `cs-06-build` | Generate isolated static tool repos from clean-room specs and worked-example fixtures. | Deterministic stack templates |
 | `cs-07-verify` | Run 5-condition test suite (offline execution, `connect-src 'self'`, zero tracking, worked-example parity). | Deterministic pass/fail gate |
 | `cs-08-catalog` | Publish verified, linked, merged, or retired entries to the `clearedstack.com` catalog. | Deterministic catalog sync |
 | `cs-09-monitor` | Scheduled ETag, XML, and DOM diff checks on FAR/DFARS/NIST, live tools, and linked tools. | Source watchers in `tools/<case>/` |
 | `cs-10-notify` | Route approved Portal edits, `needs_subtool` tasks, and fingerprinted errors into `cs-git` and owner alerts. | Notification targets in `tools/<case>/` |
 
-When a worker encounters an unfamiliar page layout or format, it fails closed into `needs_subtool`, opens a task in the owning worker repository, and automatically replays queued items once a new deterministic sub-tool and golden fixture are merged.
+When a worker encounters an unfamiliar page layout or format, it fails closed into `needs_subtool`, `cs-10-notify` opens a fingerprinted task in the owning worker repository, and `hub-queue-api` automatically replays queued items once a new deterministic sub-tool and golden fixture are merged.
 
 ### MIT clean-room Go microservices (no Forgejo, Argo CD, CasaOS, or Docker)
 
