@@ -87,14 +87,16 @@ ClearedStack v3.1 is a **100% deterministic, MIT-licensed, Kubernetes-native** p
 
 ```mermaid
 flowchart LR
-  PUB["Public Visitors (No Login)"] -->|"HTTPS (pub.* views + ✎ Edits)"| WEB["clearedstack-web"]
-  GH["GitHub (Code Mirror Only, NO Images)"] <--|"Push on change"| GIT["cs-git"]
+  PUB["Public Visitors (No Login)"] -->|"HTTPS (pub.* views + Edit)"| WEB["clearedstack-web"]
+  GIT["cs-git"] -->|"Push mirror on change"| GH["GitHub (Code Mirror Only, NO Images)"]
   WEB <-->|"pub.* + SSE + Proposals"| QAPI["hub-queue-api"]
   QAPI <-->|"RW core.*"| DB[("Postgres 17")]
-  GIT -->|"Webhook"| RUN["cs-runner (ko / BuildKit)"] --> REG["cs-registry (last 5 digests)"]
-  STORE["cs-store (Server-Side Apply)"] -->|"Watches"| GIT & REG
-  STORE -->|"Monitors & Sanitizes"| W["cs-01 .. cs-10 (cs-workers)"]
-  W -->|"ServiceAccount HTTP + Local Spool"| QAPI
+  GIT -->|"Webhook"| RUN["cs-runner (ko / BuildKit)"]
+  RUN -->|"Signed OCI"| REG["cs-registry (last 5 digests)"]
+  STORE["cs-store (Server-Side Apply)"] -->|"Watches"| GIT
+  STORE -->|"Watches"| REG
+  STORE -->|"Monitors and Sanitizes"| W["cs-01 .. cs-10 (cs-workers)"]
+  W -->|"ServiceAccount HTTP + Spool"| QAPI
 ```
 
 ## How this project is built
