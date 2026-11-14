@@ -30,6 +30,7 @@ var ErrNotFound = errors.New("ledger: no such item")
 type Item struct {
 	ID, Title, State      string
 	RecordedAt, ChangedAt time.Time
+	Changes               int // how many transitions the item has, which may be more than were read
 }
 
 // Transition is one row of pub.item_history. The optional columns are empty
@@ -47,10 +48,23 @@ type Store interface {
 
 // Handler serves /items/<id> and the stylesheet.
 type Handler struct {
-	Store    Store
-	Timeout  time.Duration    // how long one lookup may take
-	NotFound http.HandlerFunc // the site's 404 page; nil means plain text
-	Log      *slog.Logger     // nil means no log
+	store   Store
+	timeout time.Duration
+	missing http.HandlerFunc
+	log     *slog.Logger
+}
+
+// NewHandler returns a Handler. timeout is how long one lookup may take and
+// must be positive: zero would fail every page. notFound is the site's 404
+// page, or nil for plain text; log may be nil.
+func NewHandler(store Store, timeout time.Duration, notFound http.HandlerFunc, log *slog.Logger) (*Handler, error) {
+	if store == nil {
+		return nil, errors.New("ledger: no store")
+	}
+	if timeout <= 0 {
+		return nil, errors.New("ledger: the lookup timeout must be positive")
+	}
+	return &Handler{store: store, timeout: timeout, missing: notFound, log: log}, nil
 }
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -69,9 +83,9 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.notFound(w, r)
 		return
 	}
-	ctx, cancel := context.WithTimeout(r.Context(), h.Timeout)
+	ctx, cancel := context.WithTimeout(r.Context(), h.timeout)
 	defer cancel()
-	item, trans, err := h.Store.Item(ctx, id)
+	item, trans, err := h.store.Item(ctx, id)
 	switch {
 	case errors.Is(err, ErrNotFound):
 		h.notFound(w, r)
@@ -80,10 +94,10 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if r.Context().Err() != nil {
 			return // the visitor left
 		}
-		if h.Log != nil {
+		if h.log != nil {
 			// Only the kind of failure is logged: the driver's message can
 			// name the server.
-			h.Log.Error("logbook read failed", "timeout", errors.Is(err, context.DeadlineExceeded))
+			h.log.Error("logbook read failed", "timeout", errors.Is(err, context.DeadlineExceeded))
 		}
 		w.Header().Set("Cache-Control", "no-store")
 		w.Header().Set("Retry-After", "5")
@@ -99,14 +113,14 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := page.Execute(w, struct {
 		Item        Item
 		Transitions []Transition
-	}{item, trans}); err != nil && h.Log != nil {
-		h.Log.Error("ledger page write failed")
+	}{item, trans}); err != nil && h.log != nil {
+		h.log.Error("ledger page write failed")
 	}
 }
 
 func (h *Handler) notFound(w http.ResponseWriter, r *http.Request) {
-	if h.NotFound != nil {
-		h.NotFound(w, r)
+	if h.missing != nil {
+		h.missing(w, r)
 		return
 	}
 	http.NotFound(w, r)
@@ -135,6 +149,9 @@ var page = template.Must(template.New("item").Funcs(template.FuncMap{
 {{- end}}
 </dl>
 <h2>History</h2>
+{{- if gt .Item.Changes (len .Transitions)}}
+<p>Showing the latest {{len .Transitions}} of {{.Item.Changes}} changes.</p>
+{{- end}}
 <table>
 <thead><tr><th>Entry</th><th>Time (UTC)</th><th>Actor</th><th>From</th><th>To</th><th>Error code</th><th>Note</th></tr></thead>
 <tbody>

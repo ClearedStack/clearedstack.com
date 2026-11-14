@@ -53,9 +53,37 @@ func serve(h http.Handler, method, target string) *httptest.ResponseRecorder {
 }
 
 func handler(s Store) *Handler {
-	return &Handler{Store: s, Timeout: time.Second, NotFound: func(w http.ResponseWriter, r *http.Request) {
+	h, err := NewHandler(s, time.Second, func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "the 404 page", http.StatusNotFound)
-	}}
+	}, nil)
+	if err != nil {
+		panic(err)
+	}
+	return h
+}
+
+func TestNewHandlerRefusesATimeoutThatWouldFailEveryPage(t *testing.T) {
+	for _, d := range []time.Duration{0, -time.Second} {
+		if _, err := NewHandler(newFake(), d, nil, nil); err == nil {
+			t.Errorf("NewHandler accepted a timeout of %v", d)
+		}
+	}
+	if _, err := NewHandler(nil, time.Second, nil, nil); err == nil {
+		t.Error("NewHandler accepted a nil store")
+	}
+}
+
+func TestPageSaysWhenHistoryWasCut(t *testing.T) {
+	f := newFake()
+	f.item.Changes = 1200
+	body := serve(handler(f), "GET", "/items/PA-0001").Body.String()
+	if !strings.Contains(body, "Showing the latest 3 of 1200 changes.") {
+		t.Errorf("no line about the cut history:\n%s", body)
+	}
+	f.item.Changes = 3
+	if body := serve(handler(f), "GET", "/items/PA-0001").Body.String(); strings.Contains(body, "Showing the latest") {
+		t.Error("the page claims a cut when nothing was cut")
+	}
 }
 
 func TestPageShowsTheItemAndEveryTransitionInOrder(t *testing.T) {
@@ -136,7 +164,7 @@ func TestSlowLogbookTimesOutTo503(t *testing.T) {
 	f := newFake()
 	f.block = true
 	h := handler(f)
-	h.Timeout = 30 * time.Millisecond
+	h.timeout = 30 * time.Millisecond
 	start := time.Now()
 	rec := serve(h, "GET", "/items/PA-0001")
 	if rec.Code != 503 {

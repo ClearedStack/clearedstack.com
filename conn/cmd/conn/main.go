@@ -55,11 +55,11 @@ func run(log *slog.Logger) error {
 	defer db.Close()
 	hub := &feed.Hub{URL: cfg.MusterURL, TokenFile: cfg.MusterTokenFile, Log: log}
 
-	srv := server.NewServer(cfg.Listen, server.New(server.Handlers{
-		Static: site,
-		Ledger: &ledger.Handler{Store: db, Timeout: queryTimeout, NotFound: site.NotFound, Log: log},
-		Feed:   hub,
-	}))
+	items, err := ledger.NewHandler(db, queryTimeout, site.NotFound, log)
+	if err != nil {
+		return err
+	}
+	srv := server.NewServer(cfg.Listen, server.New(server.Handlers{Static: site, Ledger: items, Feed: hub}))
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()

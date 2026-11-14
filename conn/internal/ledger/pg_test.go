@@ -28,6 +28,64 @@ func openTest(t *testing.T) *PG {
 	return p
 }
 
+// openBare opens a pool without the read-only default on the connection, so a
+// test can show the transaction option does its own work.
+func openBare(t *testing.T) *PG {
+	t.Helper()
+	url := os.Getenv("CONN_TEST_DATABASE_URL")
+	if url == "" {
+		t.Skip("CONN_TEST_DATABASE_URL is not set")
+	}
+	p, err := open(url, os.Getenv("CONN_TEST_PASSWORD"), 3*time.Second, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { p.Close() })
+	return p
+}
+
+func TestPGTransactionIsReadOnlyWithoutTheConnectionDefault(t *testing.T) {
+	p := openBare(t)
+	ctx := context.Background()
+	var def string
+	if err := p.db.QueryRowContext(ctx, `SHOW default_transaction_read_only`).Scan(&def); err != nil || def != "off" {
+		t.Fatalf("the bare pool should not be read-only by default: %q, %v", def, err)
+	}
+	err := p.readOnly(ctx, func(ctx context.Context, tx *sql.Tx) error {
+		_, err := tx.ExecContext(ctx, `CREATE TEMP TABLE leak (x int)`)
+		if code := pgCode(err); code != "25006" {
+			t.Errorf("a write inside readOnly: code %q, err %v", code, err)
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestPGHistoryKeepsTheNewestAndCountsAll(t *testing.T) {
+	p := openTest(t)
+	p.historyLimit = 3
+	item, trans, err := p.Item(context.Background(), "PA-0003")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if item.Changes != 5 {
+		t.Errorf("Changes = %d, want 5", item.Changes)
+	}
+	var notes []string
+	for _, tr := range trans {
+		notes = append(notes, tr.Note)
+	}
+	if got := strings.Join(notes, ","); got != "change 3,change 4,change 5" {
+		t.Errorf("history = %q, want the newest three, oldest first", got)
+	}
+	p.historyLimit = 1000
+	if _, all, _ := p.Item(context.Background(), "PA-0003"); len(all) != 5 {
+		t.Errorf("uncut history has %d rows", len(all))
+	}
+}
+
 func TestPGItem(t *testing.T) {
 	p := openTest(t)
 	item, trans, err := p.Item(context.Background(), "PA-0001")
