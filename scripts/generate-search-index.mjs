@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { siteFields } from "../src/data/tools-json.mjs";
 import { loadCatalog } from "./load-catalog.mjs";
 
 // The same rule as src/lib/slug.ts, so links to sections land on the heading.
@@ -90,10 +91,11 @@ documents.push({
 // Read and merged by scripts/load-catalog.mjs; a bad catalog/tools.json stops here.
 const { tools, categories, toolsFound, toolsJson } = loadCatalog(rootDir);
 
-// Hand the checked catalog/tools.json (or null) to the pages: src/data/catalog.ts
+// Hand the checked catalog/tools.json (only slug, status and repository of each
+// entry, or null) to the pages: src/data/catalog.ts
 // imports this file, so the client components need no file access. Generated;
 // do not edit.
-fs.writeFileSync(path.join(dataDir, "tools-json.generated.json"), JSON.stringify(toolsJson, null, 2) + "\n");
+fs.writeFileSync(path.join(dataDir, "tools-json.generated.json"), JSON.stringify(siteFields(toolsJson), null, 2) + "\n");
 
 const categoryMap = new Map();
 categories.forEach((c) => categoryMap.set(c.id, c));

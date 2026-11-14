@@ -29,11 +29,14 @@ const fail = (message) => {
 const isObject = (v) => typeof v === "object" && v !== null && !Array.isArray(v);
 const isText = (v) => typeof v === "string" && v.trim() !== "";
 
-// An https address with no user name or password. It ends up in an href.
+// An https address with no user name or password, written exactly as the URL
+// parser would write it (so no spaces, line breaks or capital letters in the
+// host). It is stored as written and ends up in an href and in Markdown.
 function isHttps(v) {
+  if (typeof v !== "string" || /[\s\p{Cc}]/u.test(v)) return false;
   try {
     const u = new URL(v);
-    return u.protocol === "https:" && !u.username && !u.password && u.hostname.includes(".");
+    return u.href === v && u.protocol === "https:" && !u.username && !u.password && u.hostname.includes(".");
   } catch {
     return false;
   }
@@ -89,7 +92,7 @@ export function parseToolsJson(text) {
     const where = `entry "${entry.slug}"`;
     if (seen.has(entry.slug)) fail(`duplicate slug "${entry.slug}"`);
     seen.add(entry.slug);
-    const shape = SHAPES[entry.status];
+    const shape = Object.hasOwn(SHAPES, entry.status) ? SHAPES[entry.status] : undefined;
     if (!shape) fail(`${where} has an unknown status ${JSON.stringify(entry.status)}`);
     checkKeys(where, entry, [...BASE, ...shape.need, ...shape.may]);
     for (const key of [...BASE, ...shape.need]) {
@@ -100,6 +103,19 @@ export function parseToolsJson(text) {
     checkNested(where, entry);
   }
   return data;
+}
+
+/**
+ * The part of a parsed catalog the pages use: slug, status and repository of
+ * each entry. This is what src/data/tools-json.generated.json holds, so the
+ * rest of the file is not shipped in the client bundle.
+ */
+export function siteFields(catalog) {
+  if (!catalog) return null;
+  return {
+    contract: catalog.contract,
+    entries: catalog.entries.map(({ slug, status, repository }) => ({ slug, status, repository })),
+  };
 }
 
 /**
