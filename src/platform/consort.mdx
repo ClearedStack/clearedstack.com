@@ -1,0 +1,122 @@
+export const meta = {
+  title: "Consort specification",
+  summary: "Repository sync checker in the clearedstack namespace: keeps each GitHub copy matched to Plainforge, carries GitHub-only commits back as pull requests, and reports drift to Shipkeeper.",
+  group: "components",
+  order: 7,
+  revised: "2026-11",
+  status: "design",
+};
+
+Consort (`v0.1.0-draft`, in the `consort` repository, formerly `repo-sync`) watches the two copies of every ClearedStack repository. Plainforge is the source of truth. GitHub is a copy that Plainforge's own push mirror keeps up to date. Consort never writes to GitHub and never writes to a main branch anywhere.
+
+## Overview & Role
+
+Plainforge owns the outbound mirror. People and sessions still push to GitHub now and then, and a push mirror overwrites whatever it finds there, so a commit made on GitHub must reach Plainforge first or it is lost. Consort closes that gap:
+
+- **Brings GitHub changes back as pull requests.** For each GitHub commit that is on no Plainforge branch, Consort pushes the GitHub branch to `consort/<branch>` on Plainforge and opens one pull request into `main`, labelled `consort`. A person reviews and merges it. Consort never merges.
+- **Leaves workflow files alone.** In the pull request, `.github/` is always what Plainforge `main` already has, so a GitHub workflow can never arrive through Consort.
+- **Checks the mirror.** A Plainforge `main` commit still missing from GitHub `main` one full run after it was first seen marks the repository `mirror-behind`.
+- **Reports drift.** Every run produces one JSON report with one line per repository, served to Shipkeeper.
+
+The repositories come from the platform registry (`src/data/registry.json` on Plainforge `main` of `clearedstack.com`): every component's `repository`, plus `clearedstack.com` itself.
+
+### One run
+
+Every 10 minutes, for each repository:
+
+1. Fetch every Plainforge branch and every GitHub branch into a fresh bare clone.
+2. A GitHub commit counts as on Plainforge when it is reachable from any Plainforge branch other than `consort/*`, or when a Plainforge commit names it in a `(cherry picked from commit <id>)` line.
+3. For each GitHub branch with commits not on Plainforge, build the target tree (the GitHub tree with `.github/` taken from Plainforge `main`) and move `consort/<branch>` to it by fast-forward only:
+   - new branch, no `.github/` difference: push the GitHub head itself;
+   - otherwise: write one commit with that tree on top of the existing `consort/<branch>` (and the GitHub head as a second parent when it is not already included).
+   The commit's author, dates and message depend only on the GitHub head, so the same input always writes the same commit.
+4. Open the pull request, or bring the open one's title, body and label up to date. A pull request someone closed is left closed until GitHub moves on.
+5. Check whether the branch merges cleanly into `main` (`git merge-tree`) and say so in the report and the pull request.
+6. Count Plainforge `main` commits not on GitHub `main`.
+
+Running twice in a row with nothing new changes nothing: no push, no API write.
+
+### States
+
+| State | Meaning |
+| --- | --- |
+| `in-sync` | No GitHub commit is missing from Plainforge, and the mirror is not behind |
+| `github-ahead` | GitHub holds commits that are on no Plainforge branch; a `consort/*` pull request carries them |
+| `mirror-behind` | A Plainforge `main` commit seen in the previous run is still not on GitHub `main` |
+| `error` | Consort could not read a side, push a branch or reach the API; the line says why |
+
+When a repository is both ahead and behind, it is reported `github-ahead`: the mirror refuses to push over GitHub-only commits, so that is the one to fix first. Both counts are always in the line.
+
+## Runtime & Resource Budget
+
+| Attribute | Value |
+| --- | --- |
+| **Namespace** | `clearedstack` (Control Plane) |
+| **Kind** | `control-plane` |
+| **Version** | `v0.1.0-draft` |
+| **Owning Repo** | `consort` |
+| **RAM Request** | `32 MiB` (the sync run's limit is higher for the git processes it starts) |
+| **Schedule** | CronJob every 10 minutes, one run at a time, 9 minute deadline |
+| **Storage** | Stateless: fresh clones in an `emptyDir` each run; the last report is held in memory by the report server |
+| **Network Exposure** | Cluster-private (`ClusterIP` only) on 8080 for `/healthz` and `/report`; 8081 takes reports from the sync run only |
+| **Placement** | arm64 nodes, never `cm3588-plus` |
+
+## Interfaces & Data Contracts
+
+| Peer Service | Direction | Protocol / Auth | Data Contract |
+| --- | --- | --- | --- |
+| **Plainforge** | Outbound | git smart HTTP and the Forgejo API, bot token | Reads every branch; pushes `refs/heads/consort/*` by fast-forward only; opens, edits and labels pull requests; never merges, deletes or touches `main` |
+| **GitHub** | Outbound | git smart HTTP over HTTPS, read-only token | Reads every branch; writes nothing |
+| **Shipkeeper** | Inbound | Cluster-private HTTP | `GET /report` returns the last run's JSON report; `GET /healthz` answers 200 while a report younger than 35 minutes is held |
+
+### The report
+
+```json
+{
+  "generated": "2026-11-14T12:00:00Z",
+  "registry": "clearedstack.com:src/data/registry.json",
+  "counts": {"error": 0, "github-ahead": 1, "in-sync": 17, "mirror-behind": 0},
+  "repos": [
+    {
+      "name": "muster",
+      "state": "github-ahead",
+      "plainforgeMain": "<commit id>",
+      "githubMain": "<commit id>",
+      "githubOnly": 2,
+      "mirrorMissing": 4,
+      "pulls": [
+        {"githubBranch": "fuzz", "branch": "consort/fuzz", "head": "<commit id>",
+         "commits": 2, "number": 7, "state": "open", "url": "<pull request URL>"}
+      ]
+    }
+  ]
+}
+```
+
+`githubMissing` is set on a repository GitHub does not have (or will not show to the token); it is then treated as an empty repository, so it turns `mirror-behind` after one run. `conflict` is set on a pull request whose branch does not merge cleanly into `main`.
+
+## Failure Modes & Recovery
+
+- **GitHub or Plainforge unreachable:** the repository's line is `error` with git's own message; the next run tries again. Nothing is half-written, because a branch moves only by one fast-forward push.
+- **The registry cannot be read:** the run fails and delivers no report. `/healthz` turns unhealthy after 35 minutes.
+- **The report server restarts:** it has no report until the next run (within 10 minutes), and that run has no previous report, so mirror lag is judged one run later.
+- **Someone moves a `consort/*` branch by hand:** the next push is not a fast-forward and is refused; the line is `error` until the branch is put back or removed by a person.
+- **A pull request is closed without merging:** it stays closed until the GitHub branch gets a new commit, then a new pull request is opened.
+- **A run overruns:** the CronJob never starts a second run while one is going.
+
+## Security & Clean-Room Boundaries
+
+- **Never writes to `main`, never force-pushes, never merges, never deletes.** The only refspec Consort pushes is `<commit>:refs/heads/consort/<branch>`, with no `+`.
+- **Credentials from Secrets only.** The Plainforge bot token (`plainforge-bot`) and a GitHub token with read-only Contents (`consort-github`) are mounted as files. They reach git as an `http.<url>.extraHeader` in the environment, never on a command line, and are never logged or written to the report.
+- **No cluster API access.** Neither pod mounts a ServiceAccount token.
+- **Narrow network.** The sync run may reach DNS, Plainforge, the report server and public HTTPS; the report server calls nothing.
+- **Unprivileged execution.** Non-root, read-only root filesystem, all capabilities dropped.
+- **No AI at runtime.** Plain comparisons of commit graphs. The same repositories and previous report give the same report.
+- **Standard library only.** Go's standard library and the `git` binary; no third-party Git or GitHub libraries.
+
+## Related pages
+
+- [Plainforge](/platform/plainforge/)
+- [Shipkeeper](/platform/shipkeeper/)
+- [Cluster architecture](/platform/cluster-architecture/)
+- [Operating it: status views, failures and backups](/platform/operations/)

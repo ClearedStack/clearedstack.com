@@ -161,6 +161,28 @@
       "subTools": []
     },
     {
+      "slug": "consort",
+      "name": "Consort",
+      "formerly": "repo-sync",
+      "kind": "control-plane",
+      "namespace": "clearedstack",
+      "responsibility": "Keeps the GitHub copy of every repository matched to Plainforge, brings any change made on GitHub back to Plainforge as a pull request, and reports drift.",
+      "interfaces": [
+        "Reads every repository on Plainforge and on GitHub, never writes to a main branch",
+        "Opens pull requests on Plainforge for commits that exist only on GitHub",
+        "Checks that Plainforge's outbound mirror has pushed each new main commit to GitHub",
+        "Reports each sync run and its health to Shipkeeper"
+      ],
+      "repository": "consort",
+      "image": "consort",
+      "dependsOn": [
+        "plainforge"
+      ],
+      "memory": "32 MiB",
+      "version": "v0.1.0-draft",
+      "subTools": []
+    },
+    {
       "slug": "trawl",
       "name": "Trawl",
       "formerly": "cs-01-intake",

@@ -2952,20 +2952,20 @@
     "type": "guide",
     "title": "Cluster architecture",
     "subtitle": "Platform · Section J.2",
-    "summary": "The one-node, two-namespace cluster the pipeline is designed to run on: its seven control-plane services, how code is built and deployed without Docker, and where the data lives.",
+    "summary": "The one-node, two-namespace cluster the pipeline is designed to run on: its eight control-plane services, how code is built and deployed without Docker, and where the data lives.",
     "url": "/platform/cluster-architecture/",
     "badge": "DESIGN",
-    "content": "Cluster architecture The one-node, two-namespace cluster the pipeline is designed to run on: its seven control-plane services, how code is built and deployed without Docker, and where the data lives. cluster J.2 design  The pipeline is designed to run on a single small Kubernetes node, with everything it needs inside the cluster: its own Git server, its own image registry, its own build runner and its own deployer. This page describes that design. To run your own copy of this website, you need a web server and nothing else. See Host as plain files or Host on Kubernetes. This page is about the cluster for the pipeline that chooses and builds tools. One node, two namespaces, seventeen pods The whole platform is sized to fit on one machine with 4 GiB of memory, running k3s with containerd . | Namespace | What ru"
+    "content": "Cluster architecture The one-node, two-namespace cluster the pipeline is designed to run on: its eight control-plane services, how code is built and deployed without Docker, and where the data lives. cluster J.2 design  The pipeline is designed to run on a single small Kubernetes node, with everything it needs inside the cluster: its own Git server, its own image registry, its own build runner and its own deployer. This page describes that design. To run your own copy of this website, you need a web server and nothing else. See Host as plain files or Host on Kubernetes. This page is about the cluster for the pipeline that chooses and builds tools. One node, two namespaces, eighteen pods The whole platform is sized to fit on one machine with 4 GiB of memory, running k3s with containerd . | Namespace | What run"
   },
   {
-    "id": "section-platform-cluster-architecture-one-node-two-namespaces-seventeen-pods",
+    "id": "section-platform-cluster-architecture-one-node-two-namespaces-eighteen-pods",
     "type": "section",
-    "title": "One node, two namespaces, seventeen pods",
+    "title": "One node, two namespaces, eighteen pods",
     "subtitle": "Cluster architecture",
     "summary": "The whole platform is sized to fit on one machine with 4 GiB of memory, running k3s with containerd . | Namespace | What runs there | Memory requested | | --- |...",
-    "url": "/platform/cluster-architecture/#one-node-two-namespaces-seventeen-pods",
+    "url": "/platform/cluster-architecture/#one-node-two-namespaces-eighteen-pods",
     "badge": "Section",
-    "content": "One node, two namespaces, seventeen pods Cluster architecture The whole platform is sized to fit on one machine with 4 GiB of memory, running k3s with containerd . | Namespace | What runs there | Memory requested | | --- | --- | --- | | clearedstack | The control plane: seven services | About 640 MiB | | cs-workers | The pipeline: ten workers, plus short-lived browser jobs when a page needs one | About 300 MiB | Under 1 GiB at rest leaves room for the operating system, the database’s storage and the occasional build. An earlier draft gave every worker its own namespace, eleven in all. Two keeps the network rules simple and the manifests few, which matters to one person maintaining the stack."
+    "content": "One node, two namespaces, eighteen pods Cluster architecture The whole platform is sized to fit on one machine with 4 GiB of memory, running k3s with containerd . | Namespace | What runs there | Memory requested | | --- | --- | --- | | clearedstack | The control plane: eight services | About 672 MiB | | cs-workers | The pipeline: ten workers, plus short-lived browser jobs when a page needs one | About 300 MiB | Under 1 GiB at rest leaves room for the operating system, the database’s storage and the occasional build. An earlier draft gave every worker its own namespace, eleven in all. Two keeps the network rules simple and the manifests few, which matters to one person maintaining the stack."
   },
   {
     "id": "section-platform-cluster-architecture-the-control-plane",
@@ -2975,7 +2975,7 @@
     "summary": "| Service | What it does | Memory requested | | --- | --- | --- | | Conn | Serves the public site. The only service that can be reached from outside | 128 MiB |...",
     "url": "/platform/cluster-architecture/#the-control-plane",
     "badge": "Section",
-    "content": "The control plane Cluster architecture | Service | What it does | Memory requested | | --- | --- | --- | | Conn | Serves the public site. The only service that can be reached from outside | 128 MiB | | Muster | Hands out work to the workers, records results and receives edit proposals | 48 MiB | | Logbook | The one database, on a persistent volume. Logbook is the record itself; today it is kept in PostgreSQL | 256 MiB | | Plainforge | Holds every repository, signals each push and mirrors code to GitHub | 64 MiB | | Lazarette | Stores built images inside the cluster and keeps the last five of each | 64 MiB | | Keelworks | Starts a short-lived job to test and build on each push | 32 MiB | | Shipkeeper | Deploys what was built, watches its health and reports it | 48 MiB | Plainforge, Lazarette, Keelworks and Shipkeeper are written from scratch as small Go programs instead of being assembled from large existing projects. Clean room and credit explains why."
+    "content": "The control plane Cluster architecture | Service | What it does | Memory requested | | --- | --- | --- | | Conn | Serves the public site. The only service that can be reached from outside | 128 MiB | | Muster | Hands out work to the workers, records results and receives edit proposals | 48 MiB | | Logbook | The one database, on a persistent volume. Logbook is the record itself; today it is kept in PostgreSQL | 256 MiB | | Plainforge | Holds every repository, signals each push and mirrors code to GitHub | 64 MiB | | Lazarette | Stores built images inside the cluster and keeps the last five of each | 64 MiB | | Keelworks | Starts a short-lived job to test and build on each push | 32 MiB | | Shipkeeper | Deploys what was built, watches its health and reports it | 48 MiB | | Consort | Keeps the GitHub copy of every repository matched to Plainforge and brings GitHub changes back as pull requests | 32 MiB | Plainforge, Lazarette, Keelworks, Shipkeeper and Consort are written from scratch as small Go programs instead of being assembled from large existing projects. Clean room and credit explains why."
   },
   {
     "id": "section-platform-cluster-architecture-from-a-push-to-a-running-pod",
@@ -3106,6 +3106,66 @@
     "url": "/platform/conn/#security-and-clean-room-boundaries",
     "badge": "Section",
     "content": "Security & Clean-Room Boundaries Conn specification - Only Public Door: Default-deny NetworkPolicy blocks Ingress traffic to every other pod in clearedstack and cs-workers . - Database Isolation: Connects to Logbook solely with the pub ro role, which has zero privileges on core. tables, credentials, or internal operational state. - No Topology Leakage: Never receives raw node names, pod hostnames, or internal cluster IPs; Shipkeeper strips those fields before status reaches Muster and pub. . - Unprivileged Execution: Runs as a non-root user with dropped Linux capabilities, no privilege escalation, and a read-only root filesystem where state does not need to be written. - Anti-Spam Framing: Enforces client-side Proof-of-Work (~1s cryptographic puzzle) and a hidden honeypot field before forwarding anonymous edit proposals to Muster."
+  },
+  {
+    "id": "platform-consort",
+    "type": "guide",
+    "title": "Consort specification",
+    "subtitle": "Platform · Section J.4",
+    "summary": "Repository sync checker in the clearedstack namespace: keeps each GitHub copy matched to Plainforge, carries GitHub-only commits back as pull requests, and reports drift to Shipkeeper.",
+    "url": "/platform/consort/",
+    "badge": "DESIGN",
+    "content": "Consort specification Repository sync checker in the clearedstack namespace: keeps each GitHub copy matched to Plainforge, carries GitHub-only commits back as pull requests, and reports drift to Shipkeeper. components J.4 design formerly repo-sync  Keeps the GitHub copy of every repository matched to Plainforge, brings any change made on GitHub back to Plainforge as a pull request, and reports drift. Consort ( v0.1.0-draft , in the consort repository, formerly repo-sync ) watches the two copies of every ClearedStack repository. Plainforge is the source of truth. GitHub is a copy that Plainforge's own push mirror keeps up to date. Consort never writes to GitHub and never writes to a main branch anywhere. Overview & Role Plainforge owns the outbound mirror. People and sessions still push to GitHub now and then, and a push mirror overwrites whatever it finds there, so a commit made on GitHub must reach Plainforge first or it is lost. Consort closes that gap: - Brings GitHub changes back as pu"
+  },
+  {
+    "id": "section-platform-consort-overview-and-role",
+    "type": "section",
+    "title": "Overview & Role",
+    "subtitle": "Consort specification",
+    "summary": "Plainforge owns the outbound mirror. People and sessions still push to GitHub now and then, and a push mirror overwrites whatever it finds there, so a commit ma...",
+    "url": "/platform/consort/#overview-and-role",
+    "badge": "Section",
+    "content": "Overview & Role Consort specification Plainforge owns the outbound mirror. People and sessions still push to GitHub now and then, and a push mirror overwrites whatever it finds there, so a commit made on GitHub must reach Plainforge first or it is lost. Consort closes that gap: - Brings GitHub changes back as pull requests. For each GitHub commit that is on no Plainforge branch, Consort pushes the GitHub branch to consort/ on Plainforge and opens one pull request into main , labelled consort . A person reviews and merges it. Consort never merges. - Leaves workflow files alone. In the pull request, .github/ is always what Plainforge main already has, so a GitHub workflow can never arrive through Consort. - Checks the mirror. A Plainforge main commit still missing from GitHub main one full run after it was first seen marks the repository mirror-behind . - Reports drift. Every run produces one JSON report with one line per repository, served to Shipkeeper. The repositories come from the platform registry ( src/data/registry.json on Plainforge main of clearedstack.com ): every component's repository , plus clearedstack.com itself. One run Every 10 minutes, for each repository: 1. Fetch every Plainforge branch and every GitHub branch into a fresh bare clone. 2. A GitHub commit counts as on Plainforge when it is reachable from any Plainforge branch other than consort/ , or when a Plainforge commit names it in a (cherry picked from commit ) line. 3. For each GitHub branch with commits not on Plainforge, build the target tree (the GitHub tree with .github/ taken from Plainforge main ) and move consort/ to it by fast-forward only: - new branch, no .github/ difference: push the GitHub head itself; - otherwise: write one commit with that tree on top of the existing consort/ (and the GitHub head as a second parent when it is not already included). The commit's author, dates and message depend only on the GitHub head, so the same input always writes the same commit. 4. Open the pull request, or bring the open one's title, body and label up to date. A pull request someone closed is left closed until GitHub moves on. 5. Check whether the branch merges cleanly into main ( git merge-tree ) and say so in the report and the pull request. 6. Count Plainforge main commits not on GitHub main . Running twice in a row with nothing new changes nothing: no push, no API write. States | State | Meaning | | --- | --- | | in-sync | No GitHub commit is missing from Plainforge, and the mirror is not behind | | github-ahead | GitHub holds commits that are on no Plainforge branch; a consort/ pull request carries them | | mirror-behind | A Plainforge main commit seen in the previous run is still not on GitHub main | | error | Consort could not read a side, push a branch or reach the API; the line says why | When a repository is both ahead and behind, it is reported github-ahead : the mirror refuses to push over GitHub-only commits, so that is the one to fix first. Both counts are always in the line."
+  },
+  {
+    "id": "section-platform-consort-runtime-and-resource-budget",
+    "type": "section",
+    "title": "Runtime & Resource Budget",
+    "subtitle": "Consort specification",
+    "summary": "| Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | consort | |...",
+    "url": "/platform/consort/#runtime-and-resource-budget",
+    "badge": "Section",
+    "content": "Runtime & Resource Budget Consort specification | Attribute | Value | | --- | --- | | Namespace | clearedstack (Control Plane) | | Kind | control-plane | | Version | v0.1.0-draft | | Owning Repo | consort | | RAM Request | 32 MiB (the sync run's limit is higher for the git processes it starts) | | Schedule | CronJob every 10 minutes, one run at a time, 9 minute deadline | | Storage | Stateless: fresh clones in an emptyDir each run; the last report is held in memory by the report server | | Network Exposure | Cluster-private ( ClusterIP only) on 8080 for /healthz and /report ; 8081 takes reports from the sync run only | | Placement | arm64 nodes, never cm3588-plus |"
+  },
+  {
+    "id": "section-platform-consort-interfaces-and-data-contracts",
+    "type": "section",
+    "title": "Interfaces & Data Contracts",
+    "subtitle": "Consort specification",
+    "summary": "| Peer Service | Direction | Protocol / Auth | Data Contract | | --- | --- | --- | --- | | Plainforge | Outbound | git smart HTTP and the Forgejo API, bot token...",
+    "url": "/platform/consort/#interfaces-and-data-contracts",
+    "badge": "Section",
+    "content": "Interfaces & Data Contracts Consort specification | Peer Service | Direction | Protocol / Auth | Data Contract | | --- | --- | --- | --- | | Plainforge | Outbound | git smart HTTP and the Forgejo API, bot token | Reads every branch; pushes refs/heads/consort/ by fast-forward only; opens, edits and labels pull requests; never merges, deletes or touches main | | GitHub | Outbound | git smart HTTP over HTTPS, read-only token | Reads every branch; writes nothing | | Shipkeeper | Inbound | Cluster-private HTTP | GET /report returns the last run's JSON report; GET /healthz answers 200 while a report younger than 35 minutes is held | The report githubMissing is set on a repository GitHub does not have (or will not show to the token); it is then treated as an empty repository, so it turns mirror-behind after one run. conflict is set on a pull request whose branch does not merge cleanly into main ."
+  },
+  {
+    "id": "section-platform-consort-failure-modes-and-recovery",
+    "type": "section",
+    "title": "Failure Modes & Recovery",
+    "subtitle": "Consort specification",
+    "summary": "- GitHub or Plainforge unreachable: the repository's line is error with git's own message; the next run tries again. Nothing is half-written, because a branch m...",
+    "url": "/platform/consort/#failure-modes-and-recovery",
+    "badge": "Section",
+    "content": "Failure Modes & Recovery Consort specification - GitHub or Plainforge unreachable: the repository's line is error with git's own message; the next run tries again. Nothing is half-written, because a branch moves only by one fast-forward push. - The registry cannot be read: the run fails and delivers no report. /healthz turns unhealthy after 35 minutes. - The report server restarts: it has no report until the next run (within 10 minutes), and that run has no previous report, so mirror lag is judged one run later. - Someone moves a consort/ branch by hand: the next push is not a fast-forward and is refused; the line is error until the branch is put back or removed by a person. - A pull request is closed without merging: it stays closed until the GitHub branch gets a new commit, then a new pull request is opened. - A run overruns: the CronJob never starts a second run while one is going."
+  },
+  {
+    "id": "section-platform-consort-security-and-clean-room-boundaries",
+    "type": "section",
+    "title": "Security & Clean-Room Boundaries",
+    "subtitle": "Consort specification",
+    "summary": "- Never writes to main , never force-pushes, never merges, never deletes. The only refspec Consort pushes is :refs/heads/consort/ , with no + . - Credentials fr...",
+    "url": "/platform/consort/#security-and-clean-room-boundaries",
+    "badge": "Section",
+    "content": "Security & Clean-Room Boundaries Consort specification - Never writes to main , never force-pushes, never merges, never deletes. The only refspec Consort pushes is :refs/heads/consort/ , with no + . - Credentials from Secrets only. The Plainforge bot token ( plainforge-bot ) and a GitHub token with read-only Contents ( consort-github ) are mounted as files. They reach git as an http..extraHeader in the environment, never on a command line, and are never logged or written to the report. - No cluster API access. Neither pod mounts a ServiceAccount token. - Narrow network. The sync run may reach DNS, Plainforge, the report server and public HTTPS; the report server calls nothing. - Unprivileged execution. Non-root, read-only root filesystem, all capabilities dropped. - No AI at runtime. Plain comparisons of commit graphs. The same repositories and previous report give the same report. - Standard library only. Go's standard library and the git binary; no third-party Git or GitHub libraries."
   },
   {
     "id": "platform-countersign",
@@ -3725,7 +3785,7 @@
     "summary": "The project is split into small repositories, each with one job. | Group | Repositories | What it holds | | --- | --- | --- | | The hub | clearedstack.com | Thi...",
     "url": "/platform/overview/#the-parts",
     "badge": "Section",
-    "content": "The parts How the project is put together The project is split into small repositories, each with one job. | Group | Repositories | What it holds | | --- | --- | --- | | The hub | clearedstack.com | This website, the catalog, the guides, and the shared rules the other parts agree on | | The pipeline | Trawl, Sextant, Assay, Countersign, Waybill, Moldloft, Shakedown, Chartroom, Tidegauge, Bellbuoy | Ten workers, one for each stage from finding an idea to watching a published tool | | The control plane | Plainforge, Lazarette, Keelworks, Shipkeeper | Four small services that hold the code, build it, store the images and deploy them | | The tools | One repository for each tool | The browser tools themselves, each able to be read, forked and hosted alone | Keeping the parts separate has three effects. A change to one worker rebuilds and redeploys only that worker. The worker that looks at existing tools and the worker that builds new ones live in different repositories, which is how the clean-room rule is enforced. And any one part can be rolled back without touching the rest. Every component has a name of its own, so that it can be understood and used without the rest. The naming registry lists all seventeen with what each is responsible for, what it depends on and what it used to be called."
+    "content": "The parts How the project is put together The project is split into small repositories, each with one job. | Group | Repositories | What it holds | | --- | --- | --- | | The hub | clearedstack.com | This website, the catalog, the guides, and the shared rules the other parts agree on | | The pipeline | Trawl, Sextant, Assay, Countersign, Waybill, Moldloft, Shakedown, Chartroom, Tidegauge, Bellbuoy | Ten workers, one for each stage from finding an idea to watching a published tool | | The control plane | Plainforge, Lazarette, Keelworks, Shipkeeper, Consort | Five small services that hold the code, build it, store the images, deploy them and keep the GitHub copy of the code matched | | The tools | One repository for each tool | The browser tools themselves, each able to be read, forked and hosted alone | Keeping the parts separate has three effects. A change to one worker rebuilds and redeploys only that worker. The worker that looks at existing tools and the worker that builds new ones live in different repositories, which is how the clean-room rule is enforced. And any one part can be rolled back without touching the rest. Every component has a name of its own, so that it can be understood and used without the rest. The naming registry lists all eighteen with what each is responsible for, what it depends on and what it used to be called."
   },
   {
     "id": "section-platform-overview-from-an-idea-to-a-listed-tool",

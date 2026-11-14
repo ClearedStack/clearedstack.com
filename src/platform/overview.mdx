@@ -17,12 +17,12 @@ The project is split into small repositories, each with one job.
 | --- | --- | --- |
 | The hub | `clearedstack.com` | This website, the catalog, the guides, and the shared rules the other parts agree on |
 | The pipeline | Trawl, Sextant, Assay, Countersign, Waybill, Moldloft, Shakedown, Chartroom, Tidegauge, Bellbuoy | Ten workers, one for each stage from finding an idea to watching a published tool |
-| The control plane | Plainforge, Lazarette, Keelworks, Shipkeeper | Four small services that hold the code, build it, store the images and deploy them |
+| The control plane | Plainforge, Lazarette, Keelworks, Shipkeeper, Consort | Five small services that hold the code, build it, store the images, deploy them and keep the GitHub copy of the code matched |
 | The tools | One repository for each tool | The browser tools themselves, each able to be read, forked and hosted alone |
 
 Keeping the parts separate has three effects. A change to one worker rebuilds and redeploys only that worker. The worker that looks at existing tools and the worker that builds new ones live in different repositories, which is how the [clean-room rule](/platform/clean-room-and-credit/) is enforced. And any one part can be rolled back without touching the rest.
 
-Every component has a name of its own, so that it can be understood and used without the rest. The [naming registry](/platform/#registry) lists all seventeen with what each is responsible for, what it depends on and what it used to be called.
+Every component has a name of its own, so that it can be understood and used without the rest. The [naming registry](/platform/#registry) lists all eighteen with what each is responsible for, what it depends on and what it used to be called.
 
 ## From an idea to a listed tool
 
