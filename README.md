@@ -277,9 +277,9 @@ Settings, all from the environment. A required setting that is missing or unusab
 | `CONN_LISTEN` | no | Default `:8080`. |
 | `GOMEMLIMIT` | no | Default 96 MiB, set by Conn, for the 128 MiB budget in `src/data/registry.json`. |
 
-Every database read is a read-only, repeatable-read transaction with a 3 second timeout, on a connection that is read-only by default. Every answer carries `Content-Security-Policy: default-src 'self'`; the server has read-header, read, write and idle timeouts and a 1 KiB request body limit. Conn makes no network call except to Logbook and Muster, and it does not follow redirects.
+Every database read is a read-only, repeatable-read transaction with a 3 second timeout, on a connection that is read-only by default. Conn's own answers (`/items/`, `/_conn/ledger.css`, `/v1/feed`) carry `Content-Security-Policy: default-src 'self'`. The static export does not, because a Next.js page has inline scripts and styles that policy would block; it gets the three headers `docker/nginx.conf` sets (`nosniff`, `DENY`, `no-referrer`). The server has read-header, read, write and idle timeouts and a 1 KiB request body limit. Conn makes no network call except to Logbook and Muster, and it does not follow redirects.
 
-One thing to settle before the live site is served by Conn: a Next.js export contains small inline scripts, which `default-src 'self'` blocks. The ledger page uses none.
+The ledger page shows the newest 1000 changes of an item, oldest first, and says "Showing the latest N of M changes." when it cut some.
 
 ```sh
 cd conn
