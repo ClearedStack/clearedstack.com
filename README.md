@@ -255,6 +255,46 @@ and `<Callout kind="note | check | warning">` sets a short passage apart.
 Guides that describe regulations set `reviewed` and end with a "Sources"
 section. Check each fact against the official text before you write it down.
 
+## Conn server
+
+`conn/` is a small Go server, the first code of Conn, the control-plane component this repository owns (see [`src/platform/conn.mdx`](src/platform/conn.mdx)). It has its own `go.mod` and uses the standard library plus `github.com/jackc/pgx/v5` (v5.8.0, the version Muster pins) for read-only access to Logbook. The existing `Containerfile` and nginx image are unchanged; nothing here is deployed yet.
+
+| Route | What it does |
+| --- | --- |
+| `GET /` and everything else | Serves the static export in `CONN_STATIC_DIR`: a page is a folder with an `index.html`, anything else is the export's `404.html`. Names that start with a dot, `..` and symbolic links out of the directory are refused. |
+| `GET /items/<id>` | One HTML page from `pub.item` and `pub.item_history`: id, title, state and every transition in `entry_id` order. The id must match Muster's item id format (`PA-` and four digits, or five to nine digits with no leading zero). An unknown id is a 404; Logbook being down is a plain 503 with no detail and `Cache-Control: no-store`. |
+| `GET /v1/feed` | Muster's Server-Sent Events feed. Conn holds one upstream connection, with the bearer token read from `CONN_MUSTER_TOKEN_FILE` on every connect, and fans each frame out unchanged to any number of browsers. A new browser is first sent the latest depths and the latest health of each component, as a direct subscriber would be. A browser that falls behind is dropped; if the upstream connection ends, browsers are disconnected and Conn reconnects with a growing wait (1 s up to 30 s). No header of the browser's request is sent to Muster. |
+
+Settings, all from the environment. A required setting that is missing or unusable stops Conn at start; the message names the setting, never its value.
+
+| Variable | Required | Meaning |
+| --- | --- | --- |
+| `CONN_STATIC_DIR` | yes | The Next.js export (`out/`). |
+| `CONN_DATABASE_URL` | yes | Logbook's address. The user must be `pub_ro`. |
+| `CONN_DATABASE_PASSWORD_FILE` | no | A file holding `pub_ro`'s password. |
+| `CONN_MUSTER_URL` | yes | Muster's address, scheme and host only, such as `http://muster.clearedstack.svc:8080`. |
+| `CONN_MUSTER_TOKEN_FILE` | yes | The projected ServiceAccount token. |
+| `CONN_LISTEN` | no | Default `:8080`. |
+| `GOMEMLIMIT` | no | Default 96 MiB, set by Conn, for the 128 MiB budget in `src/data/registry.json`. |
+
+Every database read is a read-only, repeatable-read transaction with a 3 second timeout, on a connection that is read-only by default. Every answer carries `Content-Security-Policy: default-src 'self'`; the server has read-header, read, write and idle timeouts and a 1 KiB request body limit. Conn makes no network call except to Logbook and Muster, and it does not follow redirects.
+
+One thing to settle before the live site is served by Conn: a Next.js export contains small inline scripts, which `default-src 'self'` blocks. The ledger page uses none.
+
+```sh
+cd conn
+go vet ./... && go test ./... && go test -race ./...
+gofmt -l .          # prints nothing
+go test ./internal/itemid -run xxx -fuzz FuzzValid -fuzztime 30s
+go test ./internal/static -run xxx -fuzz FuzzResolve -fuzztime 30s
+
+# The integration test starts a throwaway PostgreSQL 17, applies Logbook's
+# migrations and reads as pub_ro. LOGBOOK_DIR is a checkout of Logbook.
+LOGBOOK_DIR=../../logbook sh scripts/integration.sh
+```
+
+Without `CONN_TEST_DATABASE_URL` the integration test is skipped. Not built yet: `POST /v1/edits` (Phase 2), Kubernetes manifests and the container image.
+
 ## Brand
 
 | File | Use |
