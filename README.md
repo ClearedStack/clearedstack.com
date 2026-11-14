@@ -139,6 +139,8 @@ AI assistance (Claude Code and Antigravity) is used **only at authoring time** u
 
 ## Working on the site
 
+AI agents (and people) changing this repository: read [AGENTS.md](AGENTS.md) first. It says where every kind of content lives, the details each page needs, the writing rules and the checks to run. Each build also writes `/llms.txt`, `/llms-full.txt`, `/pages.json`, `/status.json` and a Markdown copy of every page, so the site can be read without parsing HTML.
+
 The site is [Next.js](https://nextjs.org) with TypeScript and Tailwind CSS, exported as static files. It has no server, no API routes and no database.
 
 ```bash

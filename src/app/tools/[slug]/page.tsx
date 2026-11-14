@@ -25,7 +25,12 @@ function load(slug: string): Tool {
 export async function generateMetadata({ params }: PageProps<"/tools/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const tool = load(slug);
-  return { title: tool.name, description: tool.summary, alternates: { canonical: `/tools/${slug}/` } };
+  return {
+    title: tool.name,
+    description: tool.summary,
+    // The same page as Markdown, for agents and scripts (scripts/generate-ai-files.mjs).
+    alternates: { canonical: `/tools/${slug}/`, types: { "text/markdown": `/tools/${slug}.md` } },
+  };
 }
 
 const inlineLink = "text-ink underline decoration-accent underline-offset-4 transition-colors hover:text-accent";

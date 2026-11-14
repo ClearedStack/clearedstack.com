@@ -44,6 +44,7 @@ Open `http://localhost:3000`. The page reloads as you save files.
 | `npm run typecheck` | Checks the types |
 | `npm run build` | Builds the finished site into the `out` folder |
 | `npm run preview` | Serves the `out` folder, to look at the real build |
+| `npm run check:content` | Checks every page's details and the work log, and writes the files for AI agents |
 
 ## Find your way around
 
@@ -56,11 +57,12 @@ src/
     registry.json   the naming registry: one entry per platform component
     platform.ts     typed access to the registry
     site.ts         name, addresses, contact email, short disclaimer
+    status.jsonl    the work log: one line per change, shown at /status/
   guides/           one .mdx file per guide, served under /guides/
   platform/         one .mdx file per platform page, served under /platform/
   tools/            the detailed specification of a tool, shown on its page at /tools/<slug>/
   lib/docs.ts       reads both folders, puts the pages in order and lists the sections
-scripts/            builds the search index before each build
+scripts/            builds the search index and the files for AI agents before each build
 public/brand/       logo files
 Containerfile       builds the site and serves it with nginx
 docker/             the nginx configuration used by the image
@@ -68,6 +70,16 @@ k8s/                Kubernetes manifests
 ```
 
 Three places hold nearly everything a contributor changes: `src/data/catalog.ts` for the tools, the folder `src/guides` for the guides, and the folder `src/platform` for the pages about how the project is built and run.
+
+## Work on the site with an AI agent
+
+The site is built to be read and changed by AI agents as easily as by people.
+
+- **Rules for agents** are in `AGENTS.md` at the top of the repository: where each kind of content lives, the page details every page needs, the writing rules and the checks to run. An agent should read it before changing anything.
+- **Reading the site without HTML.** Every build writes `/llms.txt`, an index of every page with a one-line summary, and `/llms-full.txt`, the text of every page in one file. Each guide, platform page and tool also has a Markdown copy next to it: add `.md` to the address in place of the last slash, as in `/guides/your-data.md`. `/pages.json` lists every page as data.
+- **The work log.** When a piece of work is finished, started or stuck, add one line to `src/data/status.jsonl`. It appears on the [work log](/status/) and in `/status.json`. The format is in `AGENTS.md`, and the build refuses a line that does not follow it.
+
+These files are generated from the pages themselves, so they are never out of date and never need editing by hand.
 
 ## Add or change a catalog entry
 

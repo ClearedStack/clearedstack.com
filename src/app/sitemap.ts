@@ -5,16 +5,23 @@ import { guides, platform } from "@/lib/docs";
 
 export const dynamic = "force-static";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const paths = [
-    "/",
-    "/tools/",
-    ...tools.map((tool) => `/tools/${tool.slug}/`),
-    "/guides/",
-    ...guides.slugs().map((slug) => `/guides/${slug}/`),
-    "/platform/",
-    ...platform.slugs().map((slug) => `/platform/${slug}/`),
-    "/about/",
+/** "2026-11" becomes the first of that month, which is as precise as the pages record. */
+function monthDate(value?: string): Date | undefined {
+  return value ? new Date(`${value}-01T00:00:00Z`) : undefined;
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [guideDocs, platformDocs] = await Promise.all([guides.list(), platform.list()]);
+  const docs = [...guideDocs, ...platformDocs].map((doc) => ({ path: doc.href, lastModified: monthDate(doc.revised) }));
+  const paths: { path: string; lastModified?: Date }[] = [
+    { path: "/" },
+    { path: "/tools/" },
+    ...tools.map((tool) => ({ path: `/tools/${tool.slug}/` })),
+    { path: "/guides/" },
+    { path: "/platform/" },
+    ...docs,
+    { path: "/status/" },
+    { path: "/about/" },
   ];
-  return paths.map((path) => ({ url: `${site.url}${path}` }));
+  return paths.map(({ path, lastModified }) => ({ url: `${site.url}${path}`, ...(lastModified ? { lastModified } : {}) }));
 }

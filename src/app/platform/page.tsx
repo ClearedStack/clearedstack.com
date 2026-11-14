@@ -156,7 +156,11 @@ export default async function PlatformIndexPage() {
           </dl>
           <p className="mt-4 text-sm leading-relaxed text-muted">
             A page moves up a label when the thing it describes does. The label is one line at the top of the
-            page’s source file.
+            page’s source file. Day-to-day changes are recorded in the{" "}
+            <Link href="/status/" className={inlineLink}>
+              work log
+            </Link>
+            .
           </p>
         </div>
       </section>

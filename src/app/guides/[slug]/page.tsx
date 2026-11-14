@@ -30,7 +30,12 @@ export async function generateMetadata({ params }: PageProps<"/guides/[slug]">):
     return { title: moved.title, alternates: { canonical: moved.to }, robots: { index: false, follow: true } };
   }
   const { doc } = await guides.load(slug);
-  return { title: doc.title, description: doc.summary, alternates: { canonical: doc.href } };
+  return {
+    title: doc.title,
+    description: doc.summary,
+    // The same page as Markdown, for agents and scripts (scripts/generate-ai-files.mjs).
+    alternates: { canonical: doc.href, types: { "text/markdown": doc.href.replace(/\/$/, ".md") } },
+  };
 }
 
 export default async function GuidePage({ params }: PageProps<"/guides/[slug]">) {

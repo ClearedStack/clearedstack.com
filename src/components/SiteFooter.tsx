@@ -47,6 +47,16 @@ export function SiteFooter() {
             </Link>
           </li>
           <li>
+            <Link href="/status/" className={footLink}>
+              Work log
+            </Link>
+          </li>
+          <li>
+            <a href="/llms.txt" className={footLink}>
+              llms.txt
+            </a>
+          </li>
+          <li>
             <a href={site.github} className={footLink} rel="noopener">
               GitHub
             </a>

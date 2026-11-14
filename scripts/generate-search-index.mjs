@@ -63,6 +63,17 @@ documents.push({
 });
 
 documents.push({
+  id: "page-status",
+  type: "page",
+  title: "Work log",
+  subtitle: "What changed, newest first",
+  summary: "What has changed on the project recently, one line per change.",
+  url: "/status/",
+  badge: "Status",
+  content: "Work log status changes progress done in progress blocked planned updates history"
+});
+
+documents.push({
   id: "page-about",
   type: "page",
   title: "About ClearedStack",
