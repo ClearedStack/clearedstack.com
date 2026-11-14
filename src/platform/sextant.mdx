@@ -40,11 +40,11 @@ Sextant communicates exclusively with Muster in the `clearedstack` namespace ove
 
 - **Queue consumption:** Polls Muster using `lease`, `heartbeat`, `complete`, `fail`, and `needs_subtool`, draining priority lanes in strict order: `urgent` → `normal` → `backfill`.
 - **Inbound states:**
-  - `recorded` — Newly deduplicated `PA-XXXX` candidates from Trawl.
-  - `observed` (re-queued) — Items returned from `needs_subtool` replay after a sub-tool fix ships, `parked` items whose blocker cleared in Tidegauge, or `linked` items flagged for drift.
+  - `recorded`: Newly deduplicated `PA-XXXX` candidates from Trawl.
+  - `observed` (re-queued): Items returned from `needs_subtool` replay after a sub-tool fix ships, `parked` items whose blocker cleared in Tidegauge, or `linked` items flagged for drift.
 - **Outbound transitions:**
-  - `observed` — Extraction succeeded; sanitized structured JSON facts are stored in `core.*` and raw captures remain sealed behind the clean-room wall.
-  - `needs_subtool` — Fail-closed pause (`E_NEEDS_SUBTOOL`) when no registered sub-tool matches the target layout.
+  - `observed`: Extraction succeeded; sanitized structured JSON facts are stored in `core.*` and raw captures remain sealed behind the clean-room wall.
+  - `needs_subtool`: Fail-closed pause (`E_NEEDS_SUBTOOL`) when no registered sub-tool matches the target layout.
 - **Spool durability:** Extracted payloads are written to `/var/spool/cs` before acknowledging `complete` to Muster, preventing lost work during control-plane restarts.
 
 ## Sub-Tools & Failure Modes

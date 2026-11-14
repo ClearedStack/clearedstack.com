@@ -6,14 +6,14 @@ export const meta = {
 
 ## Overview & Role
 
-The **Acronym Table Builder** (`acronym-table-builder`) belongs to **CLIN 0002 — Proposal & capture** in `src/data/catalog.ts`. It scans finished or near-final proposal draft text to find every acronym, verify first-use expansion, detect conflicting definitions or unused entries, and produce the clean definition table reviewers expect.
+The **Acronym Table Builder** (`acronym-table-builder`) belongs to **CLIN 0002 (Proposal & capture)** in `src/data/catalog.ts`. It scans finished or near-final proposal draft text to find every acronym, verify first-use expansion, detect conflicting definitions or unused entries, and produce the clean definition table reviewers expect.
 
-As noted in [Answer every requirement](/guides/answer-a-solicitation/), reviewers evaluate many proposals under tight timelines. An acronym table built from the finished text—rather than copied from an old template—ensures every term in the proposal is defined and nothing extraneous is listed.
+As noted in [Answer every requirement](/guides/answer-a-solicitation/), reviewers evaluate many proposals under tight timelines. An acronym table built from the finished text, rather than copied from an old template, ensures every term in the proposal is defined and nothing extraneous is listed.
 
 | Attribute | Value |
 | --- | --- |
 | **Tool Slug** | `acronym-table-builder` |
-| **Catalog CLIN** | `0002` — Proposal & capture |
+| **Catalog CLIN** | `0002`: Proposal & capture |
 | **Stack Template** | `validator` (local lexical scanner in Moldloft) |
 | **Runtime** | 100% static browser-side HTML/CSS/JS (zero backend, zero runtime AI) |
 | **License** | MIT |
@@ -38,8 +38,8 @@ As noted in [Answer every requirement](/guides/answer-a-solicitation/), reviewer
 ### Deterministic Processing Logic
 
 1. **Inline definition detection:** Scans for explicit expansion patterns in the draft:
-   - `Full Term Name (ACRONYM)` — e.g., `"Performance Work Statement (PWS)"`
-   - `ACRONYM (Full Term Name)` — e.g., `"CUI (Controlled Unclassified Information)"`
+   - `Full Term Name (ACRONYM)`: e.g., `"Performance Work Statement (PWS)"`
+   - `ACRONYM (Full Term Name)`: e.g., `"CUI (Controlled Unclassified Information)"`
 2. **Standalone acronym extraction:** Matches uppercase/alphanumeric tokens (e.g., `FAR`, `CMMC`, `ISO`, `800-171` excluded as pure numeric, `DoD`, `FedRAMP` via mixed-case allowlist) and records total occurrence count plus character/line index of **first appearance**.
 3. **First-use compliance check:** Flags any acronym whose first appearance in `draftText` precedes its first inline expansion, or which appears without any inline expansion in the draft.
 4. **Collision & orphan detection:**
@@ -80,7 +80,7 @@ Later, the CO acts as the Change Order (CO) approver, and the SLA applies.
 | `CO` | `Contracting Officer` / `Change Order` | 3 | Defined at first use | **Collision** (2 distinct definitions) |
 | `NIST` | *(Suggested: National Institute of Standards and Technology)* | 1 | Undefined inline | Needs inline expansion |
 | `PWS` | `Performance Work Statement` | 2 | Defined at first use | OK |
-| `RFP` | `Request for Proposal` | 0 | — | **Unused** in draft |
+| `RFP` | `Request for Proposal` | 0 | none | **Unused** in draft |
 | `SLA` | *(Suggested: Service Level Agreement)* | 1 | Undefined inline | Needs inline expansion |
 
 **Verification assertions:**

@@ -6,7 +6,7 @@ export const meta = {
 
 ## Overview & Role
 
-The **NIST SP 800-171 / CMMC Readiness Checklist** (`slug: nist-800-171-checklist`, CLIN `0003` — Cybersecurity & compliance, template family `checklist`) is a static, browser-only readiness tool for defense and federal contractors. It lets a user walk through the 15 basic safeguarding requirements of FAR 52.204-21 (CMMC Level 1) or the 110 security requirements of NIST SP 800-171 Revision 2 (CMMC Level 2), record implementation status, compute a deterministic DoD Assessment Methodology (SPRS) score, and export a prioritized Plan of Action and Milestones (POA&M) gap list.
+The **NIST SP 800-171 / CMMC Readiness Checklist** (`slug: nist-800-171-checklist`, CLIN `0003` (Cybersecurity & compliance), template family `checklist`) is a static, browser-only readiness tool for defense and federal contractors. It lets a user walk through the 15 basic safeguarding requirements of FAR 52.204-21 (CMMC Level 1) or the 110 security requirements of NIST SP 800-171 Revision 2 (CMMC Level 2), record implementation status, compute a deterministic DoD Assessment Methodology (SPRS) score, and export a prioritized Plan of Action and Milestones (POA&M) gap list.
 
 **Scope boundaries:**
 - Covers self-assessment tracking and deterministic scoring only.
@@ -64,7 +64,7 @@ The **NIST SP 800-171 / CMMC Readiness Checklist** (`slug: nist-800-171-checklis
 - Baseline: `110` points.
 - Suppose `107` of `110` requirements are marked `implemented`, and `3` requirements have gaps:
   - `3.1.1` (Access Control, weight `5`): `not_implemented` → `-5`
-  - `3.5.3` (Identification & Authentication — MFA, weight `5`, partial credit eligible): `partially_implemented` (remote/privileged only) → `-3`
+  - `3.5.3` (Identification & Authentication, MFA, weight `5`, partial credit eligible): `partially_implemented` (remote/privileged only) → `-3`
   - `3.14.6` (System & Information Integrity, weight `1`): `not_implemented` → `-1`
 - Total deductions: `5 + 3 + 1 = 9`.
 - Expected SPRS score: `110 - 9 = 101`.

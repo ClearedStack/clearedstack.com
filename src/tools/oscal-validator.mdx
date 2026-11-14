@@ -6,7 +6,7 @@ export const meta = {
 
 ## Overview & Role
 
-The **OSCAL Validator** (`slug: oscal-validator`, CLIN `0003` — Cybersecurity & compliance, template family `validator`) is a static, browser-only tool that checks Open Security Controls Assessment Language (OSCAL) JSON documents locally without sending system security plans or assessment data to a remote server. It separates validation into three distinct stages—well-formedness, official NIST schema conformance, and internal reference integrity—so engineers know exactly why a file passes or fails.
+The **OSCAL Validator** (`slug: oscal-validator`, CLIN `0003` (Cybersecurity & compliance), template family `validator`) is a static, browser-only tool that checks Open Security Controls Assessment Language (OSCAL) JSON documents locally without sending system security plans or assessment data to a remote server. It separates validation into three distinct stages (well-formedness, official NIST schema conformance, and internal reference integrity) so engineers know exactly why a file passes or fails.
 
 **Scope boundaries:**
 - Validates OSCAL JSON documents locally against bundled NIST OSCAL JSON schemas.
@@ -29,14 +29,14 @@ The **OSCAL Validator** (`slug: oscal-validator`, CLIN `0003` — Cybersecurity 
 - **Optional version override:** Defaults to auto-detecting `metadata.oscal-version` from the document; allows selecting from bundled NIST OSCAL schema versions (e.g., `1.0.4`, `1.1.2`, `1.1.3`).
 
 ### Deterministic Three-Stage Processing Logic
-1. **Stage 1 — Well-formedness check:**
+1. **Stage 1: Well-formedness check:**
    - Parses input with `JSON.parse()`.
    - If parsing fails, reports the syntax error message and position and halts Stages 2 and 3.
-2. **Stage 2 — Schema-valid check:**
+2. **Stage 2: Schema-valid check:**
    - Detects the root OSCAL model property (`catalog`, `profile`, `component-definition`, `system-security-plan`, `assessment-plan`, `assessment-results`, or `plan-of-action-and-milestones`) and reads `metadata.oscal-version`.
    - Selects the exact bundled NIST OSCAL JSON Schema for that `oscal-version`. If the version is not bundled, fails closed with an explicit unsupported-version error rather than validating against a mismatched schema.
    - Runs the deterministic schema validator and collects every violation with its JSON Pointer path (e.g., `#/system-security-plan/metadata/last-modified`) and schema keyword.
-3. **Stage 3 — Reference & meaningful integrity checks:**
+3. **Stage 3: Reference & meaningful integrity checks:**
    - Verifies that `uuid` fields match UUID syntax and checks for duplicate UUIDs within the document.
    - Verifies that internal fragment references (`#uuid`) in `import-profile`, `link`, or `rlink` resolve to an existing `uuid` in `back-matter.resources` or the document's own elements.
    - Flags external `http://` or `https://` `href` references as `info: external reference not fetched offline` so users know external links were not resolved.

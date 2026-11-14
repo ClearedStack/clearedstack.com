@@ -75,7 +75,7 @@ function RegistryTable({
               </td>
               <td className="px-4 py-3 leading-relaxed text-muted">{row.responsibility}</td>
               <td className="px-4 py-3 text-muted">
-                {row.dependsOn.length > 0 ? row.dependsOn.map((dep) => findComponent(dep)!.name).join(", ") : "—"}
+                {row.dependsOn.length > 0 ? row.dependsOn.map((dep) => findComponent(dep)!.name).join(", ") : "none"}
               </td>
             </tr>
           ))}

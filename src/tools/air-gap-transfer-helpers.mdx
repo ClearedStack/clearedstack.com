@@ -6,7 +6,7 @@ export const meta = {
 
 ## Overview & Role
 
-**Air-Gap Transfer Helpers** (`slug: air-gap-transfer-helpers`, CLIN `0005` — Tactical & DevSecOps) is a client-side integrity and manifest utility in the ClearedStack catalog. Moving software, snapshot bundles, or compliance records onto a disconnected network requires proving three things at the boundary: every file is intact, no expected file went missing, and no extra file was introduced.
+**Air-Gap Transfer Helpers** (`slug: air-gap-transfer-helpers`, CLIN `0005`, Tactical & DevSecOps) is a client-side integrity and manifest utility in the ClearedStack catalog. Moving software, snapshot bundles, or compliance records onto a disconnected network requires proving three things at the boundary: every file is intact, no expected file went missing, and no extra file was introduced.
 
 Built directly around the two-sided workflow in [Working on disconnected networks](/guides/disconnected-networks/) and [Run it on a closed network](/guides/closed-networks/), Air-Gap Transfer Helpers runs in the browser on both the sending side (outside) and receiving side (inside) without uploading a single byte over the network. It generates sorted `sha256sum`-compatible manifests (`payload.sha256`), records transfer provenance metadata, and verifies received payloads with both hash comparison and file-count parity checks.
 
@@ -18,7 +18,7 @@ Built directly around the two-sided workflow in [Working on disconnected network
 | **Manifest Line Format** | GNU Coreutils `sha256sum` / POSIX text format | `<64-lowercase-hex>  <relative-path>\n` (two-space separator), sorted lexicographically by UTF-8 byte order so browser output matches `( cd payload && find . -type f -print0 \| sort -z \| xargs -0 sha256sum )`. |
 | **Transfer Provenance** | ClearedStack Closed-Network Transfer Discipline ([disconnected-networks](/guides/disconnected-networks/), [closed-networks](/guides/closed-networks/)) | Captures item name, version, source URL/commit, SHA-256 manifest digest, reviewer, transfer date, and replaced item; enforces file-count parity (`actualCount === manifestCount`). |
 
-**Scope limits:** Air-Gap Transfer Helpers verifies byte-level integrity and file-set completeness. As noted in [Working on disconnected networks](/guides/disconnected-networks/), a checksum proves a file has not changed since the checksum was made—it does **not** prove publisher identity unless the checksum is carried over an independent trusted channel or paired with a digital signature. This tool does **not** replace an organization's formal Cross-Domain Solution (CDS) or transfer approval policy.
+**Scope limits:** Air-Gap Transfer Helpers verifies byte-level integrity and file-set completeness. As noted in [Working on disconnected networks](/guides/disconnected-networks/), a checksum proves a file has not changed since the checksum was made; it does **not** prove publisher identity unless the checksum is carried over an independent trusted channel or paired with a digital signature. This tool does **not** replace an organization's formal Cross-Domain Solution (CDS) or transfer approval policy.
 
 ## Inputs, Processing Logic & Outputs
 

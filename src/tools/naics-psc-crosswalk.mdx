@@ -68,14 +68,14 @@ To pass Shakedown and ship to `live`:
 
 - **Input:** `mode = "naics_to_psc"`, `query = "541511"`, `psc_category = "services"`, `size_metric_value = 18500000` (5-year average annual receipts in USD, including affiliates).
 - **Deterministic Resolution:**
-  - Matches NAICS `541511` — *Custom Computer Programming Services*.
+  - Matches NAICS `541511`: *Custom Computer Programming Services*.
   - SBA Size Standard (13 CFR Part 121, Nov 2026 check): `$34,000,000` average annual receipts.
   - Size Check: `$18,500,000 <= $34,000,000` -> **Small** under NAICS `541511`.
   - Ranked Services PSCs returned:
-    - `DA01` — *IT and Telecom - Business Application/Application Development Support Services (Labor)* (`Primary`)
-    - `DF01` — *IT and Telecom - IT Management Support Services (Labor)* (`Primary`)
-    - `R425` — *Support - Professional: Engineering/Technical* (`Secondary`)
-    - `R499` — *Support - Professional: Other* (`Related`)
+    - `DA01`: *IT and Telecom - Business Application/Application Development Support Services (Labor)* (`Primary`)
+    - `DF01`: *IT and Telecom - IT Management Support Services (Labor)* (`Primary`)
+    - `R425`: *Support - Professional: Engineering/Technical* (`Secondary`)
+    - `R499`: *Support - Professional: Other* (`Related`)
 
 ### Boundary & Verification Cases
 

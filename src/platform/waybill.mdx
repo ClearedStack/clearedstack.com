@@ -15,7 +15,7 @@ Its core responsibilities are:
 
 - **Deterministic provenance stamping:** Render standardized attribution blocks using Go `text/template` files with three factual lines (`Idea seen in`, `What we took`, `What we did differently`).
 - **48-hour and 5-day SLA enforcement:** Track identity verification within 48 hours and honor nominative attribution opt-outs within 5 days by replacing product/vendor names with neutral descriptors while keeping public-domain law citations intact.
-- **Clean-room build spec compilation:** Compile a sanitized JSON build spec (`provenance`, `authority`, `schema`, `vectors`)—the sole artifact permitted to cross the clean-room wall into Moldloft.
+- **Clean-room build spec compilation:** Compile a sanitized JSON build spec (`provenance`, `authority`, `schema`, `vectors`), the sole artifact permitted to cross the clean-room wall into Moldloft.
 
 ## Runtime & Resource Budget
 
@@ -42,8 +42,8 @@ Waybill leases work from Muster in the `clearedstack` namespace over ServiceAcco
   3. Match the item to a `tools/spec-profiles/<tool-type>/` sub-tool.
   4. Compile the sanitized JSON build spec (`provenance`, `authority`, `schema`, `vectors`), resolving any conflict between vendor behavior and official government publications strictly in favor of the government text.
 - **Outbound transitions:**
-  - `building` — Sanitized JSON build spec compiled and validated; item is ready for Moldloft.
-  - `needs_subtool` — Fail-closed pause (`E_NEEDS_SUBTOOL`) when no `spec-profiles` sub-tool matches the required tool structure.
+  - `building`: Sanitized JSON build spec compiled and validated; item is ready for Moldloft.
+  - `needs_subtool`: Fail-closed pause (`E_NEEDS_SUBTOOL`) when no `spec-profiles` sub-tool matches the required tool structure.
   - Opt-out / correction updates on `live` tools trigger Chartroom republishing within the 5-day SLA.
 
 ## Sub-Tools & Failure Modes

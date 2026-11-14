@@ -34,18 +34,18 @@ Assay polls Muster in the `clearedstack` namespace over ServiceAccount-authentic
 - **Inbound state:** `observed` (structured JSON facts produced by Sextant).
 - **Evaluation stages:**
   1. **Five binary knockout gates:**
-     - *Public source* — Rules, formulas, and thresholds must come from officially released public materials (statutes, FAR, DFARS, NIST SPs).
-     - *Runs in the browser* — Must execute entirely client-side (HTML/CSS/JS/WASM) with no backend server or remote API.
-     - *Private by design* — Must work offline, require no accounts, emit zero tracking, and enforce `connect-src 'self'`.
-     - *One job* — Must perform a single focused task describable in one active verb-first sentence.
-     - *Arithmetic, not advice* — Must compute numbers, structure data, or look up citations—never render legal advice.
+     - *Public source*: Rules, formulas, and thresholds must come from officially released public materials (statutes, FAR, DFARS, NIST SPs).
+     - *Runs in the browser*: Must execute entirely client-side (HTML/CSS/JS/WASM) with no backend server or remote API.
+     - *Private by design*: Must work offline, require no accounts, emit zero tracking, and enforce `connect-src 'self'`.
+     - *One job*: Must perform a single focused task describable in one active verb-first sentence.
+     - *Arithmetic, not advice*: Must compute numbers, structure data, or look up citations, never render legal advice.
   2. **100-point rubric:** Candidates clearing all five gates are rated `1`–`5` across seven weighted factors (composite `20`–`100`): Need for small businesses (`×4`, 20 pts), Gap (`×4`, 20 pts), Strength of public source (`×3`, 15 pts), Fits in a browser (`×3`, 15 pts), Small enough to read (`×2`, 10 pts), Can be checked (`×2`, 10 pts), and Low upkeep of reference data (`×2`, 10 pts).
   3. **Preliminary recommendation & split/merge flag:** Assigns `Build` (Score ≥ 75 and Gap > 1), `Link` (Score ≥ 75 and Gap = 1), `Park` (Score 55–74), or `Reject` (Score < 55). Flags **split/merge review** when Need is `4`–`5` and Small enough to read is `1`–`2`.
   4. **Five deterministic tie-breakers:** Roadmap phase fit → Gap severity → Low upkeep → Small code footprint → Community demand.
 - **Outbound transitions:**
-  - `screened-out` — Candidate failed one or more knockout gates (failure reason logged publicly).
-  - `scored` — Candidate cleared all five gates and received its rubric breakdown and recommendation.
-  - `needs_subtool` — Fail-closed pause (`E_NEEDS_SUBTOOL`) when an item's category lacks a matching rubric profile.
+  - `screened_out`: Candidate failed one or more knockout gates (failure reason logged publicly).
+  - `scored`: Candidate cleared all five gates and received its rubric breakdown and recommendation.
+  - `needs_subtool`: Fail-closed pause (`E_NEEDS_SUBTOOL`) when an item's category lacks a matching rubric profile.
 
 ## Sub-Tools & Failure Modes
 

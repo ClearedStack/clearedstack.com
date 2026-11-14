@@ -6,7 +6,7 @@ export const meta = {
 
 ## Overview & Role
 
-**Offline Manifest Inspector** (`slug: offline-manifest-inspector`, CLIN `0005` — Tactical & DevSecOps) is a client-side static inspection tool in the ClearedStack catalog. On disconnected or air-gapped networks, package managers (`npm`), container runtimes (`containerd`), and security scanners cannot reach public registries, OSV/NVD feeds, or remote metadata endpoints. Engineers must inspect what is inside a container image manifest, a dependency lockfile, or a Software Bill of Materials (SBOM) locally before importing artifacts into an enclave.
+**Offline Manifest Inspector** (`slug: offline-manifest-inspector`, CLIN `0005`, Tactical & DevSecOps) is a client-side static inspection tool in the ClearedStack catalog. On disconnected or air-gapped networks, package managers (`npm`), container runtimes (`containerd`), and security scanners cannot reach public registries, OSV/NVD feeds, or remote metadata endpoints. Engineers must inspect what is inside a container image manifest, a dependency lockfile, or a Software Bill of Materials (SBOM) locally before importing artifacts into an enclave.
 
 The tool runs entirely in the visitor's browser with zero backend dependencies, making it available in both the **Full Enclave Stack** (Conn + Lazarette) and **Snapshot Mode** (frozen static bundle). Consistent with ClearedStack's architecture, it assumes `containerd` and OCI archives with **zero Docker** anywhere.
 
@@ -42,7 +42,7 @@ Every parser rule, field label, and digest check in Offline Manifest Inspector i
    - `schemaVersion === 2` with OCI/Docker `mediaType` or `manifests` / `layers` arrays → OCI Image Manifest / Index parser.
 3. **Structured extraction & enclave checks:**
    - **OCI:** Extracts config digest/size, layer digests/sizes, total compressed layer byte sum, and platform descriptors. Flags any image reference using a mutable tag without an `@sha256:` digest.
-   - **Lockfile:** Enumerates all packages, counts `sha512` vs. `sha256` vs. missing `integrity` hashes, and inspects every `resolved` URL—flagging any non-internal host (such as `registry.npmjs.org`) that must be mirrored before an offline `npm ci` build.
+   - **Lockfile:** Enumerates all packages, counts `sha512` vs. `sha256` vs. missing `integrity` hashes, and inspects every `resolved` URL, flagging any non-internal host (such as `registry.npmjs.org`) that must be mirrored before an offline `npm ci` build.
    - **SBOM:** Normalizes packages/components into a unified record (`name`, `version`, `purl`, `license`, `hashes`) and counts missing hashes and missing/NOASSERTION licenses.
 4. **Fail-closed error handling:** Malformed JSON, unsupported `lockfileVersion`, or unrecognized schemas halt parsing with an explicit `E_PARSE` diagnostic rather than guessing missing fields.
 

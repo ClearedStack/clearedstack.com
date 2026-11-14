@@ -6,7 +6,7 @@ export const meta = {
 
 ## Overview & Role
 
-The **CUI Marking Generator** (`slug: cui-marking-generator`, CLIN `0003` — Cybersecurity & compliance, template family `calculator`) is a static, browser-only utility that builds compliant banner lines, first-page Designation Indicator Blocks, and portion-marking legends for Controlled Unclassified Information (CUI). It prevents common marking mistakes—such as inventing categories, omitting Limited Dissemination Controls (LDCs), or applying retired legacy markings—by constraining selections to the bundled NARA CUI Registry.
+The **CUI Marking Generator** (`slug: cui-marking-generator`, CLIN `0003` (Cybersecurity & compliance), template family `calculator`) is a static, browser-only utility that builds compliant banner lines, first-page Designation Indicator Blocks, and portion-marking legends for Controlled Unclassified Information (CUI). It prevents common marking mistakes, such as inventing categories, omitting Limited Dissemination Controls (LDCs), or applying retired legacy markings, by constraining selections to the bundled NARA CUI Registry.
 
 **Scope boundaries:**
 - Generates text markings for unclassified CUI only.
@@ -23,7 +23,7 @@ The **CUI Marking Generator** (`slug: cui-marking-generator`, CLIN `0003` — Cy
 
 ### Inputs
 - **Marking profile:** `NARA Standard (32 CFR 2002)` (top-of-page banner) or `DoD (DoDI 5200.48)` (top-and-bottom banner).
-- **CUI Categories:** Multi-select from the bundled NARA CUI Registry lookup table (including category code, full name, and `Basic` vs `Specified` flag—e.g., `CTI`, `EXPT`, `PRVCY`, `PROCURE`, `SSEL`, `PROPIN`, `CRIT`).
+- **CUI Categories:** Multi-select from the bundled NARA CUI Registry lookup table (including category code, full name, and `Basic` vs `Specified` flag, e.g., `CTI`, `EXPT`, `PRVCY`, `PROCURE`, `SSEL`, `PROPIN`, `CRIT`).
 - **Limited Dissemination Controls (LDCs):** Optional multi-select from the bundled NARA LDC table (e.g., `FEDCON`, `NOFORN`, `NOCON`, `DL ONLY`, `REL TO [country list]`).
 - **Designation Indicator fields:**
   - `controlledByAgency`: Department, Agency, or DoD Component name
@@ -72,7 +72,7 @@ The **CUI Marking Generator** (`slug: cui-marking-generator`, CLIN `0003` — Cy
 **Worked Example (DoD CUI Specified + LDC):**
 - **Inputs:**
   - Profile: `DoD (DoDI 5200.48)`
-  - Category: `CTI` (Controlled Technical Information — CUI Specified)
+  - Category: `CTI` (Controlled Technical Information, CUI Specified)
   - LDC: `FEDCON`
   - Controlled by: `Department of the Navy` / `NAVSEA PMS 400`
   - POC: `J. Smith, 555-0142 / j.smith@example.mil`

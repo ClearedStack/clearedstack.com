@@ -6,14 +6,14 @@ export const meta = {
 
 ## Overview & Role
 
-The **Page Budget Planner** (`page-budget-planner`) belongs to **CLIN 0002 — Proposal & capture** in `src/data/catalog.ts`. It divides a solicitation's hard page limit across proposal volumes and sections in proportion to Section M evaluation weights, after reserving fixed pages for introductions, summaries, or counted front matter.
+The **Page Budget Planner** (`page-budget-planner`) belongs to **CLIN 0002 (Proposal & capture)** in `src/data/catalog.ts`. It divides a solicitation's hard page limit across proposal volumes and sections in proportion to Section M evaluation weights, after reserving fixed pages for introductions, summaries, or counted front matter.
 
 As explained in [Answer every requirement](/guides/answer-a-solicitation/), a page limit is a strict requirement: pages beyond the limit are commonly removed unread. Setting each writer's page budget on day one prevents last-minute cutting of scored technical content.
 
 | Attribute | Value |
 | --- | --- |
 | **Tool Slug** | `page-budget-planner` |
-| **Catalog CLIN** | `0002` — Proposal & capture |
+| **Catalog CLIN** | `0002`: Proposal & capture |
 | **Stack Template** | `calculator` (deterministic allocation math in Moldloft) |
 | **Runtime** | 100% static browser-side HTML/CSS/JS (zero backend, zero runtime AI) |
 | **License** | MIT |
@@ -21,7 +21,7 @@ As explained in [Answer every requirement](/guides/answer-a-solicitation/), a pa
 ## Governing Regulations & Sources
 
 - **FAR Part 15 & FAR 15.204-1 (Sections L and M):** Section L establishes volume structure, page limits, and formatting constraints (paper size, margins, font size, line spacing, and whether covers, tables of contents, acronym lists, resumes, or fold-outs count toward the limit). Section M states the evaluation factors and their relative importance (numerical weights or qualitative rankings such as *"significantly more important than"*).
-- **FAR 52.215-1 (Instructions to Offerors—Competitive Acquisition):** Governs compliance with proposal preparation instructions and page-limit enforcement.
+- **FAR 52.215-1 (Instructions to Offerors, Competitive Acquisition):** Governs compliance with proposal preparation instructions and page-limit enforcement.
 - **Solicitation-specific counting rules:** Because solicitations differ on whether covers, TOCs, compliance matrices, and resumes count toward the cap, the planner models fixed reservations explicitly so the user can align inputs to Section L.
 
 ## Inputs, Processing Logic & Outputs
@@ -61,7 +61,7 @@ As explained in [Answer every requirement](/guides/answer-a-solicitation/), a pa
 2. **Strict Content Security Policy (`connect-src 'self'`):** Enforces `default-src 'self'; connect-src 'self'; form-action 'none'`. Capture strategies and volume outlines stay strictly local.
 3. **Zero tracking or accounts:** No sign-in, cookies, analytics, or external requests. Any optional `localStorage` persistence is disclosed with a **Clear local data** control.
 4. **Offline execution:** Works completely offline after initial load with zero external dependencies.
-5. **Worked examples, citations & scope limits:** Verified against the exact worked example in [Answer every requirement](/guides/answer-a-solicitation/) and boundary edge cases (zero weights, over-allocated fixed pages, fractional remainders), cites FAR Part 15 / 52.215-1, carries an MIT `LICENSE`, and states that working weights represent the bidder's reading of Section M prose—not official government scoring formulas—unless Section M states explicit point values.
+5. **Worked examples, citations & scope limits:** Verified against the exact worked example in [Answer every requirement](/guides/answer-a-solicitation/) and boundary edge cases (zero weights, over-allocated fixed pages, fractional remainders), cites FAR Part 15 / 52.215-1, carries an MIT `LICENSE`, and states that working weights represent the bidder's reading of Section M prose, not official government scoring formulas, unless Section M states explicit point values.
 
 ## Worked Example & Verification
 
@@ -69,9 +69,9 @@ As explained in [Answer every requirement](/guides/answer-a-solicitation/), a pa
 - `totalPageLimit`: `30`
 - `fixedAllocations`: `Introduction and summary` = `2` pages (`counted: true`)
 - `sections`:
-  - `Factor 1, technical approach` — weight `50`
-  - `Factor 2, management approach` — weight `30`
-  - `Factor 3, staffing` — weight `20`
+  - `Factor 1, technical approach`: weight `50`
+  - `Factor 2, management approach`: weight `30`
+  - `Factor 3, staffing`: weight `20`
 - `roundingStep`: `1`
 
 **Step-by-step calculation:**
@@ -85,7 +85,7 @@ As explained in [Answer every requirement](/guides/answer-a-solicitation/), a pa
 
 | Part | Working Weight | Pages |
 | --- | ---: | ---: |
-| Introduction and summary | — | 2 |
+| Introduction and summary | none | 2 |
 | Factor 1, technical approach | 50% | 14 |
 | Factor 2, management approach | 30% | 8 |
 | Factor 3, staffing | 20% | 6 |

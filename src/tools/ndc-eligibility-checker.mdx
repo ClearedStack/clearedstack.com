@@ -38,14 +38,14 @@ No government agency issues a certificate for NDC status. As explained in [Codes
    - If `has_dod_awards_past_year === "no"` -> **Qualifies as Nontraditional Defense Contractor**.
    - If `has_dod_awards_past_year === "yes"` and `subject_to_full_cas === "no"` (e.g., firm-fixed-price commercial awards, CAS-exempt contracts, or modified CAS only) -> **Qualifies as Nontraditional Defense Contractor**.
    - If `has_dod_awards_past_year === "yes"` and `subject_to_full_cas === "yes"` -> **Traditional Defense Contractor (Does Not Qualify as NDC)**.
-   - If `has_dod_awards_past_year === "yes"` and `subject_to_full_cas === "unknown"` -> **Indeterminate — Inspect Contract Clauses** (prompts user to check past DoD contracts/subcontracts for FAR 52.230-2 full CAS coverage).
+   - If `has_dod_awards_past_year === "yes"` and `subject_to_full_cas === "unknown"` -> **Indeterminate: Inspect Contract Clauses** (prompts user to check past DoD contracts/subcontracts for FAR 52.230-2 full CAS coverage).
 3. **Pathway Mapping:**
    - **NDC Qualified:** Unlocks eligibility as a significant NDC participant under `10 U.S.C. 4022` prototype OTAs and makes the offeror eligible for permissive commercial treatment under `DFARS 212.102(a)(iii)` / `10 U.S.C. 3457`.
    - **Traditional Defense Contractor:** Cannot satisfy `10 U.S.C. 4022` on its own; outputs the statutory alternatives (teaming with an NDC or nonprofit research institution participating to a significant extent, or providing at least one-third non-federal cost share).
 
 ### Outputs
 
-- **Eligibility determination:** `Qualifies as NDC`, `Traditional Defense Contractor`, or `Indeterminate — Verification Required`.
+- **Eligibility determination:** `Qualifies as NDC`, `Traditional Defense Contractor`, or `Indeterminate: Verification Required`.
 - **Statutory rationale & lookback window:** Exact rule branch triggered and `[start_date, solicitation_date]` window if a date was entered.
 - **Unlocked authorities breakdown:** Structured summary of `10 U.S.C. 4022` OTA options and `DFARS 212.102(a)(iii)` commercial treatment.
 - **Self-attestation checklist:** Printable/exportable (Markdown or JSON) verification notes for proposal records.
@@ -78,7 +78,7 @@ To pass Shakedown and ship to `live`:
 
 | Test Case | Input | Expected Deterministic Output |
 | --- | --- | --- |
-| **Unknown CAS clause** | `is_small_business = "no"`, `has_dod_awards_past_year = "yes"`, `subject_to_full_cas = "unknown"` | `Indeterminate — Verification Required` with FAR 52.230-2 inspection prompt. |
+| **Unknown CAS clause** | `is_small_business = "no"`, `has_dod_awards_past_year = "yes"`, `subject_to_full_cas = "unknown"` | `Indeterminate: Verification Required` with FAR 52.230-2 inspection prompt. |
 | **Zero prior DoD awards** | `is_small_business = "no"`, `has_dod_awards_past_year = "no"` | `Qualifies as Nontraditional Defense Contractor`. |
 | **Leap-year lookback** | `solicitation_date = "2028-02-29"` | Lookback start `2027-02-28` (deterministic 1-year calendar offset without invalid date). |
 

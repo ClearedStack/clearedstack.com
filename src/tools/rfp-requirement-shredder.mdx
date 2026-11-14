@@ -6,14 +6,14 @@ export const meta = {
 
 ## Overview & Role
 
-The **RFP Requirement Shredder** (`rfp-requirement-shredder`) belongs to **CLIN 0002 — Proposal & capture** in `src/data/catalog.ts`. Its job is mechanical solicitation shredding: pulling every binding sentence containing `"shall"`, `"must"`, `"will"`, or `"should"` out of pasted solicitation text into a numbered, un-paraphrased requirements list with source references.
+The **RFP Requirement Shredder** (`rfp-requirement-shredder`) belongs to **CLIN 0002 (Proposal & capture)** in `src/data/catalog.ts`. Its job is mechanical solicitation shredding: pulling every binding sentence containing `"shall"`, `"must"`, `"will"`, or `"should"` out of pasted solicitation text into a numbered, un-paraphrased requirements list with source references.
 
-As documented in [Answer every requirement](/guides/answer-a-solicitation/), proposals are rarely lost on brilliance—they are lost when an instruction, form, or clause requirement goes unanswered. The tool automates the deterministic text extraction and numbering pass while leaving requirement interpretation and compliance judgment to the human reviewer.
+As documented in [Answer every requirement](/guides/answer-a-solicitation/), proposals are rarely lost on brilliance. They are lost when an instruction, form, or clause requirement goes unanswered. The tool automates the deterministic text extraction and numbering pass while leaving requirement interpretation and compliance judgment to the human reviewer.
 
 | Attribute | Value |
 | --- | --- |
 | **Tool Slug** | `rfp-requirement-shredder` |
-| **Catalog CLIN** | `0002` — Proposal & capture |
+| **Catalog CLIN** | `0002`: Proposal & capture |
 | **Stack Template** | `validator` (local text parser in Moldloft) |
 | **Runtime** | 100% static browser-side HTML/CSS/JS (zero backend, zero runtime AI) |
 | **License** | MIT |
@@ -24,7 +24,7 @@ The shredder is anchored to public federal acquisition structure and solicitatio
 
 - **FAR Part 15 (Contracting by Negotiation) & FAR 15.204-1 (Uniform Contract Format):** Defines the thirteen lettered solicitation sections (`A` through `M`), separating contract terms (`A`–`J`), representations (`K`), proposal instructions (`L`), and evaluation factors (`M`). Note: per [Read a solicitation](/guides/read-a-solicitation/), the FAR overhaul underway since 2025 relocates and makes the Uniform Contract Format optional in draft text while FAR 15.204-1 remains in codified text; the parser supports both lettered UCF headings and plainer headings.
 - **FAR Part 12 (Acquisition of Commercial Products and Commercial Services):** Covers commercial solicitations that omit lettered UCF labels in favor of plain headings such as *Instructions to Offerors* (Section L equivalent), *Evaluation* or *Basis for Award* (Section M equivalent), and *Statement of Work / Performance Work Statement / Statement of Objectives* (Section C equivalent).
-- **FAR 52.215-1 (Instructions to Offerors—Competitive Acquisition):** Establishes binding submission rules, late-proposal treatment, and amendment acknowledgment requirements.
+- **FAR 52.215-1 (Instructions to Offerors, Competitive Acquisition):** Establishes binding submission rules, late-proposal treatment, and amendment acknowledgment requirements.
 - **Solicitation precedence rule:** The specific solicitation and its written amendments always outrank general conventions.
 
 ## Inputs, Processing Logic & Outputs

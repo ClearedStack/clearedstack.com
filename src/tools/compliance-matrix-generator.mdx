@@ -6,14 +6,14 @@ export const meta = {
 
 ## Overview & Role
 
-The **Compliance Matrix Generator** (`compliance-matrix-generator`) belongs to **CLIN 0002 — Proposal & capture** in `src/data/catalog.ts`. It transforms shredded solicitation requirements into a structured compliance matrix that cross-references **Section L** instructions, **Section M** evaluation factors, and **Section C** work requirements against the bidder's proposal outline, owners, and review status.
+The **Compliance Matrix Generator** (`compliance-matrix-generator`) belongs to **CLIN 0002 (Proposal & capture)** in `src/data/catalog.ts`. It transforms shredded solicitation requirements into a structured compliance matrix that cross-references **Section L** instructions, **Section M** evaluation factors, and **Section C** work requirements against the bidder's proposal outline, owners, and review status.
 
 As described in [Answer every requirement](/guides/answer-a-solicitation/), a compliance matrix is built before anyone writes a paragraph: it serves as the proposal plan on day one and the final submission checklist before delivery.
 
 | Attribute | Value |
 | --- | --- |
 | **Tool Slug** | `compliance-matrix-generator` |
-| **Catalog CLIN** | `0002` — Proposal & capture |
+| **Catalog CLIN** | `0002`: Proposal & capture |
 | **Stack Template** | `checklist` / `validator` (local matrix builder in Moldloft) |
 | **Runtime** | 100% static browser-side HTML/CSS/JS (zero backend, zero runtime AI) |
 | **License** | MIT |
@@ -21,7 +21,7 @@ As described in [Answer every requirement](/guides/answer-a-solicitation/), a co
 ## Governing Regulations & Sources
 
 - **FAR Part 15 & FAR 15.204-1 (Uniform Contract Format):** Defines the structural separation between **Section L** (*Instructions, conditions, and notices to offerors*), **Section M** (*Evaluation factors for award*), and **Section C** (*Description/specifications/statement of work*). Where the FAR overhaul or FAR Part 12 commercial formats omit lettered sections, the tool maps *Instructions to Offerors*, *Evaluation / Basis for Award*, and *SOW / PWS / SOO* equivalently.
-- **FAR 52.215-1 (Instructions to Offerors—Competitive Acquisition):** Governs responsiveness to instructions, amendment acknowledgment, and compliance with solicitation-supplied templates.
+- **FAR 52.215-1 (Instructions to Offerors, Competitive Acquisition):** Governs responsiveness to instructions, amendment acknowledgment, and compliance with solicitation-supplied templates.
 - **Solicitation-supplied matrix rule:** When a solicitation includes its own compliance matrix template or prescribes specific column headers (e.g., in Section L or a Section J attachment), the solicitation's columns take precedence over default columns.
 
 ## Inputs, Processing Logic & Outputs
@@ -39,7 +39,7 @@ As described in [Answer every requirement](/guides/answer-a-solicitation/), a co
 
 1. **Requirement ingestion & deduplication:** Parses imported CSV/JSON or pasted rows, validates unique requirement IDs (`L-001`, `M-001`, `C-001`), and preserves exact solicitation wording.
 2. **Three-way crosswalk validation:** Checks alignment across the three requirement types:
-   - Flags any **Section M** evaluation factor with no linked **Section L** instruction (orphan evaluation factor — candidate for a pre-award question to the contracting officer).
+   - Flags any **Section M** evaluation factor with no linked **Section L** instruction (orphan evaluation factor, candidate for a pre-award question to the contracting officer).
    - Flags any **Section L** content instruction with no linked **Section M** factor or **Section C** requirement.
    - Flags any requirement row whose `Proposal location` is unassigned or whose `Status` is not `final` when running the readiness check.
 3. **Outline-driven sorting:** Orders matrix rows either by solicitation ID (`L` → `M` → `C`) or by proposal volume/section order so evaluators and red-team reviewers can walk the matrix top-to-bottom.
@@ -65,7 +65,7 @@ As described in [Answer every requirement](/guides/answer-a-solicitation/), a co
 2. **Strict Content Security Policy (`connect-src 'self'`):** Enforces `default-src 'self'; connect-src 'self'; form-action 'none'`. Proprietary proposal outlines, win themes, and capture notes never leave the browser.
 3. **Zero tracking or accounts:** Zero authentication, telemetry, cookies, or external scripts. Any optional `localStorage` persistence for work-in-progress matrices is disclosed with a one-click **Clear local data** control.
 4. **Offline execution:** Operates completely offline after initial page load, with all validation rules and templates bundled locally.
-5. **Worked examples, citations & scope limits:** Verified against synthetic test fixtures, cites FAR Part 15 / 15.204-1 / 52.215-1, includes an MIT `LICENSE`, and states that a compliance matrix verifies structural coverage—not whether the written technical narrative actually persuades an evaluator.
+5. **Worked examples, citations & scope limits:** Verified against synthetic test fixtures, cites FAR Part 15 / 15.204-1 / 52.215-1, includes an MIT `LICENSE`, and states that a compliance matrix verifies structural coverage, not whether the written technical narrative actually persuades an evaluator.
 
 ## Worked Example & Verification
 
@@ -74,7 +74,7 @@ As described in [Answer every requirement](/guides/answer-a-solicitation/), a co
 - `M-001` (`Section M.2.1, p. 20`): `"Factor 1, Technical Approach, evaluates transition-in readiness."`
 - `M-002` (`Section M.2.2, p. 21`): `"Factor 2, Past Performance, evaluates recent similar contracts."` *(No Section L instruction linked)*
 - `C-001` (`Section C.3.1, p. 18`): `"The contractor shall complete transition-in within 30 days of award."`
-- Proposal outline: `Vol I, Section 1.1 — Transition-In Approach`
+- Proposal outline: `Vol I, Section 1.1: Transition-In Approach`
 
 **Expected Output:**
 

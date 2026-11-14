@@ -39,8 +39,8 @@ An item does not always go straight from found to live. It can leave early, wait
 | --- | --- | --- | --- |
 | `discovered` | Trawl has seen a candidate | `recorded` | `rejected` if the address is dead or a duplicate |
 | `recorded` | It has an identifier | `observed` | `needs_subtool` if the source is in a form intake has no rule for |
-| `observed` | Sextant has read its public pages | `scored` or `screened-out` | `needs_subtool` if the page layout is unfamiliar |
-| `screened-out` | Assay found it fails a gate | Stays there | The owner can send it back to `observed` |
+| `observed` | Sextant has read its public pages | `scored` or `screened_out` | `needs_subtool` if the page layout is unfamiliar |
+| `screened_out` | Assay found it fails a gate | Stays there | The owner can send it back to `observed` |
 | `scored` | Assay has rated it | `approved` | The owner can choose `parked`, `linked`, `merged` or `rejected` |
 | `approved` | The owner chose to build, and Waybill wrote the specification | `building` | `needs_subtool` if there is no profile for that kind of tool |
 | `building` | Moldloft generated it and Shakedown is checking it | `live` | `parked` if the rule turns out to be unclear |

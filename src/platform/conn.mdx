@@ -15,7 +15,7 @@ Conn is the **only pod in the entire 17-pod cluster exposed to the public intern
 
 - **Command Portal & Catalog:** Serves the unified tool catalog (`/tools/`), operational guides (`/guides/`), live P0–P2 attention feed, and App Store UI.
 - **Zero Login Lock:** All browsing, queue inspection, sanitized error viewing, and edit proposals work anonymously without accounts, passwords, or OAuth redirects.
-- **Sanitized Read-Only Queries:** Reads exclusively from sanitized `pub.*` views in Logbook—never touching `core.*` internal tables or cluster secrets.
+- **Sanitized Read-Only Queries:** Reads exclusively from sanitized `pub.*` views in Logbook, never touching `core.*` internal tables or cluster secrets.
 - **Anonymous Edit Intake UI:** Uses `ownership_map.json` to map any editable element on the page to its owning repository (`clearedstack.com` or Trawl through Bellbuoy) and change class (`DATA`, `CONFIG`, or `ISSUE`), then forwards proposals to Muster.
 
 ## Runtime & Resource Budget
@@ -27,7 +27,7 @@ Conn is the **only pod in the entire 17-pod cluster exposed to the public intern
 | **Version** | `v0.2.0-draft` |
 | **Owning Repo** | `clearedstack.com` |
 | **RAM Request** | `128 MiB` |
-| **Priority Class** | High (Control Plane — protected from eviction) |
+| **Priority Class** | High (Control Plane, protected from eviction) |
 | **Storage** | Stateless (no Persistent Volume Claim) |
 | **Network Exposure** | Public Ingress (`HTTP/HTTPS`); cluster-private egress to Logbook (`pub.*`) and Muster |
 

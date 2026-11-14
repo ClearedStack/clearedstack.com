@@ -6,16 +6,16 @@ export const meta = {
 
 ## Overview & Role
 
-**Certificate Verifier** (`slug: certificate-verifier`, CLIN `0005` — Tactical & DevSecOps) is a client-side X.509 inspection and chain-verification tool in the ClearedStack catalog. On disconnected or air-gapped networks, browsers and operating systems cannot reach public OCSP responders, Authority Information Access (AIA) intermediate URLs, or NTP time servers. Internal enclaves also rely on private Certificate Authorities (CAs) that are not pre-installed in public trust stores, and host clocks can drift.
+**Certificate Verifier** (`slug: certificate-verifier`, CLIN `0005`, Tactical & DevSecOps) is a client-side X.509 inspection and chain-verification tool in the ClearedStack catalog. On disconnected or air-gapped networks, browsers and operating systems cannot reach public OCSP responders, Authority Information Access (AIA) intermediate URLs, or NTP time servers. Internal enclaves also rely on private Certificate Authorities (CAs) that are not pre-installed in public trust stores, and host clocks can drift.
 
-Certificate Verifier lets operators decode PEM or DER certificates, inspect Subject Alternative Names (SANs) and key usages, validate signature chains against a user-supplied CA bundle, check expiry windows, and evaluate offline Certificate Revocation Lists (CRLs) entirely inside the browser—never transmitting certificates or private data off the machine.
+Certificate Verifier lets operators decode PEM or DER certificates, inspect Subject Alternative Names (SANs) and key usages, validate signature chains against a user-supplied CA bundle, check expiry windows, and evaluate offline Certificate Revocation Lists (CRLs) entirely inside the browser, never transmitting certificates or private data off the machine.
 
 ## Governing Standards & Sources
 
 | Topic | Governing Standard | Scope in Tool |
 | --- | --- | --- |
 | **Certificate & CRL Profile** | RFC 5280 (*Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile*) | `TBSCertificate`, `Subject`, `Issuer`, `Validity` (`UTCTime` / `GeneralizedTime`), `BasicConstraints` (`cA`, `pathLenConstraint`), `KeyUsage`, `ExtendedKeyUsage`, `SubjectAlternativeName`, `SKI`/`AKI`, and X.509 v2 CRLs. |
-| **ASN.1 Binary Encoding** | ITU-T X.690 (*ASN.1 Distinguished Encoding Rules — DER*) | Deterministic tag-length-value (TLV) decoding of X.509 certificates and CRLs from raw bytes without external libraries making network calls. |
+| **ASN.1 Binary Encoding** | ITU-T X.690 (*ASN.1 Distinguished Encoding Rules, DER*) | Deterministic tag-length-value (TLV) decoding of X.509 certificates and CRLs from raw bytes without external libraries making network calls. |
 | **PEM Textual Encoding** | RFC 7468 (*Textual Encodings of PKIX, PKCS, and CMS Structures*) | Parsing `-----BEGIN CERTIFICATE-----` and `-----BEGIN X509 CRL-----` blocks, including multi-certificate PEM bundles. |
 | **Hashes & Signatures** | NIST FIPS 180-4 (*SHA-256/384/512*), RFC 8017 (RSA), RFC 5480 (ECDSA) | Fingerprinting and cryptographic signature verification via Web Crypto (`crypto.subtle.digest` and `crypto.subtle.verify`). |
 

@@ -75,7 +75,7 @@ export default function AboutPage() {
           </p>
           <p>
             <strong>The work is done by builders, not corporate overhead.</strong> In defense contracting, corporations
-            do not write code, configure shipboard networks, or secure enclaves—individual engineers, technicians, and
+            do not write code, configure networks, or secure enclaves. Individual engineers, technicians, and
             craftsmen do. Yet in the traditional defense model, multi-layered prime contractors act as administrative
             tollbooths on cleared labor, capturing the vast majority of contract value simply by managing compliance
             paperwork. The worker who builds the system sees a fraction of their billing rate, while the taxpayer pays

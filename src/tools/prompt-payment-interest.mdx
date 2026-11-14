@@ -26,12 +26,12 @@ The tool runs 100% in browser memory with zero backend services, zero runtime AI
 | Field | Type | Constraints / Options | Default |
 | --- | --- | --- | --- |
 | **Invoice Amount (`P`)** | Currency (`$`) | `>= 0.00` | `20,000.00` |
-| **Invoice Received Date (`D_inv`)** | Date (`YYYY-MM-DD`) | Date proper invoice reached designated billing office | — |
-| **Delivery Date (`D_del`)** | Date (`YYYY-MM-DD`) | Optional; used to compute 7-day deemed acceptance if `D_acc` is blank | — |
-| **Acceptance Date (`D_acc`)** | Date (`YYYY-MM-DD`) | Actual acceptance date, or auto-deemed `D_del + 7 days` per 5 CFR 1315.4(g) | — |
+| **Invoice Received Date (`D_inv`)** | Date (`YYYY-MM-DD`) | Date proper invoice reached designated billing office | none |
+| **Delivery Date (`D_del`)** | Date (`YYYY-MM-DD`) | Optional; used to compute 7-day deemed acceptance if `D_acc` is blank | none |
+| **Acceptance Date (`D_acc`)** | Date (`YYYY-MM-DD`) | Actual acceptance date, or auto-deemed `D_del + 7 days` per 5 CFR 1315.4(g) | none |
 | **Contract Payment Period** | Integer (`days`) | `> 0` (statutory default `30` days; shorter periods for specific commodities) | `30` |
 | **Defect Notice Delay (`days`)** | Integer (`days`) | `>= 0` (if agency notified of invoice defect `> 7` days after receipt, excess days reduce the payment window) | `0` |
-| **Payment Transfer Date (`D_pay`)** | Date (`YYYY-MM-DD`) | Date of electronic transfer or check mailing | — |
+| **Payment Transfer Date (`D_pay`)** | Date (`YYYY-MM-DD`) | Date of electronic transfer or check mailing | none |
 | **Interest Rate (`R`)** | Percentage (`%`) | Auto-selected from bundled Treasury semi-annual table based on `D_due + 1 day`, with manual override | `4.75` |
 | **Dispute / Financing Flag** | Boolean | Excludes interest if amount is under bona fide dispute or is a financing/progress payment | `false` |
 
