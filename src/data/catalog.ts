@@ -8,9 +8,14 @@
  * Each entry also gets its own page at /tools/<slug>/. The fields from
  * `detail` down are what that page shows; all of them are optional.
  *
- * Keep the entries plain object literals. The search index reads this file
- * as text (scripts/generate-search-index.mjs).
+ * Keep the entries plain object literals in `catalogTools`. The generator
+ * scripts read this file as text (scripts/load-catalog.mjs). If
+ * catalog/tools.json lists a tool as live, the build marks it live and fills
+ * in `repo`, whatever `status` says here.
  */
+
+import toolsJson from "./tools-json.generated.json";
+import { mergeToolsJson } from "./tools-json.mjs";
 
 export type CategoryId = "pricing" | "proposal" | "cyber" | "market" | "devsecops";
 
@@ -105,7 +110,7 @@ export const categories: Category[] = [
   },
 ];
 
-export const tools: Tool[] = [
+const catalogTools: Tool[] = [
   // Pricing & cost accounting
   {
     slug: "wrap-rate-calculator",
@@ -500,6 +505,14 @@ export const tools: Tool[] = [
     guides: [{ slug: "disconnected-networks", section: "A transfer manifest" }],
   },
 ];
+
+/**
+ * The tools as the site shows them: the list above with catalog/tools.json
+ * applied (see src/data/tools-json.mjs). The generator scripts read and check
+ * that file and write it to tools-json.generated.json (null when there is no
+ * file), so pages and client components all see the same statuses.
+ */
+export const tools: Tool[] = mergeToolsJson(catalogTools, toolsJson);
 
 export const statusLabel: Record<ToolStatus, string> = {
   planned: "Planned",

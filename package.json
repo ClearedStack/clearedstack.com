@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/generate-search-index.mjs && node scripts/generate-ai-files.mjs && next dev",
-    "build": "node scripts/generate-search-index.mjs && node scripts/generate-ai-files.mjs && next build",
+    "build": "npm test && node scripts/generate-search-index.mjs && node scripts/generate-ai-files.mjs && next build",
+    "test": "node --test scripts/*.test.mjs",
     "preview": "npx --yes serve out",
     "check:content": "node scripts/generate-ai-files.mjs",
     "lint": "eslint",

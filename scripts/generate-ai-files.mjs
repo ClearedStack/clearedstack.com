@@ -18,6 +18,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { loadCatalog } from "./load-catalog.mjs";
+
 const rootDir = process.cwd();
 const srcDir = path.join(rootDir, "src");
 const dataDir = path.join(srcDir, "data");
@@ -138,12 +140,10 @@ for (const collection of collections) {
 }
 
 // Tools: the catalog entry, followed by the tool's specification if it has one.
-const catalogSource = fs.readFileSync(path.join(dataDir, "catalog.ts"), "utf8");
-const toolsMatch = catalogSource.match(/export const tools: (?:readonly )?Tool\[\] = (\[[\s\S]*?\n\]);/);
-const categoriesMatch = catalogSource.match(/export const categories: (?:readonly )?Category\[\] = (\[[\s\S]*?\n\]);/);
-const tools = toolsMatch ? eval(toolsMatch[1]) : [];
-const categories = new Map((categoriesMatch ? eval(categoriesMatch[1]) : []).map((c) => [c.id, c]));
-if (!toolsMatch) errors.push("src/data/catalog.ts: could not find `export const tools: Tool[] = [...]`");
+// Read and merged by scripts/load-catalog.mjs; a bad catalog/tools.json stops here.
+const { source: catalogSource, toolsFound, tools, categories: categoryList } = loadCatalog(rootDir);
+const categories = new Map(categoryList.map((c) => [c.id, c]));
+if (!toolsFound) errors.push("src/data/catalog.ts: could not find `const catalogTools: Tool[] = [...]`");
 emDashCheck(path.join(dataDir, "catalog.ts"), catalogSource);
 
 for (const tool of tools) {

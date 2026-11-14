@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { loadCatalog } from "./load-catalog.mjs";
+
 // The same rule as src/lib/slug.ts, so links to sections land on the heading.
 function slugify(text) {
   return text
@@ -85,23 +87,19 @@ documents.push({
 });
 
 // 2. Tools from src/data/catalog.ts
-const catalogSource = fs.readFileSync(path.join(dataDir, "catalog.ts"), "utf8");
-const toolsMatch = catalogSource.match(/export const tools: (?:readonly )?Tool\[\] = (\[[\s\S]*?\n\]);/);
-const categoriesMatch = catalogSource.match(/export const categories: (?:readonly )?Category\[\] = (\[[\s\S]*?\n\]);/);
+// Read and merged by scripts/load-catalog.mjs; a bad catalog/tools.json stops here.
+const { tools, categories, toolsFound, toolsJson } = loadCatalog(rootDir);
+
+// Hand the checked catalog/tools.json (or null) to the pages: src/data/catalog.ts
+// imports this file, so the client components need no file access. Generated;
+// do not edit.
+fs.writeFileSync(path.join(dataDir, "tools-json.generated.json"), JSON.stringify(toolsJson, null, 2) + "\n");
 
 const categoryMap = new Map();
-if (categoriesMatch) {
-  try {
-    const categories = eval(categoriesMatch[1]);
-    categories.forEach((c) => categoryMap.set(c.id, c));
-  } catch (err) {
-    console.error("Failed to parse categories:", err);
-  }
-}
+categories.forEach((c) => categoryMap.set(c.id, c));
 
-if (toolsMatch) {
+if (toolsFound) {
   try {
-    const tools = eval(toolsMatch[1]);
     tools.forEach((t) => {
       const cat = categoryMap.get(t.category);
       const clin = cat ? `CLIN ${cat.clin}` : "CLIN";
