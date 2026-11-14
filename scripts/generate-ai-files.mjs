@@ -70,9 +70,11 @@ function rel(file) {
   return path.relative(rootDir, file);
 }
 
+// U+2014, written as a code so this file has none of its own.
+const emDash = String.fromCharCode(0x2014);
 const emDashes = [];
 function emDashCheck(file, text) {
-  const count = (text.match(/—/g) || []).length;
+  const count = text.split(emDash).length - 1;
   if (count > 0) emDashes.push(`${rel(file)} (${count})`);
 }
 
@@ -206,7 +208,7 @@ if (fs.existsSync(logFile)) {
       if (!logStates.includes(entry.state)) errors.push(`${where}: state must be one of ${logStates.join(", ")}`);
       if (!entry.summary) errors.push(`${where}: summary is missing`);
       if ((entry.summary ?? "").length > 240) errors.push(`${where}: summary is over 240 characters`);
-      if (/—/.test(line)) errors.push(`${where}: contains an em dash`);
+      if (line.includes(emDash)) errors.push(`${where}: contains an em dash`);
       if (/[\w.+-]+@[\w-]+\.[\w.]+/.test(line)) errors.push(`${where}: contains an email address`);
       if (/\b\d{1,3}(\.\d{1,3}){3}\b/.test(line)) errors.push(`${where}: contains an IP address`);
       if (/\.(local|internal|lan)\b|svc\.cluster/.test(line)) errors.push(`${where}: contains an internal hostname`);
