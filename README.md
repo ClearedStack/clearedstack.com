@@ -290,7 +290,7 @@ go test ./internal/static -run xxx -fuzz FuzzResolve -fuzztime 30s
 
 # The integration test starts a throwaway PostgreSQL 17, applies Logbook's
 # migrations and reads as pub_ro. LOGBOOK_DIR is a checkout of Logbook.
-LOGBOOK_DIR=../../logbook sh scripts/integration.sh
+LOGBOOK_DIR=/path/to/logbook sh scripts/integration.sh
 ```
 
 Without `CONN_TEST_DATABASE_URL` the integration test is skipped. Not built yet: `POST /v1/edits` (Phase 2), Kubernetes manifests and the container image.
