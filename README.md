@@ -192,7 +192,7 @@ See [Host as plain files](src/guides/host-static-files.mdx), [Host on Kubernetes
 
 ### Listing a tool
 
-Add an entry to `tools` in [`src/data/catalog.ts`](src/data/catalog.ts):
+Add an entry to `catalogTools` in [`src/data/catalog.ts`](src/data/catalog.ts):
 
 ```ts
 {
@@ -221,6 +221,16 @@ Add an entry to `tools` in [`src/data/catalog.ts`](src/data/catalog.ts):
 The home page, the catalog page, the tool's own page and every count update from that one entry.
 The build stops with a message if `guides` names a guide or a heading that does not exist.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for what a tool needs before it is listed.
+
+#### catalog/tools.json
+
+Chartroom lists a finished tool by writing `catalog/tools.json` (`{"contract":"v1","entries":[...]}`). If the file exists, the build reads it; if not, nothing changes.
+An entry with status `live` makes the tool of that slug live everywhere (home page count, catalog, tool page, search index, AI files) and sets its `repo` from `repository`.
+Entries with status `linked`, `merged` or `retired` are checked but change nothing yet.
+The build stops with a message that names the slug if the contract is unknown, a field is unknown, a slug appears twice, a status is unknown, or a `live` slug is not in `catalog.ts`.
+The text in the file is shown as plain text only.
+
+The rule lives in one place, [`src/data/tools-json.mjs`](src/data/tools-json.mjs). [`scripts/load-catalog.mjs`](scripts/load-catalog.mjs) reads the file for both generator scripts; the search-index script also writes the checked copy to `src/data/tools-json.generated.json` (committed, like `search-data.json`), which `catalog.ts` applies for the pages. Run `npm run build` or `npm run dev` after adding or changing the file; `next build` on its own does not re-read it. Its tests are in `scripts/tools-json.test.mjs` with fixtures in `testdata/catalog/`; run them with `npm test` (`npm run build` runs them first).
 
 ### Adding a guide or a platform page
 

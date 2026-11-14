@@ -19,6 +19,10 @@ The ClearedStack website: a Next.js site exported to plain static files in `out/
 | Site name, address, revision month | `src/data/site.ts` | every page |
 | Home, About and index pages | `src/app/**/page.tsx` | |
 
+### How the catalog works
+
+`src/data/catalog.ts` lists the tools by hand (`catalogTools`) and exports the merged list `tools`. If `catalog/tools.json` exists (Chartroom writes it; do not add or edit it here), the build reads it through `src/data/tools-json.mjs`: a `live` entry marks that tool live and sets `repo`; `linked`, `merged` and `retired` entries are only validated for now. A bad file, or a `live` slug missing from `catalog.ts`, stops the build. Pages (through the generated `src/data/tools-json.generated.json`) and both generator scripts all use that one merge, so do not read `catalog.ts` or `tools.json` another way. `npm test` runs its tests.
+
 One file per page. To add a page, add a file to the right folder; the index, table of contents, search, sitemap, `llms.txt` and the Markdown copy all pick it up. To move a page, keep the old address working (see `movedGuides` in `src/lib/docs.ts`).
 
 ## Page details (the `meta` block)
@@ -67,6 +71,7 @@ The build rejects a line that is not valid JSON, uses another state, or contains
 
 ## Generated files: do not edit
 
+- `src/data/tools-json.generated.json` (from `scripts/generate-search-index.mjs`)
 - `src/data/search-data.json` (from `scripts/generate-search-index.mjs`)
 - `public/llms.txt`, `public/llms-full.txt`, `public/pages.json`, `public/status.json` and every `public/{guides,platform,tools}/*.md` (from `scripts/generate-ai-files.mjs`; not committed)
 
@@ -76,6 +81,7 @@ Change the source in `src/` and rebuild.
 
 ```bash
 npm ci
+npm test                # catalog/tools.json rules; fast
 npm run check:content   # page details and work log; fast
 npm run lint
 npm run typecheck
