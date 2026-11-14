@@ -1,0 +1,109 @@
+export const meta = {
+  title: "The second pipeline: keeping the platform healthy",
+  summary: "A design in progress for the layer above the pipeline: its own workers that test, review and repair every component every day, with a person approving each merge.",
+  group: "factory",
+  order: 6,
+  revised: "2026-11",
+  status: "design",
+};
+
+The pipeline on these pages has seventeen parts, from Logbook and Muster to the ten workers and the tools that build and deploy them. Nobody has yet designed the layer that keeps all seventeen working: the checklists, the tests, the reviews and the record of who is changing what. This page is that design, as far as it has got.
+
+<Callout kind="warning" title="Still being discussed">
+This idea is not fully worked out. The section on what is decided records choices the owner has made. Everything under ideas being discussed is a proposal, and may change or be dropped.
+</Callout>
+
+## The problem
+
+Each component needs more than its own code to stay healthy. It needs tests, a check that it still speaks the shared contract, a manifest, a health check, a branch to work on, someone assigned to it and a clear idea of what done means. Across seventeen components that adds up to more than a hundred supporting pieces.
+
+Today those pieces live in chat threads and in people's heads. That is how contract drift happened: two agents worked on the same repository at the same time, and each one's idea of the contract moved apart from the other's.
+
+<Layers
+  caption="One layer outside the onion"
+  layers={[
+    { label: "Second pipeline", detail: "Keeps every component tested, reviewed and repaired, every day." },
+    { label: "The pipeline", detail: "Seventeen components that find, score, build and watch tools." },
+    { label: "The tools", detail: "The free tools in the catalog, built from the public rule." },
+  ]}
+/>
+
+## What is decided
+
+These are the owner's decisions. The quotes are the owner's own words from the discussion.
+
+| Decision | In the owner's words |
+| --- | --- |
+| It is a pipeline of its own, with its own workers | "This needs to be built out into its own pipeline. With its own workers." |
+| Reuse first, and collect ideas and tools from elsewhere | Reuse what already exists, such as Muster to hand out work and Logbook to keep results, "but also let's start harvesting ideas and tools." |
+| Every repository gets work every day | "Every repo needs to be worked on daily... making it better and identifying bugs." A bug hunter is part of this layer. |
+| It is designed around Claude Duet | Claude Duet supervises the work. See [where Claude Duet fits](#where-claude-duet-fits). |
+
+## Ideas being discussed
+
+None of these is decided. Two of them were described in the discussion as non-negotiable, and are marked so here, but they are still waiting for the design to settle around them.
+
+| Idea | What it would do |
+| --- | --- |
+| Registry | One list of every component, what it depends on, which contract version it speaks and what healthy means for it. Kept as plain data in Git, not as code. The [naming registry](/platform/#registry) is a start. |
+| Heartbeat | Every component reports in on a schedule. Silence counts as a failure. |
+| Golden tests | A small fixed set of inputs with known answers for each component, run again and again. Assay's three made-up items are the first example. |
+| Contract drift check | Compares each repository's idea of the contract with Muster's, and flags any difference. |
+| Bug hunter | A daily review of each repository that opens pull requests with fixes. |
+| Dependency and security scan | A light check, since most components use only their language's standard library. |
+| Doc keeper | Flags a README or specification that no longer matches the code. |
+| Review gate (non-negotiable) | Every day's changes pass the tests and the contract check before they can merge. |
+| One agent per repository (non-negotiable) | A lock or lease so that only one agent works on a repository at a time. This is the fix for the drift described above. |
+| Scorecard | Each repository's health over time. |
+| Daily digest | A plain-English summary each day: what is green, what is red, what is next. |
+
+### Who watches the watchers
+
+The layer at the top has to be small and boring, or it becomes the next thing that breaks. The proposal has three parts:
+
+- Keep the second pipeline as simple as it can be.
+- Let the two pipelines watch each other, so a failure in either one is seen by the other.
+- Keep one tiny check outside the cluster that raises the alarm if both go quiet.
+
+## How the daily loop would run
+
+This is the proposed loop. Like everything on this page, it is a design and not something running today.
+
+<Flow
+  caption="The proposed daily loop"
+  direction="down"
+  steps={[
+    { tag: "1", label: "Schedule", detail: "A scheduled job on the cluster drops the day's work into Muster, such as hunting bugs in Assay or checking the docs in Waybill." },
+    { tag: "2", label: "Lease", detail: "A second-pipeline worker leases a job from Muster, the same way every pipeline worker does." },
+    { tag: "3", label: "Propose", detail: "What the worker finds becomes a pull request. Nothing is pushed straight to the main branch." },
+    { tag: "4", label: "Gate", detail: "The tests and the contract check run on the pull request. Only a green pull request can merge." },
+    { tag: "5", label: "Approve", detail: "A person approves each merge, at least at first." },
+    { tag: "6", label: "Deploy and record", detail: "The main branch is deployed, results go to Logbook, and the digest worker writes the day's summary." },
+  ]}
+/>
+
+At the start the checks would run on tools the cluster already has. The project's own [Keelworks](/platform/keelworks/) and [Shipkeeper](/platform/shipkeeper/) take over building and deploying once they are ready, as described in the [overview](/platform/overview/).
+
+## Where Claude Duet fits
+
+[Claude Duet](https://www.claude.com/resources/articles/claude-duet) is an app from Anthropic in which Claude works as an agent for one person, checking their connected apps and carrying out tasks. In this design it supervises, and the cluster does the work. A few things about how Claude Duet works shape that split. Each comes from its public pages: the [announcement](https://www.claude.com/resources/articles/claude-duet) and the [getting started guide](https://support.claude.com/en/articles/17631495-get-started-with-claude-duet).
+
+| How Claude Duet works | What it means for this design |
+| --- | --- |
+| It checks connected apps every few hours, not live. | Fast checks such as the heartbeat run as scheduled jobs on the cluster, not in Claude Duet. |
+| Only the owner can mark a task as completed. | Each repository's daily work can be a task, and closing it matches a person approving the merge. |
+| Separate channels for separate subjects, all sharing one memory. | One channel per subject keeps the work findable without losing the shared picture. |
+| It asks before it sends a message, makes a payment, signs a document or deletes anything. | Merges and deploys get the same gate: nothing ships without a yes. |
+| Background work counts against the plan's usage limits. | The heavy daily bug hunting runs on the cluster's own workers, and Claude Duet reads the results. |
+
+## What comes next
+
+The discussion is ongoing. The next steps are to settle the ideas above into decisions, record them on [what is decided and what is open](/platform/decisions/), and then write a specification for each second-pipeline worker in the same form as the [component specifications](/platform/#registry).
+
+## Related pages
+
+- [Overview](/platform/overview/): the map of the platform this layer looks after.
+- [The pipeline](/platform/pipeline/): the ten workers and the Muster contract.
+- [Muster](/platform/muster/): the queue that would hand out the daily work.
+- [Logbook](/platform/logbook/): where the results would be kept.
+- [Work log](/status/): what has changed recently, one line per change.

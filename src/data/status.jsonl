@@ -1,0 +1,2 @@
+{"date":"2026-11-14","area":"second-pipeline","state":"planned","summary":"Design discussion started for a second pipeline that tests, reviews and repairs every component daily. See /platform/second-pipeline/."}
+{"date":"2026-11-14","area":"site","state":"done","summary":"Added the second pipeline design page, llms.txt, a Markdown copy of every page, a page index in JSON and this work log."}
