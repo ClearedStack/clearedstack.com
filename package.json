@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/generate-search-index.mjs && node scripts/generate-ai-files.mjs && next dev",
-    "build": "node scripts/generate-search-index.mjs && node scripts/generate-ai-files.mjs && next build",
+    "dev": "node scripts/generate-search-index.mjs && next dev",
+    "build": "node scripts/generate-search-index.mjs && next build",
     "preview": "npx --yes serve out",
+    "predev": "node scripts/generate-ai-files.mjs",
+    "prebuild": "node scripts/generate-ai-files.mjs",
     "check:content": "node scripts/generate-ai-files.mjs",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit"

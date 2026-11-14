@@ -7,7 +7,7 @@ export const meta = {
   status: "design",
 };
 
-The pipeline on these pages has seventeen parts, from Logbook and Muster to the ten workers and the tools that build and deploy them. Nobody has yet designed the layer that keeps all seventeen working: the checklists, the tests, the reviews and the record of who is changing what. This page is that design, as far as it has got.
+The pipeline on these pages has eighteen parts, from Logbook and Muster to the ten workers and the tools that build and deploy them. Nobody has yet designed the layer that keeps all eighteen working: the checklists, the tests, the reviews and the record of who is changing what. This page is that design, as far as it has got.
 
 <Callout kind="warning" title="Still being discussed">
 This idea is not fully worked out. The section on what is decided records choices the owner has made. Everything under ideas being discussed is a proposal, and may change or be dropped.
@@ -15,7 +15,7 @@ This idea is not fully worked out. The section on what is decided records choice
 
 ## The problem
 
-Each component needs more than its own code to stay healthy. It needs tests, a check that it still speaks the shared contract, a manifest, a health check, a branch to work on, someone assigned to it and a clear idea of what done means. Across seventeen components that adds up to more than a hundred supporting pieces.
+Each component needs more than its own code to stay healthy. It needs tests, a check that it still speaks the shared contract, a manifest, a health check, a branch to work on, someone assigned to it and a clear idea of what done means. Across eighteen components that adds up to more than a hundred supporting pieces.
 
 Today those pieces live in chat threads and in people's heads. That is how contract drift happened: two agents worked on the same repository at the same time, and each one's idea of the contract moved apart from the other's.
 
@@ -23,7 +23,7 @@ Today those pieces live in chat threads and in people's heads. That is how contr
   caption="One layer outside the onion"
   layers={[
     { label: "Second pipeline", detail: "Keeps every component tested, reviewed and repaired, every day." },
-    { label: "The pipeline", detail: "Seventeen components that find, score, build and watch tools." },
+    { label: "The pipeline", detail: "Eighteen components that find, score, build and watch tools." },
     { label: "The tools", detail: "The free tools in the catalog, built from the public rule." },
   ]}
 />
