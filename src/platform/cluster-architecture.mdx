@@ -1,6 +1,6 @@
 export const meta = {
   title: "Cluster architecture",
-  summary: "The one-node, two-namespace cluster the pipeline is designed to run on: its seven control-plane services, how code is built and deployed without Docker, and where the data lives.",
+  summary: "The one-node, two-namespace cluster the pipeline is designed to run on: its eight control-plane services, how code is built and deployed without Docker, and where the data lives.",
   group: "cluster",
   order: 1,
   revised: "2026-11",
@@ -13,13 +13,13 @@ The pipeline is designed to run on a single small Kubernetes node, with everythi
 To run your own copy of this website, you need a web server and nothing else. See [Host as plain files](/guides/host-static-files/) or [Host on Kubernetes](/guides/host-on-kubernetes/). This page is about the cluster for the pipeline that chooses and builds tools.
 </Callout>
 
-## One node, two namespaces, seventeen pods
+## One node, two namespaces, eighteen pods
 
 The whole platform is sized to fit on one machine with 4 GiB of memory, running `k3s` with `containerd`.
 
 | Namespace | What runs there | Memory requested |
 | --- | --- | --- |
-| `clearedstack` | The control plane: seven services | About 640 MiB |
+| `clearedstack` | The control plane: eight services | About 672 MiB |
 | `cs-workers` | The pipeline: ten workers, plus short-lived browser jobs when a page needs one | About 300 MiB |
 
 Under 1 GiB at rest leaves room for the operating system, the database’s storage and the occasional build.
@@ -37,8 +37,9 @@ An earlier draft gave every worker its own namespace, eleven in all. Two keeps t
 | [Lazarette](/platform/lazarette/) | Stores built images inside the cluster and keeps the last five of each | 64 MiB |
 | [Keelworks](/platform/keelworks/) | Starts a short-lived job to test and build on each push | 32 MiB |
 | [Shipkeeper](/platform/shipkeeper/) | Deploys what was built, watches its health and reports it | 48 MiB |
+| [Consort](/platform/consort/) | Keeps the GitHub copy of every repository matched to Plainforge and brings GitHub changes back as pull requests | 32 MiB |
 
-Plainforge, Lazarette, Keelworks and Shipkeeper are written from scratch as small Go programs instead of being assembled from large existing projects. [Clean room and credit](/platform/clean-room-and-credit/#the-same-rule-for-the-platforms-own-services) explains why.
+Plainforge, Lazarette, Keelworks, Shipkeeper and Consort are written from scratch as small Go programs instead of being assembled from large existing projects. [Clean room and credit](/platform/clean-room-and-credit/#the-same-rule-for-the-platforms-own-services) explains why.
 
 ## From a push to a running pod
 
