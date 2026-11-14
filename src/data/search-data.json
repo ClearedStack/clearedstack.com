@@ -3278,6 +3278,46 @@
     "content": "What is still open What is decided and what is open | Area | The question | Working default | Why it is not settled | | --- | --- | --- | --- | | Licensing of the data | The code is MIT. What license should cover the records the pipeline produces, when they mix public-domain government tables with facts observed about vendors and corrections sent in by readers? | MIT for all code. Only facts are recorded about vendors and regulations | Mixed-source collections need a clear answer before anyone else starts mirroring them | | More than one node | If the project outgrows one machine, or other organizations run their own copies, how should they share repositories, work and images? | One node, with code mirrored outward to GitHub | Sharing work between independent copies raises hard questions: identifiers that clash, and whose owner’s decision counts | | Stewardship | When and how does the project move from one owner to several maintainers, with a legal home, a second person who can approve, and shared review? | One owner, a fixed no-revenue rule and a public history | A project that takes no money needs succession rules that a commercial interest cannot capture | If you have a view on any of these, open an issue on GitHub or write to contact@clearedstack.com."
   },
   {
+    "id": "platform-how-it-works",
+    "type": "guide",
+    "title": "How it works, step by step",
+    "subtitle": "Platform · Section J.1",
+    "summary": "Every component and each connection it makes, then one idea followed from first sighting to the catalog, and the three loops that keep it current. Drawn from the platform's data, not typed in.",
+    "url": "/platform/how-it-works/",
+    "badge": "DESIGN",
+    "content": "How it works, step by step Every component and each connection it makes, then one idea followed from first sighting to the catalog, and the three loops that keep it current. Drawn from the platform's data, not typed in. factory J.1 design  This page shows the platform as a working whole: which parts exist, what each one connects to, and what happens to an idea as it moves through them. Nothing on it is typed in by hand. The diagrams are drawn when the site is built, from the same files the rest of the site reads. Where the design contradicts itself, the page says so instead of hiding it. Each contradiction is marked as an open question, and it stays marked until the owner decides it. The parts and how they connect Eighteen components, grouped by what they do, plus the things outside the platform they talk to. Each box lists ever"
+  },
+  {
+    "id": "section-platform-how-it-works-the-parts-and-how-they-connect",
+    "type": "section",
+    "title": "The parts and how they connect",
+    "subtitle": "How it works, step by step",
+    "summary": "Eighteen components, grouped by what they do, plus the things outside the platform they talk to. Each box lists every connection that component makes. Workers o...",
+    "url": "/platform/how-it-works/#the-parts-and-how-they-connect",
+    "badge": "Section",
+    "content": "The parts and how they connect How it works, step by step Eighteen components, grouped by what they do, plus the things outside the platform they talk to. Each box lists every connection that component makes. Workers only ever start a connection to Muster, except where an open question says otherwise."
+  },
+  {
+    "id": "section-platform-how-it-works-one-idea-step-by-step",
+    "type": "section",
+    "title": "One idea, step by step",
+    "subtitle": "How it works, step by step",
+    "summary": "Each step names who acts, how the idea's state changes, and the other ways it can leave that step. The highlighted names are everything that step touches. After...",
+    "url": "/platform/how-it-works/#one-idea-step-by-step",
+    "badge": "Section",
+    "content": "One idea, step by step How it works, step by step Each step names who acts, how the idea's state changes, and the other ways it can leave that step. The highlighted names are everything that step touches. After the eleven steps come the three loops that keep a published tool current."
+  },
+  {
+    "id": "section-platform-how-it-works-where-this-comes-from",
+    "type": "section",
+    "title": "Where this comes from",
+    "subtitle": "How it works, step by step",
+    "summary": "| What | Written in | | --- | --- | | Components, what each may reach and every connection | src/data/registry.json , also published as /platform/registry.json ...",
+    "url": "/platform/how-it-works/#where-this-comes-from",
+    "badge": "Section",
+    "content": "Where this comes from How it works, step by step | What | Written in | | --- | --- | | Components, what each may reach and every connection | src/data/registry.json , also published as /platform/registry.json | | The fourteen states and every move between them | src/data/lifecycle.json | | The order of the steps on this page | src/data/walkthrough.json | | Contradictions waiting on a decision | src/data/open-questions.json | A check runs before every build. It fails the build when these files disagree with each other: a connection the network does not allow, a state that does not exist, a dependency with no connection behind it, or two components claiming the same job. The only way past a contradiction is to fix the data or to record it as an open question for the owner, so it cannot drift silently."
+  },
+  {
     "id": "platform-how-we-decide",
     "type": "guide",
     "title": "How we decide what to build",
@@ -3832,10 +3872,10 @@
     "type": "section",
     "title": "Where to read more",
     "subtitle": "How the project is put together",
-    "summary": "| If you want to know | Read | | --- | --- | | What each of the ten workers does | The pipeline and its ten workers | | Every state an idea can be in | An item’...",
+    "summary": "| If you want to know | Read | | --- | --- | | How every part connects, and one idea followed step by step | How it works, step by step | | What each of the ten...",
     "url": "/platform/overview/#where-to-read-more",
     "badge": "Section",
-    "content": "Where to read more How the project is put together | If you want to know | Read | | --- | --- | | What each of the ten workers does | The pipeline and its ten workers | | Every state an idea can be in | An item’s life | | How an idea is screened and scored | How we decide what to build | | How copying is prevented and ideas are credited | Clean room and credit | | What the pipeline is designed to run on | Cluster architecture | | How a reader proposes a change | Public edits and what stays private | | How failures and backups are handled | Operating it | | What is settled and what is not | What is decided and what is open |"
+    "content": "Where to read more How the project is put together | If you want to know | Read | | --- | --- | | How every part connects, and one idea followed step by step | How it works, step by step | | What each of the ten workers does | The pipeline and its ten workers | | Every state an idea can be in | An item’s life | | How an idea is screened and scored | How we decide what to build | | How copying is prevented and ideas are credited | Clean room and credit | | What the pipeline is designed to run on | Cluster architecture | | How a reader proposes a change | Public edits and what stays private | | How failures and backups are handled | Operating it | | What is settled and what is not | What is decided and what is open |"
   },
   {
     "id": "platform-pipeline",

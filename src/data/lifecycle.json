@@ -1,0 +1,43 @@
+{
+  "about": "The states an idea for a tool can be in, and every move between them with the component or person that makes it. Pages draw the lifecycle from this file; scripts/check-architecture.mjs checks it against the registry.",
+  "states": [
+    { "id": "discovered", "tag": "Start", "label": "Discovered", "detail": "A candidate address or a request has been captured." },
+    { "id": "recorded", "label": "Recorded", "detail": "On the list, waiting to be looked at." },
+    { "id": "observed", "label": "Observed", "detail": "What it does, and the rule it cites, are written down." },
+    { "id": "needs_subtool", "tag": "Paused", "label": "Needs a sub-tool", "detail": "Waiting for a rule to be written for this case." },
+    { "id": "screened_out", "tag": "Can be reopened", "label": "Screened out", "detail": "Failed a gate. The reason is recorded." },
+    { "id": "scored", "label": "Scored", "detail": "Rated on the 100-point rubric, with a recommendation." },
+    { "id": "parked", "tag": "Waiting", "label": "Parked", "detail": "Held, with the thing blocking it named." },
+    { "id": "approved", "tag": "Catalog: planned", "label": "Approved", "detail": "To be built. The credit note and the specification are written." },
+    { "id": "building", "tag": "Catalog: in development", "label": "Building", "detail": "Being built and checked." },
+    { "id": "live", "tag": "Catalog: live", "label": "Live", "detail": "In the catalog and being watched." },
+    { "id": "rejected", "tag": "End", "label": "Rejected", "detail": "Declined. The reason and the score are kept." },
+    { "id": "linked", "tag": "Watched", "label": "Linked", "detail": "The catalog points to the existing tool instead of rebuilding it." },
+    { "id": "merged", "tag": "End", "label": "Merged", "detail": "Folded into another tool as a feature." },
+    { "id": "retired", "tag": "End", "label": "Retired", "detail": "Taken out of use, with a note of why." }
+  ],
+  "transitions": [
+    { "from": "discovered", "to": "recorded", "actor": "trawl", "when": "it is given an identifier and is not a duplicate" },
+    { "from": "discovered", "to": "rejected", "actor": "trawl", "when": "the address is dead or a duplicate" },
+    { "from": "recorded", "to": "observed", "actor": "sextant", "when": "its public pages have been read" },
+    { "from": "recorded", "to": "needs_subtool", "actor": "trawl", "when": "the source is in a form intake has no rule for" },
+    { "from": "observed", "to": "screened_out", "actor": "assay", "when": "it fails any knockout gate" },
+    { "from": "observed", "to": "scored", "actor": "assay", "when": "it passes all five gates" },
+    { "from": "observed", "to": "needs_subtool", "actor": "sextant", "when": "a worker has no rule for what it found" },
+    { "from": "needs_subtool", "to": "observed", "actor": "muster", "when": "the rule ships and the item is run again" },
+    { "from": "screened_out", "to": "observed", "actor": "owner", "when": "the owner overrides, or the idea is reshaped" },
+    { "from": "scored", "to": "approved", "actor": "owner", "when": "the owner chooses to build" },
+    { "from": "scored", "to": "linked", "actor": "owner", "when": "a free, private tool already does the job" },
+    { "from": "scored", "to": "merged", "actor": "owner", "when": "it belongs inside another tool" },
+    { "from": "scored", "to": "parked", "actor": "owner", "when": "it is worth doing but blocked" },
+    { "from": "scored", "to": "rejected", "actor": "owner", "when": "it falls below the threshold" },
+    { "from": "parked", "to": "observed", "actor": "tidegauge", "when": "the blocker clears" },
+    { "from": "approved", "to": "building", "actor": "moldloft", "when": "its repository is generated" },
+    { "from": "approved", "to": "needs_subtool", "actor": "waybill", "when": "there is no profile for that kind of tool" },
+    { "from": "building", "to": "live", "actor": "chartroom", "when": "it passes all five listing conditions" },
+    { "from": "building", "to": "parked", "actor": "shakedown", "when": "the rule turns out to be unclear" },
+    { "from": "live", "to": "building", "actor": "tidegauge", "when": "the rule it rests on changes" },
+    { "from": "live", "to": "retired", "actor": "tidegauge", "when": "the rule is repealed or replaced" },
+    { "from": "linked", "to": "observed", "actor": "tidegauge", "when": "that tool breaks or starts tracking users" }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "about": "Contradictions in the platform's architecture data that are known and waiting on a decision by the owner. scripts/check-architecture.mjs fails the build on any contradiction not listed here, and on any entry here that no longer occurs. Pages show each one where it applies.",
+  "questions": [
+    {
+      "key": "reach:moldloft>plainforge",
+      "raised": "2026-11-14",
+      "question": "Moldloft commits the generated repository to Plainforge, but workers cannot reach Plainforge. Either open that path for this worker, or have a control-plane service make the commit."
+    },
+    {
+      "key": "reach:chartroom>plainforge",
+      "raised": "2026-11-14",
+      "question": "Chartroom writes catalog entries to the hub repository in Plainforge, but workers cannot reach Plainforge. Either open that path for this worker, or have a control-plane service make the commit."
+    },
+    {
+      "key": "reach:bellbuoy>plainforge",
+      "raised": "2026-11-14",
+      "question": "Bellbuoy commits changes and opens tasks in Plainforge, but workers cannot reach Plainforge. Either open that path for this worker, or have a control-plane service make the commit."
+    },
+    {
+      "key": "state:chartroom:verified",
+      "raised": "2026-11-14",
+      "question": "Chartroom takes items in a state called verified, which is not one of the fourteen. Should Shakedown's pass be a state of its own, or should Chartroom take building items that passed?"
+    },
+    {
+      "key": "external:github:mirrors",
+      "raised": "2026-11-14",
+      "question": "Plainforge mirrors the code to GitHub, and Bellbuoy has a github-mirror sub-tool as well. Which one owns the mirror?"
+    }
+  ]
+}

@@ -596,3 +596,114 @@ body {
   text-transform: uppercase;
   color: var(--muted);
 }
+
+/*
+ * Architecture diagrams (src/components/Architecture.tsx), drawn from
+ * src/data: the repo map and the walk-through.
+ */
+.dg-map {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.dg-map-head {
+  margin: 0 0 0.5rem !important;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem !important;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dg-map-boxes {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .dg-map-boxes {
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  }
+}
+
+.dg-box a.dg-label {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+.dg-box-outside {
+  border-style: dashed;
+  background: transparent;
+}
+
+.dg-box-loop {
+  border-style: dashed;
+}
+
+.dg-edges,
+.dg-leases {
+  margin: 0.375rem 0 0 !important;
+  font-size: 0.75rem !important;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.dg-edges li + li {
+  margin-top: 0.2rem !important;
+}
+
+.dg-edge-kind {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+.dg-flag {
+  color: var(--warn);
+}
+
+.dg-flag .dg-edge-kind {
+  color: var(--warn);
+}
+
+.dg-flag-note {
+  display: block;
+  margin-top: 0.15rem;
+  border-left: 2px solid var(--warn);
+  padding-left: 0.5rem;
+}
+
+.dg-walk {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dg-walk-edges {
+  margin-top: 0.5rem;
+}
+
+.dg-chips {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.375rem 0 !important;
+}
+
+.dg-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.05rem 0.5rem !important;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--muted);
+  opacity: 0.55;
+}
+
+.dg-chip-on {
+  border-color: var(--accent);
+  background: var(--surface);
+  color: var(--ink);
+  opacity: 1;
+}
