@@ -42,11 +42,11 @@ func newApp(t *testing.T, store ledger.Store) http.Handler {
 		w.Header().Set("Content-Type", "text/event-stream")
 		io.WriteString(w, "id: 1\nevent: depths\ndata: {}\n\n")
 	})
-	return New(Handlers{
-		Static: st,
-		Ledger: &ledger.Handler{Store: store, Timeout: time.Second, NotFound: st.NotFound},
-		Feed:   feed,
-	})
+	lh, err := ledger.NewHandler(store, time.Second, st.NotFound, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return New(Handlers{Static: st, Ledger: lh, Feed: feed})
 }
 
 func do(h http.Handler, method, target string, body io.Reader) *httptest.ResponseRecorder {
@@ -80,23 +80,39 @@ func TestRoutes(t *testing.T) {
 	}
 }
 
-func TestEveryAnswerCarriesTheSecurityHeaders(t *testing.T) {
+func TestStaticAnswersHaveTheNginxHeadersAndNoCSP(t *testing.T) {
+	h := newApp(t, fakeStore{})
+	for _, p := range []string{"/", "/nope", "/.env", "/items/PA-0009", "/items/bogus"} {
+		rec := do(h, "GET", p, nil)
+		if got := rec.Header().Get("Content-Security-Policy"); got != "" {
+			t.Errorf("GET %s: static answer has CSP %q, which would block the export's inline scripts", p, got)
+		}
+		checkBasicHeaders(t, p, rec)
+	}
+	if rec := do(h, "POST", "/", nil); rec.Header().Get("Content-Security-Policy") != "" {
+		t.Error("a static 405 carries a CSP")
+	}
+}
+
+func TestConnsOwnAnswersHaveTheStrictCSP(t *testing.T) {
 	for name, h := range map[string]http.Handler{
 		"ok":           newApp(t, fakeStore{}),
 		"logbook down": newApp(t, fakeStore{err: errors.New("down")}),
 	} {
-		for _, p := range []string{"/", "/nope", "/items/PA-0001", "/items/PA-0009", "/v1/feed", "/_conn/ledger.css"} {
+		for _, p := range []string{"/items/PA-0001", "/v1/feed", "/_conn/ledger.css"} {
 			rec := do(h, "GET", p, nil)
 			if got := rec.Header().Get("Content-Security-Policy"); got != "default-src 'self'" {
-				t.Errorf("%s %s: CSP = %q", name, p, got)
+				t.Errorf("%s GET %s: CSP = %q", name, p, got)
 			}
-			if rec.Header().Get("X-Content-Type-Options") != "nosniff" || rec.Header().Get("Referrer-Policy") != "no-referrer" || rec.Header().Get("X-Frame-Options") != "DENY" {
-				t.Errorf("%s %s: headers %v", name, p, rec.Header())
-			}
+			checkBasicHeaders(t, p, rec)
 		}
-		if rec := do(h, "POST", "/", nil); rec.Header().Get("Content-Security-Policy") == "" {
-			t.Errorf("%s: a 405 lacks the CSP", name)
-		}
+	}
+}
+
+func checkBasicHeaders(t *testing.T, p string, rec *httptest.ResponseRecorder) {
+	t.Helper()
+	if rec.Header().Get("X-Content-Type-Options") != "nosniff" || rec.Header().Get("Referrer-Policy") != "no-referrer" || rec.Header().Get("X-Frame-Options") != "DENY" {
+		t.Errorf("GET %s: headers %v", p, rec.Header())
 	}
 }
 

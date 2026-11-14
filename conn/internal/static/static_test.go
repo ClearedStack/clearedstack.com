@@ -2,6 +2,7 @@ package static
 
 import (
 	"io"
+	"io/fs"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -52,6 +53,8 @@ func get(h http.Handler, method, target string) *httptest.ResponseRecorder {
 	h.ServeHTTP(rec, httptest.NewRequest(method, target, nil))
 	return rec
 }
+
+func fsValid(name string) bool { return fs.ValidPath(name) }
 
 func TestServes(t *testing.T) {
 	h := site(t)

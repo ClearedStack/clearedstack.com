@@ -7,7 +7,6 @@ package static
 import (
 	"errors"
 	"io"
-	"io/fs"
 	"mime"
 	"net/http"
 	"os"
@@ -37,8 +36,6 @@ func New(dir string) (*Handler, error) {
 
 // Close releases the directory.
 func (h *Handler) Close() error { return h.root.Close() }
-
-func fsValid(name string) bool { return fs.ValidPath(name) }
 
 // resolve turns a URL path into a name relative to the export root. The name
 // is empty for the root itself. slash reports a trailing slash. ok is false for
@@ -108,6 +105,9 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // NotFound answers with the export's 404.html and status 404, or a plain
 // text 404 if the export has none.
 func (h *Handler) NotFound(w http.ResponseWriter, r *http.Request) {
+	// The 404 page is a page of the export, so it has the export's policy
+	// (none), even when a strict handler of Conn's asked for it.
+	w.Header().Del("Content-Security-Policy")
 	f, err := h.root.Open("404.html")
 	if err != nil {
 		http.Error(w, "404 page not found", http.StatusNotFound)

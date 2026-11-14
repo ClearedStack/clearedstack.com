@@ -21,21 +21,33 @@ type Handlers struct {
 // New builds the handler for the whole site.
 func New(h Handlers) http.Handler {
 	mux := http.NewServeMux()
-	mux.Handle("/items/", h.Ledger)
-	mux.Handle("/_conn/ledger.css", h.Ledger)
-	mux.Handle("/v1/feed", h.Feed)
+	mux.Handle("/items/", Strict(h.Ledger))
+	mux.Handle("/_conn/ledger.css", Strict(h.Ledger))
+	mux.Handle("/v1/feed", Strict(h.Feed))
 	mux.Handle("/", h.Static)
 	return Headers(Limit(mux))
 }
 
-// Headers adds the security headers to every answer, including refusals.
+// Headers adds the headers nginx gave the static site, to every answer,
+// including refusals.
 func Headers(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		hd := w.Header()
-		hd.Set("Content-Security-Policy", "default-src 'self'")
 		hd.Set("X-Content-Type-Options", "nosniff")
 		hd.Set("X-Frame-Options", "DENY")
 		hd.Set("Referrer-Policy", "no-referrer")
+		next.ServeHTTP(w, r)
+	})
+}
+
+// Strict adds Content-Security-Policy: default-src 'self' to Conn's own
+// answers, which use no inline script or style. It is not applied to the
+// static export: a Next.js page carries inline scripts and styles that this
+// policy would block. An answer that turns out to be the export's 404 page
+// drops the header again (see static.Handler.NotFound).
+func Strict(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Security-Policy", "default-src 'self'")
 		next.ServeHTTP(w, r)
 	})
 }
