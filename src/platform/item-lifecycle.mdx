@@ -13,25 +13,7 @@ Every idea for a tool is an item with an identifier of the form `PA-0001` and ex
 
 An item does not always go straight from found to live. It can leave early, wait for something outside the project, or come back after it was finished.
 
-<States
-  caption="The states of an item, from first sighting to the catalog or the archive"
-  states={[
-    { id: "discovered", tag: "Start", label: "Discovered", detail: "A candidate address or a request has been captured.", to: [{ id: "recorded", when: "it is given an identifier and is not a duplicate" }] },
-    { id: "recorded", label: "Recorded", detail: "On the list, waiting to be looked at.", to: [{ id: "observed", when: "its public pages have been read" }] },
-    { id: "observed", label: "Observed", detail: "What it does, and the rule it cites, are written down.", to: [{ id: "screened_out", when: "it fails any knockout gate" }, { id: "scored", when: "it passes all five gates" }, { id: "needs_subtool", when: "a worker has no rule for what it found" }] },
-    { id: "needs_subtool", tag: "Paused", label: "Needs a sub-tool", detail: "Waiting for a rule to be written for this case.", to: [{ id: "observed", when: "the rule ships and the item is run again" }] },
-    { id: "screened_out", tag: "Can be reopened", label: "Screened out", detail: "Failed a gate. The reason is recorded.", to: [{ id: "observed", when: "the owner overrides, or the idea is reshaped" }] },
-    { id: "scored", label: "Scored", detail: "Rated on the 100-point rubric, with a recommendation.", to: [{ id: "approved", when: "the owner chooses to build" }, { id: "linked", when: "a free, private tool already does the job" }, { id: "merged", when: "it belongs inside another tool" }, { id: "parked", when: "it is worth doing but blocked" }, { id: "rejected", when: "it falls below the threshold" }] },
-    { id: "parked", tag: "Waiting", label: "Parked", detail: "Held, with the thing blocking it named.", to: [{ id: "observed", when: "the blocker clears" }] },
-    { id: "approved", tag: "Catalog: planned", label: "Approved", detail: "To be built. The credit note and the specification are written.", to: [{ id: "building", when: "its repository is generated" }] },
-    { id: "building", tag: "Catalog: in development", label: "Building", detail: "Being built and checked.", to: [{ id: "live", when: "it passes all five listing conditions" }] },
-    { id: "live", tag: "Catalog: live", label: "Live", detail: "In the catalog and being watched.", to: [{ id: "building", when: "the rule it rests on changes" }, { id: "retired", when: "the rule is repealed or replaced" }] },
-    { id: "rejected", tag: "End", label: "Rejected", detail: "Declined. The reason and the score are kept." },
-    { id: "linked", tag: "End", label: "Linked", detail: "The catalog points to the existing tool instead of rebuilding it." },
-    { id: "merged", tag: "End", label: "Merged", detail: "Folded into another tool as a feature." },
-    { id: "retired", tag: "End", label: "Retired", detail: "Taken out of use, with a note of why." },
-  ]}
-/>
+<ItemStates caption="The states of an item, from first sighting to the catalog or the archive" />
 
 ## Which worker makes each move
 

@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/generate-search-index.mjs && next dev",
-    "build": "node scripts/generate-search-index.mjs && next build",
+    "dev": "node scripts/check-architecture.mjs && node scripts/generate-search-index.mjs && next dev",
+    "build": "node scripts/check-architecture.mjs && node scripts/generate-search-index.mjs && next build",
     "preview": "npx --yes serve out",
     "lint": "eslint",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit",
+    "check:architecture": "node scripts/check-architecture.mjs",
+    "test": "node --test scripts/architecture.test.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",

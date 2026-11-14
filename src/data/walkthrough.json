@@ -1,0 +1,120 @@
+{
+  "about": "The order in which /platform/how-it-works/ follows one idea through the platform. Each step names who acts and which lifecycle moves it covers; the components shown as involved are worked out from the registry's edges.",
+  "steps": [
+    {
+      "id": "find",
+      "title": "A candidate turns up",
+      "actors": ["trawl"],
+      "transitions": ["discovered>recorded"],
+      "offRamps": ["discovered>rejected", "recorded>needs_subtool"],
+      "text": "Trawl reads public sources: SAM.gov notices, GitHub issues, scheduled sweeps of public sites and the site's own form. It cleans the address, checks for a duplicate and gives the item an identifier such as PA-0001."
+    },
+    {
+      "id": "observe",
+      "title": "Observe what it does",
+      "actors": ["sextant"],
+      "transitions": ["recorded>observed"],
+      "offRamps": ["observed>needs_subtool"],
+      "text": "Sextant reads the candidate's public pages and records facts only: the job, inputs and outputs, login, tracking, license, price model and the rule it cites. Each fact is marked Seen, Stated or Unknown. The page itself goes no further."
+    },
+    {
+      "id": "score",
+      "title": "Screen and score",
+      "actors": ["assay"],
+      "transitions": ["observed>scored"],
+      "offRamps": ["observed>screened_out"],
+      "text": "Assay applies the five knockout gates, then the 100-point rubric, then the tie-breakers. It returns a pass or fail on each gate, a score and a recommendation. It recommends; it does not decide."
+    },
+    {
+      "id": "decide",
+      "title": "A person decides",
+      "actors": ["countersign", "owner"],
+      "transitions": ["scored>approved"],
+      "offRamps": ["scored>linked", "scored>merged", "scored>parked", "scored>rejected"],
+      "text": "Countersign holds scored items until the owner chooses: build it, link to a tool that already does the job, merge it into another tool, park it until a blocker clears, or reject it. Overriding the recommendation needs a written reason."
+    },
+    {
+      "id": "specify",
+      "title": "Credit and specify",
+      "actors": ["waybill"],
+      "transitions": [],
+      "offRamps": ["approved>needs_subtool"],
+      "text": "Waybill writes a credit note saying where the idea came from, then a specification built only from the official rule and its worked examples. This is the clean-room wall: no material from an existing product crosses it."
+    },
+    {
+      "id": "generate",
+      "title": "Generate the tool",
+      "actors": ["moldloft"],
+      "transitions": ["approved>building"],
+      "offRamps": [],
+      "text": "Moldloft sees only the specification and one of four fixed templates: calculator, checklist, validator or decision tree. It generates the tool's own repository."
+    },
+    {
+      "id": "ship",
+      "title": "Every push becomes a running image",
+      "actors": ["plainforge", "keelworks", "lazarette", "shipkeeper"],
+      "transitions": [],
+      "offRamps": [],
+      "text": "This runs for every push to any repository, not only tools. Plainforge announces the push. Keelworks tests, builds and signs an image and writes its digest back. Lazarette keeps the image, with recent versions ready for rollback. Shipkeeper deploys it, keeps it in its intended state and reports its health."
+    },
+    {
+      "id": "verify",
+      "title": "Check before listing",
+      "actors": ["shakedown"],
+      "transitions": [],
+      "offRamps": ["building>parked"],
+      "text": "Shakedown checks the built tool against the five listing conditions before it can be listed."
+    },
+    {
+      "id": "list",
+      "title": "List it",
+      "actors": ["chartroom", "conn"],
+      "transitions": ["building>live"],
+      "offRamps": [],
+      "text": "Chartroom writes the catalog entry to the hub repository, and the site is rebuilt. Conn shows the catalog from Logbook's public views. Readers see three labels: approved shows as Planned, building as In development and live as Live."
+    },
+    {
+      "id": "watch",
+      "title": "Watch for change",
+      "actors": ["tidegauge"],
+      "transitions": ["live>building", "live>retired"],
+      "offRamps": ["parked>observed", "linked>observed"],
+      "text": "Tidegauge compares official sources, linked tools and live tools on a schedule. When a cited clause changes, the affected tool goes back to building in the urgent lane. A repealed rule retires it."
+    },
+    {
+      "id": "route",
+      "title": "Route problems to their owner",
+      "actors": ["bellbuoy"],
+      "transitions": [],
+      "offRamps": [],
+      "text": "Bellbuoy turns a failure, a paused item or an approved edit into one piece of work in the repository that owns the fix, and alerts the owner."
+    },
+    {
+      "id": "no-rule",
+      "loop": true,
+      "title": "A case no rule covers",
+      "actors": ["sextant", "bellbuoy", "muster"],
+      "transitions": ["observed>needs_subtool", "needs_subtool>observed"],
+      "offRamps": [],
+      "text": "A worker never guesses. It pauses the item and says why, and Bellbuoy opens a task to write the missing rule. When the rule is pushed it ships like any other change, and the paused items run again in the urgent lane."
+    },
+    {
+      "id": "edit",
+      "loop": true,
+      "title": "A reader proposes an edit",
+      "actors": ["reader", "conn", "countersign", "bellbuoy"],
+      "transitions": [],
+      "offRamps": [],
+      "text": "A reader proposes a change on the site, with no account. Muster records it, Countersign holds it until the owner approves, and Bellbuoy commits it in the repository that owns that part. Nothing is applied before the owner approves."
+    },
+    {
+      "id": "github",
+      "loop": true,
+      "title": "Keeping GitHub in step",
+      "actors": ["consort"],
+      "transitions": [],
+      "offRamps": [],
+      "text": "Plainforge holds the primary copy and mirrors it to GitHub. Consort checks that the mirror pushed each new main commit, and brings any change made on GitHub back to Plainforge as a pull request. It never writes to a main branch."
+    }
+  ]
+}

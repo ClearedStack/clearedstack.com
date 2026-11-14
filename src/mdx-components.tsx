@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Children, isValidElement, type ReactNode } from "react";
 import { slugify } from "@/lib/slug";
 import { AttentionCard } from "@/components/AttentionCard";
+import { ItemStates, RepoMap, Walkthrough } from "@/components/Architecture";
 import { Branch, Flow, Lanes, Layers, States } from "@/components/Diagram";
 import { EditTrigger } from "@/components/EditTrigger";
 import { MetricCell } from "@/components/MetricCell";
@@ -85,12 +86,15 @@ const components: MDXComponents = {
   EditTrigger,
   Flow,
   HealthChip,
+  ItemStates,
   Lanes,
   Layers,
   MetricCell,
   PulseStrip,
+  RepoMap,
   States,
   TrailRow,
+  Walkthrough,
   WhyDrawer,
 };
 

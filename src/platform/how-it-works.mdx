@@ -1,0 +1,35 @@
+export const meta = {
+  title: "How it works, step by step",
+  summary: "Every component and each connection it makes, then one idea followed from first sighting to the catalog, and the three loops that keep it current. Drawn from the platform's data, not typed in.",
+  group: "factory",
+  order: 1.5,
+  revised: "2026-11",
+  status: "design",
+};
+
+This page shows the platform as a working whole: which parts exist, what each one connects to, and what happens to an idea as it moves through them. Nothing on it is typed in by hand. The diagrams are drawn when the site is built, from the same files the rest of the site reads.
+
+Where the design contradicts itself, the page says so instead of hiding it. Each contradiction is marked as an open question, and it stays marked until the owner decides it.
+
+## The parts and how they connect
+
+Eighteen components, grouped by what they do, plus the things outside the platform they talk to. Each box lists every connection that component makes. Workers only ever start a connection to Muster, except where an open question says otherwise.
+
+<RepoMap />
+
+## One idea, step by step
+
+Each step names who acts, how the idea's state changes, and the other ways it can leave that step. The highlighted names are everything that step touches. After the eleven steps come the three loops that keep a published tool current.
+
+<Walkthrough />
+
+## Where this comes from
+
+| What | Written in |
+| --- | --- |
+| Components, what each may reach and every connection | `src/data/registry.json`, also published as [/platform/registry.json](/platform/registry.json) |
+| The fourteen states and every move between them | `src/data/lifecycle.json` |
+| The order of the steps on this page | `src/data/walkthrough.json` |
+| Contradictions waiting on a decision | `src/data/open-questions.json` |
+
+A check runs before every build. It fails the build when these files disagree with each other: a connection the network does not allow, a state that does not exist, a dependency with no connection behind it, or two components claiming the same job. The only way past a contradiction is to fix the data or to record it as an open question for the owner, so it cannot drift silently.

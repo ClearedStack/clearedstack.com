@@ -1,16 +1,42 @@
 {
   "version": 1,
   "revised": "2026-11",
-  "about": "The naming registry for the ClearedStack platform. One entry per component: its canonical name, the identifier it replaced, any earlier names, what it is responsible for, its boundaries, its repository, its container image and what it depends on. Manifests, pipelines and documentation should take names from this file.",
+  "about": "The naming registry for the ClearedStack platform. One entry per component: its canonical name, the identifier it replaced, any earlier names, what it is responsible for, its boundaries, its repository, its container image, what it depends on, which namespaces may reach it and each connection it makes. Manifests, pipelines and documentation should take names from this file.",
   "organization": "https://github.com/ClearedStack",
   "imageRegistry": "lazarette.clearedstack.svc.cluster.local:5000",
+  "externals": {
+    "public-sources": {
+      "name": "Public sources",
+      "detail": "Official regulations, public pages and requests"
+    },
+    "github": {
+      "name": "GitHub",
+      "detail": "The public copy of the code"
+    },
+    "reader": {
+      "name": "Reader",
+      "detail": "Anyone using the site"
+    },
+    "owner": {
+      "name": "Owner",
+      "detail": "The person who decides"
+    },
+    "owner-webhook": {
+      "name": "Owner alerts",
+      "detail": "A webhook the owner chooses"
+    }
+  },
   "components": [
     {
       "slug": "conn",
       "name": "Conn",
       "formerly": "clearedstack-web",
       "kind": "control-plane",
+      "layer": "public",
       "namespace": "clearedstack",
+      "reachableFrom": [
+        "public"
+      ],
       "responsibility": "Shows the catalog, the guides and the state of the factory to anyone, and takes in edit proposals.",
       "interfaces": [
         "Public HTTPS: the only way in from outside",
@@ -23,6 +49,23 @@
         "logbook",
         "muster"
       ],
+      "edges": [
+        {
+          "to": "logbook",
+          "kind": "reads",
+          "note": "Public views only, with a read-only role"
+        },
+        {
+          "to": "muster",
+          "kind": "reads",
+          "note": "The live update stream"
+        },
+        {
+          "to": "muster",
+          "kind": "writes",
+          "note": "Edit proposals from readers"
+        }
+      ],
       "memory": "128 MiB",
       "version": "v0.2.0-draft",
       "subTools": []
@@ -32,7 +75,12 @@
       "name": "Muster",
       "formerly": "hub-queue-api",
       "kind": "control-plane",
+      "layer": "record",
       "namespace": "clearedstack",
+      "reachableFrom": [
+        "clearedstack",
+        "cs-workers"
+      ],
       "responsibility": "Hands out work to the workers, records every result and change of state, and receives edit proposals.",
       "interfaces": [
         "Worker calls over cluster-private HTTP: lease, heartbeat, complete, fail, needs_subtool",
@@ -45,6 +93,13 @@
       "dependsOn": [
         "logbook"
       ],
+      "edges": [
+        {
+          "to": "logbook",
+          "kind": "writes",
+          "note": "Working records; the only service that does"
+        }
+      ],
       "memory": "48 MiB",
       "version": "v0.1.0-draft",
       "subTools": []
@@ -54,7 +109,11 @@
       "name": "Logbook",
       "formerly": "postgres",
       "kind": "control-plane",
+      "layer": "record",
       "namespace": "clearedstack",
+      "reachableFrom": [
+        "clearedstack"
+      ],
       "responsibility": "Keeps the record of every item, decision and proposal, and the public views of that record.",
       "interfaces": [
         "Working records (the core schema): read and written by Muster only",
@@ -63,6 +122,7 @@
       "repository": "logbook",
       "image": "postgres:17-alpine (upstream PostgreSQL; Logbook is the schema and ledger on top)",
       "dependsOn": [],
+      "edges": [],
       "memory": "256 MiB",
       "version": "17-alpine",
       "subTools": []
@@ -72,7 +132,11 @@
       "name": "Plainforge",
       "formerly": "cs-git",
       "kind": "control-plane",
+      "layer": "code",
       "namespace": "clearedstack",
+      "reachableFrom": [
+        "clearedstack"
+      ],
       "responsibility": "Holds the primary copy of every repository, announces each change and mirrors code outward.",
       "interfaces": [
         "Git over HTTP and SSH, inside the cluster only",
@@ -83,6 +147,18 @@
       "repository": "plainforge",
       "image": "plainforge",
       "dependsOn": [],
+      "edges": [
+        {
+          "to": "keelworks",
+          "kind": "notifies",
+          "note": "Announces each push"
+        },
+        {
+          "to": "github",
+          "kind": "mirrors",
+          "note": "Outbound mirror of the code"
+        }
+      ],
       "memory": "64 MiB",
       "version": "v0.1.0-draft",
       "subTools": []
@@ -95,7 +171,11 @@
         "Stow"
       ],
       "kind": "control-plane",
+      "layer": "code",
       "namespace": "clearedstack",
+      "reachableFrom": [
+        "clearedstack"
+      ],
       "responsibility": "Keeps built images inside the cluster, with recent versions ready for rollback.",
       "interfaces": [
         "Standard OCI registry API, inside the cluster only",
@@ -105,6 +185,7 @@
       "repository": "lazarette",
       "image": "lazarette",
       "dependsOn": [],
+      "edges": [],
       "memory": "64 MiB",
       "version": "v0.1.0-draft",
       "subTools": []
@@ -117,7 +198,11 @@
         "Slipway"
       ],
       "kind": "control-plane",
+      "layer": "code",
       "namespace": "clearedstack",
+      "reachableFrom": [
+        "clearedstack"
+      ],
       "responsibility": "Tests, builds and signs an image for every change.",
       "interfaces": [
         "Receives push notifications from Plainforge",
@@ -129,6 +214,23 @@
       "dependsOn": [
         "plainforge",
         "lazarette"
+      ],
+      "edges": [
+        {
+          "to": "plainforge",
+          "kind": "reads",
+          "note": "The code of each push"
+        },
+        {
+          "to": "lazarette",
+          "kind": "pushes",
+          "note": "Signed images"
+        },
+        {
+          "to": "plainforge",
+          "kind": "commits",
+          "note": "The new image digest"
+        }
       ],
       "memory": "32 MiB",
       "version": "v0.1.0-draft",
@@ -142,7 +244,11 @@
         "Bosun"
       ],
       "kind": "control-plane",
+      "layer": "code",
       "namespace": "clearedstack",
+      "reachableFrom": [
+        "clearedstack"
+      ],
       "responsibility": "Deploys what was built, keeps it in its intended state and reports its health with cluster details removed.",
       "interfaces": [
         "Kubernetes API, using server-side apply",
@@ -156,6 +262,23 @@
         "lazarette",
         "muster"
       ],
+      "edges": [
+        {
+          "to": "plainforge",
+          "kind": "reads",
+          "note": "Manifests"
+        },
+        {
+          "to": "lazarette",
+          "kind": "reads",
+          "note": "Image digests"
+        },
+        {
+          "to": "muster",
+          "kind": "writes",
+          "note": "Health reports with cluster details removed"
+        }
+      ],
       "memory": "48 MiB",
       "version": "v0.1.0-draft",
       "subTools": []
@@ -165,7 +288,11 @@
       "name": "Consort",
       "formerly": "repo-sync",
       "kind": "control-plane",
+      "layer": "code",
       "namespace": "clearedstack",
+      "reachableFrom": [
+        "clearedstack"
+      ],
       "responsibility": "Keeps the GitHub copy of every repository matched to Plainforge, brings any change made on GitHub back to Plainforge as a pull request, and reports drift.",
       "interfaces": [
         "Reads every repository on Plainforge and on GitHub, never writes to a main branch",
@@ -178,6 +305,28 @@
       "dependsOn": [
         "plainforge"
       ],
+      "edges": [
+        {
+          "to": "plainforge",
+          "kind": "reads",
+          "note": "Every repository"
+        },
+        {
+          "to": "github",
+          "kind": "reads",
+          "note": "Every repository"
+        },
+        {
+          "to": "plainforge",
+          "kind": "commits",
+          "note": "Pull requests for commits found only on GitHub"
+        },
+        {
+          "to": "shipkeeper",
+          "kind": "notifies",
+          "note": "A report of each sync run"
+        }
+      ],
       "memory": "32 MiB",
       "version": "v0.1.0-draft",
       "subTools": []
@@ -187,8 +336,10 @@
       "name": "Trawl",
       "formerly": "cs-01-intake",
       "kind": "worker",
+      "layer": "worker",
       "stage": 1,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Finds candidate tools and records each one exactly once.",
       "interfaces": [
         "Leases work from Muster over cluster-private HTTP",
@@ -198,6 +349,21 @@
       "image": "trawl",
       "dependsOn": [
         "muster"
+      ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        },
+        {
+          "to": "public-sources",
+          "kind": "reads",
+          "note": "SAM.gov notices, GitHub issues, site sweeps and the site form"
+        }
+      ],
+      "leases": [
+        "discovered"
       ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",
@@ -216,8 +382,10 @@
         "Spyglass"
       ],
       "kind": "worker",
+      "layer": "worker",
       "stage": 2,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Reads a candidate's public pages and writes down what job it does, copying nothing.",
       "interfaces": [
         "Leases work from Muster over cluster-private HTTP",
@@ -227,6 +395,21 @@
       "image": "sextant",
       "dependsOn": [
         "muster"
+      ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        },
+        {
+          "to": "public-sources",
+          "kind": "reads",
+          "note": "A candidate's public pages"
+        }
+      ],
+      "leases": [
+        "recorded"
       ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",
@@ -242,8 +425,10 @@
       "name": "Assay",
       "formerly": "cs-03-evaluate",
       "kind": "worker",
+      "layer": "worker",
       "stage": 3,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Screens each candidate against the knockout gates and scores it on the rubric.",
       "interfaces": [
         "Leases observed records from Muster",
@@ -253,6 +438,16 @@
       "image": "assay",
       "dependsOn": [
         "muster"
+      ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        }
+      ],
+      "leases": [
+        "observed"
       ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",
@@ -268,8 +463,10 @@
         "Gavel"
       ],
       "kind": "worker",
+      "layer": "worker",
       "stage": 4,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Holds scored candidates and edit proposals until a person decides.",
       "interfaces": [
         "Leases scored candidates and pending proposals from Muster",
@@ -280,6 +477,21 @@
       "dependsOn": [
         "muster"
       ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        },
+        {
+          "to": "owner",
+          "kind": "notifies",
+          "note": "Scored candidates and proposals waiting for a decision"
+        }
+      ],
+      "leases": [
+        "scored"
+      ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",
       "subTools": []
@@ -289,8 +501,10 @@
       "name": "Waybill",
       "formerly": "cs-05-provenance",
       "kind": "worker",
+      "layer": "worker",
       "stage": 5,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Credits where an idea came from and writes the specification a tool is built from.",
       "interfaces": [
         "Leases approved items from Muster",
@@ -300,6 +514,16 @@
       "image": "waybill",
       "dependsOn": [
         "muster"
+      ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        }
+      ],
+      "leases": [
+        "approved"
       ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",
@@ -315,8 +539,10 @@
         "Jig"
       ],
       "kind": "worker",
+      "layer": "worker",
       "stage": 6,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Generates a tool's repository from its specification and a fixed template.",
       "interfaces": [
         "Leases build specifications from Muster",
@@ -327,6 +553,21 @@
       "dependsOn": [
         "muster",
         "plainforge"
+      ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        },
+        {
+          "to": "plainforge",
+          "kind": "commits",
+          "note": "The generated repository"
+        }
+      ],
+      "leases": [
+        "approved"
       ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",
@@ -342,8 +583,10 @@
       "name": "Shakedown",
       "formerly": "cs-07-verify",
       "kind": "worker",
+      "layer": "worker",
       "stage": 7,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Checks a built tool against the five listing conditions before it can be listed.",
       "interfaces": [
         "Leases built tools from Muster",
@@ -353,6 +596,16 @@
       "image": "shakedown",
       "dependsOn": [
         "muster"
+      ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        }
+      ],
+      "leases": [
+        "building"
       ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",
@@ -366,8 +619,10 @@
         "Gazette"
       ],
       "kind": "worker",
+      "layer": "worker",
       "stage": 8,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Publishes, links, merges and retires catalog entries.",
       "interfaces": [
         "Leases verified, linked, merged and retired items from Muster",
@@ -378,6 +633,24 @@
       "dependsOn": [
         "muster",
         "plainforge"
+      ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        },
+        {
+          "to": "plainforge",
+          "kind": "commits",
+          "note": "Catalog entries in the hub repository"
+        }
+      ],
+      "leases": [
+        "verified",
+        "linked",
+        "merged",
+        "retired"
       ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",
@@ -391,8 +664,10 @@
         "Dogwatch"
       ],
       "kind": "worker",
+      "layer": "worker",
       "stage": 9,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Watches official sources, live tools and linked tools for change, and reopens whatever is affected.",
       "interfaces": [
         "Leases scheduled checks from Muster",
@@ -402,6 +677,23 @@
       "image": "tidegauge",
       "dependsOn": [
         "muster"
+      ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        },
+        {
+          "to": "public-sources",
+          "kind": "reads",
+          "note": "The Federal Register, the eCFR, NIST, and linked and live tools"
+        }
+      ],
+      "leases": [
+        "live",
+        "parked",
+        "linked"
       ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",
@@ -421,8 +713,10 @@
         "Foghorn"
       ],
       "kind": "worker",
+      "layer": "worker",
       "stage": 10,
       "namespace": "cs-workers",
+      "reachableFrom": [],
       "responsibility": "Turns failures, paused items and approved edits into one piece of work in the repository that owns the fix.",
       "interfaces": [
         "Leases routing work from Muster",
@@ -435,6 +729,31 @@
       "dependsOn": [
         "muster",
         "plainforge"
+      ],
+      "edges": [
+        {
+          "to": "muster",
+          "kind": "leases",
+          "note": "Takes work and reports each result"
+        },
+        {
+          "to": "plainforge",
+          "kind": "commits",
+          "note": "Changes and tasks in the repository that owns the fix"
+        },
+        {
+          "to": "owner-webhook",
+          "kind": "notifies",
+          "note": "Owner alerts"
+        },
+        {
+          "to": "github",
+          "kind": "mirrors",
+          "note": "Its github-mirror sub-tool"
+        }
+      ],
+      "leases": [
+        "needs_subtool"
       ],
       "memory": "30 MiB",
       "version": "v0.1.0-draft",

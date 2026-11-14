@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { RepoMap } from "@/components/Architecture";
 import { DocIndex } from "@/components/DocIndex";
 import { SectionLabel } from "@/components/SectionLabel";
 import { DocStatusChip } from "@/components/StatusChip";
@@ -179,6 +180,22 @@ export default async function PlatformIndexPage() {
           }))}
         />
       </div>
+
+      <section id="map" aria-labelledby="map-title" className="mt-16 scroll-mt-6 border-t border-line pt-10">
+        <SectionLabel>How it connects</SectionLabel>
+        <h2 id="map-title" className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.015em] text-balance">
+          Every component, and every connection it makes.
+        </h2>
+        <p className="mt-4 max-w-2xl leading-relaxed text-muted">
+          Drawn from the registry when the site is built, so it cannot drift from it. Anything still waiting on a
+          decision is marked as an open question. To follow one idea through all of it, read{" "}
+          <Link href="/platform/how-it-works/" className={inlineLink}>
+            how it works, step by step
+          </Link>
+          .
+        </p>
+        <RepoMap />
+      </section>
 
       <section id="registry" aria-labelledby="registry-title" className="mt-16 scroll-mt-6 border-t border-line pt-10">
         {/* Older links point at #components. */}
