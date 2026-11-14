@@ -1,0 +1,16 @@
+{
+  "contract": "v1",
+  "entries": [
+{
+  "slug": "no-such-tool",
+  "status": "live",
+  "title": "Wrap Rate Calculator",
+  "summary": "Builds a fully burdened labor rate from base pay, fringe, overhead, G&A and fee.",
+  "repository": "https://forge.example/tools/no-such-tool",
+  "provenance": {
+    "note": "Built from the public text of Example Rule 900.12. Written from scratch.",
+    "links": ["https://rules.example/part-900/section-12"]
+  }
+}
+  ]
+}

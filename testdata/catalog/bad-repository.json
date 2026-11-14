@@ -1,0 +1,16 @@
+{
+  "contract": "v1",
+  "entries": [
+{
+  "slug": "wrap-rate-calculator",
+  "status": "live",
+  "title": "Wrap Rate Calculator",
+  "summary": "Builds a fully burdened labor rate from base pay, fringe, overhead, G&A and fee.",
+  "repository": "javascript:alert(1)//",
+  "provenance": {
+    "note": "Built from the public text of Example Rule 900.12. Written from scratch.",
+    "links": ["https://rules.example/part-900/section-12"]
+  }
+}
+  ]
+}
